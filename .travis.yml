@@ -15,8 +15,8 @@ before_install:
 script:
   - docker-compose up --build -d
   - docker-compose start
-  - docker-compose run app sh test.sh
-
+  - docker-compose run test
+#  - docker-compose run app sh test.sh
 
 #language: node_js
 #node_js: node
