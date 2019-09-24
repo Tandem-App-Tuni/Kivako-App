@@ -10,4 +10,3 @@ CMD ["npm", "start"]
 WORKDIR /usr/app
 
 RUN npm install
-#RUN npm run setup
