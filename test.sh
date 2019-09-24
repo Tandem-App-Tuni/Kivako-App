@@ -1,1 +1,1 @@
-npm test
+CI=true npm test
