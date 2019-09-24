@@ -1,1 +1,1 @@
-cd kivako-tandem-app && npm test
+npm test
