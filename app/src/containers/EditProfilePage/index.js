@@ -24,6 +24,13 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Chip from '@material-ui/core/Chip';
 
+//Data
+import {municipality} from '../../components/constant/municipality'
+
+//Components
+import {CityPicker} from '../../components/CityPicker';
+
+
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -105,13 +112,6 @@ const languages = [
   "French",
   "German"
 ];
-
-const cities = [
-  'Tampere',
-  'Helsinki',
-  'Espoo',
-  'Vantaa'
-]
 
 class EditProfilePage extends Component {
   state = {
@@ -245,9 +245,8 @@ this.setState(
  )
 };
 
-handleChangeCities = event => {
-  
-  var value= (event.target.value);
+handleChangeCities = value => {
+  console.log(value);
  if (value.length > 2) {
 
  }else{
@@ -338,9 +337,13 @@ render() {
               </Grid>
 
               <Grid item xs={12}>
+             
+              <CityPicker classes = {classes}
+                selectedItem = {this.state.cities}
+                onChange = {this.handleChangeCities}
+              />
 
-
-              <FormControl className={classes.formControl}>
+              {/* <FormControl className={classes.formControl}>
         <InputLabel htmlFor="select-multiple-chip">Cities</InputLabel>
         <Select
           multiple
@@ -356,13 +359,13 @@ render() {
           )}
           MenuProps={MenuProps}
         >
-          {cities.map(name => (
+          {municipality.map(name => (
             <MenuItem key={name} value={name}>
               {name}
             </MenuItem>
           ))}
         </Select>
-      </FormControl>
+      </FormControl> */}
 </Grid>
 
               <Grid item xs={12}>
