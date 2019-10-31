@@ -12,6 +12,7 @@ import './App.css';
 import LoginPage from './containers/LoginPage'
 import EditProfilePage from './containers/EditProfilePage'
 import PreferencePage from './containers/PreferencePage'
+import PartnerListPage from './containers/PartnerListPage'
 
 const theme = createMuiTheme({
   palette: {
@@ -33,8 +34,8 @@ function App() {
         <Route exact path="/edit-profile">
             <EditProfilePage />
         </Route>
-        <Route exact path="/edit-preference">
-            <PreferencePage />
+        <Route exact path="/partner-list">
+            <PartnerListPage />
         </Route>
       </Switch>
     </Router>

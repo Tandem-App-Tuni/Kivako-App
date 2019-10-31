@@ -70,27 +70,36 @@ function ResponsiveDrawer(props) {
       <div className={classes.toolbar} />
       <Divider />
       <List>
-        {['Conversations', 'Moodle', 'Preference', 'Language matches', 'Log out'].map((text, index) => (
-          <ListItem button key={text} component={Link} 
-          to={"/edit-preference"}>
-          {index === 0 &&
+      <ListItem button key="1" component={Link} 
+          to={"/partner-list"}>
             <ListItemIcon><ForumIcon/></ListItemIcon>
-           }
-           {index === 1 &&
+            <ListItemText primary="Conversations" />
+      </ListItem>
+
+      <ListItem button key="2" component={Link} 
+          to={"/partner-list"}>
             <ListItemIcon><CollectionsBookmarkIcon/></ListItemIcon>
-           }
-           {index === 2 &&
-            <ListItemIcon><TuneIcon/></ListItemIcon>
-           }
-           {index === 3 &&
-            <ListItemIcon><PeopleIcon/></ListItemIcon>
-           }
-           {index === 4 &&
-            <ListItemIcon><ExitToAppIcon/></ListItemIcon>
-           }
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
+            <ListItemText primary="Moodle" />
+      </ListItem>
+          
+        <ListItem button key="3" component={Link} 
+      to={"/edit-profile"}>
+        <ListItemIcon><TuneIcon/></ListItemIcon>
+        <ListItemText primary="Preferences" />
+        </ListItem>
+        
+        <ListItem button key="4" component={Link} 
+      to={"/partner-list"}>
+        <ListItemIcon><PeopleIcon/></ListItemIcon>
+        <ListItemText primary="Find a partner" />
+        </ListItem>
+          
+        <ListItem button key="5" component={Link} 
+      to={"/partner-list"}>
+        <ListItemIcon><ExitToAppIcon/></ListItemIcon>
+        <ListItemText primary="Log out" />
+        </ListItem>
+
       </List>
       
     </div>
