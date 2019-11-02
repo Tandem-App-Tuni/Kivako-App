@@ -10,7 +10,8 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import {withStyles} from '@material-ui/core/styles';
-
+import Button from '@material-ui/core/Button';
+import GridListTileBar from '@material-ui/core/GridListTileBar';
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	Styles
 
 import ResponsiveDrawer from '../MenuDrawer';
@@ -49,7 +50,7 @@ const styles = ({
         padding: '0'
     },
     gridListTile: {
-        height: "100% !important",
+        // height: "100% !important",
         maxWidth: "300px",
         minWidth: 60
     },
@@ -65,7 +66,7 @@ class BrowseMatch extends React.Component {
         userMatches: [{
             languageName: "English",
             matches:
-            [{user:{name:"Nam"}},
+            [{user:{_id: "1", name:"Nam"}},
             {user:{name:"Peter"}},
             {user:{name:"Jp"}},
             {user:{name:"Nam"}},
@@ -130,8 +131,20 @@ class BrowseMatch extends React.Component {
                                    <Typography variant="overline" gutterBottom>
                                    {match.user.name}
                     </Typography>  
-                                </GridListTile>
-                            )
+                    <GridListTileBar
+            //   title={"aaa"}
+              classes={{
+                root: classes.titleBar,
+                title: classes.title,
+              }}
+              actionIcon={
+                <Button variant="contained" color = "primary" onClick = {this.onInviteAction.bind(this, match)}>
+                    Invite 
+                </Button>
+              }
+            />
+            </GridListTile>
+            )
                         }
                     </GridList>
                 </div>
@@ -163,6 +176,7 @@ class BrowseMatch extends React.Component {
                         <Typography variant="overline" gutterBottom>
                             {"Can_teach" + ' ' + item.languageName + ":"}
                         </Typography>
+                        
                     </ListItemText>
                 </div>
                 {
@@ -170,6 +184,11 @@ class BrowseMatch extends React.Component {
                 }
             </div>
         </ListItem>);
+    }
+
+
+    onInviteAction (user) {
+        console.log(user)
     }
 
 
