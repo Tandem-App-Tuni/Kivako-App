@@ -26,6 +26,39 @@ export default function PartnerListPage() {
 
   return (
     <ResponsiveDrawer title = 'Conversations'>
+
+    <Typography variant="h6" gutterBottom>
+                Requests
+    </Typography>   
+
+    <List className={classes.root}>
+      <ListItem alignItems="flex-start">
+        <ListItemAvatar>
+          <Avatar alt="Remy Sharp" src="https://pickaface.net/gallery/avatar/unr_test_161024_0535_9lih90.png" />
+        </ListItemAvatar>
+        <ListItemText
+          primary="Remy Sharp"
+          secondary={
+            <React.Fragment>
+              <Typography
+                component="span"
+                variant="body2"
+                className={classes.inline}
+                color="textPrimary"
+              >
+                Teach: English. Learn: Finnish
+              </Typography>
+              {" — Helsinki, Tampere"}
+            </React.Fragment>
+          }
+        />
+      </ListItem>
+    </List>
+
+
+    <Typography variant="h6" gutterBottom>
+                Partners
+    </Typography>    
     <List className={classes.root}>
       <ListItem alignItems="flex-start">
         <ListItemAvatar>

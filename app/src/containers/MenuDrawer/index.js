@@ -76,8 +76,7 @@ function ResponsiveDrawer(props) {
             <ListItemText primary="Conversations" />
       </ListItem>
 
-      <ListItem button key="2" component={Link} 
-          to={"/partner-list"}>
+      <ListItem button key="2" component="a" href="https://moodle.tuni.fi/">
             <ListItemIcon><CollectionsBookmarkIcon/></ListItemIcon>
             <ListItemText primary="Moodle" />
       </ListItem>
@@ -89,7 +88,7 @@ function ResponsiveDrawer(props) {
         </ListItem>
         
         <ListItem button key="4" component={Link} 
-      to={"/partner-list"}>
+      to={"/browse-match"}>
         <ListItemIcon><PeopleIcon/></ListItemIcon>
         <ListItemText primary="Find a partner" />
         </ListItem>

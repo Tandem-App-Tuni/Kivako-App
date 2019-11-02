@@ -23,6 +23,9 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Chip from '@material-ui/core/Chip';
+import Fab from '@material-ui/core/Fab';
+
+import EditIcon from '@material-ui/icons/Edit';
 
 //Data
 import {municipality} from '../../components/constant/municipality'
@@ -342,116 +345,50 @@ render() {
                 selectedItem = {this.state.cities}
                 onChange = {this.handleChangeCities}
               />
-
-              {/* <FormControl className={classes.formControl}>
-        <InputLabel htmlFor="select-multiple-chip">Cities</InputLabel>
-        <Select
-          multiple
-          value={this.state.cities}
-          onChange={this.handleChangeCities}
-          input={<Input id="select-multiple-chip" />}
-          renderValue={selected => (
-            <div className={classes.chips}>
-              {selected.map(value => (
-                <Chip key={value} label={value} className={classes.chip} />
-              ))}
-            </div>
-          )}
-          MenuProps={MenuProps}
-        >
-          {municipality.map(name => (
-            <MenuItem key={name} value={name}>
-              {name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl> */}
-</Grid>
+              </Grid>
 
               <Grid item xs={12}>
               <TextField
-              variant="outlined"
-        id="introduction"
-        label="Introduction"
-        multiline
-        fullWidth
-        rows="4"
-        defaultValue=""
-        className={classes.textField}
-        margin="normal"
-        onChange =  {this.handleChangeIntroduction}
-      />
+                        variant="outlined"
+                  id="introduction"
+                  label="Introduction"
+                  multiline
+                  fullWidth
+                  rows="4"
+                  defaultValue=""
+                  className={classes.textField}
+                  margin="normal"
+                  onChange =  {this.handleChangeIntroduction}
+                />
               </Grid>
              
               <Grid item xs={12}>
+              <Typography variant="subtitle1" gutterBottom>
+                Languages I can teach
+              </Typography>
+              <IconButton aria-label="delete" className={classes.margin}>
+                 <EditIcon fontSize="small" />
+              </IconButton>
+              </Grid>
 
+              <Grid item xs={12}>
+              <Typography variant="subtitle1" gutterBottom>
+                    Languages I want to learn
+                    </Typography>
+                    <IconButton aria-label="delete" className={classes.margin}>
+              <EditIcon fontSize="small" />
+              </IconButton>
+              </Grid>
 
-              <FormControl className={classes.formControl}>
-        <InputLabel htmlFor="select-multiple-chip">To teach</InputLabel>
-        <Select
-          multiple
-          value={this.state.languagesToTeach}
-          onChange={this.handleChangeTeach}
-          input={<Input id="select-multiple-chip" />}
-          renderValue={selected => (
-            <div className={classes.chips}>
-              {selected.map(value => (
-                <Chip key={value} label={value} className={classes.chip} />
-              ))}
-            </div>
-          )}
-          MenuProps={MenuProps}
-        >
-          {languages.map(name => (
-            <MenuItem key={name} value={name}>
-              {name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-</Grid>
-
-<Grid item xs={12}>
-
-
-              <FormControl className={classes.formControl}>
-        <InputLabel htmlFor="select-multiple-chip">To study</InputLabel>
-        <Select
-          multiple
-          value={this.state.languagesToLearn}
-          onChange={this.handleChangeStudy}
-          input={<Input id="select-multiple-chip" />}
-          renderValue={selected => (
-            <div className={classes.chips}>
-              {selected.map(value => (
-                <Chip key={value} label={value} className={classes.chip} />
-              ))}
-            </div>
-          )}
-          MenuProps={MenuProps}
-        >
-          {languages.map(name => (
-            <MenuItem key={name} value={name}>
-              {name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-</Grid>
-
-            </Grid>
-
-
-
-
-            <Button
+              </Grid>
+              <Button
               //type="submit"
               fullWidth
               variant="contained"
               color="primary"
               className={classes.submit}
               onClick={this.onSaveButtonClicked}
-            >
+              >
               Save
             </Button>
             
