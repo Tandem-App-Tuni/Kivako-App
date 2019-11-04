@@ -62,36 +62,198 @@ const styles = ({
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	Class
 
 class BrowseMatch extends React.Component {
+
+
     state = {
-        userMatches: [{
+        userMatches: [
+        {
             languageName: "English",
             matches:
-            [{user:{_id: "1", name:"Nam"}},
-            {user:{name:"Peter"}},
-            {user:{name:"Jp"}},
-            {user:{name:"Nam"}},
-            {user:{name:"Peter"}},
-            {user:{name:"Jp"}},
-            {user:{name:"Nam"}},
-            {user:{name:"Peter"}},
-            {user:{name:"Jp"}},
-            {user:{name:"Nam"}},
-            {user:{name:"Peter"}},
-            {user:{name:"Jp"}}
+            [
+                {user:{_id: "1", name:"Nam"}},
+                {user:{name:"Peter"}},
+                {user:{name:"Jp"}},
+                {user:{name:"Nam"}},
+                {user:{name:"Peter"}},
+                {user:{name:"Jp"}},
+                {user:{name:"Nam"}},
+                {user:{name:"Peter"}},
+                {user:{name:"Jp"}},
+                {user:{name:"Nam"}},
+                {user:{name:"Peter"}},
+                {user:{name:"Jp"}}
             ]
-        
         },
         {
             languageName: "Finnish",
             matches:
-            [{user:{name:"Nam"}},
-            {user:{name:"Peter"}},
-            {user:{name:"Jp"}}
-        ]
+            [
+                {user:{name:"Nam"}},
+                {user:{name:"Peter"}},
+                {user:{name:"Jp"}}
+            ]
         }
     ],
         open: false,
     };
+    // =========================================== FUNCTIONS ======================================
+    // Load possible matches list
+    loadDataPossibleUserMatches(){
+        // http://localhost:3000/api/v1/usersMatch/possibleMatchs
+        const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/usersMatch/possibleMatchs")
+        console.log(url)
+        fetch(url, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        }
+        }).then((response) => response.json())
+        .then((responseJson) => {
+            console.log(responseJson);
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+       
+    }
+
+    // Send a new match invitation
+    requestNewUserMatch(){
+        // http://localhost:3000/api/v1/usersMatch/sendRequest
+        // The requester user ID will be collect automatic by the server
+        const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/usersMatch/sendRequest")
+        console.log(url)
+        fetch(url, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            recipientUserID: this.state.recipientUserID,//User that will receive the request
+        })
+        }).then((response) => response.json())
+        .then((responseJson) => {
+            console.log(responseJson);
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+    }
+
+    // Get all the match requests made to the user by other users
+    getMatchRequestsReceivedByTheUser(){
+        // http://localhost:3000/api/v1/usersMatch/receiptMatchsRequests
+        const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/usersMatch/receiptMatchsRequests")
+        console.log(url)
+        fetch(url, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        }
+        }).then((response) => response.json())
+        .then((responseJson) => {
+            console.log(responseJson);
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+       
+    }
+
+    // Get the match requests made by the user to other users
+    getMatchRequestsRequestedByTheUser(){
+        // http://localhost:3000/api/v1/usersMatch/requestedMatchsRequests
+        const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/usersMatch/requestedMatchsRequests")
+        console.log(url)
+        fetch(url, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        }
+        }).then((response) => response.json())
+        .then((responseJson) => {
+            console.log(responseJson);
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+       
+    }
+
+    // Get the current matches of the user
+    getUserCurrentMatchs(){
+        // http://localhost:3000/api/v1/usersMatch/getUserActiveMatches
+        const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/usersMatch/getUserActiveMatches")
+        console.log(url)
+        fetch(url, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        }
+        }).then((response) => response.json())
+        .then((responseJson) => {
+            console.log(responseJson);
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+        
+    }
+
+    acceptNewMatchRequest(){
+        // need the match ID
+        const matchID = 123456;
+
+        // http://localhost:3000/api/v1/usersMatch/acceptMatchRequest/:matchid
+        const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/usersMatch/acceptMatchRequest"+matchID);
+        
+        console.log(url)
+        fetch(url, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        }
+        }).then((response) => response.json())
+        .then((responseJson) => {
+            console.log(responseJson);
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+        
+    }
+
+    denyNewMatchRequest(){
+        // need the match ID
+        const matchID = 123456;
+
+        // http://localhost:3000/api/v1/usersMatch/denyMatchRequest/:matchid
+        const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/usersMatch/denyMatchRequest"+matchID);
+        
+        console.log(url)
+        fetch(url, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        }
+        }).then((response) => response.json())
+        .then((responseJson) => {
+            console.log(responseJson);
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+        
+    }
+
+// ================================================================================================
 
     componentWillReceiveProps(nextProps) {
         const matches = nextProps.languageMatches;
