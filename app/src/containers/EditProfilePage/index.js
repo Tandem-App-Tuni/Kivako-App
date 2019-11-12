@@ -7,24 +7,12 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import { withStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
 import IconButton from '@material-ui/core/IconButton';
-
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import Chip from '@material-ui/core/Chip';
-import Fab from '@material-ui/core/Fab';
-
 import EditIcon from '@material-ui/icons/Edit';
 
 //Data
@@ -32,7 +20,7 @@ import {municipality} from '../../components/constant/municipality'
 
 //Components
 import {CityPicker} from '../../components/CityPicker';
-
+import LanguagePicker from '../../components/LanguagePicker'
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -122,10 +110,11 @@ class EditProfilePage extends Component {
     languagesToTeach:[],
     languagesToLearn: [],
     firstName : '',
-      lastName : '',
-      email : '',
-      cities : [],
-      descriptionText : ''
+    lastName : '',
+    email : '',
+    cities : [],
+    descriptionText : '',
+    showInputLanguage : false
   }
 
 onImageChange = (event) => {
@@ -272,6 +261,13 @@ this.setState(
  )
 };
 
+onShowInputLanguage = event =>  {
+  this.setState(
+    {
+      showInputLanguage: true
+    }
+  )
+};
 
 render() {
   const { classes } = this.props;
@@ -366,10 +362,12 @@ render() {
               <Typography variant="subtitle1" gutterBottom>
                 Languages I can teach
               </Typography>
-              <IconButton aria-label="delete" className={classes.margin}>
+              <IconButton aria-label="delete" className={classes.margin} onClick={this.onShowInputLanguage}>
                  <EditIcon fontSize="small" />
               </IconButton>
               </Grid>
+
+              <LanguagePicker open = {this.state.showInputLanguage}/>
 
               <Grid item xs={12}>
               <Typography variant="subtitle1" gutterBottom>
@@ -399,9 +397,7 @@ render() {
       </Container>
           
         </ResponsiveDrawer>
-      </div>
-  
-      
+      </div> 
     );
 }
 }

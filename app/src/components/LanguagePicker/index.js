@@ -1,5 +1,5 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import React, {Component} from 'react';
+import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -11,7 +11,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
-const useStyles = makeStyles(theme => ({
+
+const useStyles = theme => ({
   container: {
     display: 'flex',
     flexWrap: 'wrap',
@@ -20,38 +21,46 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(1),
     minWidth: 120,
   },
-}));
+})
 
-export default function DialogSelect() {
-  const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
-  const [age, setAge] = React.useState('');
+class LanguagePicker extends Component { 
+  state = {
+    language : "",
+    level : "",
+    credit : ""
+  }
 
-  const handleChange = event => {
-    setAge(Number(event.target.value) || '');
-  };
+  componentWillReceiveProps(nextProps) {
+    const language = nextProps.language;
+    const level = nextProps.level;
+    const credit = nextProps.credit;
+   
+    this.setState(
+        {
+          language: language,
+          level: level,
+          credit: credit
+        }
+    );  
+  }
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+  handleChange(){}
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+  handleClose(){}
 
-  return (
-    <div>
-      <Button onClick={handleClickOpen}>Open select dialog</Button>
-      <Dialog disableBackdropClick disableEscapeKeyDown open={open} onClose={handleClose}>
-        <DialogTitle>Fill the form</DialogTitle>
+  render(){
+    const {classes} = this.props;
+    return (<div>
+      <Dialog disableBackdropClick disableEscapeKeyDown open={this.props.open}>
+        <DialogTitle>Input Language</DialogTitle>
         <DialogContent>
           <form className={classes.container}>
             <FormControl className={classes.formControl}>
-              <InputLabel htmlFor="demo-dialog-native">Age</InputLabel>
+              <InputLabel htmlFor="demo-dialog-native">Language</InputLabel>
               <Select
                 native
-                value={age}
-                onChange={handleChange}
+                value=""
+                onChange={this.handleChange}
                 input={<Input id="demo-dialog-native" />}
               >
                 <option value="" />
@@ -61,33 +70,53 @@ export default function DialogSelect() {
               </Select>
             </FormControl>
             <FormControl className={classes.formControl}>
-              <InputLabel id="demo-dialog-select-label">Age</InputLabel>
+              <InputLabel id="demo-dialog-select-label">Level</InputLabel>
               <Select
                 labelId="demo-dialog-select-label"
                 id="demo-dialog-select"
-                value={age}
-                onChange={handleChange}
+                value=""
+                onChange={this.handleChange}
                 input={<Input />}
               >
                 <MenuItem value="">
                   <em>None</em>
                 </MenuItem>
-                <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
+                {["A1","A2","B1","B2","C1","C2"].map(item => {
+                  return <MenuItem key={item} value={item}>{item}</MenuItem>
+                  })}
+              </Select>
+            </FormControl>
+
+            <FormControl className={classes.formControl}>
+              <InputLabel id="demo-dialog-select-label">Credit</InputLabel>
+              <Select
+                labelId="demo-dialog-select-label"
+                id="demo-dialog-select"
+                value=""
+                onChange={this.handleChange}
+                input={<Input />}
+              >
+                <MenuItem value = {0} key = {0}>
+                  <em>None</em>
+                </MenuItem>
+                {[1,2,3,4,5].map(item => {
+                  return <MenuItem key={item} value={item}>{item}</MenuItem>
+                  })}
+                
               </Select>
             </FormControl>
           </form>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={this.handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={this.handleClose} color="primary">
             Ok
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
-  );
+    </div>)
+  }
 }
+export default withStyles(useStyles) (LanguagePicker);
