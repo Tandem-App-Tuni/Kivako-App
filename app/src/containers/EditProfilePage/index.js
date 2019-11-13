@@ -114,7 +114,10 @@ class EditProfilePage extends Component {
     email : '',
     cities : [],
     descriptionText : '',
-    showInputLanguage : false
+    showInputTeachLanguage : false,
+    showInputLearnLanguage : false,
+    editingTeachLanguageIndex : 0,
+    editingLearnLanguageIndex : 0
   }
 
 onImageChange = (event) => {
@@ -261,10 +264,21 @@ this.setState(
  )
 };
 
-onShowInputLanguage = event =>  {
+onShowInputTeachLanguage = (open, index, newValue) =>  {
+  if (open === true){
+    this.setState(
+      {
+        editingLearnLanguageIndex: index
+      }
+    )
+  }
+  else{
+    var arr = this.state.languagesToTeach
+    arr.splice(index, 0, newValue);
+  }
   this.setState(
     {
-      showInputLanguage: true
+      showInputTeachLanguage: open
     }
   )
 };
@@ -362,12 +376,23 @@ render() {
               <Typography variant="subtitle1" gutterBottom>
                 Languages I can teach
               </Typography>
-              <IconButton aria-label="delete" className={classes.margin} onClick={this.onShowInputLanguage}>
+              {
+                this.state.languagesToTeach.map(item => {
+                  return <Typography variant="subtitle1" gutterBottom>
+                    {item.language + ", " + item.level}
+                  </Typography>
+                  })
+              }
+
+              <IconButton aria-label="delete" className={classes.margin} onClick={() =>this.onShowInputTeachLanguage(true, this.state.languagesToTeach.length)}>
                  <EditIcon fontSize="small" />
               </IconButton>
               </Grid>
 
-              <LanguagePicker open = {this.state.showInputLanguage}/>
+              <LanguagePicker open = {this.state.showInputTeachLanguage} 
+                      language = {this.state.languagesToTeach[this.state.editingTeachLanguageIndex]}  
+                      onClose={(value) =>this.onShowInputTeachLanguage(false, this.state.editingTeachLanguageIndex, value)}
+                      />
 
               <Grid item xs={12}>
               <Typography variant="subtitle1" gutterBottom>

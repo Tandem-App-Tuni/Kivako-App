@@ -31,9 +31,10 @@ class LanguagePicker extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const language = nextProps.language;
-    const level = nextProps.level;
-    const credit = nextProps.credit;
+    if  (nextProps.language != null){
+    const language = nextProps.language.language;
+    const level = nextProps.language.level;
+    const credit = nextProps.language.credit;
    
     this.setState(
         {
@@ -42,11 +43,42 @@ class LanguagePicker extends Component {
           credit: credit
         }
     );  
+      }
   }
 
-  handleChange(){}
+  handleChangeLanguage = (event) => {
+    this.setState(
+      {language: event.target.value}
+    )
+  }
 
-  handleClose(){}
+  handleChangeLevel = (event) => {
+    this.setState(
+      {level: event.target.value}
+    )
+  }
+
+  handleChangeCredit = (event) => {
+    this.setState(
+      {credit: event.target.value}
+    )
+  }
+
+
+
+  handleDone = () => {
+    this.props.onClose(
+      {
+        language: "English", 
+        level: this.state.level,
+        credit: this.state.credit
+     }
+    )
+  }
+
+  handleClose = () => {
+    this.props.onClose()
+  }
 
   render(){
     const {classes} = this.props;
@@ -59,7 +91,7 @@ class LanguagePicker extends Component {
               <InputLabel htmlFor="demo-dialog-native">Language</InputLabel>
               <Select
                 native
-                value=""
+                value={this.state.language}
                 onChange={this.handleChange}
                 input={<Input id="demo-dialog-native" />}
               >
@@ -74,8 +106,8 @@ class LanguagePicker extends Component {
               <Select
                 labelId="demo-dialog-select-label"
                 id="demo-dialog-select"
-                value=""
-                onChange={this.handleChange}
+                value={this.state.level}
+                onChange={this.handleChangeLevel}
                 input={<Input />}
               >
                 <MenuItem value="">
@@ -92,8 +124,8 @@ class LanguagePicker extends Component {
               <Select
                 labelId="demo-dialog-select-label"
                 id="demo-dialog-select"
-                value=""
-                onChange={this.handleChange}
+                value={this.state.credit}
+                onChange={this.handleChangeCredit}
                 input={<Input />}
               >
                 <MenuItem value = {0} key = {0}>
@@ -111,7 +143,7 @@ class LanguagePicker extends Component {
           <Button onClick={this.handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={this.handleClose} color="primary">
+          <Button onClick={this.handleDone} color="primary">
             Ok
           </Button>
         </DialogActions>
