@@ -185,4 +185,4 @@ export let languages = [
    "Yoruba",
    "Zhuang",
    "Zulu"
- ]
+ ];

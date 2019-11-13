@@ -273,8 +273,10 @@ onShowInputTeachLanguage = (open, index, newValue) =>  {
     )
   }
   else{
-    var arr = this.state.languagesToTeach
-    arr.splice(index, 0, newValue);
+    if (newValue != null){
+      var arr = this.state.languagesToTeach
+      arr.splice(index, 0, newValue);
+    }
   }
   this.setState(
     {
@@ -390,6 +392,7 @@ render() {
               </Grid>
 
               <LanguagePicker open = {this.state.showInputTeachLanguage} 
+                      type = "teach"
                       language = {this.state.languagesToTeach[this.state.editingTeachLanguageIndex]}  
                       onClose={(value) =>this.onShowInputTeachLanguage(false, this.state.editingTeachLanguageIndex, value)}
                       />

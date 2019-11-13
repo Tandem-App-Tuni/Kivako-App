@@ -10,7 +10,9 @@ import Input from '@material-ui/core/Input';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import TextField from '@material-ui/core/TextField';
+import {languages} from '../constant/languages';
 
 const useStyles = theme => ({
   container: {
@@ -82,30 +84,29 @@ class LanguagePicker extends Component {
 
   render(){
     const {classes} = this.props;
+    var levels = ["C1","C2"];
+    if (this.props.type == "study"){
+        levels = ["A1","A2","B1","B2","C1","C2"];
+    }
     return (<div>
       <Dialog disableBackdropClick disableEscapeKeyDown open={this.props.open}>
-        <DialogTitle>Input Language</DialogTitle>
+        <DialogTitle>Input Language</DialogTitle>    
         <DialogContent>
           <form className={classes.container}>
             <FormControl className={classes.formControl}>
-              <InputLabel htmlFor="demo-dialog-native">Language</InputLabel>
-              <Select
-                native
-                value={this.state.language}
-                onChange={this.handleChange}
-                input={<Input id="demo-dialog-native" />}
-              >
-                <option value="" />
-                <option value={10}>Ten</option>
-                <option value={20}>Twenty</option>
-                <option value={30}>Thirty</option>
-              </Select>
+              {/* <InputLabel>Language</InputLabel> */}
+              <Autocomplete
+                options={languages}
+                getOptionLabel={option => option}
+                style={{ width: 200}}
+                renderInput={params => (
+                  <TextField {...params} placeholder = "Language"  fullWidth />
+                )}
+              />
             </FormControl>
             <FormControl className={classes.formControl}>
-              <InputLabel id="demo-dialog-select-label">Level</InputLabel>
+              <InputLabel>Level</InputLabel>
               <Select
-                labelId="demo-dialog-select-label"
-                id="demo-dialog-select"
                 value={this.state.level}
                 onChange={this.handleChangeLevel}
                 input={<Input />}
@@ -113,17 +114,15 @@ class LanguagePicker extends Component {
                 <MenuItem value="">
                   <em>None</em>
                 </MenuItem>
-                {["A1","A2","B1","B2","C1","C2"].map(item => {
+                {levels.map(item => {
                   return <MenuItem key={item} value={item}>{item}</MenuItem>
                   })}
               </Select>
             </FormControl>
 
-            <FormControl className={classes.formControl}>
-              <InputLabel id="demo-dialog-select-label">Credit</InputLabel>
+           { this.props.type === "study" && <FormControl className={classes.formControl}>
+              <InputLabel >Credit</InputLabel>
               <Select
-                labelId="demo-dialog-select-label"
-                id="demo-dialog-select"
                 value={this.state.credit}
                 onChange={this.handleChangeCredit}
                 input={<Input />}
@@ -137,6 +136,7 @@ class LanguagePicker extends Component {
                 
               </Select>
             </FormControl>
+           }
           </form>
         </DialogContent>
         <DialogActions>
