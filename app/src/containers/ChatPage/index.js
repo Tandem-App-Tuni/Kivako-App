@@ -1,7 +1,9 @@
 import React from 'react';
-import {Button, TextField, Grid, Box, Avatar, Divider, Zoom} from '@material-ui/core'
+import {Button, TextField, Grid, Box, Divider, Zoom, Toolbar} from '@material-ui/core'
 
 /**
+ * Author: Peter Mlakar
+ * 
  * Custom chat library. 
  * Supports rendering chat messages using the Material Ui library.
  * 
@@ -25,13 +27,30 @@ class Chat extends React.Component
 
         this.state = {messages: props.messages,
                       sendMessageFunction: props.sendMessage,
-                      textFieldContent: ''};
+                      textFieldContent: '',
+                      conversationName: props.conversationName};
 
         this.handleSend = this.handleSend.bind(this);
         this.sendMessageClick = this.sendMessageClick.bind(this);
         this.sendMessageEnter = this.sendMessageEnter.bind(this);
 
         if (typeof this.state.sendMessageFunction == 'undefined') this.state.sendMessageFunction = this.sendMessage;
+    }
+
+    /**
+     * Because the contents of the chat window is updated trough 
+     * setting new properties of the component, a listener for
+     * properties change is required to trigger re-rendering.
+     * 
+     * @param {*} props
+     * @param {*} state 
+     */
+    static getDerivedStateFromProps(props, state)
+    {
+        return {messages: props.messages,
+                sendMessageFunction: typeof state.sendMessageFunction == 'undefined' ? Chat.sendMessage : state.sendMessageFunction,
+                textFieldContent: state.textFieldContent,
+                conversationName: props.conversationName};
     }
 
     /**
@@ -123,6 +142,10 @@ class Chat extends React.Component
         return(
             <Box
                 boxShadow={3}>
+                <Toolbar
+                    style={{backgroundColor:'indigo', color:'white'}}>
+                {this.state.conversationName}
+                </Toolbar>
                 {this.renderMessages()}
                 <Divider light/>
                 <Box
@@ -173,6 +196,18 @@ class ChatBubble extends React.Component
         this.side = props.message.id == 0 ? 'flex-start' : 'flex-end';
         this.color = props.message.id == 0 ? '#2073E8' : '#24B8FF';
         this.align = props.message.id == 0 ? 'left' : 'right';
+    }
+
+    componentWillReceiveProps(props)
+    {
+        this.message = props.message;
+
+        this.text = props.message.text;
+        this.side = props.message.id == 0 ? 'flex-start' : 'flex-end';
+        this.color = props.message.id == 0 ? '#2073E8' : '#24B8FF';
+        this.align = props.message.id == 0 ? 'left' : 'right';
+
+        this.forceUpdate();
     }
 
     render()

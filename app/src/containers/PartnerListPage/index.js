@@ -1,13 +1,16 @@
 import React from 'react';
 import {Redirect} from 'react-router-dom';
-import {Box, List, ListItem, ListItemText, ListItemAvatar, Avatar, Typography, makeStyles} from '@material-ui/core'
+import {Box, List, ListItem, ListItemText, ListItemAvatar, Avatar, Typography, Tooltip, CircularProgress, Zoom} from '@material-ui/core'
 import Chat from '../ChatPage'
-
+import openSocket from 'socket.io-client';
 import ResponsiveDrawer from '../MenuDrawer';
 
 /**
- * The PartnerListPage renders the current partners and new request the user might have.
- * There are two arrays that need to be set, the request array and the partners array.
+ * Author: Peter Mlakar
+ * 
+ * The PartnerListPage renders the current partners and request the user might have.
+ * There are two arrays that need to be recieved from the
+ * api called on the url /user/request&partner, the request array and the partners array.
  * There are is one parrameter that can be set: peekWordCount which controlls how many words of the last message of the conversation are shown in the preview.
  * The request array has the following structure:
  * 
@@ -38,6 +41,13 @@ import ResponsiveDrawer from '../MenuDrawer';
  * topic of conversation. ConversationId property is the index in the array of this.parent where this conversation is located.
  * By this nature it should be unique.
  * The messages array holds the messages of this conversation in the structue described in the Chat class.
+ * 
+ * The PartnerListPage state contains the following parameters:
+ * currentOpenConversation -> contains the reference to the currently open conversation
+ * peekWordCount -> explained above
+ * chatWindow -> the exact chat window object rendered on the screen
+ * socket -> the openSocket connecting to the conversatin thread of this user
+ * loadedServerInformation -> a flag set to true when the conversation data has been recieved from the server
  */
 class PartnerListPage extends React.Component
 {
@@ -47,73 +57,48 @@ class PartnerListPage extends React.Component
 
     this.state = {
       currentOpenConversation: undefined,
-      peekWordCount: 5
+      peekWordCount: 5,
+      chatWindow: undefined,
+      socket: openSocket('http://localhost:3000'),
+      loadedServerInformation: false
     };
 
-    this.requests = [{
-      name: 'Remy Sharp',
-      teach: 'English',
-      learn: 'Finnish',
-      city0: 'Helsinki',
-      city1: 'Tampere'
-    }];
-
-    this.partners = [
-    {
-      name: 'Ali Connors',
-      conversationName: 'Are you really good at English?',
-      conversationId: 0,
-      messages: [
-        {
-          id: 1,
-          timestamp: new Date(),
-          text: 'Hey how are you?'
-        },
-        {
-          id: 0,
-          timestamp: new Date(),
-          text: 'Good, you?'
-        },
-          {id: 1,
-          timestamp: new Date(),
-          text: 'I\'ll be in your neighborhood doing errands this weedkend. Can I stop by?'
-        }
-      ]
-    },
-    {
-      name: 'Scott McScotland',
-      conversationName: 'Summer school',
-      conversationId: 1,
-      messages: [
-        {
-          id: 0,
-          timestamp: new Date(),
-          text: 'Wish I could come, but I\'m out of town this weekend and I really don\'t care.'
-        }
-      ]
-    },
-    {
-      name: 'Sandra Adams',
-      conversationName: 'Studying',
-      conversationId: 2,
-      messages: [
-        {
-          id:1,
-          timestamp: new Date(),
-          text: 'I really would like to study with you but unfortunatelly I can\'t. Bye.'
-        }
-      ]
-    }]
+    this.partners = [];
+    this.requests = [];
 
     this.renderRequestArray = this.renderRequestArray.bind(this);
     this.renderPartnerArray = this.renderPartnerArray.bind(this);
-    this.rednerChatWindow = this.renderChatWindow.bind(this);
     this.getMessagePeek = this.getMessagePeek.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.fetchServerData = this.fetchServerData.bind(this);
 
     this.isAuthenticated = this.isAuthenticated.bind(this);
 
     console.log(this.partners);
+
+    this.fetchServerData();
+  }
+
+  /**
+   * fetchServerData creates a get request to the server api
+   * for the appropriate users request and partner list objects.
+   * 
+   */
+  fetchServerData()
+  {
+    fetch('http://localhost:3002/user/request&partner', 
+    {
+      method: 'get',
+      dataType: 'json'
+    })
+    .then((response) => response.json())
+    .then((text) => 
+    {
+      this.partners = text.partners;
+      this.requests = text.requests;
+
+      this.setState({loadedServerInformation: true});
+    });
   }
 
   /**
@@ -123,27 +108,31 @@ class PartnerListPage extends React.Component
   {
     let requestArray = [];
 
+    if (!this.state.loadedServerInformation) return <CircularProgress variant='indeterminate' color='primary'/>
+
     this.requests.forEach((element, index) => {
       requestArray.push(
-        <ListItem alignItems="flex-start" key={index}>
-          <ListItemAvatar>
-            <Avatar alt={element.name} src="https://pickaface.net/gallery/avatar/unr_test_161024_0535_9lih90.png" />
-          </ListItemAvatar>
-          <ListItemText
-            primary={element.name}
-            secondary={
-              <React.Fragment>
-                <Typography
-                  component="span"
-                  variant="body2"
-                  color="textPrimary"
-                  display='inline'>
-                  Teach: {element.teach}. Learn: {element.learn}
-                </Typography>
-                -{element.city0},{element.city1}
-              </React.Fragment>
-            }/>
-        </ListItem>
+        <Zoom in={true}>
+          <ListItem alignItems="flex-start" key={index}>
+            <ListItemAvatar>
+              <Avatar alt={element.name} src='https://oldschool.runescape.wiki/images/thumb/1/1e/Cowboy_chathead.png/30px-Cowboy_chathead.png?5f19e'/>
+            </ListItemAvatar>
+            <ListItemText
+              primary={element.name}
+              secondary={
+                <React.Fragment>
+                  <Typography
+                    component="span"
+                    variant="body2"
+                    color="textPrimary"
+                    display='inline'>
+                    Teach: {element.teach}. Learn: {element.learn}
+                  </Typography>
+                  -{element.city0},{element.city1}
+                </React.Fragment>
+              }/>
+          </ListItem>
+        </Zoom>
       );
     })
 
@@ -159,51 +148,47 @@ class PartnerListPage extends React.Component
   {
     let parnerArray = [];
 
+    if (!this.state.loadedServerInformation) return <CircularProgress variant='indeterminate' color='primary'/>
+
     this.partners.forEach((element, index) => {
       parnerArray.push(
-        <Box 
-          onClick={() => this.handleClick(element.conversationId)}
-          key={index}>
-          <ListItem 
-            alignItems="flex-start">
-            <ListItemAvatar>
-              <Avatar 
-                alt={element.name} 
-                src="https://pickaface.net/gallery/avatar/unr_test_161024_0535_9lih90.png"/>
-            </ListItemAvatar>
-            <ListItemText
-              primary={element.conversationName}
-              secondary={
-                <React.Fragment>
-                  <Typography
-                    component="span"
-                    variant="body2"
-                    display='inline'
-                    color="textPrimary">
-                    {element.name}
-                  </Typography>
-                  {"  " + this.getMessagePeek(element.messages)}
-                </React.Fragment>
-              }
-          />
-        </ListItem>
-        </Box>
+        <Zoom in={true}>
+          <Box 
+            onClick={() => this.handleClick(element.conversationId)}
+            key={index}>
+            <Tooltip 
+              title='Click to open conversation...'
+              placement='left'>
+              <ListItem 
+                alignItems="flex-start">
+                <ListItemAvatar>
+                  <Avatar 
+                    alt={element.name} 
+                    src='https://oldschool.runescape.wiki/images/thumb/1/1e/Cowboy_chathead.png/30px-Cowboy_chathead.png?5f19e'/>
+                </ListItemAvatar>
+                <ListItemText
+                  primary={element.conversationName}
+                  secondary={
+                    <React.Fragment>
+                      <Typography
+                        component="span"
+                        variant="body2"
+                        display='inline'
+                        color="textPrimary">
+                        {element.name}
+                      </Typography>
+                      {"  " + this.getMessagePeek(element.messages)}
+                    </React.Fragment>
+                  }
+              />
+            </ListItem>
+          </Tooltip>
+          </Box>
+        </Zoom>
       );
     });
 
     return parnerArray;
-  }
-
-  /**
-   * renderChatWindow renders the chat window if a chat window is open.
-   */
-  renderChatWindow()
-  {
-    if (typeof this.state.currentOpenConversation == 'undefined') return(<div></div>);
-
-    var tmp = <Chat messages={this.state.currentOpenConversation.messages}/>;
-    
-    return(tmp)
   }
 
   /**
@@ -247,6 +232,11 @@ class PartnerListPage extends React.Component
 
     if (id != currentId) this.setState({currentOpenConversation: this.partners[id]})
     else this.setState({currentOpenConversation: undefined})
+
+    console.log(this.partners[id].name);
+
+    if (id != currentId) this.setState({chatWindow: <Chat messages={this.partners[id].messages} conversationName={this.partners[id].conversationName}/>});
+    else this.setState({chatWindow: <div></div>});
   }
 
   /**
@@ -294,7 +284,7 @@ class PartnerListPage extends React.Component
             {this.renderPartnerArray()}
           </List>
         </Box>
-        {this.renderChatWindow()}
+        {this.state.chatWindow}
       </ResponsiveDrawer>
     )}
 }
