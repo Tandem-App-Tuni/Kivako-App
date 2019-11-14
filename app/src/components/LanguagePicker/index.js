@@ -20,7 +20,7 @@ const useStyles = theme => ({
     flexWrap: 'wrap',
   },
   formControl: {
-    margin: theme.spacing(1),
+    // margin: theme.spacing(1),
     minWidth: 120,
   },
 })
@@ -33,11 +33,16 @@ class LanguagePicker extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    var language = "";
+    var level = "";
+    var credit = "";
     if  (nextProps.language != null){
-    const language = nextProps.language.language;
-    const level = nextProps.language.level;
-    const credit = nextProps.language.credit;
-   
+     language = nextProps.language.language;
+     level = nextProps.language.level;
+     credit = nextProps.language.credit;
+    }
+
+    console.log(language);
     this.setState(
         {
           language: language,
@@ -45,12 +50,17 @@ class LanguagePicker extends Component {
           credit: credit
         }
     );  
-      }
+      
   }
 
-  handleChangeLanguage = (event) => {
+  handleChangeLanguage = (event, value) => {
+    var language = value
+    if (value === null){
+      language = ""
+    }
+    console.log(language);
     this.setState(
-      {language: event.target.value}
+      {language: language}
     )
   }
 
@@ -71,7 +81,7 @@ class LanguagePicker extends Component {
   handleDone = () => {
     this.props.onClose(
       {
-        language: "English", 
+        language: this.state.language, 
         level: this.state.level,
         credit: this.state.credit
      }
@@ -92,18 +102,20 @@ class LanguagePicker extends Component {
       <Dialog disableBackdropClick disableEscapeKeyDown open={this.props.open}>
         <DialogTitle>Input Language</DialogTitle>    
         <DialogContent>
-          <form className={classes.container}>
-            <FormControl className={classes.formControl}>
-              {/* <InputLabel>Language</InputLabel> */}
-              <Autocomplete
+        <Autocomplete
                 options={languages}
                 getOptionLabel={option => option}
-                style={{ width: 200}}
+                style={{ width: 300}}
+                onChange = {(event, value) => this.handleChangeLanguage(event, value)}
                 renderInput={params => (
-                  <TextField {...params} placeholder = "Language"  fullWidth />
+                  <TextField {...params} 
+                    placeholder = "Language"  
+                    fullWidth 
+                    label = {this.state.language}
+                  />
                 )}
               />
-            </FormControl>
+
             <FormControl className={classes.formControl}>
               <InputLabel>Level</InputLabel>
               <Select
@@ -137,7 +149,6 @@ class LanguagePicker extends Component {
               </Select>
             </FormControl>
            }
-          </form>
         </DialogContent>
         <DialogActions>
           <Button onClick={this.handleClose} color="primary">

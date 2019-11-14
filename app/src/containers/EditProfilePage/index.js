@@ -268,7 +268,7 @@ onShowInputTeachLanguage = (open, index, newValue) =>  {
   if (open === true){
     this.setState(
       {
-        editingLearnLanguageIndex: index
+        editingTeachLanguageIndex: index
       }
     )
   }
@@ -380,7 +380,7 @@ render() {
               </Typography>
               {
                 this.state.languagesToTeach.map(item => {
-                  return <Typography variant="subtitle1" gutterBottom>
+                  return <Typography key = {item.language} variant="subtitle1" gutterBottom>
                     {item.language + ", " + item.level}
                   </Typography>
                   })
