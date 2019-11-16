@@ -230,11 +230,11 @@ handleChangeLastName = event => {
   
   var value= (event.target.value);
  
-this.setState(
- {
-   lastName: value
-     }
- )
+  this.setState(
+  {
+    lastName: value
+      }
+  )
 };
 
 handleChangeEmail = event => {
@@ -278,12 +278,18 @@ checkUserIsRegistered = () =>{
   console.log(url);
 
   fetch(url, {
-  method: 'GET'
-  //credentials: 'same-origin'
+    method: 'GET',
+    credentials: 'include',
+    cors:'no-cors'
   }).then((response) => response.json())
   .then((responseJson) => {
-    console.log("log");
-    console.log(responseJson);
+    //console.log("log");
+    console.log(responseJson.email);
+    this.setState(
+      {
+        email: responseJson.email
+          }
+      )
   })
   .catch((error) => {
     console.error(error);
