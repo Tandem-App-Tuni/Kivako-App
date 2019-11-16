@@ -272,30 +272,27 @@ this.setState(
  )
 };
 
-checkLogin = () =>{
+checkUserIsRegistered = () =>{
   const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/users/isRegistered")
-  console.log(url)
+  console.log('Checking is the user is registered...');
+  console.log(url);
+
   fetch(url, {
-  method: 'GET',
-  headers: {
-    'Accept': 'application/json',
-    'Content-Type': 'application/json'
-  },
-  credentials: 'same-origin'
-}).then((response) => response.json())
-.then((responseJson) => {
-  console.log(responseJson);
-})
-.catch((error) => {
-  console.error(error);
+  method: 'GET'
+  //credentials: 'same-origin'
+  }).then((response) => response.json())
+  .then((responseJson) => {
+    console.log("log");
+    console.log(responseJson);
+  })
+  .catch((error) => {
+    console.error(error);
 });
 
-
-//this.uploadPhoto("5daf39de47435bd5d59687c6");
 }
 
 componentDidMount(){
-  this.checkLogin();
+  this.checkUserIsRegistered();
 
 }
 
