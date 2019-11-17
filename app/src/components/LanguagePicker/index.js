@@ -12,6 +12,9 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+
+
 import {languages} from '../constant/languages';
 
 const useStyles = theme => ({
@@ -29,28 +32,40 @@ class LanguagePicker extends Component {
   state = {
     language : "",
     level : "",
-    credit : ""
+    credit : "",
+    errorStr : "",
+    excludedLanguages: []
   }
 
   componentWillReceiveProps(nextProps) {
     var language = "";
     var level = "";
     var credit = "";
+    var excludedLanguages = [];
     if  (nextProps.language != null){
      language = nextProps.language.language;
      level = nextProps.language.level;
      credit = nextProps.language.credit;
+     excludedLanguages = nextProps.language.excludedLanguages;
     }
 
-    console.log(language);
     this.setState(
         {
           language: language,
           level: level,
-          credit: credit
+          credit: credit,
+          errorStr: ""
         }
     );  
       
+  }
+
+  handleTypeLanguage = (event, value) => {
+    if (value != ""){
+      this.setState(
+            {language: ""}
+          )
+    }
   }
 
   handleChangeLanguage = (event, value) => {
@@ -58,7 +73,6 @@ class LanguagePicker extends Component {
     if (value === null){
       language = ""
     }
-    console.log(language);
     this.setState(
       {language: language}
     )
@@ -79,6 +93,12 @@ class LanguagePicker extends Component {
 
 
   handleDone = () => {
+    if (this.state.language == "" || this.state.level == ""|| (this.props.type === "learn" && this.state.credit == "")) {
+      this.setState(
+        {errorStr: "Please fill in all data"}
+      )
+      return
+    }
     this.props.onClose(
       {
         language: this.state.language, 
@@ -95,18 +115,25 @@ class LanguagePicker extends Component {
   render(){
     const {classes} = this.props;
     var levels = ["C1","C2"];
-    if (this.props.type == "study"){
+    if (this.props.type == "learn"){
         levels = ["A1","A2","B1","B2","C1","C2"];
     }
+
+    const excludedLanguages = this.props.excludedLanguages;
+    const filteredLanguages = languages.filter(function(x) { 
+      return excludedLanguages.indexOf(x) < 0;
+    });
+
     return (<div>
       <Dialog disableBackdropClick disableEscapeKeyDown open={this.props.open}>
         <DialogTitle>Input Language</DialogTitle>    
         <DialogContent>
         <Autocomplete
-                options={languages}
+                options={filteredLanguages}
                 getOptionLabel={option => option}
                 style={{ width: 300}}
                 onChange = {(event, value) => this.handleChangeLanguage(event, value)}
+                onInputChange = {(event, value) => this.handleTypeLanguage(event, value)}
                 renderInput={params => (
                   <TextField {...params} 
                     placeholder = "Language"  
@@ -132,7 +159,7 @@ class LanguagePicker extends Component {
               </Select>
             </FormControl>
 
-           { this.props.type === "study" && <FormControl className={classes.formControl}>
+           { this.props.type === "learn" && <FormControl className={classes.formControl}>
               <InputLabel >Credit</InputLabel>
               <Select
                 value={this.state.credit}
@@ -147,8 +174,14 @@ class LanguagePicker extends Component {
                   })}
                 
               </Select>
-            </FormControl>
-           }
+            </FormControl>          
+          }
+          {
+            this.state.errorStr != "" && <Typography variant="body2" color = "secondary" gutterBottom>
+                    {this.state.errorStr}
+                    </Typography>
+
+          }
         </DialogContent>
         <DialogActions>
           <Button onClick={this.handleClose} color="primary">

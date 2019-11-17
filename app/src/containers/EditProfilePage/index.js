@@ -14,6 +14,12 @@ import Container from '@material-ui/core/Container';
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 
 //Data
 import {municipality} from '../../components/constant/municipality'
@@ -92,7 +98,12 @@ const useStyles = theme => ({
   },
   noLabel: {
     marginTop: theme.spacing(3),
-  }
+  },
+   flexContainer : {
+  display: 'flex',
+  flexDirection: 'row',
+  padding: 0,
+}
   
 });
 
@@ -195,7 +206,7 @@ handleChangeTeach = event => {
     )
 };
 
-handleChangeStudy = event => {
+handleChangeLearn = event => {
   const { options } = event.target;
 
      var value= (event.target.value);
@@ -241,7 +252,6 @@ this.setState(
 };
 
 handleChangeCities = value => {
-  console.log(value);
  if (value.length > 2) {
 
  }else{
@@ -275,7 +285,17 @@ onShowInputTeachLanguage = (open, index, newValue) =>  {
   else{
     if (newValue != null){
       var arr = this.state.languagesToTeach
-      arr.splice(index, 0, newValue);
+      if (index < this.state.languagesToTeach.length){
+        arr[index] = newValue
+      }
+      else{
+        arr.push(newValue)
+      }     
+      this.setState(
+        {
+          languagesToTeach: arr
+        }
+      )
     }
   }
   this.setState(
@@ -285,8 +305,54 @@ onShowInputTeachLanguage = (open, index, newValue) =>  {
   )
 };
 
+
+onShowInputLearnLanguage = (open, index, newValue) =>  {
+  if (open === true){
+    this.setState(
+      {
+        editingLearnLanguageIndex: index
+      }
+    )
+  }
+  else{
+    if (newValue != null){
+      var arr = this.state.languagesToLearn
+      if (index < this.state.languagesToLearn.length){
+        arr[index] = newValue
+      }
+      else{
+        arr.push(newValue)
+      }  
+      this.setState(
+        {
+          languagesToLearn: arr
+        }
+      )
+    }
+  }
+  this.setState(
+    {
+      showInputLearnLanguage: open
+    }
+  )
+};
+
+toExcludeLanguages = () =>{
+  var langs = [];
+  
+  this.state.languagesToTeach.forEach(item => {
+    langs.push(item.language);
+  }
+  )
+  
+  return langs
+}
+
+
 render() {
   const { classes } = this.props;
+  const excludedLanguages = this.toExcludeLanguages()
+  
     return  (
       <div>
           <ResponsiveDrawer title = 'Profile'>
@@ -375,19 +441,25 @@ render() {
               </Grid>
              
               <Grid item xs={12}>
-              <Typography variant="subtitle1" gutterBottom>
+              <Typography variant="subtitle2" gutterBottom>
                 Languages I can teach
               </Typography>
-              {
-                this.state.languagesToTeach.map(item => {
-                  return <Typography key = {item.language} variant="subtitle1" gutterBottom>
-                    {item.language + ", " + item.level}
-                  </Typography>
-                  })
-              }
 
-              <IconButton aria-label="delete" className={classes.margin} onClick={() =>this.onShowInputTeachLanguage(true, this.state.languagesToTeach.length)}>
-                 <EditIcon fontSize="small" />
+              <List>
+              {this.state.languagesToTeach.map(item => {
+                return (
+                    <ListItem button key={item.language} onClick={() =>this.onShowInputTeachLanguage(true, this.state.languagesToTeach.indexOf(item))}>
+                      <ListItemText primary={item.language + ",level: " + item.level} />
+                      <ListItemIcon>
+                        <EditIcon />
+                      </ListItemIcon>
+                    </ListItem>
+                )
+              })}
+              </List>
+
+              <IconButton className={classes.margin} onClick={() =>this.onShowInputTeachLanguage(true, this.state.languagesToTeach.length)}>
+                 <AddCircleOutlineIcon fontSize="small" />
               </IconButton>
               </Grid>
 
@@ -395,18 +467,40 @@ render() {
                       type = "teach"
                       language = {this.state.languagesToTeach[this.state.editingTeachLanguageIndex]}  
                       onClose={(value) =>this.onShowInputTeachLanguage(false, this.state.editingTeachLanguageIndex, value)}
+                      excludedLanguages = {excludedLanguages}
                       />
 
               <Grid item xs={12}>
-              <Typography variant="subtitle1" gutterBottom>
+              <Typography variant="subtitle2" gutterBottom>
                     Languages I want to learn
                     </Typography>
-                    <IconButton aria-label="delete" className={classes.margin}>
-              <EditIcon fontSize="small" />
+
+                    <List>
+              {this.state.languagesToLearn.map(item => {
+                return (
+                    <ListItem button key={item.language} onClick={() =>this.onShowInputLearnLanguage(true, this.state.languagesToLearn.indexOf(item))}>
+                      <ListItemText primary={item.language + ",level " + item.level + ", credits: " + item.credit } />
+                      <ListItemIcon>
+                        <EditIcon />
+                      </ListItemIcon>
+                    </ListItem>
+                )
+              })}
+              </List>
+                  
+                    <IconButton className={classes.margin} onClick={() =>this.onShowInputLearnLanguage(true, this.state.languagesToLearn.length)}>
+                 <AddCircleOutlineIcon fontSize="small" />
               </IconButton>
               </Grid>
 
+              <LanguagePicker open = {this.state.showInputLearnLanguage} 
+                      type = "learn"
+                      language = {this.state.languagesToLearn[this.state.editingLearnLanguageIndex]}  
+                      onClose={(value) =>this.onShowInputLearnLanguage(false, this.state.editingLearnLanguageIndex, value)}
+                      excludedLanguages = {excludedLanguages}
+                      />
               </Grid>
+
               <Button
               //type="submit"
               fullWidth
