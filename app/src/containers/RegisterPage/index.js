@@ -16,10 +16,6 @@ import { withStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
 import IconButton from '@material-ui/core/IconButton';
-import { browserHistory } from 'react-router';
-import  { Redirect } from 'react-router-dom'
-
-import { withRouter } from 'react-router-dom';
 
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -112,15 +108,7 @@ const useStyles = theme => ({
   
 });
 
-const languages = [
-  "English",
-  "Finnish",
-  "Swedish",
-  "French",
-  "German"
-];
-
-class EditProfilePage extends Component {
+class RegisterPage extends Component {
   state = {
     profileImg: null,
     languagesToTeach:[],
@@ -164,7 +152,6 @@ onSaveButtonClicked = () =>{
 }).then((response) => response.json())
 .then((responseJson) => {
   console.log(responseJson);
-  this.uploadPhoto(responseJson.userCreated._id)
 })
 .catch((error) => {
   console.error(error);
@@ -278,7 +265,7 @@ this.setState(
 
 checkUserIsRegistered = () =>{
   const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/users/isRegistered")
-  console.log('Checking is the user is registered...');
+  console.log('Checking if the user is already registered...');
   console.log(url);
 
   fetch(url, {
@@ -289,51 +276,61 @@ checkUserIsRegistered = () =>{
   .then((responseJson) => {
     //console.log("log");
     console.log(responseJson.email);
-    this.setState(
-      {
-        email: responseJson.email
-          }
-      )
-  })
-  .catch((error) => {
-    console.error(error);
-  });
-}
-
-checkIfUserIsAuthenticaded = () =>{
-
-  const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/isAuthenticated")
-  console.log('Checking if the user is authenticated...');
-  //console.log(url);
-
-  fetch(url, {
-    method: 'GET',
-    credentials: 'include',
-    cors:'no-cors'
-  }).then((response) => response.json())
-  .then((responseData) => {
-    //console.log("log");
-    console.log(responseData);
-    if(responseData === false){
-        // User not authenticated
-        console.log("oi");
-        // Redirect to inicial page.
-        // TODO IMPLEMENT THIS REDIRECT
-        //browserHistory.push('/');
+    if(responseJson.data === true){
+        // User already registered
+        // Redirect to dashboard. No register required again.
+        this.props.history.push('/browse-match')
     }else{
+        // User not registered
+        // Let user register
+        this.setState(
+            {
+              email: responseJson.email
+                }
+            )
         // Continue page render
     }
 
   })
   .catch((error) => {
     console.error(error);
-  });
+});
+
 }
 
-componentDidMount(){
-  this.checkIfUserIsAuthenticaded();
-  this.checkUserIsRegistered();
+checkUserIsAuthenticaded = () =>{
+    // TODO -> Check if user is authenticated, make API call to check it
+    const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/isAuthenticated")
+    console.log('Checking if the user is authenticated...');
+    console.log(url);
+  
+    fetch(url, {
+      method: 'GET',
+      credentials: 'include',
+      cors:'no-cors'
+    }).then((response) => response.json())
+    .then((responseData) => {
+      //console.log("log");
+      console.log(responseData);
+      if(responseData === false){
+          // User not authenticated
+          // 
+          // Redirect to inicial page.
+          this.props.history.push('/')
+      }else{
+          // Continue page render
+      }
+  
+    })
+    .catch((error) => {
+      console.error(error);
+  });
+  
+  }
 
+componentDidMount(){
+  this.checkUserIsAuthenticaded();
+  this.checkUserIsRegistered();
 
 }
 
@@ -470,4 +467,4 @@ render() {
 }
 }
   
-  export default withStyles(useStyles) (EditProfilePage);
+  export default withStyles(useStyles) (RegisterPage);

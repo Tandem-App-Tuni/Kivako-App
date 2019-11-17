@@ -93,6 +93,22 @@ class BrowseMatch extends React.Component {
         open: false,
     };
 
+    getUserPossibleMatchsList = () =>{
+        const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/usersMatch/possibleMatchs");
+    
+        fetch(url, {
+            method: 'GET',
+            credentials: 'include',
+            cors:'no-cors'
+        }).then((response) => response.json())
+        .then((responseJson) => {
+            // Resposta
+            console.log(responseJson);
+        }).catch((error) => {
+            console.error(error);
+        });
+    };
+
     componentWillReceiveProps(nextProps) {
         const matches = nextProps.languageMatches;
         this.setState(
@@ -189,6 +205,10 @@ class BrowseMatch extends React.Component {
 
     onInviteAction (user) {
         console.log(user)
+    }
+
+    componentDidMount(){
+        this.getUserPossibleMatchsList();
     }
 
 
