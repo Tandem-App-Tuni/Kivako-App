@@ -120,13 +120,7 @@ const useStyles = theme => ({
   
 });
 
-const languages = [
-  "English",
-  "Finnish",
-  "Swedish",
-  "French",
-  "German"
-];
+
 
 class EditProfilePage extends Component {
   state = {
