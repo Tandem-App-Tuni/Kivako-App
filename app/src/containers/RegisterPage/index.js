@@ -7,16 +7,15 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import { withStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
 import IconButton from '@material-ui/core/IconButton';
-import { browserHistory } from 'react-router';
-import  { Redirect } from 'react-router-dom'
-
-import { withRouter } from 'react-router-dom';
 
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -27,19 +26,13 @@ import Chip from '@material-ui/core/Chip';
 import Fab from '@material-ui/core/Fab';
 
 import EditIcon from '@material-ui/icons/Edit';
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
-
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
 
 //Data
 import {municipality} from '../../components/constant/municipality'
 
 //Components
 import {CityPicker} from '../../components/CityPicker';
-import LanguagePicker from '../../components/LanguagePicker'
+
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -111,37 +104,20 @@ const useStyles = theme => ({
   },
   noLabel: {
     marginTop: theme.spacing(3),
-  },
-   flexContainer : {
-  display: 'flex',
-  flexDirection: 'row',
-  padding: 0,
-}
+  }
   
 });
 
-const languages = [
-  "English",
-  "Finnish",
-  "Swedish",
-  "French",
-  "German"
-];
-
-class EditProfilePage extends Component {
+class RegisterPage extends Component {
   state = {
     profileImg: null,
     languagesToTeach:[],
     languagesToLearn: [],
     firstName : '',
-    lastName : '',
-    email : '',
-    cities : [],
-    descriptionText : '',
-    showInputTeachLanguage : false,
-    showInputLearnLanguage : false,
-    editingTeachLanguageIndex : 0,
-    editingLearnLanguageIndex : 0
+      lastName : '',
+      email : '',
+      cities : [],
+      descriptionText : ''
   }
 
 onImageChange = (event) => {
@@ -176,7 +152,6 @@ onSaveButtonClicked = () =>{
 }).then((response) => response.json())
 .then((responseJson) => {
   console.log(responseJson);
-  this.uploadPhoto(responseJson.userCreated._id)
 })
 .catch((error) => {
   console.error(error);
@@ -219,7 +194,7 @@ handleChangeTeach = event => {
     )
 };
 
-handleChangeLearn = event => {
+handleChangeStudy = event => {
   const { options } = event.target;
 
      var value= (event.target.value);
@@ -265,6 +240,7 @@ this.setState(
 };
 
 handleChangeCities = value => {
+  console.log(value);
  if (value.length > 2) {
 
  }else{
@@ -289,7 +265,7 @@ this.setState(
 
 checkUserIsRegistered = () =>{
   const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/users/isRegistered")
-  console.log('Checking is the user is registered...');
+  console.log('Checking if the user is already registered...');
   console.log(url);
 
   fetch(url, {
@@ -300,132 +276,66 @@ checkUserIsRegistered = () =>{
   .then((responseJson) => {
     //console.log("log");
     console.log(responseJson.email);
-    this.setState(
-      {
-        email: responseJson.email
-          }
-      )
-  })
-  .catch((error) => {
-    console.error(error);
-  });
-}
-
-checkIfUserIsAuthenticaded = () =>{
-
-  const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/isAuthenticated")
-  console.log('Checking if the user is authenticated...');
-  //console.log(url);
-
-  fetch(url, {
-    method: 'GET',
-    credentials: 'include',
-    cors:'no-cors'
-  }).then((response) => response.json())
-  .then((responseData) => {
-    //console.log("log");
-    console.log(responseData);
-    if(responseData === false){
-        // User not authenticated
-        console.log("oi");
-        // Redirect to inicial page.
-        // TODO IMPLEMENT THIS REDIRECT
-        //browserHistory.push('/');
+    if(responseJson.data === true){
+        // User already registered
+        // Redirect to dashboard. No register required again.
+        this.props.history.push('/browse-match')
     }else{
+        // User not registered
+        // Let user register
+        this.setState(
+            {
+              email: responseJson.email
+                }
+            )
         // Continue page render
     }
 
   })
   .catch((error) => {
     console.error(error);
-  });
+});
+
 }
+
+checkUserIsAuthenticaded = () =>{
+    // TODO -> Check if user is authenticated, make API call to check it
+    const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/isAuthenticated")
+    console.log('Checking if the user is authenticated...');
+    console.log(url);
+  
+    fetch(url, {
+      method: 'GET',
+      credentials: 'include',
+      cors:'no-cors'
+    }).then((response) => response.json())
+    .then((responseData) => {
+      //console.log("log");
+      console.log(responseData);
+      if(responseData === false){
+          // User not authenticated
+          // 
+          // Redirect to inicial page.
+          this.props.history.push('/')
+      }else{
+          // Continue page render
+      }
+  
+    })
+    .catch((error) => {
+      console.error(error);
+  });
+  
+  }
 
 componentDidMount(){
-  this.checkIfUserIsAuthenticaded();
+  this.checkUserIsAuthenticaded();
   this.checkUserIsRegistered();
 
-
 }
-onShowInputTeachLanguage = (open, index, newValue) =>  {
-  if (open === true){
-    this.setState(
-      {
-        editingTeachLanguageIndex: index
-      }
-    )
-  }
-  else{
-    if (newValue != null){
-      var arr = this.state.languagesToTeach
-      if (index < this.state.languagesToTeach.length){
-        arr[index] = newValue
-      }
-      else{
-        arr.push(newValue)
-      }     
-      this.setState(
-        {
-          languagesToTeach: arr
-        }
-      )
-    }
-  }
-  this.setState(
-    {
-      showInputTeachLanguage: open
-    }
-  )
-};
-
-
-onShowInputLearnLanguage = (open, index, newValue) =>  {
-  if (open === true){
-    this.setState(
-      {
-        editingLearnLanguageIndex: index
-      }
-    )
-  }
-  else{
-    if (newValue != null){
-      var arr = this.state.languagesToLearn
-      if (index < this.state.languagesToLearn.length){
-        arr[index] = newValue
-      }
-      else{
-        arr.push(newValue)
-      }  
-      this.setState(
-        {
-          languagesToLearn: arr
-        }
-      )
-    }
-  }
-  this.setState(
-    {
-      showInputLearnLanguage: open
-    }
-  )
-};
-
-toExcludeLanguages = () =>{
-  var langs = [];
-  
-  this.state.languagesToTeach.forEach(item => {
-    langs.push(item.language);
-  }
-  )
-  
-  return langs
-}
-
 
 render() {
   const { classes } = this.props;
-  const excludedLanguages = this.toExcludeLanguages()
-  
     return  (
       <div>
           <ResponsiveDrawer title = 'Profile'>
@@ -514,66 +424,24 @@ render() {
               </Grid>
              
               <Grid item xs={12}>
-              <Typography variant="subtitle2" gutterBottom>
+              <Typography variant="subtitle1" gutterBottom>
                 Languages I can teach
               </Typography>
-
-              <List>
-              {this.state.languagesToTeach.map(item => {
-                return (
-                    <ListItem button key={item.language} onClick={() =>this.onShowInputTeachLanguage(true, this.state.languagesToTeach.indexOf(item))}>
-                      <ListItemText primary={item.language + ",level: " + item.level} />
-                      <ListItemIcon>
-                        <EditIcon />
-                      </ListItemIcon>
-                    </ListItem>
-                )
-              })}
-              </List>
-
-              <IconButton className={classes.margin} onClick={() =>this.onShowInputTeachLanguage(true, this.state.languagesToTeach.length)}>
-                 <AddCircleOutlineIcon fontSize="small" />
+              <IconButton aria-label="delete" className={classes.margin}>
+                 <EditIcon fontSize="small" />
               </IconButton>
               </Grid>
-
-              <LanguagePicker open = {this.state.showInputTeachLanguage} 
-                      type = "teach"
-                      language = {this.state.languagesToTeach[this.state.editingTeachLanguageIndex]}  
-                      onClose={(value) =>this.onShowInputTeachLanguage(false, this.state.editingTeachLanguageIndex, value)}
-                      excludedLanguages = {excludedLanguages}
-                      />
 
               <Grid item xs={12}>
-              <Typography variant="subtitle2" gutterBottom>
+              <Typography variant="subtitle1" gutterBottom>
                     Languages I want to learn
                     </Typography>
-
-                    <List>
-              {this.state.languagesToLearn.map(item => {
-                return (
-                    <ListItem button key={item.language} onClick={() =>this.onShowInputLearnLanguage(true, this.state.languagesToLearn.indexOf(item))}>
-                      <ListItemText primary={item.language + ",level " + item.level + ", credits: " + item.credit } />
-                      <ListItemIcon>
-                        <EditIcon />
-                      </ListItemIcon>
-                    </ListItem>
-                )
-              })}
-              </List>
-                  
-                    <IconButton className={classes.margin} onClick={() =>this.onShowInputLearnLanguage(true, this.state.languagesToLearn.length)}>
-                 <AddCircleOutlineIcon fontSize="small" />
+                    <IconButton aria-label="delete" className={classes.margin}>
+              <EditIcon fontSize="small" />
               </IconButton>
               </Grid>
 
-              <LanguagePicker open = {this.state.showInputLearnLanguage} 
-                      type = "learn"
-                      language = {this.state.languagesToLearn[this.state.editingLearnLanguageIndex]}  
-                      onClose={(value) =>this.onShowInputLearnLanguage(false, this.state.editingLearnLanguageIndex, value)}
-                      excludedLanguages = {excludedLanguages}
-                      />
               </Grid>
-
               <Button
               //type="submit"
               fullWidth
@@ -592,9 +460,11 @@ render() {
       </Container>
           
         </ResponsiveDrawer>
-      </div> 
+      </div>
+  
+      
     );
 }
 }
   
-  export default withStyles(useStyles) (EditProfilePage);
+  export default withStyles(useStyles) (RegisterPage);
