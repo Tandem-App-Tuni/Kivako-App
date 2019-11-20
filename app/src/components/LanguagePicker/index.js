@@ -32,7 +32,7 @@ class LanguagePicker extends Component {
   state = {
     language : "",
     level : "",
-    credit : "",
+    credits : "",
     errorStr : "",
     excludedLanguages: []
   }
@@ -40,12 +40,12 @@ class LanguagePicker extends Component {
   componentWillReceiveProps(nextProps) {
     var language = "";
     var level = "";
-    var credit = "";
+    var credits = "";
     var excludedLanguages = [];
     if  (nextProps.language != null){
      language = nextProps.language.language;
      level = nextProps.language.level;
-     credit = nextProps.language.credit;
+     credits = nextProps.language.credits;
      excludedLanguages = nextProps.language.excludedLanguages;
     }
 
@@ -53,7 +53,7 @@ class LanguagePicker extends Component {
         {
           language: language,
           level: level,
-          credit: credit,
+          credits: credits,
           errorStr: ""
         }
     );  
@@ -86,7 +86,7 @@ class LanguagePicker extends Component {
 
   handleChangeCredit = (event) => {
     this.setState(
-      {credit: event.target.value}
+      {credits: event.target.value}
     )
   }
 
@@ -103,7 +103,7 @@ class LanguagePicker extends Component {
       {
         language: this.state.language, 
         level: this.state.level,
-        credit: this.state.credit
+        credits: this.state.credits
      }
     )
   }
@@ -159,10 +159,10 @@ class LanguagePicker extends Component {
               </Select>
             </FormControl>
 
-           { this.props.type === "learn" && <FormControl className={classes.formControl}>
-              <InputLabel >Credit</InputLabel>
+           {  <FormControl className={classes.formControl}>
+              <InputLabel >Credits</InputLabel>
               <Select
-                value={this.state.credit}
+                value={this.state.credits}
                 onChange={this.handleChangeCredit}
                 input={<Input />}
               >

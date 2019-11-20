@@ -148,7 +148,7 @@ onImageChange = (event) => {
 }
 
 onSaveButtonClicked = () =>{
-  const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/users/add")
+  const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/users/update")
   console.log(url)
   fetch(url, {
   method: 'POST',
@@ -156,20 +156,27 @@ onSaveButtonClicked = () =>{
     'Accept': 'application/json',
     'Content-Type': 'application/json',
   },
+  credentials: 'include',
+  cors:'no-cors',
   body: JSON.stringify({
     languagesToTeach: this.state.languagesToTeach,
     languagesToLearn: this.state.languagesToLearn,
     firstName : this.state.firstName,
-      lastName : this.state.lastName,
-      email : this.state.email,
-      cities : this.state.cities,
-      descriptionText : this.state.descriptionText,
-      userIsActivie: true
+    lastName : this.state.lastName,
+    email : this.state.email,
+    cities : this.state.cities,
+    descriptionText : this.state.descriptionText,
+    userIsActivie: true
   })
 }).then((response) => response.json())
 .then((responseJson) => {
   console.log(responseJson);
-  this.uploadPhoto(responseJson.userCreated._id)
+  if(responseJson.update){
+    alert("User informations updated succesfully!");
+  }else{
+    alert("Update failed. Please try again later");
+  }
+  //this.uploadPhoto(responseJson.userCreated._id)
 })
 .catch((error) => {
   console.error(error);
@@ -542,7 +549,7 @@ render() {
               {this.state.languagesToTeach.map(item => {
                 return (
                     <ListItem button key={item.language} onClick={() =>this.onShowInputTeachLanguage(true, this.state.languagesToTeach.indexOf(item))}>
-                      <ListItemText primary={item.language + ",level: " + item.level} />
+                      <ListItemText primary={item.language + ", Level: " + item.level  + ", Credits: " + item.credits} />
                       <ListItemIcon>
                         <EditIcon />
                       </ListItemIcon>
@@ -572,7 +579,7 @@ render() {
               {this.state.languagesToLearn.map(item => {
                 return (
                     <ListItem button key={item.language} onClick={() =>this.onShowInputLearnLanguage(true, this.state.languagesToLearn.indexOf(item))}>
-                      <ListItemText primary={item.language + ",level " + item.level + ", credits: " + item.credit } />
+                      <ListItemText primary={item.language + ", Level " + item.level + ", Credits: " + item.credits } />
                       <ListItemIcon>
                         <EditIcon />
                       </ListItemIcon>
@@ -595,15 +602,15 @@ render() {
               </Grid>
 
               <Button
-              //type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-              onClick={this.onSaveButtonClicked}
-              >
-              Save
-            </Button>
+                //type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+                onClick={this.onSaveButtonClicked}
+                >
+                  Save
+              </Button>
             
           </form>
         </div>
