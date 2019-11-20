@@ -246,38 +246,33 @@ handleChangeLastName = event => {
   )
 };
 
-handleChangeEmail = event => {
-  
+handleChangeEmail = event => {  
   var value= (event.target.value);
- 
-this.setState(
- {
-   email: value
-     }
- )
+
+  this.setState({
+    email: value
+  })
 };
 
 handleChangeCities = value => {
  if (value.length > 2) {
-
+  // Nothing to do
  }else{
-this.setState(
- {
-   cities: value
+    this.setState({
+      cities: value
+    })
   }
- )
-}
 };
 
 handleChangeIntroduction = event => {
   
   var value= (event.target.value);
  
-this.setState(
- {
-   descriptionText: value
-  }
- )
+  this.setState(
+  {
+    descriptionText: value
+    }
+  )
 };
 
 checkUserIsRegistered = () =>{
@@ -293,11 +288,7 @@ checkUserIsRegistered = () =>{
   .then((responseJson) => {
     //console.log("log");
     console.log(responseJson.email);
-    this.setState(
-      {
-        email: responseJson.email
-          }
-      )
+
   })
   .catch((error) => {
     console.error(error);
@@ -320,7 +311,6 @@ checkIfUserIsAuthenticaded = () =>{
     console.log(responseData);
     if(responseData === false){
         // User not authenticated
-        console.log("oi");
         // Redirect to inicial page.
         // TODO IMPLEMENT THIS REDIRECT
         //browserHistory.push('/');
@@ -334,12 +324,45 @@ checkIfUserIsAuthenticaded = () =>{
   });
 }
 
+preLoadUserInformations = () =>{
+
+  //http://localhost:3000/api/v1/users/userInfo
+  const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/users/userInfo")
+  console.log('[INFO]Loading user information...');
+  //console.log(url);
+
+  fetch(url, {
+    method: 'GET',
+    credentials: 'include',
+    cors:'no-cors'
+  }).then((response) => response.json())
+  .then((responseData) => {
+    //console.log("USER INFORMATIONS");
+    //console.log(responseData);
+    //console.log(responseData.data.firstName);
+
+    this.setState({
+        firstName: responseData.data.firstName,
+        lastName: responseData.data.lastName,
+        email: responseData.data.email,
+        languagesToLearn: responseData.data.languagesToLearn,
+        languagesToTeach: responseData.data.languagesToTeach,
+        descriptionText: responseData.data.descriptionText,
+        cities: responseData.data.cities
+    })
+
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+}
+
 componentDidMount(){
   this.checkIfUserIsAuthenticaded();
   this.checkUserIsRegistered();
-
-
+  this.preLoadUserInformations();
 }
+
 onShowInputTeachLanguage = (open, index, newValue) =>  {
   if (open === true){
     this.setState(
@@ -452,6 +475,7 @@ render() {
                   fullWidth
                   id="firstName"
                   label="First Name"
+                  value = {this.state.firstName}
                   autoFocus
                   onChange =  {this.handleChangeFirstName}
                 />
@@ -464,6 +488,7 @@ render() {
                   id="lastName"
                   label="Last Name"
                   name="lastName"
+                  value = {this.state.lastName}
                   autoComplete="lname"
                   onChange =  {this.handleChangeLastName}
                 />
@@ -476,6 +501,7 @@ render() {
                   fullWidth
                   id="email"
                   label="Email Address"
+                  value = {this.state.email}
                   name="email"
                   autoComplete="email"
                   onChange =  {this.handleChangeEmail}
@@ -496,6 +522,7 @@ render() {
                         variant="outlined"
                   id="introduction"
                   label="Introduction"
+                  value = {this.state.descriptionText}
                   multiline
                   fullWidth
                   rows="4"
