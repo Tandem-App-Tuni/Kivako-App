@@ -1,6 +1,6 @@
 
 import React, {Component} from 'react';
-import ResponsiveDrawer from '../MenuDrawer';
+//import ResponsiveDrawer from '../MenuDrawer';
 
 import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
@@ -13,6 +13,18 @@ import { withStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
 import IconButton from '@material-ui/core/IconButton';
+
+import EditIcon from '@material-ui/icons/Edit';
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+
+/*
+//Data
+import {municipality} from '../../components/constant/municipality'
 import { browserHistory } from 'react-router';
 import  { Redirect } from 'react-router-dom'
 
@@ -25,24 +37,14 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Chip from '@material-ui/core/Chip';
 import Fab from '@material-ui/core/Fab';
-
-import EditIcon from '@material-ui/icons/Edit';
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
-
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-
-//Data
-import {municipality} from '../../components/constant/municipality'
-
+*/
 //Components
 import {CityPicker} from '../../components/CityPicker';
 import LanguagePicker from '../../components/LanguagePicker'
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
+/*
 const MenuProps = {
   PaperProps: {
     style: {
@@ -50,7 +52,7 @@ const MenuProps = {
       width: 250,
     },
   },
-};
+};*/
 
 const useStyles = theme => ({
   '@global': {

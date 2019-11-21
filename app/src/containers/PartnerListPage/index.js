@@ -80,7 +80,7 @@ class PartnerListPage extends Component {
   }
 
   getInviteDiv(list, classes) {
-    if (list.length == 0){
+    if (list.length === 0){
       return null
     }
     else{
