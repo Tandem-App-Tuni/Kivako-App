@@ -32,6 +32,9 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 
 import Divider from '@material-ui/core/Divider';
 
+import {Redirect} from 'react-router-dom';
+
+
 /*
 //Data
 import {municipality} from '../../components/constant/municipality'
@@ -145,7 +148,8 @@ class SignUpPage extends Component {
     showInputTeachLanguage : false,
     showInputLearnLanguage : false,
     editingTeachLanguageIndex : 0,
-    editingLearnLanguageIndex : 0
+    editingLearnLanguageIndex : 0,
+    isAlreadyregistered : false
   }
 
 onImageChange = (event) => {
@@ -258,12 +262,12 @@ handleChangeLastName = event => {
   const validNameRegex = RegExp(/^.*(?=.{1,})(?=.*[a-zA-Z\\u0080-\\uFFFF])(?=.*\d).*$/);
 
   if(validNameRegex.test(formLastName)===true){
-    this.setState( {lastNameError: true, lastNameErrorMessage: 'Special characters are not accepted'} )
+    this.setState( {lastNameError: true, lastNameErrorMessage: 'Special characters are not accepted'} );
   }else if(formLastName.length <= 2 || formLastName.length >=20){
-    this.setState( {lastNameError: true, lastNameErrorMessage: 'Number of characters not accepted'} )
+    this.setState( {lastNameError: true, lastNameErrorMessage: 'Number of characters not accepted'} );
   }else{
-    this.setState( {lastNameError: false, lastNameErrorMessage: ''} )
-    this.setState( {lastName: formLastName} )
+    this.setState( {lastNameError: false, lastNameErrorMessage: ''} );
+    this.setState( {lastName: formLastName} );
   }
 
 };
@@ -271,36 +275,36 @@ handleChangeLastName = event => {
 handleChangeEmail = event => {
   
   var value= (event.target.value);
- 
-this.setState(
- {
-   email: value
-     }
- )
+  this.setState({email: value});
 };
 
 handleChangeCities = value => {
- if (value.length > 2) {
-
- }else{
-this.setState(
- {
-   cities: value
+  if (value.length > 2) {
+    this.setState( {citiesError: true, citiesErrorMessage: 'Maximum number of cities is 2'} );
+  }else if(value.length < 1){
+    this.setState( {citiesError: true, citiesErrorMessage: 'Minimun number of cities is 1'} );
+  }else{
+    this.setState( {citiesError: false, citiesErrorMessage: ''} );
+    this.setState({cities: value});
   }
- )
-}
 };
 
 handleChangeIntroduction = event => {
   
   var value= (event.target.value);
- 
-this.setState(
- {
-   descriptionText: value
+
+  if (value.length < 5 && value.length > 0) {
+    this.setState( {introError: true, introErrorMessage: 'We recommend to write about you'} );
+  }else if(value.length > 500){
+    this.setState( {introError: true, introErrorMessage: 'Maximum number of characters is 500!'} );
+  }else{
+    this.setState( {introError: false, introErrorMessage: ''} );
+    this.setState({descriptionText: value});
   }
- )
+ 
+
 };
+
 
 checkUserIsRegistered = () =>{
   const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/users/isRegistered")
@@ -313,9 +317,21 @@ checkUserIsRegistered = () =>{
     cors:'no-cors'
   }).then((response) => response.json())
   .then((responseJson) => {
-    //console.log("log");
-    //console.log(responseJson.email);
-    this.setState({email: responseJson.email})
+    console.log("Checking if user is registered")
+    console.log(responseJson.isRegistered);
+
+    this.setState({email: responseJson.email});
+
+    if(responseJson.isRegistered){
+      console.log("User already registered");
+      //User is already registered. Redirect to dashboard
+      this.setState({ isAlreadyregistered: true });
+      
+    }else{
+      console.log("User NOT registered");
+      // Continue render to register user
+      this.setState({ isAlreadyregistered: false });
+    }
   })
   .catch((error) => {
     console.error(error);
@@ -326,7 +342,7 @@ checkIfUserIsAuthenticaded = () =>{
 
   const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/isAuthenticated")
   console.log('Checking if the user is authenticated...');
-  //console.log(url);
+  
 
   fetch(url, {
     method: 'GET',
@@ -336,14 +352,17 @@ checkIfUserIsAuthenticaded = () =>{
   .then((responseData) => {
     //console.log("log");
     console.log(responseData);
-    if(responseData === false){
+    if(responseData.isAuthenticated === false){
         // User not authenticated
-        console.log("oi");
+        //console.log("oi");
         // Redirect to inicial page.
         // TODO IMPLEMENT THIS REDIRECT
         //browserHistory.push('/');
     }else{
-        // Continue page render
+        // User is already authenticated
+        // Set email automaticaly
+        console.log("User autheticated")
+        this.setState({email: responseData.email})
     }
 
   })
@@ -434,12 +453,14 @@ handleTermsAndConditionsCheckboxChange = name => event => {
 };
 
 componentDidMount(){
+  this.state.isAlreadyregistered = false;
   this.checkIfUserIsAuthenticaded();
   this.checkUserIsRegistered();
 
   //Disable button until conditions been accepted
   this.state.termsAndConditionsAccept = false;
-  
+  console.log("Is registered: " + this.state.isAlreadyregistered);
+
 }
 
 
@@ -447,7 +468,11 @@ render() {
   const { classes } = this.props;
   const excludedLanguages = this.toExcludeLanguages();
 
-  
+    // In case user is already registered, just redirect to other pages
+    if(this.state.isAlreadyregistered){  
+      return  <Redirect  to="/edit-profile" />
+    }
+
     return  (
       <div>
         <Container component="main" maxWidth="xs">
@@ -478,7 +503,7 @@ render() {
                   label="First Name"
                   autoFocus
                   error={this.state.firstNameError}
-                  helperText={ this.state.firstNameError === false ? 'Empty field!' : this.state.firstNameErrorMessage}
+                  helperText={ this.state.firstNameError === false ? '' : this.state.firstNameErrorMessage}
                   onChange =  {this.handleChangeFirstName}
                   inputProps={{maxLength: 21}}
                 />
@@ -493,7 +518,7 @@ render() {
                   name="lastName"
                   autoComplete="lname"
                   error={this.state.lastNameError}
-                  helperText={ this.state.lastNameError === false ? 'Empty field!' : this.state.lastNameErrorMessage}
+                  helperText={ this.state.lastNameError === false ? '' : this.state.lastNameErrorMessage}
                   onChange =  {this.handleChangeLastName}
                   inputProps={{maxLength: 21}}
                 />
@@ -541,6 +566,7 @@ render() {
                       margin="normal"
                       onChange =  {this.handleChangeIntroduction}
                       helperText = "The max number of characters is 500."
+                      inputProps={{maxLength: 500}}
                     />
                 </Grid>
              
