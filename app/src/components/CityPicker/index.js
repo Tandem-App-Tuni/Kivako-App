@@ -19,6 +19,7 @@ function renderInput(inputProps) {
 
   return (
     <TextField
+      helperText = "Maximum number of cities is 2."
       InputProps={{
         inputRef: ref,
         classes: {

@@ -22,6 +22,16 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+
+import Divider from '@material-ui/core/Divider';
+
 /*
 //Data
 import {municipality} from '../../components/constant/municipality'
@@ -227,24 +237,35 @@ handleChangeLearn = event => {
 
 handleChangeFirstName = event => {
   
-     var value= (event.target.value);
+  var formFirstName= (event.target.value);
+  const validNameRegex = RegExp(/^.*(?=.{1,})(?=.*[a-zA-Z\\u0080-\\uFFFF])(?=.*\d).*$/);
+
+  if(validNameRegex.test(formFirstName)===true){
+    this.setState( {firstNameError: true, firstNameErrorMessage: 'Special characters are not accepted'} )
+  }else if(formFirstName.length <= 2 || formFirstName.length >=20){
+    this.setState( {firstNameError: true, firstNameErrorMessage: 'Number of characters not accepted'} )
+  }else{
+    this.setState( {firstNameError: false, firstNameErrorMessage: ''} )
+    this.setState( {firstName: formFirstName} )
+  }
     
-  this.setState(
-    {
-      firstName: value
-        }
-    )
+  
 };
 
 handleChangeLastName = event => {
-  
-  var value= (event.target.value);
- 
-  this.setState(
-  {
-    lastName: value
-      }
-  )
+
+  var formLastName= (event.target.value);
+  const validNameRegex = RegExp(/^.*(?=.{1,})(?=.*[a-zA-Z\\u0080-\\uFFFF])(?=.*\d).*$/);
+
+  if(validNameRegex.test(formLastName)===true){
+    this.setState( {lastNameError: true, lastNameErrorMessage: 'Special characters are not accepted'} )
+  }else if(formLastName.length <= 2 || formLastName.length >=20){
+    this.setState( {lastNameError: true, lastNameErrorMessage: 'Number of characters not accepted'} )
+  }else{
+    this.setState( {lastNameError: false, lastNameErrorMessage: ''} )
+    this.setState( {lastName: formLastName} )
+  }
+
 };
 
 handleChangeEmail = event => {
@@ -293,12 +314,8 @@ checkUserIsRegistered = () =>{
   }).then((response) => response.json())
   .then((responseJson) => {
     //console.log("log");
-    console.log(responseJson.email);
-    this.setState(
-      {
-        email: responseJson.email
-          }
-      )
+    //console.log(responseJson.email);
+    this.setState({email: responseJson.email})
   })
   .catch((error) => {
     console.error(error);
@@ -335,12 +352,7 @@ checkIfUserIsAuthenticaded = () =>{
   });
 }
 
-componentDidMount(){
-  this.checkIfUserIsAuthenticaded();
-  this.checkUserIsRegistered();
 
-
-}
 onShowInputTeachLanguage = (open, index, newValue) =>  {
   if (open === true){
     this.setState(
@@ -371,7 +383,6 @@ onShowInputTeachLanguage = (open, index, newValue) =>  {
     }
   )
 };
-
 
 onShowInputLearnLanguage = (open, index, newValue) =>  {
   if (open === true){
@@ -415,30 +426,44 @@ toExcludeLanguages = () =>{
   return langs
 }
 
+handleTermsAndConditionsCheckboxChange = name => event => {
+  this.setState({
+    termsAndConditionsAccept : name,
+  })
+
+};
+
+componentDidMount(){
+  this.checkIfUserIsAuthenticaded();
+  this.checkUserIsRegistered();
+
+  //Disable button until conditions been accepted
+  this.state.termsAndConditionsAccept = false;
+  
+}
+
 
 render() {
   const { classes } = this.props;
-  const excludedLanguages = this.toExcludeLanguages()
+  const excludedLanguages = this.toExcludeLanguages();
+
   
     return  (
       <div>
-          <Container component="main" maxWidth="xs">
+        <Container component="main" maxWidth="xs">
         <CssBaseline />
-        <div className={classes.paper}>
-          <Avatar className={classes.avatar} src={this.state.profileImgURL}>
-          
-          </Avatar>
-          <div className={classes.uploadBtnWrapper}>
-          <IconButton
-          color="primary"
-          className={classes.button}
-          aria-label="upload picture"
-          component="span"
-        >
-          <PhotoCamera />
-        </IconButton>
-        <input type="file" name="myfile" onChange={this.onImageChange} />
+        <div align = "center" className={classes.paper} style={{backgroundColor: '#400075', color: 'white', borderRadius:16}}>
+              <Typography variant="h3" >
+                    Register
+              </Typography>
+              <br></br>
+              <Typography variant="caption" >
+                    Please, fill just some more informations to use Tandem App and confirm your registration!
+              </Typography>
+              <br></br>
         </div>
+
+        <div className={classes.paper} >
 
           <form className={classes.form} noValidate>
             <Grid container spacing={2}>
@@ -447,138 +472,195 @@ render() {
                   autoComplete="fname"
                   name="firstName"
                   variant="outlined"
-                  required
+                  required={true}
                   fullWidth
                   id="firstName"
                   label="First Name"
                   autoFocus
+                  error={this.state.firstNameError}
+                  helperText={ this.state.firstNameError === false ? 'Empty field!' : this.state.firstNameErrorMessage}
                   onChange =  {this.handleChangeFirstName}
+                  inputProps={{maxLength: 21}}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
                   variant="outlined"
-                  required
+                  required={true}
                   fullWidth
                   id="lastName"
                   label="Last Name"
                   name="lastName"
                   autoComplete="lname"
+                  error={this.state.lastNameError}
+                  helperText={ this.state.lastNameError === false ? 'Empty field!' : this.state.lastNameErrorMessage}
                   onChange =  {this.handleChangeLastName}
+                  inputProps={{maxLength: 21}}
                 />
               </Grid>
 
               <Grid item xs={12}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                  onChange =  {this.handleChangeEmail}
-                  // disabled = {true}
-                />
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="email"
+                    label="Email Address"
+                    value = {this.state.email}
+                    name="email"
+                    autoComplete="email"
+                    onChange =  {this.handleChangeEmail}
+                    //disabled = {true}
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                  />
+                </Grid>
+
+              <Grid item xs={12}>
+                  <CityPicker classes = {classes}
+                    selectedItem = {this.state.cities}
+                    onChange = {this.handleChangeCities}
+  
+                  />
               </Grid>
 
               <Grid item xs={12}>
+                  <TextField
+                      variant="outlined"
+                      id="introduction"
+                      label="Short introduction about you"
+                      value = {this.state.descriptionText}
+                      multiline
+                      fullWidth
+                      ={true}
+                      rows="4"
+                      defaultValue=""
+                      className={classes.textField}
+                      maxlength = {500}
+                      margin="normal"
+                      onChange =  {this.handleChangeIntroduction}
+                      helperText = "The max number of characters is 500."
+                    />
+                </Grid>
              
-              <CityPicker classes = {classes}
-                selectedItem = {this.state.cities}
-                onChange = {this.handleChangeCities}
-              />
-              </Grid>
-
               <Grid item xs={12}>
-              <TextField
-                        variant="outlined"
-                  id="introduction"
-                  label="Introduction"
-                  multiline
-                  fullWidth
-                  rows="4"
-                  defaultValue=""
-                  className={classes.textField}
-                  margin="normal"
-                  onChange =  {this.handleChangeIntroduction}
-                />
-              </Grid>
-             
-              <Grid item xs={12}>
-              <Typography variant="subtitle2" gutterBottom>
-                Languages I can teach
-              </Typography>
+                <Typography variant="subtitle1" gutterBottom>
+                  Languages I can teach (maximum of 3)
+                </Typography>
 
-              <List>
-              {this.state.languagesToTeach.map(item => {
-                return (
-                    <ListItem button key={item.language} onClick={() =>this.onShowInputTeachLanguage(true, this.state.languagesToTeach.indexOf(item))}>
-                      <ListItemText primary={item.language + ",level: " + item.level} />
-                      <ListItemIcon>
-                        <EditIcon />
-                      </ListItemIcon>
-                    </ListItem>
-                )
-              })}
-              </List>
-
-              <IconButton className={classes.margin} onClick={() =>this.onShowInputTeachLanguage(true, this.state.languagesToTeach.length)}>
-                 <AddCircleOutlineIcon fontSize="small" />
-              </IconButton>
+                <List>
+                      {this.state.languagesToTeach.map(item => {
+                        return (
+                            <ListItem button key={item.language} onClick={() =>this.onShowInputTeachLanguage(true, this.state.languagesToTeach.indexOf(item))}>
+                              <ListItemText primary={item.language + ", Level: " + item.level  + ", Credits: " + item.credits} />
+                              <ListItemIcon>
+                                <EditIcon />
+                              </ListItemIcon>
+                            </ListItem>
+                        )
+                      })}
+                  </List>
+                  <div align="center">
+                    <IconButton disabled={this.state.languagesToTeach.length>=3} className={classes.margin} onClick={() =>this.onShowInputTeachLanguage(true, this.state.languagesToTeach.length)}>
+                      <AddCircleOutlineIcon fontSize="small" /> <Typography align="center"  variant="button"> Add more languages to teach</Typography>
+                    </IconButton>
+                  </div>
               </Grid>
 
               <LanguagePicker open = {this.state.showInputTeachLanguage} 
-                      type = "teach"
-                      language = {this.state.languagesToTeach[this.state.editingTeachLanguageIndex]}  
-                      onClose={(value) =>this.onShowInputTeachLanguage(false, this.state.editingTeachLanguageIndex, value)}
-                      excludedLanguages = {excludedLanguages}
-                      />
+                    type = "teach"
+                    language = {this.state.languagesToTeach[this.state.editingTeachLanguageIndex]}  
+                    onClose={(value) =>this.onShowInputTeachLanguage(false, this.state.editingTeachLanguageIndex, value)}
+                    excludedLanguages = {excludedLanguages}
+                />
 
               <Grid item xs={12}>
-              <Typography variant="subtitle2" gutterBottom>
-                    Languages I want to learn
+                    <Typography variant="subtitle1" gutterBottom>
+                          Languages I want to learn (maximum of 3)
                     </Typography>
 
                     <List>
-              {this.state.languagesToLearn.map(item => {
-                return (
-                    <ListItem button key={item.language} onClick={() =>this.onShowInputLearnLanguage(true, this.state.languagesToLearn.indexOf(item))}>
-                      <ListItemText primary={item.language + ",level " + item.level + ", credits: " + item.credit } />
-                      <ListItemIcon>
-                        <EditIcon />
-                      </ListItemIcon>
-                    </ListItem>
-                )
-              })}
-              </List>
-                  
-                    <IconButton className={classes.margin} onClick={() =>this.onShowInputLearnLanguage(true, this.state.languagesToLearn.length)}>
-                 <AddCircleOutlineIcon fontSize="small" />
-              </IconButton>
+                      {this.state.languagesToLearn.map(item => {
+                        return (
+                            <ListItem button key={item.language} onClick={() =>this.onShowInputLearnLanguage(true, this.state.languagesToLearn.indexOf(item))}>
+                              <ListItemText primary={item.language + ", Level " + item.level + ", Credits: " + item.credits } />
+                              <ListItemIcon>
+                                <EditIcon />
+                              </ListItemIcon>
+                            </ListItem>
+                        )
+                      })}
+                    </List>
+                    <div align="center">
+                      <IconButton disabled={this.state.languagesToLearn.length>=3} align="center" className={classes.margin} onClick={() =>this.onShowInputLearnLanguage(true, this.state.languagesToLearn.length)}>
+                        <AddCircleOutlineIcon fontSize="small" />  <Typography align="center"  variant="button"> Add more languages to learn</Typography>
+                      </IconButton>
+                    </div>
               </Grid>
 
               <LanguagePicker open = {this.state.showInputLearnLanguage} 
-                      type = "learn"
-                      language = {this.state.languagesToLearn[this.state.editingLearnLanguageIndex]}  
-                      onClose={(value) =>this.onShowInputLearnLanguage(false, this.state.editingLearnLanguageIndex, value)}
-                      excludedLanguages = {excludedLanguages}
-                      />
+                        type = "learn"
+                        language = {this.state.languagesToLearn[this.state.editingLearnLanguageIndex]}  
+                        onClose={(value) =>this.onShowInputLearnLanguage(false, this.state.editingLearnLanguageIndex, value)}
+                        excludedLanguages = {excludedLanguages}
+                  />
               </Grid>
 
-              <Button
-              //type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-              onClick={this.onSaveButtonClicked}
-              >
-              SIGN UP
-            </Button>
+              <br></br>
+
+              <Divider variant="fullWidth" />
+
+              <br></br>
+
             
           </form>
+
+          <div>
+            <div>
+                <ExpansionPanel>
+                  <ExpansionPanelSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-label="Expand"
+                    aria-controls="additional-actions1-content"
+                    id="additional-actions1-header"
+                  >
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          id="teste"
+                          checked = {this.state.termsAndConditionsAccept}
+                          onChange={this.handleTermsAndConditionsCheckboxChange(!this.state.termsAndConditionsAccept)}
+                          color="primary"
+                        />
+                      }
+                      label="I accept the terms and conditions"
+                    />
+                  </ExpansionPanelSummary>
+                  <ExpansionPanelDetails>
+                    <Typography color="textSecondary">
+                      Terms and conditions can be see in <a href="url">link text</a>
+                    </Typography>
+                  </ExpansionPanelDetails>
+                </ExpansionPanel>
+
+            </div>
+
+            <Button
+                //type="submit"
+                disabled={!this.state.termsAndConditionsAccept}
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+                onClick={this.onSaveButtonClicked}
+                >
+                SIGN UP
+            </Button>
+
+          </div>
         </div>
+
         <Box mt={5}>
         </Box>
       </Container>

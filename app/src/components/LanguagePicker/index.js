@@ -95,7 +95,7 @@ class LanguagePicker extends Component {
   handleDone = () => {
     if (this.state.language == "" || this.state.level == ""|| (this.props.type === "learn" && this.state.credit == "")) {
       this.setState(
-        {errorStr: "Please fill in all data"}
+        {errorStr: "Please fill all the fields!"}
       )
       return
     }
@@ -135,6 +135,7 @@ class LanguagePicker extends Component {
                 onChange = {(event, value) => this.handleChangeLanguage(event, value)}
                 onInputChange = {(event, value) => this.handleTypeLanguage(event, value)}
                 renderInput={params => (
+                  
                   <TextField {...params} 
                     placeholder = "Language"  
                     fullWidth 

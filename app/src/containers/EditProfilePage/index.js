@@ -504,7 +504,10 @@ class EditProfilePage extends Component {
                     name="email"
                     autoComplete="email"
                     onChange =  {this.handleChangeEmail}
-                    disabled = {true}
+                    //disabled = {true}
+                    InputProps={{
+                      readOnly: true,
+                    }}
                   />
                 </Grid>
 
@@ -551,7 +554,7 @@ class EditProfilePage extends Component {
                     })}
                   </List>
 
-                  <IconButton label="teste" className={classes.margin} onClick={() =>this.onShowInputTeachLanguage(true, this.state.languagesToTeach.length)}>
+                  <IconButton className={classes.margin} onClick={() =>this.onShowInputTeachLanguage(true, this.state.languagesToTeach.length)}>
                     <AddCircleOutlineIcon fontSize="small" /> <Typography align="center"  variant="button"> Add more languages</Typography>
                   </IconButton>
 
@@ -567,7 +570,7 @@ class EditProfilePage extends Component {
                 <Grid item xs={12}>
                     <Typography variant="subtitle2" gutterBottom>
                           Languages I want to learn
-                      </Typography>
+                    </Typography>
 
                     <List>
                       {this.state.languagesToLearn.map(item => {
