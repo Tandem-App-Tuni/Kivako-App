@@ -149,7 +149,8 @@ class SignUpPage extends Component {
     showInputLearnLanguage : false,
     editingTeachLanguageIndex : 0,
     editingLearnLanguageIndex : 0,
-    isAlreadyregistered : false
+    isAlreadyregistered : false,
+    termsAndConditionsAccept : false
   }
 
 onImageChange = (event) => {
@@ -183,8 +184,14 @@ onSaveButtonClicked = () =>{
   })
 }).then((response) => response.json())
 .then((responseJson) => {
-  console.log(responseJson);
-  this.uploadPhoto(responseJson.userCreated._id)
+  console.log(responseJson.userAdded);
+  if (responseJson.userAdded) {
+    alert("User registered succesfully!");
+    this.setState({ isAlreadyregistered: true });
+  } else {
+    alert("Register failed. Please try again later");
+  }
+  //this.uploadPhoto(responseJson.userCreated._id)
 })
 .catch((error) => {
   console.error(error);
@@ -292,7 +299,10 @@ handleChangeCities = value => {
 handleChangeIntroduction = event => {
   
   var value= (event.target.value);
+  this.setState({descriptionText: value});
+  console.log(value.length)
 
+  
   if (value.length < 5 && value.length > 0) {
     this.setState( {introError: true, introErrorMessage: 'We recommend to write about you'} );
   }else if(value.length > 500){
@@ -326,12 +336,78 @@ checkUserIsRegistered = () =>{
       console.log("User already registered");
       //User is already registered. Redirect to dashboard
       this.setState({ isAlreadyregistered: true });
+    }else{
+      console.log("User NOT registered");
+      // Continue render to register user
+      this.setState({ isAlreadyregistered: false });
+    }
+    
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+}
+
+checkUserIsRegistered2(callback) {
+  const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/users/isRegistered")
+  console.log('Checking is the user is registered...');
+  console.log(url);
+
+  fetch(url, {
+    method: 'GET',
+    credentials: 'include',
+    cors:'no-cors'
+  }).then((response) => response.json())
+  .then((responseJson) => {
+    console.log("Checking if user is registered")
+    console.log(responseJson.isRegistered);
+
+
+    if(responseJson.isRegistered){
+      console.log("User already registered");
+      //User is already registered. Redirect to dashboard
+      this.setState({ isAlreadyregistered: true });
       
     }else{
       console.log("User NOT registered");
       // Continue render to register user
       this.setState({ isAlreadyregistered: false });
     }
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+}
+
+checkIfUserIsAuthenticaded2 (callback){
+
+  const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/isAuthenticated")
+  console.log('Checking if the user is authenticated...');
+  
+
+  fetch(url, {
+    method: 'GET',
+    credentials: 'include',
+    cors:'no-cors'
+  }).then((response) => response.json())
+  .then((responseData) => {
+    //console.log("log");
+    console.log(responseData);
+    if(responseData.isAuthenticated === false){
+        // User not authenticated
+        //console.log("oi");
+        // Redirect to inicial page.
+        // TODO IMPLEMENT THIS REDIRECT
+        //browserHistory.push('/');
+    }else{
+        // User is already authenticated
+        // Set email automaticaly
+        console.log("User autheticated");
+        this.setState({email: responseData.email});
+        
+    }
+    callback();
+
   })
   .catch((error) => {
     console.error(error);
@@ -453,13 +529,21 @@ handleTermsAndConditionsCheckboxChange = name => event => {
 };
 
 componentDidMount(){
-  this.state.isAlreadyregistered = false;
-  this.checkIfUserIsAuthenticaded();
-  this.checkUserIsRegistered();
+  
+  this.checkIfUserIsAuthenticaded2(() => {
+      console.log("Authentication control finished");
+
+      this.checkUserIsRegistered2( () => {
+        console.log("Register control finished");
+      });
+
+    });
+  //this.checkIfUserIsAuthenticaded();
+  //this.checkUserIsRegistered();
 
   //Disable button until conditions been accepted
-  this.state.termsAndConditionsAccept = false;
-  console.log("Is registered: " + this.state.isAlreadyregistered);
+ // this.state.termsAndConditionsAccept = false;
+  //console.log("Is registered: " + this.state.isAlreadyregistered);
 
 }
 
@@ -469,6 +553,7 @@ render() {
   const excludedLanguages = this.toExcludeLanguages();
 
     // In case user is already registered, just redirect to other pages
+    console.log("Inside render " + this.state.isAlreadyregistered);
     if(this.state.isAlreadyregistered){  
       return  <Redirect  to="/edit-profile" />
     }
@@ -557,16 +642,16 @@ render() {
                       label="Short introduction about you"
                       value = {this.state.descriptionText}
                       multiline
-                      fullWidth
-                      ={true}
+                      fullWidth={true}
                       rows="4"
                       defaultValue=""
                       className={classes.textField}
                       maxlength = {500}
                       margin="normal"
                       onChange =  {this.handleChangeIntroduction}
-                      helperText = "The max number of characters is 500."
-                      inputProps={{maxLength: 500}}
+                      //helperText = "The max number of characters is 500."
+                      error={this.state.introError}
+                      helperText={ this.state.introError === false ? 'The max number of characters is 500.' : this.state.introErrorMessage}
                     />
                 </Grid>
              

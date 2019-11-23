@@ -61,7 +61,7 @@ class LanguagePicker extends Component {
   }
 
   handleTypeLanguage = (event, value) => {
-    if (value != ""){
+    if (value !== ""){
       this.setState(
             {language: ""}
           )
@@ -93,7 +93,7 @@ class LanguagePicker extends Component {
 
 
   handleDone = () => {
-    if (this.state.language == "" || this.state.level == ""|| (this.props.type === "learn" && this.state.credit == "")) {
+    if (this.state.language === "" || this.state.level === ""|| (this.props.type === "learn" && this.state.credit === "")) {
       this.setState(
         {errorStr: "Please fill all the fields!"}
       )
@@ -115,7 +115,7 @@ class LanguagePicker extends Component {
   render(){
     const {classes} = this.props;
     var levels = ["C1","C2"];
-    if (this.props.type == "learn"){
+    if (this.props.type === "learn"){
         levels = ["A1","A2","B1","B2","C1","C2"];
     }
 
@@ -178,7 +178,7 @@ class LanguagePicker extends Component {
             </FormControl>          
           }
           {
-            this.state.errorStr != "" && <Typography variant="body2" color = "secondary" gutterBottom>
+            this.state.errorStr !== "" && <Typography variant="body2" color = "secondary" gutterBottom>
                     {this.state.errorStr}
                     </Typography>
 
