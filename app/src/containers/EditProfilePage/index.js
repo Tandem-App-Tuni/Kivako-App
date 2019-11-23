@@ -538,7 +538,6 @@ class EditProfilePage extends Component {
                     name="email"
                     autoComplete="email"
                     onChange =  {this.handleChangeEmail}
-                    //disabled = {true}
                     InputProps={{
                       readOnly: true,
                     }}
@@ -546,7 +545,8 @@ class EditProfilePage extends Component {
                 </Grid>
 
                 <Grid item xs={12}>
-                  <CityPicker classes = {classes}
+                  <CityPicker
+                    classes = {classes}
                     selectedItem = {this.state.cities}
                     onChange = {this.handleChangeCities}
                   />

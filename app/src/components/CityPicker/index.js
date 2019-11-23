@@ -6,9 +6,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import deburr from 'lodash/deburr';
 import Downshift from 'downshift';
-import { makeStyles } from '@material-ui/core/styles';
+//import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import Popper from '@material-ui/core/Popper';
+//import Popper from '@material-ui/core/Popper';
 import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
 import Chip from '@material-ui/core/Chip';
@@ -195,6 +195,7 @@ CityPicker.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
+/*
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
@@ -227,4 +228,4 @@ const useStyles = makeStyles(theme => ({
 }));
 
 let popperNode;
-
+*/
