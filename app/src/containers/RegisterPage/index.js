@@ -31,41 +31,12 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 
 import Divider from '@material-ui/core/Divider';
-
 import {Redirect} from 'react-router-dom';
 
-
-/*
-//Data
-import {municipality} from '../../components/constant/municipality'
-import { browserHistory } from 'react-router';
-import  { Redirect } from 'react-router-dom'
-
-import { withRouter } from 'react-router-dom';
-
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import Chip from '@material-ui/core/Chip';
-import Fab from '@material-ui/core/Fab';
-*/
 //Components
 import {CityPicker} from '../../components/CityPicker';
 import LanguagePicker from '../../components/LanguagePicker'
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-/*
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};*/
 
 const useStyles = theme => ({
   '@global': {
@@ -150,410 +121,317 @@ class SignUpPage extends Component {
     editingTeachLanguageIndex : 0,
     editingLearnLanguageIndex : 0,
     isAlreadyregistered : false,
-    termsAndConditionsAccept : false
+    termsAndConditionsAccept : false,
+    isAlreadyAuthenticated : false
   }
 
-onImageChange = (event) => {
-  if (event.target.files.length > 0){
-    const url = URL.createObjectURL(event.target.files[0]);
-    this.setState({
-      profileImg: event.target.files[0],
-      profileImgURL: url
-    });
-  }
-}
-
-onSaveButtonClicked = () =>{
-  const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/users/add")
-  console.log(url)
-  fetch(url, {
-  method: 'POST',
-  headers: {
-    'Accept': 'application/json',
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify({
-    languagesToTeach: this.state.languagesToTeach,
-    languagesToLearn: this.state.languagesToLearn,
-    firstName : this.state.firstName,
-      lastName : this.state.lastName,
-      email : this.state.email,
-      cities : this.state.cities,
-      descriptionText : this.state.descriptionText,
-      userIsActivie: true
-  })
-}).then((response) => response.json())
-.then((responseJson) => {
-  console.log(responseJson.userAdded);
-  if (responseJson.userAdded) {
-    alert("User registered succesfully!");
-    this.setState({ isAlreadyregistered: true });
-  } else {
-    alert("Register failed. Please try again later");
-  }
-  //this.uploadPhoto(responseJson.userCreated._id)
-})
-.catch((error) => {
-  console.error(error);
-});
-
-
-//this.uploadPhoto("5daf39de47435bd5d59687c6");
-}
-
-uploadPhoto = (userId) =>{
-  const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/users/updatePicture/"+userId)
-  console.log(url)
-  var formData = new FormData()
- formData.append('profileImg', this.state.profileImg);
- console.log(formData)
-  fetch(url, {
-  method: 'POST',
-  // headers: {
-  //       'Content-Type': 'multipart/form-data',
-  //     },
-  body: formData
-}).then((response) => response.json())
-.then((responseJson) => {
-  console.log(responseJson);
-})
-.catch((error) => {
-  console.error(error);
-});
-}
-
-handleChangeTeach = event => {
-  const { options } = event.target;
-
-     var value= (event.target.value);
-    
-  this.setState(
-    {
-      languagesToTeach: value
-        }
-    )
-};
-
-handleChangeLearn = event => {
-  const { options } = event.target;
-
-     var value= (event.target.value);
-    
-  this.setState(
-    {
-      languagesToLearn: value
-        }
-    )
-};
-
-handleChangeFirstName = event => {
-  
-  var formFirstName= (event.target.value);
-  const validNameRegex = RegExp(/^.*(?=.{1,})(?=.*[a-zA-Z\\u0080-\\uFFFF])(?=.*\d).*$/);
-
-  if(validNameRegex.test(formFirstName)===true){
-    this.setState( {firstNameError: true, firstNameErrorMessage: 'Special characters are not accepted'} )
-  }else if(formFirstName.length <= 2 || formFirstName.length >=20){
-    this.setState( {firstNameError: true, firstNameErrorMessage: 'Number of characters not accepted'} )
-  }else{
-    this.setState( {firstNameError: false, firstNameErrorMessage: ''} )
-    this.setState( {firstName: formFirstName} )
-  }
-    
-  
-};
-
-handleChangeLastName = event => {
-
-  var formLastName= (event.target.value);
-  const validNameRegex = RegExp(/^.*(?=.{1,})(?=.*[a-zA-Z\\u0080-\\uFFFF])(?=.*\d).*$/);
-
-  if(validNameRegex.test(formLastName)===true){
-    this.setState( {lastNameError: true, lastNameErrorMessage: 'Special characters are not accepted'} );
-  }else if(formLastName.length <= 2 || formLastName.length >=20){
-    this.setState( {lastNameError: true, lastNameErrorMessage: 'Number of characters not accepted'} );
-  }else{
-    this.setState( {lastNameError: false, lastNameErrorMessage: ''} );
-    this.setState( {lastName: formLastName} );
-  }
-
-};
-
-handleChangeEmail = event => {
-  
-  var value= (event.target.value);
-  this.setState({email: value});
-};
-
-handleChangeCities = value => {
-  if (value.length > 2) {
-    this.setState( {citiesError: true, citiesErrorMessage: 'Maximum number of cities is 2'} );
-  }else if(value.length < 1){
-    this.setState( {citiesError: true, citiesErrorMessage: 'Minimun number of cities is 1'} );
-  }else{
-    this.setState( {citiesError: false, citiesErrorMessage: ''} );
-    this.setState({cities: value});
-  }
-};
-
-handleChangeIntroduction = event => {
-  
-  var value= (event.target.value);
-  this.setState({descriptionText: value});
-  console.log(value.length)
-
-  
-  if (value.length < 5 && value.length > 0) {
-    this.setState( {introError: true, introErrorMessage: 'We recommend to write about you'} );
-  }else if(value.length > 500){
-    this.setState( {introError: true, introErrorMessage: 'Maximum number of characters is 500!'} );
-  }else{
-    this.setState( {introError: false, introErrorMessage: ''} );
-    this.setState({descriptionText: value});
-  }
- 
-
-};
-
-
-checkUserIsRegistered = () =>{
-  const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/users/isRegistered")
-  console.log('Checking is the user is registered...');
-  console.log(url);
-
-  fetch(url, {
-    method: 'GET',
-    credentials: 'include',
-    cors:'no-cors'
-  }).then((response) => response.json())
-  .then((responseJson) => {
-    console.log("Checking if user is registered")
-    console.log(responseJson.isRegistered);
-
-    this.setState({email: responseJson.email});
-
-    if(responseJson.isRegistered){
-      console.log("User already registered");
-      //User is already registered. Redirect to dashboard
-      this.setState({ isAlreadyregistered: true });
-    }else{
-      console.log("User NOT registered");
-      // Continue render to register user
-      this.setState({ isAlreadyregistered: false });
-    }
-    
-  })
-  .catch((error) => {
-    console.error(error);
-  });
-}
-
-checkUserIsRegistered2(callback) {
-  const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/users/isRegistered")
-  console.log('Checking is the user is registered...');
-  console.log(url);
-
-  fetch(url, {
-    method: 'GET',
-    credentials: 'include',
-    cors:'no-cors'
-  }).then((response) => response.json())
-  .then((responseJson) => {
-    console.log("Checking if user is registered")
-    console.log(responseJson.isRegistered);
-
-
-    if(responseJson.isRegistered){
-      console.log("User already registered");
-      //User is already registered. Redirect to dashboard
-      this.setState({ isAlreadyregistered: true });
-      
-    }else{
-      console.log("User NOT registered");
-      // Continue render to register user
-      this.setState({ isAlreadyregistered: false });
-    }
-  })
-  .catch((error) => {
-    console.error(error);
-  });
-}
-
-checkIfUserIsAuthenticaded2 (callback){
-
-  const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/isAuthenticated")
-  console.log('Checking if the user is authenticated...');
-  
-
-  fetch(url, {
-    method: 'GET',
-    credentials: 'include',
-    cors:'no-cors'
-  }).then((response) => response.json())
-  .then((responseData) => {
-    //console.log("log");
-    console.log(responseData);
-    if(responseData.isAuthenticated === false){
-        // User not authenticated
-        //console.log("oi");
-        // Redirect to inicial page.
-        // TODO IMPLEMENT THIS REDIRECT
-        //browserHistory.push('/');
-    }else{
-        // User is already authenticated
-        // Set email automaticaly
-        console.log("User autheticated");
-        this.setState({email: responseData.email});
-        
-    }
-    callback();
-
-  })
-  .catch((error) => {
-    console.error(error);
-  });
-}
-
-checkIfUserIsAuthenticaded = () =>{
-
-  const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/isAuthenticated")
-  console.log('Checking if the user is authenticated...');
-  
-
-  fetch(url, {
-    method: 'GET',
-    credentials: 'include',
-    cors:'no-cors'
-  }).then((response) => response.json())
-  .then((responseData) => {
-    //console.log("log");
-    console.log(responseData);
-    if(responseData.isAuthenticated === false){
-        // User not authenticated
-        //console.log("oi");
-        // Redirect to inicial page.
-        // TODO IMPLEMENT THIS REDIRECT
-        //browserHistory.push('/');
-    }else{
-        // User is already authenticated
-        // Set email automaticaly
-        console.log("User autheticated")
-        this.setState({email: responseData.email})
-    }
-
-  })
-  .catch((error) => {
-    console.error(error);
-  });
-}
-
-
-onShowInputTeachLanguage = (open, index, newValue) =>  {
-  if (open === true){
-    this.setState(
-      {
-        editingTeachLanguageIndex: index
-      }
-    )
-  }
-  else{
-    if (newValue != null){
-      var arr = this.state.languagesToTeach
-      if (index < this.state.languagesToTeach.length){
-        arr[index] = newValue
-      }
-      else{
-        arr.push(newValue)
-      }     
-      this.setState(
-        {
-          languagesToTeach: arr
-        }
-      )
-    }
-  }
-  this.setState(
-    {
-      showInputTeachLanguage: open
-    }
-  )
-};
-
-onShowInputLearnLanguage = (open, index, newValue) =>  {
-  if (open === true){
-    this.setState(
-      {
-        editingLearnLanguageIndex: index
-      }
-    )
-  }
-  else{
-    if (newValue != null){
-      var arr = this.state.languagesToLearn
-      if (index < this.state.languagesToLearn.length){
-        arr[index] = newValue
-      }
-      else{
-        arr.push(newValue)
-      }  
-      this.setState(
-        {
-          languagesToLearn: arr
-        }
-      )
-    }
-  }
-  this.setState(
-    {
-      showInputLearnLanguage: open
-    }
-  )
-};
-
-toExcludeLanguages = () =>{
-  var langs = [];
-  
-  this.state.languagesToTeach.forEach(item => {
-    langs.push(item.language);
-  }
-  )
-  
-  return langs
-}
-
-handleTermsAndConditionsCheckboxChange = name => event => {
-  this.setState({
-    termsAndConditionsAccept : name,
-  })
-
-};
-
-componentDidMount(){
-  
-  this.checkIfUserIsAuthenticaded2(() => {
-      console.log("Authentication control finished");
-
-      this.checkUserIsRegistered2( () => {
-        console.log("Register control finished");
+  onImageChange = (event) => {
+    if (event.target.files.length > 0){
+      const url = URL.createObjectURL(event.target.files[0]);
+      this.setState({
+        profileImg: event.target.files[0],
+        profileImgURL: url
       });
+    }
+  }
+
+  handleChangeTeach = event => {
+    const { options } = event.target;
+
+      var value= (event.target.value);
+      
+    this.setState(
+      {
+        languagesToTeach: value
+          }
+      )
+  };
+
+  handleChangeLearn = event => {
+    const { options } = event.target;
+
+      var value= (event.target.value);
+      
+    this.setState(
+      {
+        languagesToLearn: value
+          }
+      )
+  };
+
+  handleChangeFirstName = event => {
+    
+    var formFirstName= (event.target.value);
+    const validNameRegex = RegExp(/^.*(?=.{1,})(?=.*[a-zA-Z\\u0080-\\uFFFF])(?=.*\d).*$/);
+
+    if(validNameRegex.test(formFirstName)===true){
+      this.setState( {firstNameError: true, firstNameErrorMessage: 'Special characters are not accepted'} )
+    }else if(formFirstName.length <= 2 || formFirstName.length >=20){
+      this.setState( {firstNameError: true, firstNameErrorMessage: 'Number of characters not accepted'} )
+    }else{
+      this.setState( {firstNameError: false, firstNameErrorMessage: ''} )
+      this.setState( {firstName: formFirstName} )
+    }
+      
+    
+  };
+
+  handleChangeLastName = event => {
+
+    var formLastName= (event.target.value);
+    const validNameRegex = RegExp(/^.*(?=.{1,})(?=.*[a-zA-Z\\u0080-\\uFFFF])(?=.*\d).*$/);
+
+    if(validNameRegex.test(formLastName)===true){
+      this.setState( {lastNameError: true, lastNameErrorMessage: 'Special characters are not accepted'} );
+    }else if(formLastName.length <= 2 || formLastName.length >=20){
+      this.setState( {lastNameError: true, lastNameErrorMessage: 'Number of characters not accepted'} );
+    }else{
+      this.setState( {lastNameError: false, lastNameErrorMessage: ''} );
+      this.setState( {lastName: formLastName} );
+    }
+
+  };
+
+  handleChangeEmail = event => {
+    
+    var value= (event.target.value);
+    this.setState({email: value});
+  };
+
+  handleChangeCities = value => {
+    if (value.length > 2) {
+      this.setState( {citiesError: true, citiesErrorMessage: 'Maximum number of cities is 2'} );
+    }else if(value.length < 1){
+      this.setState( {citiesError: true, citiesErrorMessage: 'Minimun number of cities is 1'} );
+    }else{
+      this.setState( {citiesError: false, citiesErrorMessage: ''} );
+      this.setState({cities: value});
+    }
+  };
+
+  handleChangeIntroduction = event => {
+    
+    var value= (event.target.value);
+    this.setState({descriptionText: value});
+
+    
+    if (value.length < 5 && value.length > 0) {
+      this.setState( {introError: true, introErrorMessage: 'We recommend to write about you'} );
+    }else if(value.length > 500){
+      this.setState( {introError: true, introErrorMessage: 'Maximum number of characters is 500!'} );
+    }else{
+      this.setState( {introError: false, introErrorMessage: ''} );
+      this.setState({descriptionText: value});
+    }
+  
+
+  };
+
+  handleTermsAndConditionsCheckboxChange = name => event => {
+    this.setState({
+      termsAndConditionsAccept : name,
+    })
+
+  };
+
+  onShowInputTeachLanguage = (open, index, newValue) =>  {
+    if (open === true){
+      this.setState(
+        {
+          editingTeachLanguageIndex: index
+        }
+      )
+    }
+    else{
+      if (newValue != null){
+        var arr = this.state.languagesToTeach
+        if (index < this.state.languagesToTeach.length){
+          arr[index] = newValue
+        }
+        else{
+          arr.push(newValue)
+        }     
+        this.setState(
+          {
+            languagesToTeach: arr
+          }
+        )
+      }
+    }
+    this.setState(
+      {
+        showInputTeachLanguage: open
+      }
+    )
+  };
+
+  onShowInputLearnLanguage = (open, index, newValue) =>  {
+    if (open === true){
+      this.setState(
+        {
+          editingLearnLanguageIndex: index
+        }
+      )
+    }
+    else{
+      if (newValue != null){
+        var arr = this.state.languagesToLearn
+        if (index < this.state.languagesToLearn.length){
+          arr[index] = newValue
+        }
+        else{
+          arr.push(newValue)
+        }  
+        this.setState(
+          {
+            languagesToLearn: arr
+          }
+        )
+      }
+    }
+    this.setState(
+      {
+        showInputLearnLanguage: open
+      }
+    )
+  };
+
+  toExcludeLanguages = () =>{
+    var langs = [];
+    
+    this.state.languagesToTeach.forEach(item => {
+      langs.push(item.language);
+    }
+    )
+    
+    return langs
+  }
+
+  // API Call to insert user
+  //TODO -> MAKE A CHECK, IF ALL FIELDS ARE NOT VALID. DON'T SEND API CALL
+  onSaveButtonClicked = () =>{
+    const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/users/add")
+    //console.log(url)
+    fetch(url, {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+        languagesToTeach: this.state.languagesToTeach,
+        languagesToLearn: this.state.languagesToLearn,
+        firstName : this.state.firstName,
+        lastName : this.state.lastName,
+        email : this.state.email,
+        cities : this.state.cities,
+        descriptionText : this.state.descriptionText,
+        userIsActivie: true
+    })
+    }).then((response) => response.json())
+    .then((responseJson) => {
+      console.log(responseJson.userAdded);
+      if (responseJson.userAdded) {
+        alert("User registered succesfully!");
+        this.setState({ isAlreadyregistered: true });
+      } else {
+        alert("Register failed. Please try again later");
+      }
+
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+
+  }
+
+  // Load page functions
+  checkIfUserIsRegistered(callback) {
+    const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/users/isRegistered")
+    //console.log('Checking is the user is registered...');
+    //console.log(url);
+
+    fetch(url, {
+      method: 'GET',
+      credentials: 'include',
+      cors:'no-cors'
+    }).then((response) => response.json())
+    .then((responseJson) => {
+      //console.log("Checking if user is registered")
+      //console.log(responseJson.isRegistered);
+
+      if(responseJson.isRegistered){
+        //console.log("User already registered");
+        //User is already registered. Redirect to dashboard
+        this.setState({ isAlreadyregistered: true });
+        
+      }else{
+        console.log("User NOT registered");
+        // Continue render to register user
+        this.setState({ isAlreadyregistered: false });
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  }
+
+  checkIfUserIsAuthenticaded (callback){
+
+    const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/isAuthenticated");
+
+    fetch(url, {
+      method: 'GET',
+      credentials: 'include',
+      cors:'no-cors'
+    }).then((response) => response.json())
+    .then((responseData) => {
+      
+      //console.log(responseData);
+      if(responseData.isAuthenticated === false){
+          // User not authenticated
+          // Redirect to inicial page.
+          this.setState({isAlreadyAuthenticated: true});
+          // Will be redirected in render
+          //browserHistory.push('/');
+      }else{
+          // User is already authenticated
+          // Set email automaticaly
+          console.log("User autheticated");
+          this.setState({email: responseData.email});
+          
+      }
+      callback();
+
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  }
+
+  componentDidMount(){
+    
+    this.checkIfUserIsAuthenticaded(() => {
+        //console.log("Authentication control finished");
+
+        this.checkIfUserIsRegistered( () => {
+          //console.log("Register control finished");
+        });
 
     });
-  //this.checkIfUserIsAuthenticaded();
-  //this.checkUserIsRegistered();
 
-  //Disable button until conditions been accepted
- // this.state.termsAndConditionsAccept = false;
-  //console.log("Is registered: " + this.state.isAlreadyregistered);
+  }
 
-}
+  render() {
+    const { classes } = this.props;
+    const excludedLanguages = this.toExcludeLanguages();
 
-
-render() {
-  const { classes } = this.props;
-  const excludedLanguages = this.toExcludeLanguages();
+    // In case user is not authenticated, redirect to initial page
+    if(this.state.isAlreadyAuthenticated){  
+      return  <Redirect  to="/" />
+    }
 
     // In case user is already registered, just redirect to other pages
-    console.log("Inside render " + this.state.isAlreadyregistered);
     if(this.state.isAlreadyregistered){  
       return  <Redirect  to="/edit-profile" />
     }
@@ -577,6 +455,7 @@ render() {
 
           <form className={classes.form} noValidate>
             <Grid container spacing={2}>
+
               <Grid item xs={12} sm={6}>
                 <TextField
                   autoComplete="fname"
@@ -593,6 +472,7 @@ render() {
                   inputProps={{maxLength: 21}}
                 />
               </Grid>
+
               <Grid item xs={12} sm={6}>
                 <TextField
                   variant="outlined"
@@ -610,50 +490,49 @@ render() {
               </Grid>
 
               <Grid item xs={12}>
-                  <TextField
-                    variant="outlined"
-                    required
-                    fullWidth
-                    id="email"
-                    label="Email Address"
-                    value = {this.state.email}
-                    name="email"
-                    autoComplete="email"
-                    onChange =  {this.handleChangeEmail}
-                    //disabled = {true}
-                    InputProps={{
-                      readOnly: true,
-                    }}
-                  />
-                </Grid>
-
-              <Grid item xs={12}>
-                  <CityPicker classes = {classes}
-                    selectedItem = {this.state.cities}
-                    onChange = {this.handleChangeCities}
-  
-                  />
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  value = {this.state.email}
+                  name="email"
+                  autoComplete="email"
+                  onChange =  {this.handleChangeEmail}
+                  //disabled = {true}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                />
               </Grid>
 
               <Grid item xs={12}>
-                  <TextField
-                      variant="outlined"
-                      id="introduction"
-                      label="Short introduction about you"
-                      value = {this.state.descriptionText}
-                      multiline
-                      fullWidth={true}
-                      rows="4"
-                      defaultValue=""
-                      className={classes.textField}
-                      maxlength = {500}
-                      margin="normal"
-                      onChange =  {this.handleChangeIntroduction}
-                      //helperText = "The max number of characters is 500."
-                      error={this.state.introError}
-                      helperText={ this.state.introError === false ? 'The max number of characters is 500.' : this.state.introErrorMessage}
-                    />
-                </Grid>
+                <CityPicker classes = {classes}
+                  selectedItem = {this.state.cities}
+                  onChange = {this.handleChangeCities}
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <TextField
+                    variant="outlined"
+                    id="introduction"
+                    label="Short introduction about you"
+                    //value = {this.state.descriptionText}
+                    multiline
+                    fullWidth={true}
+                    rows="4"
+                    defaultValue=""
+                    className={classes.textField}
+                    maxLength = {500}
+                    margin="normal"
+                    onChange =  {this.handleChangeIntroduction}
+                    //helperText = "The max number of characters is 500."
+                    error={this.state.introError}
+                    helperText={ this.state.introError === false ? 'The max number of characters is 500.' : this.state.introErrorMessage}
+                  />
+              </Grid>
              
               <Grid item xs={12}>
                 <Typography variant="subtitle1" gutterBottom>
@@ -710,19 +589,21 @@ render() {
                     </div>
               </Grid>
 
-              <LanguagePicker open = {this.state.showInputLearnLanguage} 
-                        type = "learn"
-                        language = {this.state.languagesToLearn[this.state.editingLearnLanguageIndex]}  
-                        onClose={(value) =>this.onShowInputLearnLanguage(false, this.state.editingLearnLanguageIndex, value)}
-                        excludedLanguages = {excludedLanguages}
-                  />
-              </Grid>
+              <LanguagePicker 
+                    open = {this.state.showInputLearnLanguage} 
+                    type = "learn"
+                    language = {this.state.languagesToLearn[this.state.editingLearnLanguageIndex]}  
+                    onClose={(value) =>this.onShowInputLearnLanguage(false, this.state.editingLearnLanguageIndex, value)}
+                    excludedLanguages = {excludedLanguages}
+              />
+            
+            </Grid>
 
-              <br></br>
+            <br></br>
 
-              <Divider variant="fullWidth" />
+            <Divider variant="fullWidth" />
 
-              <br></br>
+            <br></br>
 
             
           </form>
@@ -778,7 +659,8 @@ render() {
           
       </div> 
     );
-}
+  }
+
 }
   
-  export default withStyles(useStyles) (SignUpPage);
+export default withStyles(useStyles) (SignUpPage);
