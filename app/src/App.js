@@ -11,7 +11,7 @@ import {Colors} from './components/constant/index'
 import './App.css';
 import LoginPage from './containers/LoginPage'
 import EditProfilePage from './containers/EditProfilePage'
-import PreferencePage from './containers/PreferencePage'
+//import PreferencePage from './containers/PreferencePage'
 import PartnerListPage from './containers/PartnerListPage'
 import BrowseMatch from './containers/BrowseMatch'
 import RegisterPage from './containers/RegisterPage'

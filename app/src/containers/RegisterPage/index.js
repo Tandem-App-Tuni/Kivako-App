@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 //import ResponsiveDrawer from '../MenuDrawer';
 
 import Typography from '@material-ui/core/Typography';
-import Avatar from '@material-ui/core/Avatar';
+//import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
@@ -11,7 +11,7 @@ import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import { withStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import PhotoCamera from '@material-ui/icons/PhotoCamera';
+//import PhotoCamera from '@material-ui/icons/PhotoCamera';
 import IconButton from '@material-ui/core/IconButton';
 
 import EditIcon from '@material-ui/icons/Edit';
@@ -107,22 +107,28 @@ const useStyles = theme => ({
 });
 
 class SignUpPage extends Component {
-  state = {
-    profileImg: null,
-    languagesToTeach:[],
-    languagesToLearn: [],
-    firstName : '',
-    lastName : '',
-    email : '',
-    cities : [],
-    descriptionText : '',
-    showInputTeachLanguage : false,
-    showInputLearnLanguage : false,
-    editingTeachLanguageIndex : 0,
-    editingLearnLanguageIndex : 0,
-    isAlreadyregistered : false,
-    termsAndConditionsAccept : false,
-    isAlreadyAuthenticated : false
+  _isMounted = false;
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      profileImg: null,
+      languagesToTeach:[],
+      languagesToLearn: [],
+      firstName : '',
+      lastName : '',
+      email : '',
+      cities : [],
+      descriptionText : '',
+      showInputTeachLanguage : false,
+      showInputLearnLanguage : false,
+      editingTeachLanguageIndex : 0,
+      editingLearnLanguageIndex : 0,
+      isAlreadyregistered : false,
+      termsAndConditionsAccept : false,
+      isAlreadyAuthenticated : false,
+      isLoadingPage:true
+    };
   }
 
   onImageChange = (event) => {
@@ -136,27 +142,16 @@ class SignUpPage extends Component {
   }
 
   handleChangeTeach = event => {
-    const { options } = event.target;
-
-      var value= (event.target.value);
-      
-    this.setState(
-      {
-        languagesToTeach: value
-          }
-      )
+    //const { options } = event.target;
+    var value= (event.target.value);
+    this.setState({languagesToTeach: value});
   };
 
   handleChangeLearn = event => {
-    const { options } = event.target;
-
-      var value= (event.target.value);
-      
-    this.setState(
-      {
-        languagesToLearn: value
-          }
-      )
+    //const { options } = event.target;
+    var value= (event.target.value);
+    this.setState({languagesToLearn: value});
+  
   };
 
   handleChangeFirstName = event => {
@@ -308,7 +303,7 @@ class SignUpPage extends Component {
   }
 
   // API Call to insert user
-  //TODO -> MAKE A CHECK, IF ALL FIELDS ARE NOT VALID. DON'T SEND API CALL
+  //TODO -> MAKE A CHECK, IF ALL FIELDS ARE NOT VALID, DON'T SEND API CALL
   onSaveButtonClicked = () =>{
     const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/users/add")
     //console.log(url)
@@ -348,8 +343,6 @@ class SignUpPage extends Component {
   // Load page functions
   checkIfUserIsRegistered(callback) {
     const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/users/isRegistered")
-    //console.log('Checking is the user is registered...');
-    //console.log(url);
 
     fetch(url, {
       method: 'GET',
@@ -357,16 +350,11 @@ class SignUpPage extends Component {
       cors:'no-cors'
     }).then((response) => response.json())
     .then((responseJson) => {
-      //console.log("Checking if user is registered")
-      //console.log(responseJson.isRegistered);
 
       if(responseJson.isRegistered){
-        //console.log("User already registered");
         //User is already registered. Redirect to dashboard
         this.setState({ isAlreadyregistered: true });
-        
       }else{
-        console.log("User NOT registered");
         // Continue render to register user
         this.setState({ isAlreadyregistered: false });
       }
@@ -374,6 +362,9 @@ class SignUpPage extends Component {
     .catch((error) => {
       console.error(error);
     });
+
+    callback();
+
   }
 
   checkIfUserIsAuthenticaded (callback){
@@ -387,20 +378,15 @@ class SignUpPage extends Component {
     }).then((response) => response.json())
     .then((responseData) => {
       
-      //console.log(responseData);
       if(responseData.isAuthenticated === false){
-          // User not authenticated
-          // Redirect to inicial page.
-          this.setState({isAlreadyAuthenticated: true});
-          // Will be redirected in render
-          //browserHistory.push('/');
+        // Nothing to do, user will be redirect in render;
       }else{
-          // User is already authenticated
-          // Set email automaticaly
-          console.log("User autheticated");
-          this.setState({email: responseData.email});
-          
+        // User is already authenticated
+        // Set email automaticaly
+        this.setState({email: responseData.email});
+        this.setState({isAlreadyAuthenticated: true});    
       }
+
       callback();
 
     })
@@ -410,30 +396,44 @@ class SignUpPage extends Component {
   }
 
   componentDidMount(){
-    
-    this.checkIfUserIsAuthenticaded(() => {
+    this._isMounted = true;
+    if(this._isMounted){   
+      this.checkIfUserIsAuthenticaded(() => {
         //console.log("Authentication control finished");
 
         this.checkIfUserIsRegistered( () => {
           //console.log("Register control finished");
+
+          this.setState({isLoadingPage:false});
         });
 
-    });
+      });
 
+    }
+
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   render() {
     const { classes } = this.props;
     const excludedLanguages = this.toExcludeLanguages();
 
-    // In case user is not authenticated, redirect to initial page
-    if(this.state.isAlreadyAuthenticated){  
+    //Wait until all informations be render until continue
+    if(this.state.isLoadingPage) {
+      return null;
+    }
+
+    // In case user is not authenticated, redirect to initial page.
+    if(!this.state.isAlreadyAuthenticated){  
       return  <Redirect  to="/" />
     }
 
-    // In case user is already registered, just redirect to other pages
+    // In case user is ALREADY registered, just redirect to other system page.
     if(this.state.isAlreadyregistered){  
-      return  <Redirect  to="/edit-profile" />
+      return  <Redirect  to="/browse-match" />
     }
 
     return  (

@@ -14,26 +14,7 @@ import {
 import Container from '@material-ui/core/Container';
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
 import IconButton from '@material-ui/core/IconButton';
-/*
-import {
-  browserHistory
-} from 'react-router';
-import {
-  Redirect
-} from 'react-router-dom'
 
-import {
-  withRouter
-} from 'react-router-dom';
-
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import Chip from '@material-ui/core/Chip';
-import Fab from '@material-ui/core/Fab';
-*/
 import EditIcon from '@material-ui/icons/Edit';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 
@@ -51,16 +32,6 @@ import {Redirect} from 'react-router-dom';
 import {CityPicker} from '../../components/CityPicker';
 import LanguagePicker from '../../components/LanguagePicker'
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
 
 const useStyles = theme => ({
   '@global': {
@@ -129,24 +100,28 @@ const useStyles = theme => ({
 
 });
 
-
-
 class EditProfilePage extends Component {
-  state = {
-    profileImg: null,
-    languagesToTeach: [],
-    languagesToLearn: [],
-    firstName: '',
-    lastName: '',
-    email: '',
-    cities: [],
-    descriptionText: '',
-    showInputTeachLanguage: false,
-    showInputLearnLanguage: false,
-    editingTeachLanguageIndex: 0,
-    editingLearnLanguageIndex: 0,
-    isAlreadyregistered : false,
-    isAlreadyAuthenticated : false
+  _isMounted = false;
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      profileImg: null,
+      languagesToTeach: [],
+      languagesToLearn: [],
+      firstName: '',
+      lastName: '',
+      email: '',
+      cities: [],
+      descriptionText: '',
+      showInputTeachLanguage: false,
+      showInputLearnLanguage: false,
+      editingTeachLanguageIndex: 0,
+      editingLearnLanguageIndex: 0,
+      isAlreadyregistered : false,
+      isAlreadyAuthenticated : false,
+      isLoadingPage:true
+    };
   }
 
   onImageChange = (event) => {
@@ -159,6 +134,8 @@ class EditProfilePage extends Component {
     }
   }
 
+  // API Call to insert user
+  //TODO -> MAKE A CHECK, IF ALL FIELDS ARE NOT VALID, DON'T SEND API CALL
   onSaveButtonClicked = () => {
     const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/users/update")
     console.log(url)
@@ -221,27 +198,13 @@ class EditProfilePage extends Component {
   }
 
   handleChangeTeach = event => {
-    const {
-      options
-    } = event.target;
-
     var value = (event.target.value);
-
-    this.setState({
-      languagesToTeach: value
-    })
+    this.setState({languagesToTeach: value})
   };
 
   handleChangeLearn = event => {
-    const {
-      options
-    } = event.target;
-
     var value = (event.target.value);
-
-    this.setState({
-      languagesToLearn: value
-    })
+    this.setState({languagesToLearn: value});
   };
 
   handleChangeFirstName = event => {
@@ -318,8 +281,6 @@ class EditProfilePage extends Component {
   // Load page functions
   checkIfUserIsRegistered(callback) {
     const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/users/isRegistered")
-    //console.log('Checking is the user is registered...');
-    //console.log(url);
 
     fetch(url, {
       method: 'GET',
@@ -327,21 +288,17 @@ class EditProfilePage extends Component {
       cors:'no-cors'
     }).then((response) => response.json())
     .then((responseJson) => {
-      //console.log("Checking if user is registered")
-      //console.log(responseJson.isRegistered);
 
       if(responseJson.isRegistered){
-        //console.log("User already registered");
-        //User is already registered. Redirect to dashboard
+        //User is already registered. Redirect to dashboard in render
         this.setState({ isAlreadyregistered: true });
-        
       }else{
-        console.log("User NOT registered");
-        // Continue render to register user
+        // Continue render normaly to register user
         this.setState({ isAlreadyregistered: false });
       }
 
       callback();
+
     })
     .catch((error) => {
       console.error(error);
@@ -359,20 +316,15 @@ class EditProfilePage extends Component {
     }).then((response) => response.json())
     .then((responseData) => {
       
-      //console.log(responseData);
       if(responseData.isAuthenticated === false){
-          // User not authenticated
-          // Redirect to inicial page.
-          this.setState({isAlreadyAuthenticated: true});
-          // Will be redirected in render
-          //browserHistory.push('/');
+        // Nothing to do, user will be redirect in render;
       }else{
-          // User is already authenticated
-          // Set email automaticaly
-          console.log("User autheticated");
-          this.setState({email: responseData.email});
-          
+        // User is already authenticated
+        // Set email automaticaly
+        this.setState({isAlreadyAuthenticated: true});
+        this.setState({email: responseData.email});
       }
+
       callback();
 
     })
@@ -381,7 +333,7 @@ class EditProfilePage extends Component {
     });
   }
 
-  preLoadUserInformations = () => {
+  preLoadUserInformations = (callback) => {
 
     //http://localhost:3000/api/v1/users/userInfo
     const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/users/userInfo")
@@ -394,9 +346,6 @@ class EditProfilePage extends Component {
         cors: 'no-cors'
       }).then((response) => response.json())
       .then((responseData) => {
-        //console.log("USER INFORMATIONS");
-        //console.log(responseData);
-        //console.log(responseData.data.firstName);
 
         this.setState({
           firstName: responseData.data.firstName,
@@ -412,24 +361,32 @@ class EditProfilePage extends Component {
       .catch((error) => {
         console.error(error);
       });
+
+      callback();
   }
 
   componentDidMount() {
-    
-    this.checkIfUserIsAuthenticaded(() => {
-      console.log("Authentication control finished");
+    this._isMounted = true;
 
-      this.checkIfUserIsRegistered( () => {
-        console.log("Register control finished");
-
-        this.preLoadUserInformations( () => {
-          console.log("Load user informations finished");
+    if(this._isMounted){
           
+      this.checkIfUserIsAuthenticaded(() => {
+
+        this.checkIfUserIsRegistered( () => {
+
+          this.preLoadUserInformations( () => {
+            this.setState({isLoadingPage:false});
+          });
+
         });
 
       });
+    }
 
-    });
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   onShowInputTeachLanguage = (open, index, newValue) => {
@@ -490,135 +447,173 @@ class EditProfilePage extends Component {
 
   render() {
     const { classes } = this.props;
-    const excludedLanguages = this.toExcludeLanguages()
-    /*
-      // In case user is not authenticated, redirect to initial page
-      if(this.state.isAlreadyAuthenticated){  
-        return  <Redirect  to="/" />
-      }
+    const excludedLanguages = this.toExcludeLanguages();
+
+    //Wait until all informations be render until continue
+    if(this.state.isLoadingPage) {
+      return null;
+    }
+
+    // In case user is not authenticated, redirect to initial page
+    if(!this.state.isAlreadyAuthenticated){  
+      return  <Redirect  to="/" />
+    }
+
+    // In case user is NOT registered yet, just redirect to initial system page.
+    if(!this.state.isAlreadyregistered){  
+      return  <Redirect  to="/" />
+    }
+    
+    return  (
+      <div>
+        <ResponsiveDrawer title = 'Profile'>
+        
+        <Container component="main" maxWidth="xs">
+          <CssBaseline />
   
-      // In case user is already registered, just redirect to other pages
-      if(this.state.isAlreadyregistered){  
-        return  <Redirect  to="/edit-profile" />
-      }*/
-    
-      return  (
-        <div>
-          <ResponsiveDrawer title = 'Profile'>
-          
-          <Container component="main" maxWidth="xs">
-            <CssBaseline />
-    
-            <div className={classes.paper}>
-              <Avatar className={classes.avatar} src={this.state.profileImgURL}>
-              
-              </Avatar>
-              <div className={classes.uploadBtnWrapper}>
-              
-                <IconButton
-                  color="primary"
-                  className={classes.button}
-                  aria-label="upload picture"
-                  component="span"
-                >
-                <PhotoCamera />
+          <div className={classes.paper}>
+            <Avatar className={classes.avatar} src={this.state.profileImgURL}>
+            
+            </Avatar>
+            <div className={classes.uploadBtnWrapper}>
+            
+              <IconButton
+                color="primary"
+                className={classes.button}
+                aria-label="upload picture"
+                component="span"
+              >
+              <PhotoCamera />
 
-                </IconButton>
-                <input type="file" name="myfile" onChange={this.onImageChange} />
-              </div>
+              </IconButton>
+              <input type="file" name="myfile" onChange={this.onImageChange} />
+            </div>
 
-              <form className={classes.form} noValidate>
-                <Grid container spacing={2}>
+            <form className={classes.form} noValidate>
+              <Grid container spacing={2}>
 
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      autoComplete="fname"
-                      name="firstName"
-                      variant="outlined"
-                      required={true}
-                      fullWidth
-                      id="firstName"
-                      label="First Name"
-                      autoFocus
-                      error={this.state.firstNameError}
-                      value = {this.state.firstName}
-                      helperText={ this.state.firstNameError === false ? '' : this.state.firstNameErrorMessage}
-                      onChange =  {this.handleChangeFirstName}
-                      inputProps={{maxLength: 21}}
-                    />
-                  </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    autoComplete="fname"
+                    name="firstName"
+                    variant="outlined"
+                    required={true}
+                    fullWidth
+                    id="firstName"
+                    label="First Name"
+                    autoFocus
+                    error={this.state.firstNameError}
+                    value = {this.state.firstName}
+                    helperText={ this.state.firstNameError === false ? '' : this.state.firstNameErrorMessage}
+                    onChange =  {this.handleChangeFirstName}
+                    inputProps={{maxLength: 21}}
+                  />
+                </Grid>
 
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      variant="outlined"
-                      required={true}
-                      fullWidth
-                      id="lastName"
-                      label="Last Name"
-                      name="lastName"
-                      autoComplete="lname"
-                      value = {this.state.lastName}
-                      error={this.state.lastNameError}
-                      helperText={ this.state.lastNameError === false ? '' : this.state.lastNameErrorMessage}
-                      onChange =  {this.handleChangeLastName}
-                      inputProps={{maxLength: 21}}
-                    />
-                  </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    variant="outlined"
+                    required={true}
+                    fullWidth
+                    id="lastName"
+                    label="Last Name"
+                    name="lastName"
+                    autoComplete="lname"
+                    value = {this.state.lastName}
+                    error={this.state.lastNameError}
+                    helperText={ this.state.lastNameError === false ? '' : this.state.lastNameErrorMessage}
+                    onChange =  {this.handleChangeLastName}
+                    inputProps={{maxLength: 21}}
+                  />
+                </Grid>
 
-                  <Grid item xs={12}>
-                    <TextField
-                      variant="outlined"
-                      required
-                      fullWidth
-                      id="email"
-                      label="Email Address"
-                      value = {this.state.email}
-                      name="email"
-                      autoComplete="email"
-                      onChange =  {this.handleChangeEmail}
-                      //disabled = {true}
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                    />
-                  </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="email"
+                    label="Email Address"
+                    value = {this.state.email}
+                    name="email"
+                    autoComplete="email"
+                    onChange =  {this.handleChangeEmail}
+                    //disabled = {true}
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                  />
+                </Grid>
 
-                  <Grid item xs={12}>
-                    <CityPicker classes = {classes}
-                      selectedItem = {this.state.cities}
-                      onChange = {this.handleChangeCities}
-                    />
-                  </Grid>
-                  
-                  <Grid item xs={12}>
-                    <TextField
-                        variant="outlined"
-                        id="introduction"
-                        label="Short introduction about you"
-                        value = {this.state.descriptionText}
-                        multiline
-                        fullWidth={true}
-                        rows="4"
-                        className={classes.textField}
-                        maxLength = {500}
-                        margin="normal"
-                        onChange =  {this.handleChangeIntroduction}
-                        //helperText = "The max number of characters is 500."
-                        error={this.state.introError}
-                        helperText={ this.state.introError === false ? 'The max number of characters is 500.' : this.state.introErrorMessage}
-                      />
-                  </Grid>
+                <Grid item xs={12}>
+                  <CityPicker classes = {classes}
+                    selectedItem = {this.state.cities}
+                    onChange = {this.handleChangeCities}
+                  />
+                </Grid>
                 
-                  <Grid item xs={12}>
+                <Grid item xs={12}>
+                  <TextField
+                      variant="outlined"
+                      id="introduction"
+                      label="Short introduction about you"
+                      value = {this.state.descriptionText}
+                      multiline
+                      fullWidth={true}
+                      rows="4"
+                      className={classes.textField}
+                      maxLength = {500}
+                      margin="normal"
+                      onChange =  {this.handleChangeIntroduction}
+                      //helperText = "The max number of characters is 500."
+                      error={this.state.introError}
+                      helperText={ this.state.introError === false ? 'The max number of characters is 500.' : this.state.introErrorMessage}
+                    />
+                </Grid>
+              
+                <Grid item xs={12}>
+                  <Typography variant="subtitle1" gutterBottom>
+                    Languages I can teach (maximum of 3)
+                  </Typography>
+
+                  <List>
+                    {this.state.languagesToTeach.map(item => {
+                      return (
+                          <ListItem button key={item.language} onClick={() =>this.onShowInputTeachLanguage(true, this.state.languagesToTeach.indexOf(item))}>
+                            <ListItemText primary={item.language + ", Level: " + item.level  + ", Credits: " + item.credits} />
+                            <ListItemIcon>
+                              <EditIcon />
+                            </ListItemIcon>
+                          </ListItem>
+                      )
+                    })}
+                  </List>
+
+                  <div align="center">
+                      <IconButton disabled={this.state.languagesToTeach.length>=3} className={classes.margin} onClick={() =>this.onShowInputTeachLanguage(true, this.state.languagesToTeach.length)}>
+                        <AddCircleOutlineIcon fontSize="small" /> <Typography align="center"  variant="button"> Add more languages to teach</Typography>
+                      </IconButton>
+                  </div>
+
+                </Grid>
+
+                <LanguagePicker open = {this.state.showInputTeachLanguage} 
+                    type = "teach"
+                    language = {this.state.languagesToTeach[this.state.editingTeachLanguageIndex]}  
+                    onClose={(value) =>this.onShowInputTeachLanguage(false, this.state.editingTeachLanguageIndex, value)}
+                    excludedLanguages = {excludedLanguages}
+                />
+
+                <Grid item xs={12}>
                     <Typography variant="subtitle1" gutterBottom>
-                      Languages I can teach (maximum of 3)
+                          Languages I want to learn (maximum of 3)
                     </Typography>
 
                     <List>
-                      {this.state.languagesToTeach.map(item => {
+                      {this.state.languagesToLearn.map(item => {
                         return (
-                            <ListItem button key={item.language} onClick={() =>this.onShowInputTeachLanguage(true, this.state.languagesToTeach.indexOf(item))}>
-                              <ListItemText primary={item.language + ", Level: " + item.level  + ", Credits: " + item.credits} />
+                            <ListItem button key={item.language} onClick={() =>this.onShowInputLearnLanguage(true, this.state.languagesToLearn.indexOf(item))}>
+                              <ListItemText primary={item.language + ", Level " + item.level + ", Credits: " + item.credits } />
                               <ListItemIcon>
                                 <EditIcon />
                               </ListItemIcon>
@@ -628,77 +623,44 @@ class EditProfilePage extends Component {
                     </List>
 
                     <div align="center">
-                        <IconButton disabled={this.state.languagesToTeach.length>=3} className={classes.margin} onClick={() =>this.onShowInputTeachLanguage(true, this.state.languagesToTeach.length)}>
-                          <AddCircleOutlineIcon fontSize="small" /> <Typography align="center"  variant="button"> Add more languages to teach</Typography>
-                        </IconButton>
+                      <IconButton disabled={this.state.languagesToLearn.length>=3} align="center" className={classes.margin} onClick={() =>this.onShowInputLearnLanguage(true, this.state.languagesToLearn.length)}>
+                        <AddCircleOutlineIcon fontSize="small" />  <Typography align="center"  variant="button"> Add more languages to learn</Typography>
+                      </IconButton>
                     </div>
 
-                  </Grid>
-
-                  <LanguagePicker open = {this.state.showInputTeachLanguage} 
-                      type = "teach"
-                      language = {this.state.languagesToTeach[this.state.editingTeachLanguageIndex]}  
-                      onClose={(value) =>this.onShowInputTeachLanguage(false, this.state.editingTeachLanguageIndex, value)}
-                      excludedLanguages = {excludedLanguages}
-                  />
-
-                  <Grid item xs={12}>
-                      <Typography variant="subtitle1" gutterBottom>
-                            Languages I want to learn (maximum of 3)
-                      </Typography>
-
-                      <List>
-                        {this.state.languagesToLearn.map(item => {
-                          return (
-                              <ListItem button key={item.language} onClick={() =>this.onShowInputLearnLanguage(true, this.state.languagesToLearn.indexOf(item))}>
-                                <ListItemText primary={item.language + ", Level " + item.level + ", Credits: " + item.credits } />
-                                <ListItemIcon>
-                                  <EditIcon />
-                                </ListItemIcon>
-                              </ListItem>
-                          )
-                        })}
-                      </List>
-
-                      <div align="center">
-                        <IconButton disabled={this.state.languagesToLearn.length>=3} align="center" className={classes.margin} onClick={() =>this.onShowInputLearnLanguage(true, this.state.languagesToLearn.length)}>
-                          <AddCircleOutlineIcon fontSize="small" />  <Typography align="center"  variant="button"> Add more languages to learn</Typography>
-                        </IconButton>
-                      </div>
-
-                  </Grid>
-
-                  <LanguagePicker 
-                        open = {this.state.showInputLearnLanguage} 
-                        type = "learn"
-                        language = {this.state.languagesToLearn[this.state.editingLearnLanguageIndex]}  
-                        onClose={(value) =>this.onShowInputLearnLanguage(false, this.state.editingLearnLanguageIndex, value)}
-                        excludedLanguages = {excludedLanguages}
-                  />
-              
                 </Grid>
 
-                  <Button
-                    //type="submit"
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    className={classes.submit}
-                    onClick={this.onSaveButtonClicked}
-                    >
-                    Save
-                  </Button>
-                
-              </form>
-
-            </div>
-            <Box mt={5}>
-            </Box>
-          </Container>
+                <LanguagePicker 
+                      open = {this.state.showInputLearnLanguage} 
+                      type = "learn"
+                      language = {this.state.languagesToLearn[this.state.editingLearnLanguageIndex]}  
+                      onClose={(value) =>this.onShowInputLearnLanguage(false, this.state.editingLearnLanguageIndex, value)}
+                      excludedLanguages = {excludedLanguages}
+                />
             
-          </ResponsiveDrawer>
-        </div> 
-      );
+              </Grid>
+
+                <Button
+                  //type="submit"
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  className={classes.submit}
+                  onClick={this.onSaveButtonClicked}
+                  >
+                  Save
+                </Button>
+              
+            </form>
+
+          </div>
+          <Box mt={5}>
+          </Box>
+        </Container>
+          
+        </ResponsiveDrawer>
+      </div> 
+    );
   }
 
 }
