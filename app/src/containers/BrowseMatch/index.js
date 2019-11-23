@@ -16,11 +16,47 @@ import GridListTileBar from '@material-ui/core/GridListTileBar';
 
 import ResponsiveDrawer from '../MenuDrawer';
 
+import Divider from '@material-ui/core/Divider';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import Avatar from '@material-ui/core/Avatar';
+
+import { makeStyles } from '@material-ui/core/styles';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import Card from '@material-ui/core/Card';
+
+import clsx from 'clsx';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardMedia from '@material-ui/core/CardMedia';
+import CardContent from '@material-ui/core/CardContent';
+import CardActions from '@material-ui/core/CardActions';
+import Collapse from '@material-ui/core/Collapse';
+import IconButton from '@material-ui/core/IconButton';
+import { red } from '@material-ui/core/colors';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import ShareIcon from '@material-ui/icons/Share';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import Icon from '@material-ui/core/Icon';
+
+
+import Grid from '@material-ui/core/Grid'
+
+
+const useStyles = makeStyles(theme => ({
+    root: {
+      width: '100%',
+      maxWidth: 360,
+      backgroundColor: theme.palette.background.paper,
+    },
+    inline: {
+      display: 'inline',
+    },
+  }));
 
 
 const styles = ({
     root: {
-        display: 'flex',
+        //display: 'flex',
         flexWrap: 'wrap',
         justifyContent: 'space-around',
         overflow: 'hidden',
@@ -29,12 +65,14 @@ const styles = ({
         flexWrap: 'nowrap',
         // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
         transform: 'translateZ(0)',
+        width: "30%",
+        height: "350"
     },
     fullWidth: {
         width: "100%",
     },
     bottomMargin: {
-        marginBottom: '2.5em',
+        marginBottom: '5em',
     },
     title: {
         color: '#fff',
@@ -50,9 +88,14 @@ const styles = ({
         padding: '0'
     },
     gridListTile: {
-        // height: "100% !important",
-        maxWidth: "300px",
-        minWidth: 60
+        height:"100%",
+        width:"10%",   
+        minHeight: "300px",
+        maxWidth: "150px",
+        minWidth: "400px",
+        space:3,
+        marginBottom: 10,
+        marginLeft: 5
     },
     gridListTileBar: {
         background: "#3f51b5",
@@ -60,8 +103,29 @@ const styles = ({
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	Class
-
+    /*
+    {"cities":["Tammela"],
+    "_id":"5dd874cb523c731b688846cf",
+    "firstName":"User One",
+    "lastName":"Test Case",
+    "email":"user1@example.com",
+    "descriptionText":"Hi, i'm a user test case",
+    "languagesToTeach":[{"language":"Albanian","level":"C1","credits":2}],
+    "languagesToLearn":[{"language":"Arbëresh","level":"A2","credits":1}
+    */
 class BrowseMatch extends React.Component {
+
+    _isMounted = false;
+
+    constructor(props) {
+      super(props);
+      this.state = {
+        userMatches:[],
+        isAlreadyregistered : false,
+        isAlreadyAuthenticated : false,
+        isLoadingPage:true
+      };
+    }
 
 
     state = {
@@ -70,191 +134,34 @@ class BrowseMatch extends React.Component {
             languageName: "English",
             matches:
             [
-                {user:{_id: "1", name:"Nam"}},
-                {user:{name:"Peter"}},
-                {user:{name:"Jp"}},
-                {user:{name:"Nam"}},
-                {user:{name:"Peter"}},
-                {user:{name:"Jp"}},
-                {user:{name:"Nam"}},
-                {user:{name:"Peter"}},
-                {user:{name:"Jp"}},
-                {user:{name:"Nam"}},
-                {user:{name:"Peter"}},
-                {user:{name:"Jp"}}
+                {_id: "1", name:"Nam",firstName:"User Test",lastName:"lastName",cities:["Tammela","Tampere"],languagesToTeach:[{"language":"Albanian","level":"C1","credits":2}],
+                languagesToLearn:[{"language":"Arbëresh","level":"A2","credits":1}],descriptionText:"Hi, i'm a user test case"},
+                {name:"Peter"},
+                {name:"Jp"},
+                {name:"Nam"},
+                {name:"Peter"},
+                {name:"Jp"},
+                {name:"Nam"},
+                {name:"Peter"},
+                {name:"Jp"},
+                {name:"Nam"},
+                {name:"Peter"},
+                {name:"Jp"}
             ]
         },
         {
             languageName: "Finnish",
             matches:
             [
-                {user:{name:"Nam"}},
-                {user:{name:"Peter"}},
-                {user:{name:"Jp"}}
+                {name:"Nam"},
+                {name:"Peter"},
+                {name:"Jp"}
             ]
         }
     ],
         open: false,
     };
-    // =========================================== FUNCTIONS ======================================
-    // Load possible matches list
-    loadDataPossibleUserMatches(){
-        // http://localhost:3000/api/v1/usersMatch/possibleMatchs
-        const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/usersMatch/possibleMatchs")
-        console.log(url)
-        fetch(url, {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        }
-        }).then((response) => response.json())
-        .then((responseJson) => {
-            console.log(responseJson);
-        })
-        .catch((error) => {
-            console.error(error);
-        });
-       
-    }
-
-    // Send a new match invitation
-    requestNewUserMatch(){
-        // http://localhost:3000/api/v1/usersMatch/sendRequest
-        // The requester user ID will be collect automatic by the server
-        const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/usersMatch/sendRequest")
-        console.log(url)
-        fetch(url, {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            recipientUserID: this.state.recipientUserID,//User that will receive the request
-        })
-        }).then((response) => response.json())
-        .then((responseJson) => {
-            console.log(responseJson);
-        })
-        .catch((error) => {
-            console.error(error);
-        });
-    }
-
-    // Get all the match requests made to the user by other users
-    getMatchRequestsReceivedByTheUser(){
-        // http://localhost:3000/api/v1/usersMatch/receiptMatchsRequests
-        const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/usersMatch/receiptMatchsRequests")
-        console.log(url)
-        fetch(url, {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        }
-        }).then((response) => response.json())
-        .then((responseJson) => {
-            console.log(responseJson);
-        })
-        .catch((error) => {
-            console.error(error);
-        });
-       
-    }
-
-    // Get the match requests made by the user to other users
-    getMatchRequestsRequestedByTheUser(){
-        // http://localhost:3000/api/v1/usersMatch/requestedMatchsRequests
-        const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/usersMatch/requestedMatchsRequests")
-        console.log(url)
-        fetch(url, {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        }
-        }).then((response) => response.json())
-        .then((responseJson) => {
-            console.log(responseJson);
-        })
-        .catch((error) => {
-            console.error(error);
-        });
-       
-    }
-
-    // Get the current matches of the user
-    getUserCurrentMatchs(){
-        // http://localhost:3000/api/v1/usersMatch/getUserActiveMatches
-        const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/usersMatch/getUserActiveMatches")
-        console.log(url)
-        fetch(url, {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        }
-        }).then((response) => response.json())
-        .then((responseJson) => {
-            console.log(responseJson);
-        })
-        .catch((error) => {
-            console.error(error);
-        });
-        
-    }
-
-    acceptNewMatchRequest(){
-        // need the match ID
-        const matchID = 123456;
-
-        // http://localhost:3000/api/v1/usersMatch/acceptMatchRequest/:matchid
-        const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/usersMatch/acceptMatchRequest"+matchID);
-        
-        console.log(url)
-        fetch(url, {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        }
-        }).then((response) => response.json())
-        .then((responseJson) => {
-            console.log(responseJson);
-        })
-        .catch((error) => {
-            console.error(error);
-        });
-        
-    }
-
-    denyNewMatchRequest(){
-        // need the match ID
-        const matchID = 123456;
-
-        // http://localhost:3000/api/v1/usersMatch/denyMatchRequest/:matchid
-        const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/usersMatch/denyMatchRequest"+matchID);
-        
-        console.log(url)
-        fetch(url, {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        }
-        }).then((response) => response.json())
-        .then((responseJson) => {
-            console.log(responseJson);
-        })
-        .catch((error) => {
-            console.error(error);
-        });
-        
-    }
-
-// ================================================================================================
-
+    
     getUserPossibleMatchsList = () =>{
         const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/usersMatch/possibleMatchs");
     
@@ -289,6 +196,48 @@ class BrowseMatch extends React.Component {
     };
 
     getMatchesTiles(item, classes) {
+        const cardStyle =makeStyles(theme => ({
+            card: {
+              maxWidth: 345
+            },
+            media: {
+              height: 0,
+              paddingTop: '56.25%', // 16:9
+            },
+            expand: {
+              transform: 'rotate(0deg)',
+              marginLeft: 'auto',
+              transition: theme.transitions.create('transform', {
+                duration: theme.transitions.duration.shortest,
+              }),
+            },
+            expandOpen: {
+              transform: 'rotate(180deg)',
+            },
+          }));
+
+        const gridListStyle = makeStyles(theme => ({
+            root: {
+              display: 'flex',
+              flexWrap: 'wrap',
+              justifyContent: 'space-around',
+              overflow: 'hidden',
+              backgroundColor: theme.palette.background.paper,
+            },
+            gridList: {
+              flexWrap: 'nowrap',
+              // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
+              transform: 'translateZ(0)',
+            },
+            title: {
+              color: theme.palette.primary.light,
+            },
+            titleBar: {
+              background:
+                'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
+            },
+          }));
+
         return (
             item.matches.length === 0 ? (
                 <Typography variant="h5" gutterBottom>
@@ -301,38 +250,65 @@ class BrowseMatch extends React.Component {
                 </Typography>
             ) : (
                 <div className={classes.fullWidth}>
-                    <GridList className={classes.gridList} cols={4}>
-                        {
-                            item.matches.map((match, key) =>
-                                <GridListTile key={key}
-                                              className={classes.gridListTile}>
-                                   <Typography variant="overline" gutterBottom>
-                                   {match.user.name}
-                    </Typography>  
-                    <GridListTileBar
-            //   title={"aaa"}
-              classes={{
-                root: classes.titleBar,
-                title: classes.title,
-              }}
-              actionIcon={
-                <Button variant="contained" color = "primary" onClick = {this.onInviteAction.bind(this, match)}>
-                    Invite 
-                </Button>
-              }
-            />
-            </GridListTile>
-            )
-                        }
-                    </GridList>
-                </div>
+                <GridList className={classes.gridList} >
+                    {
+                        item.matches.map((match, key) =>
+                            
+                            <GridListTile key={key} className={classes.gridListTile}>
+                                <Card className={cardStyle.card}>
+                                        <CardHeader
+                                        avatar={
+                                            <Avatar src={"https://pickaface.net/gallery/avatar/unr_test_161024_0535_9lih90.png"} 
+                                                    aria-label="recipe" 
+                                                    className={classes.bigAvatar}>
+                                            </Avatar>
+                                        }
+                                        action={
+                                            <IconButton aria-label="settings">
+                                            <MoreVertIcon />
+                                            </IconButton>
+                                        }
+                                        title={match.firstName + match.lastName}
+                                        subheader={ match.cities}
+                                        />
+                                        
+                                        <CardContent>
+
+                                        <Typography variant="body1" color="textSecondary" component="p">
+                                             
+                                            {match.descriptionText}
+
+                                        </Typography>
+                                        <br></br>
+                                        <Divider variant="middle" />
+                                        <br></br>
+                                        <Typography variant="body2" color="textSecondary" component="p">
+                                            <Icon fontSize="small">home</Icon>Cities: {match.cities}<br></br>
+                                            <Icon fontSize="small">language</Icon>Languages want to learn:<br></br>
+
+                                         </Typography>
+                                        </CardContent>
+                                        <CardActions disableSpacing >
+       
+                                            <div align="center">
+                                                <Button variant="contained" color="primary">Request Match</Button>
+                                            </div>
+                                           
+                                        </CardActions>
+                                </Card>
+                            </GridListTile>
+                        )
+                    }
+                </GridList>
+            </div>
+                
             )
         )
     }
 
     getAlreadyExistsDiv(item, classes) {
-        return (<ListItem key={item.languageName}
-                          className={classes.fullWidth + ' ' + classes.bottomMargin}>
+        return (
+        <ListItem key={item.languageName} className={classes.fullWidth + ' ' + classes.bottomMargin}>
             <Typography variant="h5" gutterBottom>
                 <Typography variant="overline" gutterBottom>
                     {"Existing_match_found_for"} {item.languageName}
@@ -344,22 +320,25 @@ class BrowseMatch extends React.Component {
         </ListItem>)
     }
 
-    getMatchesList(item, classes) {
+    getMatchesList(item, classes){
         return (<ListItem
             key={item.languageName}
-            className={classes.fullWidth + ' ' + classes.bottomMargin}>
-            <div className={classes.fullWidth} key={item.languageName}>
-                <div className={classes.fullWidth}>
+            >
+            <div key={item.languageName}>
+                <div >
                     <ListItemText className={classes.bottomMargin}>
-                        <Typography variant="overline" gutterBottom>
-                            {"Can_teach" + ' ' + item.languageName + ":"}
+                        <Typography variant="h3" gutterBottom>
+                            {"Possible matches to learn " + ' ' + item.languageName + ":"}
                         </Typography>
                         
                     </ListItemText>
+
                 </div>
                 {
                     this.getMatchesTiles(item, classes)
                 }
+                <br></br>
+                <Divider variant="middle" />
             </div>
         </ListItem>);
     }
@@ -376,24 +355,38 @@ class BrowseMatch extends React.Component {
 
     render() {
         const {classes} = this.props;
+        const classesTest =makeStyles(theme => ({
+            root: {
+              width: '100%',
+              maxWidth: 360,
+              backgroundColor: theme.palette.background.paper,
+            },
+            inline: {
+              display: 'inline',
+            },
+          }));
 
         return (
-            
-            <div className={classes.root}>
-                <ResponsiveDrawer title = "Find a new language partner">
-                <List component="nav" className={classes.fullWidth}>
-                    {
-                        this.state.userMatches.map(item => {
-                            return item.alreadyExists ? (
-                                this.getAlreadyExistsDiv(item, classes)
-                            ) : (
-                                this.getMatchesList(item, classes)
-                            )
-                        })
-                    }
-                </List>
-                </ResponsiveDrawer>
+            <div>
+                <div className={classes.root}>
+                    <ResponsiveDrawer title = "Find a new language partner">
+                        <List component="nav" className={classes.fullWidth}>
+                            {
+                                this.state.userMatches.map(item => {
+                                    return item.alreadyExists ? (
+                                        this.getAlreadyExistsDiv(item, classes)
+                                    ) : (
+                                        this.getMatchesList(item, classes)
+                                    )
+                                })
+                            }
+                        </List>
+                    </ResponsiveDrawer>
+
+                </div>
+
             </div>
+
         );
     }
 }
