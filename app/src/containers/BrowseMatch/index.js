@@ -38,6 +38,8 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Icon from '@material-ui/core/Icon';
 
+import {Redirect} from 'react-router-dom';
+
 
 import Grid from '@material-ui/core/Grid'
 
@@ -45,7 +47,7 @@ import Grid from '@material-ui/core/Grid'
 const useStyles = makeStyles(theme => ({
     root: {
       width: '100%',
-      maxWidth: 360,
+      maxWidth: 1000,
       backgroundColor: theme.palette.background.paper,
     },
     inline: {
@@ -65,8 +67,8 @@ const styles = ({
         flexWrap: 'nowrap',
         // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
         transform: 'translateZ(0)',
-        width: "30%",
-        height: "350"
+        width: "70%",
+        //height: "350"
     },
     fullWidth: {
         width: "100%",
@@ -116,76 +118,52 @@ const styles = ({
 class BrowseMatch extends React.Component {
 
     _isMounted = false;
+    
 
     constructor(props) {
+        //Test purposes
+        const userMatchesTest = [
+            {
+                languageName: "English",
+                matches:
+                [
+                    {_id: "1", name:"Nam",firstName:"User Test",lastName:"lastName",cities:["Tammela","Tampere"],languagesToTeach:[{"language":"Albanian","level":"C1","credits":2}],
+                    languagesToLearn:[{"language":"Arbëresh","level":"A2","credits":1}],descriptionText:"Hi, i'm a user test case"},
+                    {name:"Peter"},
+                    {name:"Jp"},
+                    {name:"Nam"},
+                    {name:"Peter"},
+                    {name:"Jp"},
+                    {name:"Nam"},
+                    {name:"Peter"},
+                    {name:"Jp"},
+                    {name:"Nam"},
+                    {name:"Peter"},
+                    {name:"Jp"}
+                ]
+            },
+            {
+                languageName: "Finnish",
+                matches:
+                [
+                    {name:"Nam"},
+                    {name:"Peter"},
+                    {name:"Jp"}
+                ]
+            }
+        ]
+
+
       super(props);
       this.state = {
         userMatches:[],
         isAlreadyregistered : false,
         isAlreadyAuthenticated : false,
-        isLoadingPage:true
+        isLoadingPage:true,
+        open:false
       };
     }
 
-
-    state = {
-        userMatches: [
-        {
-            languageName: "English",
-            matches:
-            [
-                {_id: "1", name:"Nam",firstName:"User Test",lastName:"lastName",cities:["Tammela","Tampere"],languagesToTeach:[{"language":"Albanian","level":"C1","credits":2}],
-                languagesToLearn:[{"language":"Arbëresh","level":"A2","credits":1}],descriptionText:"Hi, i'm a user test case"},
-                {name:"Peter"},
-                {name:"Jp"},
-                {name:"Nam"},
-                {name:"Peter"},
-                {name:"Jp"},
-                {name:"Nam"},
-                {name:"Peter"},
-                {name:"Jp"},
-                {name:"Nam"},
-                {name:"Peter"},
-                {name:"Jp"}
-            ]
-        },
-        {
-            languageName: "Finnish",
-            matches:
-            [
-                {name:"Nam"},
-                {name:"Peter"},
-                {name:"Jp"}
-            ]
-        }
-    ],
-        open: false,
-    };
-    
-    getUserPossibleMatchsList = () =>{
-        const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/usersMatch/possibleMatchs");
-    
-        fetch(url, {
-            method: 'GET',
-            credentials: 'include',
-            cors:'no-cors'
-        }).then((response) => response.json())
-        .then((responseJson) => {
-            // Resposta
-            console.log(responseJson);
-        }).catch((error) => {
-            console.error(error);
-        });
-    };
-
-    componentWillReceiveProps(nextProps) {
-        const matches = nextProps.languageMatches;
-        this.setState(
-            {
-                userMatches: matches
-            }
-        );
-    }
 
     openModal = () => {
         this.setState({open: true})
@@ -216,35 +194,13 @@ class BrowseMatch extends React.Component {
             },
           }));
 
-        const gridListStyle = makeStyles(theme => ({
-            root: {
-              display: 'flex',
-              flexWrap: 'wrap',
-              justifyContent: 'space-around',
-              overflow: 'hidden',
-              backgroundColor: theme.palette.background.paper,
-            },
-            gridList: {
-              flexWrap: 'nowrap',
-              // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
-              transform: 'translateZ(0)',
-            },
-            title: {
-              color: theme.palette.primary.light,
-            },
-            titleBar: {
-              background:
-                'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
-            },
-          }));
-
         return (
             item.matches.length === 0 ? (
                 <Typography variant="h5" gutterBottom>
                     <Typography variant="overline" gutterBottom>
-                        {"No_matches_found_for"} {item.languageName}
+                        {"No matches found for "} {item.languageName}
                     </Typography>
-                    <Link href="/languagePreferences" className={classes.preferencesLink}>
+                    <Link href="/edit-profile" className={classes.preferencesLink}>
                         {"Edit_your_preferences"}
                     </Link>
                 </Typography>
@@ -291,7 +247,12 @@ class BrowseMatch extends React.Component {
                                         <CardActions disableSpacing >
        
                                             <div align="center">
-                                                <Button variant="contained" color="primary">Request Match</Button>
+                                                <Button variant="contained" 
+                                                        color="primary"
+                                                        onClick = {this.onInviteAction.bind(this, match,item.languageName)}
+                                                >
+                                                    Request Match
+                                                </Button>
                                             </div>
                                            
                                         </CardActions>
@@ -343,28 +304,158 @@ class BrowseMatch extends React.Component {
         </ListItem>);
     }
 
+    onInviteAction(user,language) {
+        //console.log(user)
+        //console.log(language)
+        alert("convite para: " + user.firstName + " no idioma " + language);
 
-    onInviteAction (user) {
-        console.log(user)
+        const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/usersMatch/sendRequest")
+        //console.log(url)
+        
+        fetch(url, {
+            method: 'POST',
+            headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            cors: 'no-cors',
+            body: JSON.stringify({
+                recipientID: user._id,
+                matchLanguage: language
+            })
+        }).then((response) => response.json())
+        .then((responseJson) => {
+            console.log(responseJson);
+            if (responseJson.requested) {
+                alert("Match request sended to the user!");
+                //window.location.reload();
+            } else {
+                alert("Match request failed! Please, try again later")
+            }
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+
+    }
+
+    getUserPossibleMatchsListAPI = (callback) =>{
+        const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/usersMatch/possibleMatchs");
+    
+        fetch(url, {
+            method: 'GET',
+            credentials: 'include',
+            cors:'no-cors'
+        }).then((response) => response.json())
+        .then((responseJson) => {
+            // Resposta
+            console.log(this.state.userMatches);
+            console.log(responseJson.userPossibleMatches)
+            this.setState({userMatches: responseJson.userPossibleMatches})
+           
+        }).catch((error) => {
+            console.error(error);
+        });
+
+        callback();
+    };
+
+    checkIfUserIsRegistered(callback) {
+        const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/users/isRegistered")
+    
+        fetch(url, {
+          method: 'GET',
+          credentials: 'include',
+          cors:'no-cors'
+        }).then((response) => response.json())
+        .then((responseJson) => {
+    
+          if(responseJson.isRegistered){
+            //User is already registered. Redirect to dashboard in render
+            this.setState({ isAlreadyregistered: true });
+          }else{
+            // Continue render normaly to register user
+            this.setState({ isAlreadyregistered: false });
+          }
+    
+          callback();
+    
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+      }
+    
+    checkIfUserIsAuthenticaded (callback){
+
+    const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/isAuthenticated");
+
+    fetch(url, {
+        method: 'GET',
+        credentials: 'include',
+        cors:'no-cors'
+    }).then((response) => response.json())
+    .then((responseData) => {
+        
+        if(responseData.isAuthenticated === false){
+        // Nothing to do, user will be redirect in render;
+        }else{
+        // User is already authenticated
+        // Set email automaticaly
+        this.setState({isAlreadyAuthenticated: true});
+        this.setState({email: responseData.email});
+        }
+
+        callback();
+
+    })
+    .catch((error) => {
+        console.error(error);
+    });
     }
 
     componentDidMount(){
-        this.getUserPossibleMatchsList();
+        this._isMounted = true;
+
+        if(this._isMounted){
+          
+            this.checkIfUserIsAuthenticaded(() => {
+      
+              this.checkIfUserIsRegistered( () => {
+      
+                this.getUserPossibleMatchsListAPI( () => {
+                  this.setState({isLoadingPage:false});
+                });
+      
+              });
+      
+            });
+        }
     }
+
+    componentWillUnmount() {
+        this._isMounted = false;
+      }
 
 
     render() {
         const {classes} = this.props;
-        const classesTest =makeStyles(theme => ({
-            root: {
-              width: '100%',
-              maxWidth: 360,
-              backgroundColor: theme.palette.background.paper,
-            },
-            inline: {
-              display: 'inline',
-            },
-          }));
+        
+        //Wait until all informations be render until continue
+        if(this.state.isLoadingPage) {
+            return null;
+        }
+    
+        // In case user is not authenticated, redirect to initial page
+        if(!this.state.isAlreadyAuthenticated){  
+            return  <Redirect  to="/" />
+        }
+    
+        // In case user is NOT registered yet, just redirect to initial system page.
+        if(!this.state.isAlreadyregistered){  
+            return  <Redirect  to="/" />
+        }
 
         return (
             <div>

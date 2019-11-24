@@ -350,20 +350,25 @@ class SignUpPage extends Component {
       cors:'no-cors'
     }).then((response) => response.json())
     .then((responseJson) => {
+      console.log("aqui")
+      console.log(responseJson.isRegistered);
 
       if(responseJson.isRegistered){
+        console.log("entrou")
         //User is already registered. Redirect to dashboard
         this.setState({ isAlreadyregistered: true });
       }else{
         // Continue render to register user
         this.setState({ isAlreadyregistered: false });
       }
+
+      callback();
     })
     .catch((error) => {
       console.error(error);
     });
 
-    callback();
+   
 
   }
 
@@ -403,6 +408,8 @@ class SignUpPage extends Component {
 
         this.checkIfUserIsRegistered( () => {
           //console.log("Register control finished");
+          console.log("aqui2")
+          console.log(this.state.isAlreadyregistered)
 
           this.setState({isLoadingPage:false});
         });

@@ -138,7 +138,7 @@ class EditProfilePage extends Component {
   //TODO -> MAKE A CHECK, IF ALL FIELDS ARE NOT VALID, DON'T SEND API CALL
   onSaveButtonClicked = () => {
     const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/users/update")
-    console.log(url)
+    //console.log(url)
     fetch(url, {
         method: 'POST',
         headers: {
