@@ -63,6 +63,11 @@ class PartnerListPage extends React.Component
       loadedServerInformation: false
     };
 
+    this.state.socket.on('message', (data) => 
+    {
+      console.log(data);
+    });
+
     this.partners = [];
     this.requests = [];
 
@@ -86,9 +91,10 @@ class PartnerListPage extends React.Component
    */
   fetchServerData()
   {
-    fetch('http://localhost:3002/user/request&partner', 
+    fetch('http://localhost:3000/api/v1/chat/partners&requests', 
     {
-      method: 'get',
+      method: 'GET',
+      credentials: 'include',
       dataType: 'json'
     })
     .then((response) => response.json())
@@ -112,10 +118,17 @@ class PartnerListPage extends React.Component
 
     this.requests.forEach((element, index) => {
       requestArray.push(
-        <Zoom in={true}>
-          <ListItem alignItems="flex-start" key={index}>
+        <Zoom 
+          in={true}
+          key={index}>
+          <ListItem 
+            alignItems="flex-start" 
+            key={index}>
             <ListItemAvatar>
-              <Avatar alt={element.name} src='https://oldschool.runescape.wiki/images/thumb/1/1e/Cowboy_chathead.png/30px-Cowboy_chathead.png?5f19e'/>
+              <Avatar 
+                alt={element.name} 
+                key={index}
+                src='https://www.stickees.com/files/avatars/male-avatars/1697-andrew-sticker.png'/>
             </ListItemAvatar>
             <ListItemText
               primary={element.name}
@@ -152,19 +165,21 @@ class PartnerListPage extends React.Component
 
     this.partners.forEach((element, index) => {
       parnerArray.push(
-        <Zoom in={true}>
+        <Zoom 
+          in={true}
+          key={index}>
           <Box 
-            onClick={() => this.handleClick(element.conversationId)}
-            key={index}>
+            onClick={() => this.handleClick(element.conversationId)}>
             <Tooltip 
               title='Click to open conversation...'
               placement='left'>
               <ListItem 
-                alignItems="flex-start">
+                alignItems="flex-start"
+                key={index}>
                 <ListItemAvatar>
                   <Avatar 
                     alt={element.name} 
-                    src='https://oldschool.runescape.wiki/images/thumb/1/1e/Cowboy_chathead.png/30px-Cowboy_chathead.png?5f19e'/>
+                    src='https://www.stickees.com/files/avatars/male-avatars/1697-andrew-sticker.png'/>
                 </ListItemAvatar>
                 <ListItemText
                   primary={element.conversationName}
