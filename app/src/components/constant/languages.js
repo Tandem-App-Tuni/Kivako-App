@@ -64,7 +64,7 @@ export let languages = [
    "Haryanvi",
    "Hausa",
    "Hebrew",
-   "Hiligaynon\/Ilonggo (Visayan)",
+   "Hiligaynon Ilonggo (Visayan)",
    "Hungarian",
    "Hindi[a]",
    "Hmong",

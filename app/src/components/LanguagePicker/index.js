@@ -32,7 +32,7 @@ class LanguagePicker extends Component {
   state = {
     language : "",
     level : "",
-    credit : "",
+    credits : "",
     errorStr : "",
     excludedLanguages: []
   }
@@ -40,12 +40,12 @@ class LanguagePicker extends Component {
   componentWillReceiveProps(nextProps) {
     var language = "";
     var level = "";
-    var credit = "";
+    var credits = "";
     var excludedLanguages = [];
     if  (nextProps.language != null){
      language = nextProps.language.language;
      level = nextProps.language.level;
-     credit = nextProps.language.credit;
+     credits = nextProps.language.credits;
      excludedLanguages = nextProps.language.excludedLanguages;
     }
 
@@ -53,7 +53,7 @@ class LanguagePicker extends Component {
         {
           language: language,
           level: level,
-          credit: credit,
+          credits: credits,
           errorStr: ""
         }
     );  
@@ -61,7 +61,7 @@ class LanguagePicker extends Component {
   }
 
   handleTypeLanguage = (event, value) => {
-    if (value != ""){
+    if (value !== ""){
       this.setState(
             {language: ""}
           )
@@ -86,16 +86,16 @@ class LanguagePicker extends Component {
 
   handleChangeCredit = (event) => {
     this.setState(
-      {credit: event.target.value}
+      {credits: event.target.value}
     )
   }
 
 
 
   handleDone = () => {
-    if (this.state.language == "" || this.state.level == ""|| (this.props.type === "learn" && this.state.credit == "")) {
+    if (this.state.language === "" || this.state.level === ""|| (this.props.type === "learn" && this.state.credit === "")) {
       this.setState(
-        {errorStr: "Please fill in all data"}
+        {errorStr: "Please fill all the fields!"}
       )
       return
     }
@@ -103,7 +103,7 @@ class LanguagePicker extends Component {
       {
         language: this.state.language, 
         level: this.state.level,
-        credit: this.state.credit
+        credits: this.state.credits
      }
     )
   }
@@ -115,7 +115,7 @@ class LanguagePicker extends Component {
   render(){
     const {classes} = this.props;
     var levels = ["C1","C2"];
-    if (this.props.type == "learn"){
+    if (this.props.type === "learn"){
         levels = ["A1","A2","B1","B2","C1","C2"];
     }
 
@@ -135,6 +135,7 @@ class LanguagePicker extends Component {
                 onChange = {(event, value) => this.handleChangeLanguage(event, value)}
                 onInputChange = {(event, value) => this.handleTypeLanguage(event, value)}
                 renderInput={params => (
+                  
                   <TextField {...params} 
                     placeholder = "Language"  
                     fullWidth 
@@ -159,10 +160,10 @@ class LanguagePicker extends Component {
               </Select>
             </FormControl>
 
-           { this.props.type === "learn" && <FormControl className={classes.formControl}>
-              <InputLabel >Credit</InputLabel>
+           {  <FormControl className={classes.formControl}>
+              <InputLabel >Credits</InputLabel>
               <Select
-                value={this.state.credit}
+                value={this.state.credits}
                 onChange={this.handleChangeCredit}
                 input={<Input />}
               >
@@ -177,7 +178,7 @@ class LanguagePicker extends Component {
             </FormControl>          
           }
           {
-            this.state.errorStr != "" && <Typography variant="body2" color = "secondary" gutterBottom>
+            this.state.errorStr !== "" && <Typography variant="body2" color = "secondary" gutterBottom>
                     {this.state.errorStr}
                     </Typography>
 
