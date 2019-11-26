@@ -56,10 +56,10 @@ const useStyles = theme => ({
           </CardContent>
         </CardActionArea>
         <CardActions>
-          <Button size="small" color="primary">
+          <Button size="small" color="primary" onClick = {() => this.props.onClose(true)}>
             Connect
           </Button>
-          <Button size="small" color="secondary">
+          <Button size="small" color="secondary" onClick = {() => this.props.onClose(false)}>
             Decline
           </Button>
         </CardActions>
