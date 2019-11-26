@@ -15,6 +15,7 @@ import EditProfilePage from './containers/EditProfilePage'
 import PartnerListPage from './containers/PartnerListPage'
 import BrowseMatch from './containers/BrowseMatch'
 import RegisterPage from './containers/RegisterPage'
+import MatchRequests from './containers/MatchRequests'
 
 const theme = createMuiTheme({
   palette: {
@@ -44,6 +45,9 @@ function App() {
         </Route>
         <Route exact path="/register">
             <RegisterPage />
+        </Route>
+        <Route exact path="/match-requests">
+            <MatchRequests />
         </Route>
       </Switch>
     </Router>

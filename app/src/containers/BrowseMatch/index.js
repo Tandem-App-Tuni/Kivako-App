@@ -44,37 +44,27 @@ import {Redirect} from 'react-router-dom';
 import Grid from '@material-ui/core/Grid'
 
 
-const useStyles = makeStyles(theme => ({
-    root: {
-      width: '100%',
-      maxWidth: 1000,
-      backgroundColor: theme.palette.background.paper,
-    },
-    inline: {
-      display: 'inline',
-    },
-  }));
 
 
 const styles = ({
     root: {
-        //display: 'flex',
-        flexWrap: 'wrap',
-        justifyContent: 'space-around',
-        overflow: 'hidden',
+        display: 'inline',
+        //flexWrap: 'wrap',
+        // justifyContent: 'space-around',
+        //overflow: 'hidden',
     },
     gridList: {
-        flexWrap: 'nowrap',
+        //flexWrap: 'nowrap',
         // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
         transform: 'translateZ(0)',
-        width: "70%",
-        //height: "350"
+        width: "auto",
+        height: "auto"
     },
     fullWidth: {
         width: "100%",
     },
     bottomMargin: {
-        marginBottom: '5em',
+        marginBottom: '2em',
     },
     title: {
         color: '#fff',
@@ -91,13 +81,13 @@ const styles = ({
     },
     gridListTile: {
         height:"100%",
-        width:"10%",   
+        width:"100%",   
         minHeight: "300px",
         maxWidth: "150px",
         minWidth: "400px",
-        space:3,
-        marginBottom: 10,
-        marginLeft: 5
+        space:2,
+        marginBottom: 5,
+        marginLeft: 1
     },
     gridListTileBar: {
         background: "#3f51b5",
@@ -182,16 +172,6 @@ class BrowseMatch extends React.Component {
               height: 0,
               paddingTop: '56.25%', // 16:9
             },
-            expand: {
-              transform: 'rotate(0deg)',
-              marginLeft: 'auto',
-              transition: theme.transitions.create('transform', {
-                duration: theme.transitions.duration.shortest,
-              }),
-            },
-            expandOpen: {
-              transform: 'rotate(180deg)',
-            },
           }));
 
         return (
@@ -205,7 +185,7 @@ class BrowseMatch extends React.Component {
                     </Link>
                 </Typography>
             ) : (
-                <div className={classes.fullWidth}>
+                <div >
                 <GridList className={classes.gridList} >
                     {
                         item.matches.map((match, key) =>
@@ -288,7 +268,7 @@ class BrowseMatch extends React.Component {
             <div key={item.languageName}>
                 <div >
                     <ListItemText className={classes.bottomMargin}>
-                        <Typography variant="h3" gutterBottom>
+                        <Typography variant="h6" gutterBottom>
                             {"Possible matches to learn " + ' ' + item.languageName + ":"}
                         </Typography>
                         

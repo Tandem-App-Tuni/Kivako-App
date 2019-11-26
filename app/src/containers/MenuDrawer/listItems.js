@@ -69,7 +69,7 @@ export const secondaryListItems = (
       <ListItemText primary="Find a Partner!" />
     </ListItem>
 
-    <ListItem button>
+    <ListItem button component={Link} to={"/match-requests"}>
       <ListItemIcon>
         <TimerIcon />
       </ListItemIcon>
