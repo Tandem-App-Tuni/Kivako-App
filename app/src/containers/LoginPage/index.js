@@ -1,7 +1,31 @@
 
 import Button from '@material-ui/core/Button';
 import React, {Component} from 'react';
+import Container from '@material-ui/core/Container';
+import Paper from '@material-ui/core/Paper';
+import {
+  withStyles
+} from '@material-ui/core/styles';
 
+import logo from '../../tandemlogo.png'
+
+const useStyles = theme => ({
+  '@global': {
+    body: {
+      backgroundColor: theme.palette.common.white,
+    },
+  },
+  paper: {
+    marginTop: theme.spacing(8),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center'
+  }
+,img:{
+  width: '100%',
+    height: 300
+}
+});
 
 class LandingPage extends Component {
 
@@ -15,14 +39,23 @@ class LandingPage extends Component {
   
 
   render() {
+    const { classes } = this.props;
      return ( 
      <div>
-        <Button variant="contained" color = "primary" onClick={this.onLoginButtonClicked} >
+         <Container component="main" maxWidth="xs">
+  
+          <Paper className={classes.paper}>
+          <img src={logo} style={{ maxHeight: 100 , maxWidth: '80%', marginTop: 30,marginLeft: 20,marginRight: 20}}/>
+          <Button variant="contained" color = "primary" onClick={this.onLoginButtonClicked}
+          style={{ maxHeight: 100 , maxWidth: '80%', marginTop: 30,marginLeft: 20,marginRight: 20,marginBottom: 20}}>
             Sign in
         </Button>
+            </Paper>
+            </Container>
+       
       </div>)
   }
 
 }
   
-export default LandingPage;
+export default withStyles(useStyles)(LandingPage);
