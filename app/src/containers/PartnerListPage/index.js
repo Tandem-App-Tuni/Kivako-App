@@ -58,14 +58,54 @@ class PartnerListPage extends React.Component
     this.state = {
       currentOpenConversation: undefined,
       peekWordCount: 5,
+      user: undefined,
       chatWindow: undefined,
       socket: openSocket('http://localhost:3000'),
       loadedServerInformation: false
-    };
+    }; 
 
-    this.state.socket.on('message', (data) => 
+    /**
+     * Function listens for initialization events
+     * and creates the list of partners based on the
+     * data recieved from the server via the socket io
+     * connection.
+     */
+    this.state.socket.on('initialization', (data) => 
     {
-      console.log(data);
+      var messages = data.messages;
+      var roomInformation = data.rooms;
+
+      var i;
+      for (i = 0; i < roomInformation.length; i++)
+      {
+        var room = roomInformation[i];
+        var partner = {name: room.name, 
+                       roomId: room.roomId,
+                       conversationName: 'Conversation with ' + room.name,
+                       conversationId: i,
+                       messages: messages[i]};
+
+        this.partners.push(partner);               
+      }
+
+      this.setState({loadedServerInformation: true, user: data.user});
+    });
+
+    /**
+     * Function listens to roomUpdate events when subscribing to
+     * a specific room. 
+     */
+    this.state.socket.on('roomUpdate', (data) => 
+    {
+      this.partners.forEach((element) => 
+      {
+        if (element.roomId == data.roomId)
+        {
+          element.messages = data.room.messages;
+        }
+      });
+      
+      this.setState({peekWordCount: 5});
     });
 
     this.partners = [];
@@ -73,38 +113,20 @@ class PartnerListPage extends React.Component
 
     this.renderRequestArray = this.renderRequestArray.bind(this);
     this.renderPartnerArray = this.renderPartnerArray.bind(this);
+    this.renderChatWindow = this.renderChatWindow.bind(this);
     this.getMessagePeek = this.getMessagePeek.bind(this);
     this.handleClick = this.handleClick.bind(this);
-    this.fetchServerData = this.fetchServerData.bind(this);
 
     this.isAuthenticated = this.isAuthenticated.bind(this);
-
-    console.log(this.partners);
-
-    this.fetchServerData();
   }
 
   /**
-   * fetchServerData creates a get request to the server api
-   * for the appropriate users request and partner list objects.
-   * 
+   * Handle socket disconnection events that are triggered uppon
+   * component unmounting events (switching pages).
    */
-  fetchServerData()
+  componentWillUnmount()
   {
-    fetch('http://localhost:3000/api/v1/chat/partners&requests', 
-    {
-      method: 'GET',
-      credentials: 'include',
-      dataType: 'json'
-    })
-    .then((response) => response.json())
-    .then((text) => 
-    {
-      this.partners = text.partners;
-      this.requests = text.requests;
-
-      this.setState({loadedServerInformation: true});
-    });
+    this.state.socket.disconnect();
   }
 
   /**
@@ -248,19 +270,37 @@ class PartnerListPage extends React.Component
     if (id != currentId) this.setState({currentOpenConversation: this.partners[id]})
     else this.setState({currentOpenConversation: undefined})
 
-    console.log(this.partners[id].name);
-
-    if (id != currentId) this.setState({chatWindow: <Chat messages={this.partners[id].messages} conversationName={this.partners[id].conversationName}/>});
-    else this.setState({chatWindow: <div></div>});
+    if (id != currentId) 
+    {
+      this.state.socket.emit('subscribe', 
+          {to: this.partners[id].roomId, 
+           from: currentId != -1 ? this.partners[currentId].roomId : 'null'});
+    }
+    else 
+    {
+      this.state.socket.emit('subscribe', 
+          {to: 'null', 
+           from: currentId != -1 ? this.partners[currentId].roomId : 'null'});
+    }
   }
 
   /**
    * The authentication check to the backend server checking if the
-   * user is logged in. Currently always returns true.
+   * user is logged in. Currently always returns true. TODO
    */
   isAuthenticated()
   {
     return true;
+  }
+
+  /**
+   * Renders the apropriate chat window
+   * if one is open.
+   */
+  renderChatWindow()
+  {
+    if (typeof this.state.currentOpenConversation == 'undefined') return(<div></div>);
+    else return(<Chat user={this.state.user} roomId={this.state.currentOpenConversation.roomId} socket={this.state.socket} messages={this.state.currentOpenConversation.messages} conversationName={this.state.currentOpenConversation.conversationName}/>);
   }
 
   /**
@@ -299,7 +339,7 @@ class PartnerListPage extends React.Component
             {this.renderPartnerArray()}
           </List>
         </Box>
-        {this.state.chatWindow}
+        {this.renderChatWindow()}
       </ResponsiveDrawer>
     )}
 }

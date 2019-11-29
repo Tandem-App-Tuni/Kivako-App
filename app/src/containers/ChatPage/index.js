@@ -28,13 +28,30 @@ class Chat extends React.Component
         this.state = {messages: props.messages,
                       sendMessageFunction: props.sendMessage,
                       textFieldContent: '',
-                      conversationName: props.conversationName};
+                      conversationName: props.conversationName,
+                      socket: props.socket,
+                      roomId: props.roomId,
+                      user: props.user};
 
         this.handleSend = this.handleSend.bind(this);
         this.sendMessageClick = this.sendMessageClick.bind(this);
         this.sendMessageEnter = this.sendMessageEnter.bind(this);
 
         if (typeof this.state.sendMessageFunction == 'undefined') this.state.sendMessageFunction = this.sendMessage;
+        
+        this.state.socket.on('message', (data) => 
+        {
+            console.log('Client', this.state.user, 'recieved message!');
+            var messages = this.state.messages;
+
+            messages.push({
+                id: data.id,
+                timestamp: data.timestamp,
+                text: data.text
+            });
+
+            this.setState({messages: messages});
+        });
     }
 
     /**
@@ -50,7 +67,19 @@ class Chat extends React.Component
         return {messages: props.messages,
                 sendMessageFunction: typeof state.sendMessageFunction == 'undefined' ? Chat.sendMessage : state.sendMessageFunction,
                 textFieldContent: state.textFieldContent,
+                roomId: props.roomId,
+                socket: props.socket,
                 conversationName: props.conversationName};
+    }
+
+    /**
+     * Disconnects the clients socket from the message
+     * thread when the component is unmounted. This is required
+     * when the user changes chat boxes.
+     */
+    componentWillUnmount()
+    {
+        this.state.socket.off('message');
     }
 
     /**
@@ -74,8 +103,9 @@ class Chat extends React.Component
     {
         let bubbles = [];
 
-        this.state.messages.forEach((element, index) => {
-            bubbles.push(<ChatBubble key={index} message={element}></ChatBubble>);
+        this.state.messages.forEach((element, index) => 
+        {
+            bubbles.push(<ChatBubble key={index} user={this.state.user} message={element}></ChatBubble>);
         });
 
         return bubbles;
@@ -105,12 +135,16 @@ class Chat extends React.Component
 
     /**
      * handleSend function updates the current state messages, forcing a re-render of the ui.
+     * The message is also sent to the socket io server for processing and emiting to the apropriate
+     * client.
      * 
      * @param {*} newMessages The new messages array.
      */
     handleSend(newMessages)
     {
-        console.log('Processing post send...');
+        console.log('Processing post send...emitting to socket.io',newMessages[newMessages.length - 1]);
+
+        this.state.socket.emit('message', {user: this.state.user, roomId: this.state.roomId, message: newMessages[newMessages.length - 1]});
 
         this.setState({
             messages: newMessages,
@@ -125,7 +159,7 @@ class Chat extends React.Component
     sendMessageClick()
     {
         if (this.state.textFieldContent == '') return;
-        this.handleSend(this.state.sendMessageFunction(this.state.textFieldContent, this.state.messages, 0));
+        this.handleSend(this.state.sendMessageFunction(this.state.textFieldContent, this.state.messages, this.state.user));
     }
 
     /**
@@ -134,7 +168,7 @@ class Chat extends React.Component
      */
     sendMessageEnter(event)
     {
-        if (event.key == 'Enter' && this.setState.textFieldContent != '') this.handleSend(this.state.sendMessageFunction(this.state.textFieldContent, this.state.messages, 0));
+        if (event.key == 'Enter' && this.setState.textFieldContent != '') this.handleSend(this.state.sendMessageFunction(this.state.textFieldContent, this.state.messages, this.state.user));
     }
 
     render()
@@ -190,24 +224,28 @@ class ChatBubble extends React.Component
     {
         super(props);
 
-        this.message = props.message;
-
-        this.text = props.message.text;
-        this.side = props.message.id == 0 ? 'flex-start' : 'flex-end';
-        this.color = props.message.id == 0 ? '#2073E8' : '#24B8FF';
-        this.align = props.message.id == 0 ? 'left' : 'right';
+        this.state = 
+        {
+            message: props.message,
+            text: props.message.text,
+            side: props.message.id == props.user ? 'flex-start' : 'flex-end',
+            color: props.message.id == props.user ? '#2073E8' : '#24B8FF',
+            align: props.message.id == props.user ? 'left' : 'right'
+        };
     }
 
-    componentWillReceiveProps(props)
+    static getDerivedStateFromProps(props, oldState)
     {
-        this.message = props.message;
+        var newState =
+        {
+            message: props.message,
+            text: props.message.text,
+            side: props.message.id == props.user ? 'flex-start' : 'flex-end',
+            color: props.message.id == props.user ? '#2073E8' : '#24B8FF',
+            align: props.message.id == props.user ? 'left' : 'right'
+        };
 
-        this.text = props.message.text;
-        this.side = props.message.id == 0 ? 'flex-start' : 'flex-end';
-        this.color = props.message.id == 0 ? '#2073E8' : '#24B8FF';
-        this.align = props.message.id == 0 ? 'left' : 'right';
-
-        this.forceUpdate();
+        return newState;
     }
 
     render()
@@ -217,7 +255,7 @@ class ChatBubble extends React.Component
                 container
                 direction='column'
                 justify='space-around'
-                alignItems={this.side}>
+                alignItems={this.state.side}>
                     <Zoom in={true}>
                     <Box 
                         boxShadow={3} 
@@ -227,8 +265,8 @@ class ChatBubble extends React.Component
                         height='auto'
                         component='div'
                         p={2} m={2} 
-                        bgcolor={this.color}>
-                            <p style={{'textAlign': 'center'}}>{this.text}</p>
+                        bgcolor={this.state.color}>
+                            <p style={{'textAlign': 'center'}}>{this.state.text}</p>
                     </Box>
                     </Zoom>
             </Grid>
