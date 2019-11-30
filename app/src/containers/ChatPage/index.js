@@ -1,277 +1,290 @@
 import React from 'react';
-import {Button, TextField, Grid, Box, Divider, Zoom, Toolbar} from '@material-ui/core'
+import {Redirect} from 'react-router-dom';
+import {Box, List, ListItem, ListItemText, ListItemAvatar, Avatar, Typography, Tooltip, CircularProgress, Zoom} from '@material-ui/core'
+import Chat from '../ChatBox'
+import openSocket from 'socket.io-client';
+import ResponsiveDrawer from '../MenuDrawer';
 
 /**
  * Author: Peter Mlakar
  * 
- * Custom chat library. 
- * Supports rendering chat messages using the Material Ui library.
+ * The PartnerListPage renders the current partners and request the user might have.
+ * There are two arrays that need to be recieved from the
+ * api called on the url /user/request&partner, the request array and the partners array.
+ * There are is one parrameter that can be set: peekWordCount which controlls how many words of the last message of the conversation are shown in the preview.
+ * The request array has the following structure:
  * 
- * Expected properties: messages
- * Optional properties: function sendMessage
+ * requests = [{
+ *   name: 'Remy Sharp',
+ *   teach: 'English',
+ *   learn: 'Finnish',
+ *   city0: 'Helsinki',
+ *   city1: 'Tampere'
+ *  },...];
  * 
- * The messages object should be an array of the following shape:
- * [{
- *  id: 0,
- *  timestamp: new Date(),
- *  text: "This is the first message!"
- *  },...]
- *  Each array entry presents one messgae. If the message has id 0 it will be rendered as if it belongs to the
- *  session user. All other messages with other ids will be rendered as recieved messages.
+ * The name property holds the name of the user requesting the connection.
+ * The teach, learn properties are self evident. The city0 is the city where the user lives, city1 is the
+ * city in which the user studies.
+ * 
+ * The second array holds all the partners with which the user is conversing.
+ * It has the following structure:
+ * 
+ * this.partners = [
+ *  {
+ *    name: 'Ali Connors',
+ *    conversationName: 'Brunch this weekend?',
+ *    conversationId: 0,
+ *    messages: [...]
+ *  },...];
+ * 
+ * The name property holds the name of the user with which we are conversing. The conversationName describes the
+ * topic of conversation. ConversationId property is the index in the array of this.parent where this conversation is located.
+ * By this nature it should be unique.
+ * The messages array holds the messages of this conversation in the structue described in the Chat class.
+ * 
+ * The ChatPage state contains the following parameters:
+ * currentOpenConversation -> contains the reference to the currently open conversation
+ * peekWordCount -> explained above
+ * chatWindow -> the exact chat window object rendered on the screen
+ * socket -> the openSocket connecting to the conversatin thread of this user
+ * loadedServerInformation -> a flag set to true when the conversation data has been recieved from the server
  */
-class Chat extends React.Component
+class ChatPage extends React.Component
 {
-    constructor(props)
+  constructor(props)
+  {
+    super(props);
+
+    this.state = {
+      currentOpenConversation: undefined,
+      peekWordCount: 5,
+      user: undefined,
+      chatWindow: undefined,
+      socket: openSocket('http://localhost:3000'),
+      loadedServerInformation: false
+    }; 
+
+    /**
+     * Function listens for initialization events
+     * and creates the list of partners based on the
+     * data recieved from the server via the socket io
+     * connection.
+     */
+    this.state.socket.on('initialization', (data) => 
     {
-        super(props);
+      var messages = data.messages;
+      var roomInformation = data.rooms;
 
-        this.state = {messages: props.messages,
-                      sendMessageFunction: props.sendMessage,
-                      textFieldContent: '',
-                      conversationName: props.conversationName,
-                      socket: props.socket,
-                      roomId: props.roomId,
-                      user: props.user};
+      var i;
+      for (i = 0; i < roomInformation.length; i++)
+      {
+        var room = roomInformation[i];
+        var partner = {name: room.name, 
+                       roomId: room.roomId,
+                       conversationName: 'Conversation with ' + room.name,
+                       conversationId: i,
+                       messages: messages[i]};
 
-        this.handleSend = this.handleSend.bind(this);
-        this.sendMessageClick = this.sendMessageClick.bind(this);
-        this.sendMessageEnter = this.sendMessageEnter.bind(this);
+        this.partners.push(partner);               
+      }
 
-        if (typeof this.state.sendMessageFunction == 'undefined') this.state.sendMessageFunction = this.sendMessage;
-        
-        this.state.socket.on('message', (data) => 
+      this.setState({loadedServerInformation: true, user: data.user});
+    });
+
+    /**
+     * Function listens to roomUpdate events when subscribing to
+     * a specific room. 
+     */
+    this.state.socket.on('roomUpdate', (data) => 
+    {
+      this.partners.forEach((element) => 
+      {
+        if (element.roomId == data.roomId)
         {
-            console.log('Client', this.state.user, 'recieved message!');
-            var messages = this.state.messages;
+          element.messages = data.room.messages;
+        }
+      });
+      
+      this.setState({peekWordCount: 5});
+    });
 
-            messages.push({
-                id: data.id,
-                timestamp: data.timestamp,
-                text: data.text
-            });
+    this.partners = [];
 
-            this.setState({messages: messages});
-        });
-    }
+    this.renderPartnerArray = this.renderPartnerArray.bind(this);
+    this.renderChatWindow = this.renderChatWindow.bind(this);
+    this.getMessagePeek = this.getMessagePeek.bind(this);
+    this.handleClick = this.handleClick.bind(this);
 
-    /**
-     * Because the contents of the chat window is updated trough 
-     * setting new properties of the component, a listener for
-     * properties change is required to trigger re-rendering.
-     * 
-     * @param {*} props
-     * @param {*} state 
-     */
-    static getDerivedStateFromProps(props, state)
+    this.isAuthenticated = this.isAuthenticated.bind(this);
+  }
+
+  /**
+   * Handle socket disconnection events that are triggered uppon
+   * component unmounting events (switching pages).
+   */
+  componentWillUnmount()
+  {
+    this.state.socket.disconnect();
+  }
+
+  /**
+   * renderPartnerArray renders the request array stored in this.partners, defined in the constructor.
+   * These elements also contain a handleClick function, which if clicked, opens the chat window with the
+   * specific conversation.
+   */
+  renderPartnerArray()
+  {
+    let parnerArray = [];
+
+    if (!this.state.loadedServerInformation) return <CircularProgress variant='indeterminate' color='primary'/>
+
+    this.partners.forEach((element, index) => {
+      parnerArray.push(
+        <Zoom 
+          in={true}
+          key={index}>
+          <Box 
+            onClick={() => this.handleClick(element.conversationId)}>
+            <Tooltip 
+              title='Click to open conversation...'
+              placement='left'>
+              <ListItem 
+                alignItems="flex-start"
+                key={index}>
+                <ListItemAvatar>
+                  <Avatar 
+                    alt={element.name} 
+                    src='https://www.stickees.com/files/avatars/male-avatars/1697-andrew-sticker.png'/>
+                </ListItemAvatar>
+                <ListItemText
+                  primary={element.conversationName}
+                  secondary={
+                    <React.Fragment>
+                      <Typography
+                        component="span"
+                        variant="body2"
+                        display='inline'
+                        color="textPrimary">
+                        {element.name}
+                      </Typography>
+                      {"  " + this.getMessagePeek(element.messages)}
+                    </React.Fragment>
+                  }
+              />
+            </ListItem>
+          </Tooltip>
+          </Box>
+        </Zoom>
+      );
+    });
+
+    return parnerArray;
+  }
+
+  /**
+   * getMessagePeek constructs the preview of the conversation that has the length peekWordCount of words of the
+   * last message of the conversation.
+   * 
+   * @param {*} messages Messages of the specific conversation for which the peek should be retrieved.
+   */
+  getMessagePeek(messages)
+  {
+    var msg = messages[messages.length - 1];
+
+    var peekSplit = msg.text.split(" ");
+    var peek = "";
+
+    peekSplit.forEach((element, index) => 
     {
-        return {messages: props.messages,
-                sendMessageFunction: typeof state.sendMessageFunction == 'undefined' ? Chat.sendMessage : state.sendMessageFunction,
-                textFieldContent: state.textFieldContent,
-                roomId: props.roomId,
-                socket: props.socket,
-                conversationName: props.conversationName};
-    }
+      if (index > this.state.peekWordCount) return;
+      peek+= " " + element;
+    });
 
-    /**
-     * Disconnects the clients socket from the message
-     * thread when the component is unmounted. This is required
-     * when the user changes chat boxes.
-     */
-    componentWillUnmount()
+    return peek + "...";
+  }
+
+  /**
+   * 
+   * handleClick funtion handles the click event on the components 
+   * generated by the renderPartnerArray function. The currently selected
+   * conversation is stored in the this.state.currentOpenConversation reference.
+   * If no conversation is open, the reference is undefined. Clicking the same
+   * conversation twice closes the conversation.
+   * 
+   * @param {*} id id of the clicked conversation.
+   */
+  handleClick(id)
+  {
+    var currentId;
+
+    if (typeof this.state.currentOpenConversation == 'undefined') currentId = -1;
+    else currentId = this.state.currentOpenConversation.conversationId;
+
+    if (id != currentId) this.setState({currentOpenConversation: this.partners[id]})
+    else this.setState({currentOpenConversation: undefined})
+
+    if (id != currentId) 
     {
-        this.state.socket.off('message');
+      this.state.socket.emit('subscribe', 
+          {to: this.partners[id].roomId, 
+           from: currentId != -1 ? this.partners[currentId].roomId : 'null'});
     }
-
-    /**
-     * handleTextChange function handles the event when the
-     * user is typing the message. The contents of the text field is
-     * used to update the this.state property textFieldContent.
-     * 
-     * @param {*} e TextField containing the unfinished message contents. 
-     */
-    handleTextChange(e)
+    else 
     {
-        this.setState({textFieldContent: e.target.value});
+      this.state.socket.emit('subscribe', 
+          {to: 'null', 
+           from: currentId != -1 ? this.partners[currentId].roomId : 'null'});
     }
+  }
 
-    /**
-     * renderMessages renders the message array stored in
-     * the state of the Chat component. The rendered components
-     * are ChatBubbles.
-     */
-    renderMessages()
-    {
-        let bubbles = [];
+  /**
+   * The authentication check to the backend server checking if the
+   * user is logged in. Currently always returns true. TODO
+   */
+  isAuthenticated()
+  {
+    return true;
+  }
 
-        this.state.messages.forEach((element, index) => 
-        {
-            bubbles.push(<ChatBubble key={index} user={this.state.user} message={element}></ChatBubble>);
-        });
+  /**
+   * Renders the apropriate chat window
+   * if one is open.
+   */
+  renderChatWindow()
+  {
+    if (typeof this.state.currentOpenConversation == 'undefined') return(<div></div>);
+    else return(<Chat user={this.state.user} roomId={this.state.currentOpenConversation.roomId} socket={this.state.socket} messages={this.state.currentOpenConversation.messages} conversationName={this.state.currentOpenConversation.conversationName}/>);
+  }
 
-        return bubbles;
-    }
+  /**
+   * The render function only renders this page
+   * if the user is logged by checking the isAuthenticated function return value.
+   * If the user is not logged in, he or she is redirected to the '/' page.
+   * Else the conversation page is rendered.
+   */
+  render()
+  {
+    if (!this.isAuthenticated()) 
+      return (
+        <Redirect  to="/"/>
+      )
 
-    /**
-     * sendMessage function handels the event of sending the message.
-     * This function can be overwriten to do custom actions (like server verification etc.).
-     * The returned value should be the new chat array.
-     * 
-     * @param {*} contents The contents of the TextField at the time it is sent.
-     * @param {*} messages The current messages array.
-     * @param {*} id The id of the user sending the message. Should always be 0.
-     */
-    sendMessage(contents, messages, id)
-    {
-        console.log('Sending message...');
-
-        messages.push({
-            id: id,
-            timestamp: new Date(),
-            text: contents
-        });
-
-        return messages;
-    }
-
-    /**
-     * handleSend function updates the current state messages, forcing a re-render of the ui.
-     * The message is also sent to the socket io server for processing and emiting to the apropriate
-     * client.
-     * 
-     * @param {*} newMessages The new messages array.
-     */
-    handleSend(newMessages)
-    {
-        console.log('Processing post send...emitting to socket.io',newMessages[newMessages.length - 1]);
-
-        this.state.socket.emit('message', {user: this.state.user, roomId: this.state.roomId, message: newMessages[newMessages.length - 1]});
-
-        this.setState({
-            messages: newMessages,
-            textFieldContent: ''
-        });
-    }
-
-    /**
-     * sendMessageClick processes the action of clicking the send message button.
-     * It only sends the message if the textfield contains some non empty string.
-     */
-    sendMessageClick()
-    {
-        if (this.state.textFieldContent == '') return;
-        this.handleSend(this.state.sendMessageFunction(this.state.textFieldContent, this.state.messages, this.state.user));
-    }
-
-    /**
-     * sendMessageEnter processes the action of pressing the enter key.
-     * It only sends the message if the textfield contains some non empty string.
-     */
-    sendMessageEnter(event)
-    {
-        if (event.key == 'Enter' && this.setState.textFieldContent != '') this.handleSend(this.state.sendMessageFunction(this.state.textFieldContent, this.state.messages, this.state.user));
-    }
-
-    render()
-    {
-        return(
-            <Box
-                boxShadow={3}>
-                <Toolbar
-                    style={{backgroundColor:'indigo', color:'white'}}>
-                {this.state.conversationName}
-                </Toolbar>
-                {this.renderMessages()}
-                <Divider light/>
-                <Box
-                    p={1} m={0}>
-                    <Grid
-                        container
-                        direction='row'
-                        justify='flex-start'
-                        alignItems='flex-end'>
-                        <Box
-                            p={1} m={0}>
-                            <Button 
-                                variant='contained' 
-                                color = 'primary'
-                                onClick={() => this.sendMessageClick()}>
-                                    Send message
-                            </Button>
-                        </Box>
-                        <Box
-                            p={1} m={0}>
-                            <TextField 
-                                placeholder='Write message here...'
-                                onKeyPress={(event) => this.sendMessageEnter(event)}
-                                onChange={(e) => this.handleTextChange(e)}
-                                value={this.state.textFieldContent}>
-                            </TextField>
-                        </Box>
-                    </Grid>
-                </Box>
-            </Box>
-        )
-    }
+    return(
+      <ResponsiveDrawer title = 'Conversations'>
+        <Box
+          width='80%'>
+          <Typography variant="h6" gutterBottom>
+                  Partners
+          </Typography> 
+          <List 
+            width='100%'
+            color='paper'>
+            {this.renderPartnerArray()}
+          </List>
+        </Box>
+        {this.renderChatWindow()}
+      </ResponsiveDrawer>
+    )}
 }
 
-/**
- * The ChatBubble component hold the 
- * text of individual messages and handles the rendering side.
- */
-class ChatBubble extends React.Component
-{
-    constructor(props)
-    {
-        super(props);
-
-        this.state = 
-        {
-            message: props.message,
-            text: props.message.text,
-            side: props.message.id == props.user ? 'flex-start' : 'flex-end',
-            color: props.message.id == props.user ? '#2073E8' : '#24B8FF',
-            align: props.message.id == props.user ? 'left' : 'right'
-        };
-    }
-
-    static getDerivedStateFromProps(props, oldState)
-    {
-        var newState =
-        {
-            message: props.message,
-            text: props.message.text,
-            side: props.message.id == props.user ? 'flex-start' : 'flex-end',
-            color: props.message.id == props.user ? '#2073E8' : '#24B8FF',
-            align: props.message.id == props.user ? 'left' : 'right'
-        };
-
-        return newState;
-    }
-
-    render()
-    {
-        return(
-            <Grid 
-                container
-                direction='column'
-                justify='space-around'
-                alignItems={this.state.side}>
-                    <Zoom in={true}>
-                    <Box 
-                        boxShadow={3} 
-                        minWidth='10%'
-                        minHeight='5%'
-                        width='auto'
-                        height='auto'
-                        component='div'
-                        p={2} m={2} 
-                        bgcolor={this.state.color}>
-                            <p style={{'textAlign': 'center'}}>{this.state.text}</p>
-                    </Box>
-                    </Zoom>
-            </Grid>
-        )
-    }
-}
-
-export default Chat;
+export default ChatPage;

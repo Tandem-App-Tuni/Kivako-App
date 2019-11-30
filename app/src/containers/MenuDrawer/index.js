@@ -80,7 +80,7 @@ function ResponsiveDrawer(props) {
             <ListItemIcon><CollectionsBookmarkIcon/></ListItemIcon>
             <ListItemText primary="Moodle" />
       </ListItem>
-          
+
         <ListItem button key="3" component={Link} 
       to={"/edit-profile"}>
         <ListItemIcon><TuneIcon/></ListItemIcon>
@@ -93,7 +93,13 @@ function ResponsiveDrawer(props) {
         <ListItemText primary="Find a partner" />
         </ListItem>
           
-        <ListItem button key="5" component={Link} 
+      <ListItem button key="5" component={Link} 
+        to={"/chat-page"}>
+          <ListItemIcon><ForumIcon/></ListItemIcon>
+          <ListItemText primary="Chat"/>
+      </ListItem>
+
+        <ListItem button key="6" component={Link} 
       to={"/partner-list"}>
         <ListItemIcon><ExitToAppIcon/></ListItemIcon>
         <ListItemText primary="Log out" />

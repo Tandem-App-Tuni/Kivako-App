@@ -1,7 +1,7 @@
 import React from 'react';
 import {Redirect} from 'react-router-dom';
 import {Box, List, ListItem, ListItemText, ListItemAvatar, Avatar, Typography, Tooltip, CircularProgress, Zoom} from '@material-ui/core'
-import Chat from '../ChatPage'
+import Chat from '../ChatBox'
 import openSocket from 'socket.io-client';
 import ResponsiveDrawer from '../MenuDrawer';
 
