@@ -18,6 +18,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import TimerIcon from '@material-ui/icons/Timer';
 import DateRangeIcon from '@material-ui/icons/DateRange';
 import PersonIcon from '@material-ui/icons/Person';
+import PersonPinIcon from '@material-ui/icons/PersonPin';
 
 import { Link } from "react-router-dom";
 
@@ -41,9 +42,9 @@ export const mainListItems = (
     <ListItem button component={Link} 
           to={"/partner-list"}>
       <ListItemIcon>
-        <ForumIcon/>
+        <PersonPinIcon/>
       </ListItemIcon>
-      <ListItemText primary="Conversations" />
+      <ListItemText primary="Learning partners" />
     </ListItem>
 
     <ListItem button component={Link} 
@@ -54,6 +55,13 @@ export const mainListItems = (
       <ListItemText primary="Profile" />
     </ListItem>
 
+    <ListItem button component={Link} 
+      to={"/chat-page"}>
+      <ListItemIcon>
+        <ForumIcon/>
+      </ListItemIcon>
+      <ListItemText primary="Chat" />
+    </ListItem>
 
   </div>
 );
