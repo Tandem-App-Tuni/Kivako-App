@@ -1,4 +1,3 @@
-
 import Button from '@material-ui/core/Button';
 import React, {Component} from 'react';
 import Container from '@material-ui/core/Container';
@@ -27,9 +26,8 @@ const useStyles = theme => ({
 }
 });
 
-class LandingPage extends Component {
-
-
+class LandingPage extends Component 
+{
   onLoginButtonClicked = () =>{
     const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/login");
 
