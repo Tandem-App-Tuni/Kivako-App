@@ -1,5 +1,11 @@
 import React from 'react';
 import {Button, TextField, Grid, Box, Divider, Zoom, Toolbar} from '@material-ui/core'
+import QueryBuilderIcon from '@material-ui/icons/QueryBuilder';
+import Icon from '@material-ui/core/Icon';
+import Avatar from '@material-ui/core/Avatar';
+
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 
 /**
  * Author: Peter Mlakar
@@ -180,33 +186,50 @@ class Chat extends React.Component
                     style={{backgroundColor:'indigo', color:'white'}}>
                 {this.state.conversationName}
                 </Toolbar>
+                <br></br>
                 {this.renderMessages()}
-                <Divider light/>
+                <br></br>
+                <br></br>
+                <Divider variant="middle" />
+                <br></br>
                 <Box
                     p={1} m={0}>
                     <Grid
+                        spacing={2}
                         container
                         direction='row'
                         justify='flex-start'
                         alignItems='flex-end'>
-                        <Box
-                            p={1} m={0}>
-                            <Button 
-                                variant='contained' 
-                                color = 'primary'
-                                onClick={() => this.sendMessageClick()}>
-                                    Send message
-                            </Button>
-                        </Box>
-                        <Box
-                            p={1} m={0}>
-                            <TextField 
-                                placeholder='Write message here...'
+                        
+                        <Grid item xs={12} sm={11   }>
+                            <TextField
+                                multiline
+                                fullWidth
+                                margin="normal"
+                                InputLabelProps={{
+                                shrink: true,
+                                }}
+                                placeholder='Write your message here...'
                                 onKeyPress={(event) => this.sendMessageEnter(event)}
                                 onChange={(e) => this.handleTextChange(e)}
                                 value={this.state.textFieldContent}>
-                            </TextField>
-                        </Box>
+                            </TextField>               
+                      
+                        </Grid>
+
+
+                        <Grid item xs={12} sm={1}> 
+                            <Button
+                                variant="contained"
+                                fullWidth
+                                color="primary"
+                                onClick={() => this.sendMessageClick()}
+                            >
+                            
+                            <Icon>send</Icon>
+                            </Button>               
+                        </Grid>
+
                     </Grid>
                 </Box>
             </Box>
@@ -241,36 +264,107 @@ class ChatBubble extends React.Component
             message: props.message,
             text: props.message.text,
             side: props.message.id == props.user ? 'flex-start' : 'flex-end',
-            color: props.message.id == props.user ? '#2073E8' : '#24B8FF',
+            color: props.message.id == props.user ? '#EBFFBE' : '#EEEBEB',
             align: props.message.id == props.user ? 'left' : 'right'
         };
 
         return newState;
     }
 
+
     render()
     {
-        return(
-            <Grid 
-                container
-                direction='column'
-                justify='space-around'
-                alignItems={this.state.side}>
-                    <Zoom in={true}>
-                    <Box 
-                        boxShadow={3} 
-                        minWidth='10%'
-                        minHeight='5%'
-                        width='auto'
-                        height='auto'
-                        component='div'
-                        p={2} m={2} 
-                        bgcolor={this.state.color}>
-                            <p style={{'textAlign': 'center'}}>{this.state.text}</p>
-                    </Box>
-                    </Zoom>
-            </Grid>
-        )
+        // Message of the other user
+        if(this.state.align=='right'){
+            return(
+                <div>
+                    <Grid
+                        spacing={5}
+                        container
+                        direction='row'
+                        justify='space-around'
+                        alignItems={this.state.side}>
+
+                                <Grid item xs={12} sm={1}> 
+                                    <div align="center">
+                                        <Avatar src={"https://pickaface.net/gallery/avatar/unr_test_161024_0535_9lih90.png"} 
+                                                                    aria-label="recipe" 
+                                                                    >
+                                        </Avatar>      
+
+                                    </div>        
+                                </Grid>
+                                <Grid item xs={12} sm={9}> 
+                                    <div align="left">
+                                        <Paper square={false} style={{backgroundColor: this.state.color}}>
+                                            <Typography variant="subtitle2">
+                                                Test user
+                                            </Typography>
+                                            <Typography variant="body2">
+                                                {this.state.text}
+                                            </Typography>
+                                            <div align="right">
+                                                <Typography variant="caption" align="right">
+                                                    27/09/2019 - 15:03
+                                                </Typography>
+                                            </div>
+                                        </Paper> 
+                                    </div>      
+                                </Grid>
+                                <Grid item xs={12} sm={2}> 
+                                
+                                    
+                                </Grid>
+                    </Grid>
+                </div> 
+            )
+        }else{
+            return(
+                <div>
+                    <Grid
+                        spacing={5}
+                        container
+                        direction='row'
+                        justify='space-around'
+                        alignItems={this.state.side}>
+                            <Grid item xs={12} sm={2}> 
+                            
+                                
+                            </Grid>
+
+                            <Grid item xs={12} sm={9}> 
+                            
+                                <Paper square={false} style={{backgroundColor: this.state.color}}>
+                                    <Typography variant="subtitle2">
+                                        Test user
+                                    </Typography>
+                                    <Typography variant="body2">
+                                        {this.state.text}
+                                    </Typography>
+                                    <div align="right">
+                                        <Typography variant="caption" align="right">
+                                            27/09/2019 - 15:03
+                                        </Typography>
+                                    </div>
+                                </Paper>          
+                            </Grid>
+
+                            <Grid item xs={12} sm={1}> 
+                                <div align="center">
+                                    <Avatar src={"https://pickaface.net/gallery/avatar/unr_test_161024_0535_9lih90.png"} 
+                                                                aria-label="recipe" 
+                                                                >
+                                    </Avatar>      
+
+                                </div>        
+                            </Grid>
+
+                    </Grid>
+                </div> 
+            )
+            // Message of the current user(own message)
+        }
+ 
     }
 }
 
