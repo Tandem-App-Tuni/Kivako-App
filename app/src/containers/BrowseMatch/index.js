@@ -39,7 +39,9 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Icon from '@material-ui/core/Icon';
 
 import {Redirect} from 'react-router-dom';
-
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 
 import Grid from '@material-ui/core/Grid'
 
@@ -93,6 +95,7 @@ const styles = ({
         background: "#3f51b5",
     },
 });
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	Class
     /*
@@ -176,14 +179,10 @@ class BrowseMatch extends React.Component {
 
         return (
             item.matches.length === 0 ? (
-                <Typography variant="h5" gutterBottom>
                     <Typography variant="overline" gutterBottom>
-                        {"No matches found for "} {item.languageName}
+                        {"No matches found for "} {item.languageName} :( !
                     </Typography>
-                    <Link href="/edit-profile" className={classes.preferencesLink}>
-                        {"Edit_your_preferences"}
-                    </Link>
-                </Typography>
+      
             ) : (
                 <div >
                 <GridList className={classes.gridList} >
@@ -262,26 +261,31 @@ class BrowseMatch extends React.Component {
     }
 
     getMatchesList(item, classes){
-        return (<ListItem
-            key={item.languageName}
-            >
-            <div key={item.languageName}>
-                <div >
-                    <ListItemText className={classes.bottomMargin}>
-                        <Typography variant="h6" gutterBottom>
-                            {"Possible matches to learn " + ' ' + item.languageName + ":"}
-                        </Typography>
-                        
-                    </ListItemText>
+        return (
+                <div>
+                    <div key={item.languageName}>
+                        <ExpansionPanel>
+                            <ExpansionPanelSummary
+                                expandIcon={<ExpandMoreIcon />}
+                                aria-controls="panel1a-content"
+                                id="panel1a-header"
+                            >
+                            <Typography className={classes.heading}>Possible matches to learn {item.languageName}</Typography>
+                            </ExpansionPanelSummary>
+                            <ExpansionPanelDetails>
+                                {
+                                    this.getMatchesTiles(item, classes)
+                                }
+                                <br></br>
+                                <Divider variant="middle" />
+                            </ExpansionPanelDetails>
+                        </ExpansionPanel>
+                        <br></br>
+                    </div>
+                
 
                 </div>
-                {
-                    this.getMatchesTiles(item, classes)
-                }
-                <br></br>
-                <Divider variant="middle" />
-            </div>
-        </ListItem>);
+            );
     }
 
     onInviteAction(user,language) {
@@ -421,6 +425,15 @@ class BrowseMatch extends React.Component {
 
     render() {
         const {classes} = this.props;
+        const classesPanel = makeStyles(theme => ({
+            root: {
+              width: '100%',
+            },
+            heading: {
+              fontSize: theme.typography.pxToRem(15),
+              fontWeight: theme.typography.fontWeightRegular,
+            },
+          }));
         
         //Wait until all informations be render until continue
         if(this.state.isLoadingPage) {
@@ -441,17 +454,19 @@ class BrowseMatch extends React.Component {
             <div>
                 <div className={classes.root}>
                     <ResponsiveDrawer title = "Find a new language partner">
-                        <List component="nav" className={classes.fullWidth}>
-                            {
-                                this.state.userMatches.map(item => {
-                                    return item.alreadyExists ? (
-                                        this.getAlreadyExistsDiv(item, classes)
-                                    ) : (
-                                        this.getMatchesList(item, classes)
-                                    )
-                                })
-                            }
-                        </List>
+                        
+                        <div className={classesPanel.root}>
+ 
+                                {
+                                    this.state.userMatches.map(item => {
+                                        return item.alreadyExists ? (
+                                            this.getAlreadyExistsDiv(item, classes)
+                                        ) : (
+                                            this.getMatchesList(item, classes)
+                                        )
+                                    })
+                                }
+                        </div>
                     </ResponsiveDrawer>
 
                 </div>

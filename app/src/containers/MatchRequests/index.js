@@ -13,6 +13,7 @@ import {withStyles} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	Styles
+import Paper from '@material-ui/core/Paper';
 
 import ResponsiveDrawer from '../MenuDrawer';
 
@@ -310,8 +311,12 @@ class MatchRequests extends React.Component {
 
         return (
             <div>
+
+
                 <div className={classes.root}>
                     <ResponsiveDrawer title = "Matches requests!">
+
+
                         <List component="nav" className={classes.fullWidth}>
                             {
 

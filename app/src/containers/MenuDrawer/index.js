@@ -25,8 +25,8 @@ function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
+      <Link color="inherit" href="">
+       Kivako Tandem App
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -89,7 +89,7 @@ const useStyles = makeStyles(theme => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    width: theme.spacing(7),
+    width: theme.spacing(2),
     [theme.breakpoints.up('sm')]: {
       width: theme.spacing(9),
     },
@@ -111,7 +111,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'column',
   },
   fixedHeight: {
-    height: 240,
+    height: 100,
   },
 }));
 

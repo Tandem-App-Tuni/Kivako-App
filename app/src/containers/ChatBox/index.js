@@ -1,11 +1,12 @@
 import React from 'react';
 import {Button, TextField, Grid, Box, Divider, Zoom, Toolbar} from '@material-ui/core'
-import QueryBuilderIcon from '@material-ui/icons/QueryBuilder';
 import Icon from '@material-ui/core/Icon';
 import Avatar from '@material-ui/core/Avatar';
 
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import { spacing } from '@material-ui/system';
+
 
 /**
  * Author: Peter Mlakar
@@ -181,14 +182,14 @@ class Chat extends React.Component
     {
         return(
             <Box
+                borderRadius={5}
                 boxShadow={3}>
                 <Toolbar
                     style={{backgroundColor:'indigo', color:'white'}}>
-                {this.state.conversationName}
+                    {this.state.conversationName}
                 </Toolbar>
                 <br></br>
                 {this.renderMessages()}
-                <br></br>
                 <br></br>
                 <Divider variant="middle" />
                 <br></br>
@@ -200,8 +201,11 @@ class Chat extends React.Component
                         direction='row'
                         justify='flex-start'
                         alignItems='flex-end'>
+                                                    
+                        <Grid item xs={12} sm={1}>
+                        </Grid>
                         
-                        <Grid item xs={12} sm={11   }>
+                        <Grid item xs={12} sm={9}>
                             <TextField
                                 multiline
                                 fullWidth
@@ -228,6 +232,9 @@ class Chat extends React.Component
                             
                             <Icon>send</Icon>
                             </Button>               
+                        </Grid>
+
+                        <Grid item xs={12} sm={1}>
                         </Grid>
 
                     </Grid>
@@ -261,6 +268,7 @@ class ChatBubble extends React.Component
     {
         var newState =
         {
+            user: props.user,
             message: props.message,
             text: props.message.text,
             side: props.message.id == props.user ? 'flex-start' : 'flex-end',
@@ -271,11 +279,18 @@ class ChatBubble extends React.Component
         return newState;
     }
 
+    convertTimeStampToDate(date){
+        var current_datetime = new Date(date);
+        var convertedDate = current_datetime.getDate() + '/' + (current_datetime.getMonth() + 1) + '/' + current_datetime.getFullYear() + " " + current_datetime.getHours() + ":" + current_datetime.getMinutes();
+        return convertedDate;
+    }
+
 
     render()
     {
         // Message of the other user
         if(this.state.align=='right'){
+            console.log(this.state)
             return(
                 <div>
                     <Grid
@@ -284,9 +299,9 @@ class ChatBubble extends React.Component
                         direction='row'
                         justify='space-around'
                         alignItems={this.state.side}>
-
-                                <Grid item xs={12} sm={1}> 
-                                    <div align="center">
+                                
+                                <Grid item xs={12} sm={1} alignContent='center' alignItems="center"> 
+                                    <div align="right">
                                         <Avatar src={"https://pickaface.net/gallery/avatar/unr_test_161024_0535_9lih90.png"} 
                                                                     aria-label="recipe" 
                                                                     >
@@ -298,14 +313,14 @@ class ChatBubble extends React.Component
                                     <div align="left">
                                         <Paper square={false} style={{backgroundColor: this.state.color}}>
                                             <Typography variant="subtitle2">
-                                                Test user
+                                              
                                             </Typography>
-                                            <Typography variant="body2">
-                                                {this.state.text}
+                                            <Typography variant="body2" ml={2}>
+                                              {this.state.text}
                                             </Typography>
                                             <div align="right">
-                                                <Typography variant="caption" align="right">
-                                                    27/09/2019 - 15:03
+                                                <Typography variant="caption" align="right" color='textSecondary'>
+                                                    {this.convertTimeStampToDate(this.state.message.timestamp)} 
                                                 </Typography>
                                             </div>
                                         </Paper> 
@@ -336,20 +351,19 @@ class ChatBubble extends React.Component
                             
                                 <Paper square={false} style={{backgroundColor: this.state.color}}>
                                     <Typography variant="subtitle2">
-                                        Test user
                                     </Typography>
                                     <Typography variant="body2">
                                         {this.state.text}
                                     </Typography>
                                     <div align="right">
-                                        <Typography variant="caption" align="right">
-                                            27/09/2019 - 15:03
+                                        <Typography variant="caption" align="right" color='textSecondary'>
+                                            {this.convertTimeStampToDate(this.state.message.timestamp)} 
                                         </Typography>
                                     </div>
                                 </Paper>          
                             </Grid>
 
-                            <Grid item xs={12} sm={1}> 
+                            <Grid item xs={12} sm={1} alignContent='center' alignItems="center"> 
                                 <div align="center">
                                     <Avatar src={"https://pickaface.net/gallery/avatar/unr_test_161024_0535_9lih90.png"} 
                                                                 aria-label="recipe" 
