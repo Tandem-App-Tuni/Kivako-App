@@ -7,6 +7,8 @@ import {
 } from '@material-ui/core/styles';
 
 import logo from '../../tandemlogo.png'
+import Typography from '@material-ui/core/Typography';
+
 
 const useStyles = theme => ({
   '@global': {
@@ -22,7 +24,7 @@ const useStyles = theme => ({
   }
 ,img:{
   width: '100%',
-    height: 300
+    height: 600
 }
 });
 
@@ -43,7 +45,10 @@ class LandingPage extends Component
          <Container component="main" maxWidth="xs">
   
           <Paper className={classes.paper}>
-          <img src={logo} style={{ maxHeight: 100 , maxWidth: '80%', marginTop: 30,marginLeft: 20,marginRight: 20}}/>
+          <img src={logo} style={{ maxHeight: 100 , maxWidth: '100%', marginTop: 30,marginLeft: 20,marginRight: 20}}/>
+          <Typography component="h1" variant="h6" color="inherit">
+            Admin page
+          </Typography>
           <Button variant="contained" color = "primary" onClick={this.onLoginButtonClicked}
           style={{ maxHeight: 100 , maxWidth: '80%', marginTop: 30,marginLeft: 20,marginRight: 20,marginBottom: 20}}>
             Sign in
