@@ -14,12 +14,17 @@ import Badge from '@material-ui/core/Badge';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import Link from '@material-ui/core/Link';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import MessageIcon from '@material-ui/icons/Message';
+import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import { mainListItems, secondaryListItems, thirdListItems } from './listItems';
+import { Link } from 'react-router-dom';
+
+
+import logo from '../../tandemlogo.png'
 
 function Copyright() {
   return (
@@ -89,7 +94,7 @@ const useStyles = makeStyles(theme => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    width: theme.spacing(2),
+    width: theme.spacing(7),
     [theme.breakpoints.up('sm')]: {
       width: theme.spacing(9),
     },
@@ -111,7 +116,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'column',
   },
   fixedHeight: {
-    height: 100,
+    height: 240,
   },
 }));
 
@@ -126,6 +131,7 @@ export default function Dashboard(props) {
     setOpen(false);
   };
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+  
 
   return (
     <div className={classes.root}>
@@ -144,22 +150,17 @@ export default function Dashboard(props) {
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
             {props.title}
           </Typography>
-          <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
-              <NotificationsIcon />
+          <IconButton color="inherit" component={Link} to="/match-requests">
+            <Badge badgeContent={0} color="secondary"> 
+              <PersonAddIcon />
             </Badge>
           </IconButton>
-          <IconButton
-                aria-label="account of current user"
-                aria-controls="primary-search-account-menu"
-                aria-haspopup="true"
-                color="inherit"
-              >
-            <AccountCircle />
+          <IconButton color="inherit" component={Link} to="/chat-page">
+            <Badge badgeContent={0} color="secondary">
+              <MessageIcon />
+            </Badge>
           </IconButton>
-          <Typography variant="subtitle2" component="h2">
-            Hi, João
-          </Typography>
+
         </Toolbar>
       </AppBar>
       <Drawer
@@ -170,6 +171,7 @@ export default function Dashboard(props) {
         open={open}
       > 
             <div className={classes.toolbarIcon}>
+              <img src={logo} style={{ maxHeight: 100 , maxWidth: '70%', align:'center'}}/>
               <IconButton onClick={handleDrawerClose}>
                 <ChevronLeftIcon />
               </IconButton>
