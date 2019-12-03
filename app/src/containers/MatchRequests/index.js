@@ -3,7 +3,8 @@ import React from 'react';
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	Material UI
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
-import Link from '@material-ui/core/Link';
+import { Link } from 'react-router-dom';
+
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import List from '@material-ui/core/List';
@@ -41,8 +42,7 @@ import Icon from '@material-ui/core/Icon';
 
 import {Redirect} from 'react-router-dom';
 
-
-import Grid from '@material-ui/core/Grid'
+import logo from '../../tandemlogo.png'
 
 
 const styles = ({
@@ -107,7 +107,6 @@ class MatchRequests extends React.Component {
         open:false
       };
     }
-
 
     openModal = () => {
         this.setState({open: true})
@@ -309,9 +308,47 @@ class MatchRequests extends React.Component {
             return  <Redirect  to="/" />
         }
 
+        // Check if user has requests
+        
+        if(this.state.userRequestMatches.length === 0){  
+
+            return  (
+                <div className={classes.root}>
+                    <ResponsiveDrawer title = "Matches requests!">
+                        <div align = "center">
+                            <Paper>
+                                <img src={logo} style={{ maxHeight: 100 , maxWidth: '80%', marginTop: 30,marginLeft: 20,marginRight: 20}}/>
+      
+                                <br></br>
+                                <br></br>
+                                <br></br>
+                                <br></br>
+                                <Typography variant="h5" gutterBottom>
+                                    At the moment any matches requests were found in the system!
+                                </Typography>
+                                <br></br>
+                                <Typography variant="h6" gutterBottom>
+                                    Click in the button to search some partners!
+                                </Typography>
+                                <br></br>
+                                <Button component={Link} to="/browse-match" variant="contained" color="primary">Search!</Button>
+                                <br></br>
+                                <br></br>
+                            </Paper>
+                            <br></br>
+                            <br></br>
+                            <br></br>
+                        </div>
+
+                    </ResponsiveDrawer>
+                
+
+                </div>
+                )
+        }
+
         return (
             <div>
-
 
                 <div className={classes.root}>
                     <ResponsiveDrawer title = "Matches requests!">
