@@ -68,7 +68,6 @@ class ChatPage extends React.Component
     this.state = {
       currentOpenConversation: undefined,
       peekWordCount: 5,
-      chatRooms: 0,
       user: undefined,
       chatWindow: undefined,
       socket: openSocket('http://localhost:3000'),
@@ -83,17 +82,23 @@ class ChatPage extends React.Component
      */
     this.state.socket.on('initialization', (data) => 
     {
-      let roomInformation = data.roomInformation;
+      var messages = data.messages;
+      var roomInformation = data.rooms;
 
-      this.partners.push({
-        name: data.name,
-        roomId: roomInformation.roomId,
-        conversationName: 'Conversation with ' + data.name,
-        conversationId: this.state.chatRooms,
-        messages: roomInformation.messages
-      });
+      var i;
+      for (i = 0; i < roomInformation.length; i++)
+      {
+        var room = roomInformation[i];
+        var partner = {name: room.name, 
+                       roomId: room.roomId,
+                       conversationName: room.name,
+                       conversationId: i,
+                       messages: messages[i]};
 
-      this.setState({loadedServerInformation: true, user: data.user, chatRooms: this.state.chatRooms + 1});
+        this.partners.push(partner);               
+      }
+
+      this.setState({loadedServerInformation: true, user: data.user});
     });
 
     /**
@@ -190,8 +195,6 @@ class ChatPage extends React.Component
    */
   getMessagePeek(messages)
   {
-    if (messages.length == 0) return '...';
-
     var msg = messages[messages.length - 1];
 
     var peekSplit = msg.text.split(" ");

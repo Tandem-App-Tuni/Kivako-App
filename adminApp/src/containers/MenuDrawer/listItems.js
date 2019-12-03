@@ -9,7 +9,7 @@ import PeopleIcon from '@material-ui/icons/People';
 import BarChartIcon from '@material-ui/icons/BarChart';
 import LayersIcon from '@material-ui/icons/Layers';
 import AssignmentIcon from '@material-ui/icons/Assignment';
-
+import ReportProblemIcon from '@material-ui/icons/ReportProblem';
 import ForumIcon from '@material-ui/icons/Forum';
 import CollectionsBookmarkIcon from '@material-ui/icons/CollectionsBookmark';
 import TuneIcon from '@material-ui/icons/Tune';
@@ -19,6 +19,12 @@ import TimerIcon from '@material-ui/icons/Timer';
 import DateRangeIcon from '@material-ui/icons/DateRange';
 import PersonIcon from '@material-ui/icons/Person';
 import PersonPinIcon from '@material-ui/icons/PersonPin';
+
+import SettingsIcon from '@material-ui/icons/Settings';
+import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
+import PersonAddIcon from '@material-ui/icons/PersonAdd';
+import GroupIcon from '@material-ui/icons/Group';
+
 
 import Badge from '@material-ui/core/Badge';
 
@@ -34,35 +40,27 @@ export const mainListItems = (
       <ListItemText primary="Dashboard" />
     </ListItem>
 
-    <ListItem button component="a" href="https://moodle.tuni.fi/">
-      <ListItemIcon>
-        <CollectionsBookmarkIcon/>
-      </ListItemIcon>
-      <ListItemText primary="DigiCampus" />
-    </ListItem>
-
     <ListItem button component={Link} 
           to={"/partner-list"}>
       <ListItemIcon>
-        <PersonPinIcon/>
+        <BarChartIcon/>
       </ListItemIcon>
-      <ListItemText primary="Current partners" /> <Badge color="primary" badgeContent={1}></Badge>
+      <ListItemText primary="Statistics" />
     </ListItem>
 
-    <ListItem button component={Link} 
-      to={"/edit-profile"}>
+    <ListItem button >
       <ListItemIcon>
-        <PersonIcon/>
+        <ReportProblemIcon/>
       </ListItemIcon>
-      <ListItemText primary="Profile" />
+      <ListItemText primary="Support" />
     </ListItem>
 
     <ListItem button component={Link} 
       to={"/chat-page"}>
       <ListItemIcon>
-        <ForumIcon/>
+        <SettingsIcon/>
       </ListItemIcon>
-      <ListItemText primary="Chat" /> <Badge color="primary" badgeContent={2}></Badge>
+      <ListItemText primary="Settings"/>
     </ListItem>
 
   </div>
@@ -70,27 +68,27 @@ export const mainListItems = (
 
 export const secondaryListItems = (
   <div>
-    <ListSubheader inset>Matches</ListSubheader>
+    <ListSubheader inset>Users Management</ListSubheader>
     <ListItem button component={Link} 
-      to={"/browse-match"}>
+      to={"/list-students"}>
       <ListItemIcon>
-        <SearchIcon />
+        <GroupIcon />
       </ListItemIcon>
-      <ListItemText primary="Find a Partner!" />
+      <ListItemText primary="Students" />
     </ListItem>
 
-    <ListItem button component={Link} to={"/match-requests"}>
+    <ListItem button component={Link} to={"/list-admins"}>
       <ListItemIcon>
-        <TimerIcon />
+        <PersonIcon />
       </ListItemIcon>
-      <ListItemText primary="Pending Requests" /> <Badge color="primary" badgeContent={4}></Badge>
+      <ListItemText primary="Admins"/>
     </ListItem>
 
-    <ListItem button>
+    <ListItem button component={Link} to={"/register-admin"}>
       <ListItemIcon>
-        <DateRangeIcon />
+        <PersonAddIcon />
       </ListItemIcon>
-      <ListItemText primary="Old Matches" />
+      <ListItemText primary="Add Admin" />
     </ListItem>
   </div>
 );

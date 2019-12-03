@@ -150,16 +150,9 @@ export default function Dashboard(props) {
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
             {props.title}
           </Typography>
-          <IconButton color="inherit" component={Link} to="/match-requests">
-            <Badge badgeContent={0} color="secondary"> 
-              <PersonAddIcon />
-            </Badge>
-          </IconButton>
-          <IconButton color="inherit" component={Link} to="/chat-page">
-            <Badge badgeContent={0} color="secondary">
-              <MessageIcon />
-            </Badge>
-          </IconButton>
+          <Typography component="h1" variant="h6" color="inherit">
+              ADMIN PAGE
+          </Typography>
 
         </Toolbar>
       </AppBar>
