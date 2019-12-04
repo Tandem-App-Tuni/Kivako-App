@@ -44,8 +44,10 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 
 import Grid from '@material-ui/core/Grid'
+import { positions } from '@material-ui/system';
 
 
+import withWidth, { isWidthUp } from '@material-ui/core/withWidth';
 
 
 const styles = ({
@@ -79,7 +81,7 @@ const styles = ({
         color: '#3f51b5'
     },
     cardContent: {
-        padding: '0'
+        padding: '10'
     },
     gridListTile: {
         height:"100%",
@@ -89,7 +91,7 @@ const styles = ({
         minWidth: "400px",
         space:2,
         marginBottom: 5,
-        marginLeft: 1
+        marginLeft: 10
     },
     gridListTileBar: {
         background: "#3f51b5",
@@ -153,9 +155,14 @@ class BrowseMatch extends React.Component {
         isAlreadyregistered : false,
         isAlreadyAuthenticated : false,
         isLoadingPage:true,
-        open:false
+        open:false,
+        width: window.innerWidth
       };
     }
+
+    handleWindowSizeChange = () => {
+        this.setState({ width: window.innerWidth });
+      };
 
 
     openModal = () => {
@@ -165,6 +172,16 @@ class BrowseMatch extends React.Component {
     handleClose = () => {
         this.setState({open: false});
     };
+
+    getGridListCols = () => {
+        const isMobile = window.innerWidth <= 500;
+
+        if (isMobile) {
+          return 1;
+        }else{
+        return 2;
+        }
+      }
 
     getMatchesTiles(item, classes) {
         const cardStyle =makeStyles(theme => ({
@@ -177,6 +194,7 @@ class BrowseMatch extends React.Component {
             },
           }));
 
+
         return (
             item.matches.length === 0 ? (
                     <Typography variant="overline" gutterBottom>
@@ -184,63 +202,68 @@ class BrowseMatch extends React.Component {
                     </Typography>
       
             ) : (
-                <div >
-                <GridList className={classes.gridList} >
+                <GridList container cols={this.getGridListCols()} spacing={30} cellHeight={'auto'}>
                     {
-                        item.matches.map((match, key) =>
-                            
-                            <GridListTile key={key} className={classes.gridListTile}>
-                                <Card className={cardStyle.card}>
+                    item.matches.map((match, key) =>                
+                        <Grid container spacing={3}>
+                            <Grid item xs >
+                                <Card border={1} className={cardStyle.card} key={key}>
                                         <CardHeader
-                                        avatar={
-                                            <Avatar src={"https://pickaface.net/gallery/avatar/unr_test_161024_0535_9lih90.png"} 
-                                                    aria-label="recipe" 
-                                                    className={classes.bigAvatar}>
-                                            </Avatar>
-                                        }
-                                        action={
-                                            <IconButton aria-label="settings">
-                                            <MoreVertIcon />
-                                            </IconButton>
-                                        }
-                                        title={match.firstName + match.lastName}
-                                        subheader={ match.cities}
+                                            avatar={
+                                                <Avatar src={"https://pickaface.net/gallery/avatar/unr_test_161024_0535_9lih90.png"} 
+                                                        aria-label="recipe" 
+                                                        className={classes.bigAvatar}>
+                                                </Avatar>
+                                            }
+                                            action={
+                                                <IconButton aria-label="settings">
+                                                <MoreVertIcon />
+                                                </IconButton>
+                                            }
+                                            title={match.firstName +' '+ match.lastName}
+                                            subheader={ match.cities}
                                         />
                                         
                                         <CardContent>
 
-                                        <Typography variant="body1" color="textSecondary" component="p">
-                                             
-                                            {match.descriptionText}
+                                            <Typography variant="body1" color="textSecondary" component="p">
+                                                
+                                                {match.descriptionText}
 
-                                        </Typography>
-                                        <br></br>
-                                        <Divider variant="middle" />
-                                        <br></br>
-                                        <Typography variant="body2" color="textSecondary" component="p">
-                                            <Icon fontSize="small">home</Icon>Cities: {match.cities}<br></br>
-                                            <Icon fontSize="small">language</Icon>Languages want to learn:<br></br>
-
-                                         </Typography>
+                                            </Typography>
+                                            <br></br>
+                                            <Divider variant="middle" />
+                                            <br></br>
+                                            <Typography variant="body2" color="textSecondary" component="p">
+                                                <Icon fontSize="small">home</Icon>Cities: {match.cities}<br></br>
+                                                <Icon fontSize="small">language</Icon>Languages want to learn:<br></br>
+                                            </Typography>
                                         </CardContent>
                                         <CardActions disableSpacing >
-       
-                                            <div align="center">
+                                            <Grid container>
+                                            <Grid item xs={12} sm={4}>
+                                                
+                                            </Grid>
+                                            <Grid item xs>
                                                 <Button variant="contained" 
                                                         color="primary"
                                                         onClick = {this.onInviteAction.bind(this, match,item.languageName)}
                                                 >
                                                     Request Match
                                                 </Button>
-                                            </div>
-                                           
+                                            </Grid>
+                                            <Grid item xs={12} sm={4}>
+                                            
+                                            </Grid>
+                                            </Grid>
                                         </CardActions>
                                 </Card>
-                            </GridListTile>
+                            </Grid>
+                        </Grid>
                         )
                     }
+                
                 </GridList>
-            </div>
                 
             )
         )
@@ -248,16 +271,17 @@ class BrowseMatch extends React.Component {
 
     getAlreadyExistsDiv(item, classes) {
         return (
-        <ListItem key={item.languageName} className={classes.fullWidth + ' ' + classes.bottomMargin}>
-            <Typography variant="h5" gutterBottom>
-                <Typography variant="overline" gutterBottom>
-                    {"Existing_match_found_for"} {item.languageName}
+            <ListItem key={item.languageName} className={classes.fullWidth + ' ' + classes.bottomMargin}>
+                <Typography variant="h5" gutterBottom>
+                    <Typography variant="overline" gutterBottom>
+                        {"Existing_match_found_for"} {item.languageName}
+                    </Typography>
+                    <Link href="/listMatches" className={classes.preferencesLink}>
+                        {"See_your_matches"}
+                    </Link>
                 </Typography>
-                <Link href="/listMatches" className={classes.preferencesLink}>
-                    {"See_your_matches"}
-                </Link>
-            </Typography>
-        </ListItem>)
+            </ListItem>
+        )
     }
 
     getMatchesList(item, classes){
@@ -291,7 +315,7 @@ class BrowseMatch extends React.Component {
     onInviteAction(user,language) {
         //console.log(user)
         //console.log(language)
-        alert("convite para: " + user.firstName + " no idioma " + language);
+        //alert("convite para: " + user.firstName + " no idioma " + language);
 
         const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/usersMatch/sendRequest")
         //console.log(url)
@@ -422,6 +446,17 @@ class BrowseMatch extends React.Component {
         this._isMounted = false;
       }
 
+    componentWillMount() {
+    window.addEventListener('resize', this.handleWindowSizeChange);
+    }
+    
+    // make sure to remove the listener
+    // when the component is not mounted anymore
+    componentWillUnmount() {
+    window.removeEventListener('resize', this.handleWindowSizeChange);
+    }
+      
+
 
     render() {
         const {classes} = this.props;
@@ -434,7 +469,7 @@ class BrowseMatch extends React.Component {
               fontWeight: theme.typography.fontWeightRegular,
             },
           }));
-        
+
         //Wait until all informations be render until continue
         if(this.state.isLoadingPage) {
             return null;
@@ -455,17 +490,16 @@ class BrowseMatch extends React.Component {
                 <div className={classes.root}>
                     <ResponsiveDrawer title = "Find a new language partner">
                         
-                        <div className={classesPanel.root}>
- 
-                                {
-                                    this.state.userMatches.map(item => {
-                                        return item.alreadyExists ? (
-                                            this.getAlreadyExistsDiv(item, classes)
-                                        ) : (
-                                            this.getMatchesList(item, classes)
-                                        )
-                                    })
-                                }
+                        <div >
+                            {
+                                this.state.userMatches.map(item => {
+                                    return item.alreadyExists ? (
+                                        this.getAlreadyExistsDiv(item, classes)
+                                    ) : (
+                                        this.getMatchesList(item, classes)
+                                    )
+                                })
+                            }
                         </div>
                     </ResponsiveDrawer>
 
