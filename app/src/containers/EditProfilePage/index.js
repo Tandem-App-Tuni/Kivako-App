@@ -31,7 +31,7 @@ import {Redirect} from 'react-router-dom';
 //Components
 import {CityPicker} from '../../components/CityPicker';
 import LanguagePicker from '../../components/LanguagePicker'
-
+import {AlertView} from '../../components/AlertView'
 
 const useStyles = theme => ({
   '@global': {
@@ -116,6 +116,9 @@ class EditProfilePage extends Component {
       descriptionText: '',
       showInputTeachLanguage: false,
       showInputLearnLanguage: false,
+      showAlert: false,
+      alertType: 'error',
+      alertText: '',
       editingTeachLanguageIndex: 0,
       editingLearnLanguageIndex: 0,
       isAlreadyregistered : false,
@@ -161,10 +164,12 @@ class EditProfilePage extends Component {
       .then((responseJson) => {
         console.log(responseJson);
         if (responseJson.update) {
-          alert("User informations updated succesfully!");
+          this.toogleAlert(true, 'success', 'User informations updated succesfully!')
+          // alert("User informations updated succesfully!");
           window.location.reload();
         } else {
-          alert("Update failed. Please try again later");
+          this.toogleAlert(true, 'error', 'Update failed. Please try again later')
+          // alert("Update failed. Please try again later");
         }
         //this.uploadPhoto(responseJson.userCreated._id)
       })
@@ -445,6 +450,22 @@ class EditProfilePage extends Component {
     return langs
   }
 
+  toogleAlert(open, type, text){
+    //type is 'error', 'info', 'success', 'warning'
+    if (open === true) {
+      this.setState({
+        showAlert: open,
+        alertType: type,
+        alertText: text
+      })
+    }
+    else{
+      this.setState({
+        showAlert: open
+      })
+    }
+  }
+
   render() {
     const { classes } = this.props;
     const excludedLanguages = this.toExcludeLanguages();
@@ -657,7 +678,17 @@ class EditProfilePage extends Component {
           <Box mt={5}>
           </Box>
         </Container>
-          
+        <AlertView
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        open={this.state.showAlert}
+        autoHideDuration={6000}
+        onClose={() =>this.toogleAlert(false, null, null)}
+        variant={this.state.alertType}
+        message={this.state.alertText}
+      />
         </ResponsiveDrawer>
       </div> 
     );
