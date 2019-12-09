@@ -46,7 +46,7 @@ export const mainListItems = (
       <ListItemIcon>
         <PersonPinIcon/>
       </ListItemIcon>
-      <ListItemText primary="Current partners" /> <Badge color="primary" badgeContent={1}></Badge>
+      <ListItemText primary="Current partners" />
     </ListItem>
 
     <ListItem button component={Link} 
@@ -62,7 +62,7 @@ export const mainListItems = (
       <ListItemIcon>
         <ForumIcon/>
       </ListItemIcon>
-      <ListItemText primary="Chat" /> <Badge color="primary" badgeContent={2}></Badge>
+      <ListItemText primary="Chat" />
     </ListItem>
 
   </div>
@@ -83,7 +83,7 @@ export const secondaryListItems = (
       <ListItemIcon>
         <TimerIcon />
       </ListItemIcon>
-      <ListItemText primary="Pending Requests" /> <Badge color="primary" badgeContent={4}></Badge>
+      <ListItemText primary="Pending Requests" />
     </ListItem>
 
     <ListItem button>

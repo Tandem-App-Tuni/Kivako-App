@@ -151,14 +151,10 @@ export default function Dashboard(props) {
             {props.title}
           </Typography>
           <IconButton color="inherit" component={Link} to="/match-requests">
-            <Badge badgeContent={0} color="secondary"> 
               <PersonAddIcon />
-            </Badge>
           </IconButton>
           <IconButton color="inherit" component={Link} to="/chat-page">
-            <Badge badgeContent={0} color="secondary">
               <MessageIcon />
-            </Badge>
           </IconButton>
 
         </Toolbar>
