@@ -11,9 +11,6 @@ import {Colors} from './components/constant/index'
 import './App.css';
 import LoginPage from './containers/LoginPage'
 import RegisterAdminPage from './containers/RegisterAdmin'
-//import PreferencePage from './containers/PreferencePage'
-import PartnerListPage from './containers/PartnerListPage'
-import BrowseMatch from './containers/BrowseMatch'
 import RegisterPage from './containers/RegisterPage'
 import ListOfAdmins from './containers/ListOfAdmins'
 import ListOfStudents from './containers/ListOfStudents'
@@ -39,9 +36,6 @@ function App() {
         </Route>
         <Route exact path="/register-admin">
             <RegisterAdminPage />
-        </Route>
-        <Route exact path="/partner-list">
-            <PartnerListPage />
         </Route>
         <Route exact path="/list-admins">
             <ListOfAdmins />

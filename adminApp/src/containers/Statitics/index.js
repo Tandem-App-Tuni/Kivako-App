@@ -1,41 +1,12 @@
 import React, {Component} from 'react';
 import ResponsiveDrawer from '../MenuDrawer';
 
-import Typography from '@material-ui/core/Typography';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
 import {
   withStyles
 } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import PhotoCamera from '@material-ui/icons/PhotoCamera';
-import IconButton from '@material-ui/core/IconButton';
-import Snackbar from '@material-ui/core/Snackbar';
-
-import EditIcon from '@material-ui/icons/Edit';
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
-
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
 
 import {Redirect} from 'react-router-dom';
-import Paper from '@material-ui/core/Paper';
-import { string } from 'prop-types';
 import MaterialTable from "material-table";
-
 
 
 const useStyles = theme => ({
@@ -104,8 +75,7 @@ class Statitics extends Component {
       cors:'no-cors'
     }).then((response) => response.json())
     .then((responseJson) => {
-      console.log("aqui")
-      console.log(responseJson)
+      //console.log(responseJson)
       if(responseJson.isRegistered && responseJson.isAdmin ){
         //User is already registered. Redirect to dashboard in render
         this.setState({ isAlreadyregistered: true });
@@ -181,7 +151,6 @@ class Statitics extends Component {
 
 
   render() {
-    const { classes } = this.props;
     
     //Wait until all informations be render until continue
     if(this.state.isLoadingPage) {
@@ -200,7 +169,7 @@ class Statitics extends Component {
     
     return  (
       <div>
-        <ResponsiveDrawer title = 'Statitics'>
+        <ResponsiveDrawer title = 'Statistics'>
         <StatiticsTable></StatiticsTable>
  
           
@@ -265,7 +234,7 @@ class StatiticsTable extends Component {
     }).then((response) => response.json())
     .then((responseJson) => {
       this.setState({ rows: responseJson.data });
-      console.log(responseJson.data)
+      //console.log(responseJson.data)
       callback();
 
     })
@@ -290,8 +259,7 @@ class StatiticsTable extends Component {
   }
 
   render(){
-    const classes  = useStyles();
-    console.log(this.columns)
+    //console.log(this.columns)
 
     if(this.isLoadingTable){
       return null;

@@ -4,29 +4,13 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import DashboardIcon from '@material-ui/icons/Dashboard';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import PeopleIcon from '@material-ui/icons/People';
 import BarChartIcon from '@material-ui/icons/BarChart';
-import LayersIcon from '@material-ui/icons/Layers';
-import AssignmentIcon from '@material-ui/icons/Assignment';
 import ReportProblemIcon from '@material-ui/icons/ReportProblem';
-import ForumIcon from '@material-ui/icons/Forum';
-import CollectionsBookmarkIcon from '@material-ui/icons/CollectionsBookmark';
-import TuneIcon from '@material-ui/icons/Tune';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import SearchIcon from '@material-ui/icons/Search';
-import TimerIcon from '@material-ui/icons/Timer';
-import DateRangeIcon from '@material-ui/icons/DateRange';
 import PersonIcon from '@material-ui/icons/Person';
-import PersonPinIcon from '@material-ui/icons/PersonPin';
-
 import SettingsIcon from '@material-ui/icons/Settings';
-import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import GroupIcon from '@material-ui/icons/Group';
-
-
-import Badge from '@material-ui/core/Badge';
 
 import { Link } from "react-router-dom";
 
@@ -55,8 +39,7 @@ export const mainListItems = (
       <ListItemText primary="Support" />
     </ListItem>
 
-    <ListItem button component={Link} 
-      to={"/chat-page"}>
+    <ListItem button>
       <ListItemIcon>
         <SettingsIcon/>
       </ListItemIcon>

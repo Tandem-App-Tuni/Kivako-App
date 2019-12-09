@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import ResponsiveDrawer from '../MenuDrawer';
 
-import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -15,14 +14,6 @@ import Container from '@material-ui/core/Container';
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
 import IconButton from '@material-ui/core/IconButton';
 import Snackbar from '@material-ui/core/Snackbar';
-
-import EditIcon from '@material-ui/icons/Edit';
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
-
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
 
 import {Redirect} from 'react-router-dom';
 
@@ -131,9 +122,10 @@ class RegisterAdminPage extends Component {
     }
   }
 
-  // API Call to insert user
+  // API Call to insert adminuser
   onSaveButtonClicked = () => {
-    const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/users/add")
+    // http://localhost:3000/api/v1/admin/add 
+    const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/admin/add")
     //console.log(url)
     fetch(url, {
         method: 'POST',
@@ -156,12 +148,12 @@ class RegisterAdminPage extends Component {
         })
       }).then((response) => response.json())
       .then((responseJson) => {
-        console.log(responseJson);
-        if (responseJson.update) {
+        //console.log(responseJson);
+        if (responseJson.userAdded) {
           alert("Admin User added succesfully!");
           window.location.reload();
         } else {
-          alert("Update failed! " + responseJson.description);
+          alert("Register requisition failed! " + responseJson.description);
           this.snackBarMessageError = responseJson.description;
           this.openSnackBar=true;
         }
@@ -178,10 +170,10 @@ class RegisterAdminPage extends Component {
 
   uploadPhoto = (userId) => {
     const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/users/updatePicture/" + userId)
-    console.log(url)
+    //console.log(url)
     var formData = new FormData()
     formData.append('profileImg', this.state.profileImg);
-    console.log(formData)
+    //console.log(formData)
     fetch(url, {
         method: 'POST',
         // headers: {
@@ -190,7 +182,7 @@ class RegisterAdminPage extends Component {
         body: formData
       }).then((response) => response.json())
       .then((responseJson) => {
-        console.log(responseJson);
+        //console.log(responseJson);
       })
       .catch((error) => {
         console.error(error);
@@ -247,7 +239,7 @@ class RegisterAdminPage extends Component {
       cors:'no-cors'
     }).then((response) => response.json())
     .then((responseJson) => {
-      console.log(responseJson)
+      //console.log(responseJson)
       if(responseJson.isRegistered){
         //User is already registered. Redirect to dashboard in render
         this.setState({ isAlreadyregistered: true });
@@ -333,13 +325,11 @@ class RegisterAdminPage extends Component {
     
     // In case user is not authenticated, redirect to initial page
     if(!this.state.isAlreadyAuthenticated){  
-      console.log("entrou 1")
       return  <Redirect  to="/" />
     }
 
     // In case user is NOT an admin, just redirect to initial system page.
     if(!this.state.userIsAdmin){  
-      console.log("entrou 2")
       return  <Redirect  to="/" />
     }
     

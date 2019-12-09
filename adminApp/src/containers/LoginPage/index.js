@@ -45,7 +45,7 @@ class LandingPage extends Component
          <Container component="main" maxWidth="xs">
   
           <Paper className={classes.paper}>
-          <img src={logo} style={{ maxHeight: 100 , maxWidth: '100%', marginTop: 30,marginLeft: 20,marginRight: 20}}/>
+          <img alt="" src={logo} style={{ maxHeight: 100 , maxWidth: '100%', marginTop: 30,marginLeft: 20,marginRight: 20}}/>
           <Typography component="h1" variant="h6" color="inherit">
             Admin page
           </Typography>
