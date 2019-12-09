@@ -41,7 +41,7 @@ export const mainListItems = (
     </ListItem>
 
     <ListItem button component={Link} 
-          to={"/partner-list"}>
+          to={"/statitics"}>
       <ListItemIcon>
         <BarChartIcon/>
       </ListItemIcon>

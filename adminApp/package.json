@@ -11,6 +11,7 @@
     "@progress/kendo-react-conversational-ui": "^3.6.0",
     "@progress/kendo-react-intl": "^3.6.0",
     "downshift": "^3.3.7",
+    "material-table": "^1.54.1",
     "prop-types": "^15.7.2",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",

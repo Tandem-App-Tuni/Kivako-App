@@ -14,10 +14,10 @@ import RegisterAdminPage from './containers/RegisterAdmin'
 //import PreferencePage from './containers/PreferencePage'
 import PartnerListPage from './containers/PartnerListPage'
 import BrowseMatch from './containers/BrowseMatch'
-import ChatPage from './containers/ChatPage'
 import RegisterPage from './containers/RegisterPage'
 import ListOfAdmins from './containers/ListOfAdmins'
 import ListOfStudents from './containers/ListOfStudents'
+import Statitics from './containers/Statitics'
 
 
 const theme = createMuiTheme({
@@ -46,16 +46,15 @@ function App() {
         <Route exact path="/list-admins">
             <ListOfAdmins />
         </Route>
-        <Route exact path="/chat-page">
-            <ChatPage/>
-        </Route>
         <Route exact path="/register">
             <RegisterPage />
         </Route>
         <Route exact path="/list-students">
             <ListOfStudents />
         </Route>
-
+        <Route exact path="/statitics">
+            <Statitics />
+        </Route>
         
 
       </Switch>
