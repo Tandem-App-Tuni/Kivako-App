@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function PartnerListPage() {
-  const classes = useStyles();
+  const classNamees = useStyles();
 
   return (
     <ResponsiveDrawer title = 'Conversations'>
@@ -31,7 +31,7 @@ export default function PartnerListPage() {
                 Requests
     </Typography>   
 
-    <List className={classes.root}>
+    <List classNameName={classNamees.root}>
       <ListItem alignItems="flex-start">
         <ListItemAvatar>
           <Avatar alt="Remy Sharp" src="https://pickaface.net/gallery/avatar/unr_test_161024_0535_9lih90.png" />
@@ -43,7 +43,7 @@ export default function PartnerListPage() {
               <Typography
                 component="span"
                 variant="body2"
-                className={classes.inline}
+                classNameName={classNamees.inline}
                 color="textPrimary"
               >
                 Teach: English. Learn: Finnish
@@ -59,7 +59,7 @@ export default function PartnerListPage() {
     <Typography variant="h6" gutterBottom>
                 Partners
     </Typography>    
-    <List className={classes.root}>
+    <List classNameName={classNamees.root}>
       <ListItem alignItems="flex-start">
         <ListItemAvatar>
           <Avatar alt="Remy Sharp" src="https://pickaface.net/gallery/avatar/unr_test_161024_0535_9lih90.png" />
@@ -71,7 +71,7 @@ export default function PartnerListPage() {
               <Typography
                 component="span"
                 variant="body2"
-                className={classes.inline}
+                classNameName={classNamees.inline}
                 color="textPrimary"
               >
                 Ali Connors
@@ -93,7 +93,7 @@ export default function PartnerListPage() {
               <Typography
                 component="span"
                 variant="body2"
-                className={classes.inline}
+                classNameName={classNamees.inline}
                 color="textPrimary"
               >
                 to Scott, Alex, Jennifer
@@ -115,7 +115,7 @@ export default function PartnerListPage() {
               <Typography
                 component="span"
                 variant="body2"
-                className={classes.inline}
+                classNameName={classNamees.inline}
                 color="textPrimary"
               >
                 Sandra Adams

@@ -15,15 +15,15 @@ import Chip from '@material-ui/core/Chip';
 
 
 function renderInput(inputProps) {
-  const { InputProps, classes, ref, ...other } = inputProps;
+  const { InputProps, classNamees, ref, ...other } = inputProps;
 
   return (
     <TextField
       InputProps={{
         inputRef: ref,
-        classes: {
-          root: classes.inputRoot,
-          input: classes.inputInput,
+        classNamees: {
+          root: classNamees.inputRoot,
+          input: classNamees.inputInput,
         },
         ...InputProps,
       }}
@@ -36,7 +36,7 @@ renderInput.propTypes = {
   /**
    * Override or extend the styles applied to the component.
    */
-  classes: PropTypes.object.isRequired,
+  classNamees: PropTypes.object.isRequired,
   InputProps: PropTypes.object,
 };
 
@@ -90,7 +90,7 @@ function getSuggestions(value, { showEmpty = false } = {}) {
 }
 
 export function CityPicker(props) {
-  const { classes } = props;
+  const { classNamees } = props;
   const [inputValue, setInputValue] = React.useState('');
   const [selectedItem, setSelectedItem] = React.useState(props.selectedItem);
   
@@ -144,10 +144,10 @@ export function CityPicker(props) {
         });
 
         return (
-          <div className={classes.container}>
+          <div classNameName={classNamees.container}>
             {renderInput({
               fullWidth: true,
-              classes,
+              classNamees,
               label: 'Municipalities',
               InputLabelProps: getLabelProps(),
               InputProps: {
@@ -156,7 +156,7 @@ export function CityPicker(props) {
                     key={item}
                     tabIndex={-1}
                     label={item}
-                    className={classes.chip}
+                    classNameName={classNamees.chip}
                     onDelete={handleDelete(item)}
                   />
                 )),
@@ -171,7 +171,7 @@ export function CityPicker(props) {
             })}
 
             {isOpen ? (
-              <Paper className={classes.pickerpaper} square>
+              <Paper classNameName={classNamees.pickerpaper} square>
                 {getSuggestions(inputValue2).map((suggestion, index) =>
                   renderSuggestion({
                     suggestion,
@@ -191,7 +191,7 @@ export function CityPicker(props) {
 }
 
 CityPicker.propTypes = {
-  classes: PropTypes.object.isRequired,
+  classNamees: PropTypes.object.isRequired,
 };
 
 const useStyles = makeStyles(theme => ({

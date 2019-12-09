@@ -9,7 +9,7 @@ import GridListTile from '@material-ui/core/GridListTile';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import {withStyles} from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	Styles
@@ -59,216 +59,216 @@ const styles = ({
     },
 });
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	Class
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	className
 
 class BrowseMatch extends React.Component {
 
 
     state = {
         userMatches: [
-        {
-            languageName: "English",
-            matches:
-            [
-                {user:{_id: "1", name:"Nam"}},
-                {user:{name:"Peter"}},
-                {user:{name:"Jp"}},
-                {user:{name:"Nam"}},
-                {user:{name:"Peter"}},
-                {user:{name:"Jp"}},
-                {user:{name:"Nam"}},
-                {user:{name:"Peter"}},
-                {user:{name:"Jp"}},
-                {user:{name:"Nam"}},
-                {user:{name:"Peter"}},
-                {user:{name:"Jp"}}
-            ]
-        },
-        {
-            languageName: "Finnish",
-            matches:
-            [
-                {user:{name:"Nam"}},
-                {user:{name:"Peter"}},
-                {user:{name:"Jp"}}
-            ]
-        }
-    ],
+            {
+                languageName: "English",
+                matches:
+                    [
+                        { user: { _id: "1", name: "Nam" } },
+                        { user: { name: "Peter" } },
+                        { user: { name: "Jp" } },
+                        { user: { name: "Nam" } },
+                        { user: { name: "Peter" } },
+                        { user: { name: "Jp" } },
+                        { user: { name: "Nam" } },
+                        { user: { name: "Peter" } },
+                        { user: { name: "Jp" } },
+                        { user: { name: "Nam" } },
+                        { user: { name: "Peter" } },
+                        { user: { name: "Jp" } }
+                    ]
+            },
+            {
+                languageName: "Finnish",
+                matches:
+                    [
+                        { user: { name: "Nam" } },
+                        { user: { name: "Peter" } },
+                        { user: { name: "Jp" } }
+                    ]
+            }
+        ],
         open: false,
     };
     // =========================================== FUNCTIONS ======================================
     // Load possible matches list
-    loadDataPossibleUserMatches(){
+    loadDataPossibleUserMatches() {
         // http://localhost:3000/api/v1/usersMatch/possibleMatchs
         const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/usersMatch/possibleMatchs")
         console.log(url)
         fetch(url, {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        }
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            }
         }).then((response) => response.json())
-        .then((responseJson) => {
-            console.log(responseJson);
-        })
-        .catch((error) => {
-            console.error(error);
-        });
-       
+            .then((responseJson) => {
+                console.log(responseJson);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+
     }
 
     // Send a new match invitation
-    requestNewUserMatch(){
+    requestNewUserMatch() {
         // http://localhost:3000/api/v1/usersMatch/sendRequest
         // The requester user ID will be collect automatic by the server
         const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/usersMatch/sendRequest")
         console.log(url)
         fetch(url, {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            recipientUserID: this.state.recipientUserID,//User that will receive the request
-        })
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                recipientUserID: this.state.recipientUserID,//User that will receive the request
+            })
         }).then((response) => response.json())
-        .then((responseJson) => {
-            console.log(responseJson);
-        })
-        .catch((error) => {
-            console.error(error);
-        });
+            .then((responseJson) => {
+                console.log(responseJson);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
     }
 
     // Get all the match requests made to the user by other users
-    getMatchRequestsReceivedByTheUser(){
+    getMatchRequestsReceivedByTheUser() {
         // http://localhost:3000/api/v1/usersMatch/receiptMatchsRequests
         const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/usersMatch/receiptMatchsRequests")
         console.log(url)
         fetch(url, {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        }
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            }
         }).then((response) => response.json())
-        .then((responseJson) => {
-            console.log(responseJson);
-        })
-        .catch((error) => {
-            console.error(error);
-        });
-       
+            .then((responseJson) => {
+                console.log(responseJson);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+
     }
 
     // Get the match requests made by the user to other users
-    getMatchRequestsRequestedByTheUser(){
+    getMatchRequestsRequestedByTheUser() {
         // http://localhost:3000/api/v1/usersMatch/requestedMatchsRequests
         const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/usersMatch/requestedMatchsRequests")
         console.log(url)
         fetch(url, {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        }
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            }
         }).then((response) => response.json())
-        .then((responseJson) => {
-            console.log(responseJson);
-        })
-        .catch((error) => {
-            console.error(error);
-        });
-       
+            .then((responseJson) => {
+                console.log(responseJson);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+
     }
 
     // Get the current matches of the user
-    getUserCurrentMatchs(){
+    getUserCurrentMatchs() {
         // http://localhost:3000/api/v1/usersMatch/getUserActiveMatches
         const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/usersMatch/getUserActiveMatches")
         console.log(url)
         fetch(url, {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        }
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            }
         }).then((response) => response.json())
-        .then((responseJson) => {
-            console.log(responseJson);
-        })
-        .catch((error) => {
-            console.error(error);
-        });
-        
+            .then((responseJson) => {
+                console.log(responseJson);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+
     }
 
-    acceptNewMatchRequest(){
+    acceptNewMatchRequest() {
         // need the match ID
         const matchID = 123456;
 
         // http://localhost:3000/api/v1/usersMatch/acceptMatchRequest/:matchid
-        const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/usersMatch/acceptMatchRequest"+matchID);
-        
+        const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/usersMatch/acceptMatchRequest" + matchID);
+
         console.log(url)
         fetch(url, {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        }
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            }
         }).then((response) => response.json())
-        .then((responseJson) => {
-            console.log(responseJson);
-        })
-        .catch((error) => {
-            console.error(error);
-        });
-        
+            .then((responseJson) => {
+                console.log(responseJson);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+
     }
 
-    denyNewMatchRequest(){
+    denyNewMatchRequest() {
         // need the match ID
         const matchID = 123456;
 
         // http://localhost:3000/api/v1/usersMatch/denyMatchRequest/:matchid
-        const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/usersMatch/denyMatchRequest"+matchID);
-        
+        const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/usersMatch/denyMatchRequest" + matchID);
+
         console.log(url)
         fetch(url, {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        }
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            }
         }).then((response) => response.json())
-        .then((responseJson) => {
-            console.log(responseJson);
-        })
-        .catch((error) => {
-            console.error(error);
-        });
-        
+            .then((responseJson) => {
+                console.log(responseJson);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+
     }
 
-// ================================================================================================
+    // ================================================================================================
 
-    getUserPossibleMatchsList = () =>{
+    getUserPossibleMatchsList = () => {
         const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/usersMatch/possibleMatchs");
-    
+
         fetch(url, {
             method: 'GET',
             credentials: 'include',
-            cors:'no-cors'
+            cors: 'no-cors'
         }).then((response) => response.json())
-        .then((responseJson) => {
-            // Resposta
-            console.log(responseJson);
-        }).catch((error) => {
-            console.error(error);
-        });
+            .then((responseJson) => {
+                // Resposta
+                console.log(responseJson);
+            }).catch((error) => {
+                console.error(error);
+            });
     };
 
     componentWillReceiveProps(nextProps) {
@@ -281,117 +281,117 @@ class BrowseMatch extends React.Component {
     }
 
     openModal = () => {
-        this.setState({open: true})
+        this.setState({ open: true })
     };
 
     handleClose = () => {
-        this.setState({open: false});
+        this.setState({ open: false });
     };
 
-    getMatchesTiles(item, classes) {
+    getMatchesTiles(item, classNamees) {
         return (
             item.matches.length === 0 ? (
                 <Typography variant="h5" gutterBottom>
                     <Typography variant="overline" gutterBottom>
                         {"No_matches_found_for"} {item.languageName}
                     </Typography>
-                    <Link href="/languagePreferences" className={classes.preferencesLink}>
+                    <Link href="/languagePreferences" classNameName={classNamees.preferencesLink}>
                         {"Edit_your_preferences"}
                     </Link>
                 </Typography>
             ) : (
-                <div className={classes.fullWidth}>
-                    <GridList className={classes.gridList} cols={4}>
-                        {
-                            item.matches.map((match, key) =>
-                                <GridListTile key={key}
-                                              className={classes.gridListTile}>
-                                   <Typography variant="overline" gutterBottom>
-                                   {match.user.name}
-                    </Typography>  
-                    <GridListTileBar
-            //   title={"aaa"}
-              classes={{
-                root: classes.titleBar,
-                title: classes.title,
-              }}
-              actionIcon={
-                <Button variant="contained" color = "primary" onClick = {this.onInviteAction.bind(this, match)}>
-                    Invite 
+                    <div classNameName={classNamees.fullWidth}>
+                        <GridList classNameName={classNamees.gridList} cols={4}>
+                            {
+                                item.matches.map((match, key) =>
+                                    <GridListTile key={key}
+                                        classNameName={classNamees.gridListTile}>
+                                        <Typography variant="overline" gutterBottom>
+                                            {match.user.name}
+                                        </Typography>
+                                        <GridListTileBar
+                                            //   title={"aaa"}
+                                            classNamees={{
+                                                root: classNamees.titleBar,
+                                                title: classNamees.title,
+                                            }}
+                                            actionIcon={
+                                                <Button variant="contained" color="primary" onClick={this.onInviteAction.bind(this, match)}>
+                                                    Invite
                 </Button>
-              }
-            />
-            </GridListTile>
-            )
-                        }
-                    </GridList>
-                </div>
-            )
+                                            }
+                                        />
+                                    </GridListTile>
+                                )
+                            }
+                        </GridList>
+                    </div>
+                )
         )
     }
 
-    getAlreadyExistsDiv(item, classes) {
+    getAlreadyExistsDiv(item, classNamees) {
         return (<ListItem key={item.languageName}
-                          className={classes.fullWidth + ' ' + classes.bottomMargin}>
+            classNameName={classNamees.fullWidth + ' ' + classNamees.bottomMargin}>
             <Typography variant="h5" gutterBottom>
                 <Typography variant="overline" gutterBottom>
                     {"Existing_match_found_for"} {item.languageName}
                 </Typography>
-                <Link href="/listMatches" className={classes.preferencesLink}>
+                <Link href="/listMatches" classNameName={classNamees.preferencesLink}>
                     {"See_your_matches"}
                 </Link>
             </Typography>
         </ListItem>)
     }
 
-    getMatchesList(item, classes) {
+    getMatchesList(item, classNamees) {
         return (<ListItem
             key={item.languageName}
-            className={classes.fullWidth + ' ' + classes.bottomMargin}>
-            <div className={classes.fullWidth} key={item.languageName}>
-                <div className={classes.fullWidth}>
-                    <ListItemText className={classes.bottomMargin}>
+            classNameName={classNamees.fullWidth + ' ' + classNamees.bottomMargin}>
+            <div classNameName={classNamees.fullWidth} key={item.languageName}>
+                <div classNameName={classNamees.fullWidth}>
+                    <ListItemText classNameName={classNamees.bottomMargin}>
                         <Typography variant="overline" gutterBottom>
                             {"Can_teach" + ' ' + item.languageName + ":"}
                         </Typography>
-                        
+
                     </ListItemText>
                 </div>
                 {
-                    this.getMatchesTiles(item, classes)
+                    this.getMatchesTiles(item, classNamees)
                 }
             </div>
         </ListItem>);
     }
 
 
-    onInviteAction (user) {
+    onInviteAction(user) {
         console.log(user)
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this.getUserPossibleMatchsList();
     }
 
 
     render() {
-        const {classes} = this.props;
+        const { classNamees } = this.props;
 
         return (
-            
-            <div className={classes.root}>
-                <ResponsiveDrawer title = "Find a new language partner">
-                <List component="nav" className={classes.fullWidth}>
-                    {
-                        this.state.userMatches.map(item => {
-                            return item.alreadyExists ? (
-                                this.getAlreadyExistsDiv(item, classes)
-                            ) : (
-                                this.getMatchesList(item, classes)
-                            )
-                        })
-                    }
-                </List>
+
+            <div classNameName={classNamees.root}>
+                <ResponsiveDrawer title="Find a new language partner">
+                    <List component="nav" classNameName={classNamees.fullWidth}>
+                        {
+                            this.state.userMatches.map(item => {
+                                return item.alreadyExists ? (
+                                    this.getAlreadyExistsDiv(item, classNamees)
+                                ) : (
+                                        this.getMatchesList(item, classNamees)
+                                    )
+                            })
+                        }
+                    </List>
                 </ResponsiveDrawer>
             </div>
         );
@@ -399,7 +399,7 @@ class BrowseMatch extends React.Component {
 }
 
 BrowseMatch.propTypes = {
-    classes: PropTypes.object.isRequired,
+    classNamees: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(BrowseMatch);

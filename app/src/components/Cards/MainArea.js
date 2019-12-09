@@ -78,7 +78,7 @@ class MainArea extends Component {
             )
         })
         return (
-            <div className="container">
+            <div classNameName="container">
                 {peopleCards}
             </div>
 
@@ -103,8 +103,8 @@ class MainArea extends Component {
         })
         return (
 
-            <div className="container-fluid d-flex justify-content-center">
-                <div className="row">
+            <div classNameName="container-fluid d-flex justify-content-center">
+                <div classNameName="row">
                     {peopleCards}
                 </div>
             </div>

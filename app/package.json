@@ -3,11 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.25",
+    "@fortawesome/free-solid-svg-icons": "^5.11.2",
+    "@fortawesome/react-fontawesome": "^0.1.8",
     "@material-ui/core": "^4.5.0",
     "@material-ui/icons": "^4.5.1",
     "@material-ui/lab": "^4.0.0-alpha.32",
     "@material-ui/styles": "^4.5.0",
+    "bootstrap": "^4.4.1",
     "downshift": "^3.3.7",
+    "font-awesome": "^4.7.0",
     "prop-types": "^15.7.2",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
@@ -41,4 +46,3 @@
   },
   "devDependencies": {}
 }
-

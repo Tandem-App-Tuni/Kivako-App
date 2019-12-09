@@ -1,5 +1,5 @@
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import ResponsiveDrawer from '../MenuDrawer';
 
 import Typography from '@material-ui/core/Typography';
@@ -14,7 +14,7 @@ import Container from '@material-ui/core/Container';
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
 import IconButton from '@material-ui/core/IconButton';
 import { browserHistory } from 'react-router';
-import  { Redirect } from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
 
 import { withRouter } from 'react-router-dom';
 
@@ -35,10 +35,10 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 
 //Data
-import {municipality} from '../../components/constant/municipality'
+import { municipality } from '../../components/constant/municipality'
 
 //Components
-import {CityPicker} from '../../components/CityPicker';
+import { CityPicker } from '../../components/CityPicker';
 import LanguagePicker from '../../components/LanguagePicker'
 
 const ITEM_HEIGHT = 48;
@@ -95,7 +95,7 @@ const useStyles = theme => ({
     }
   }
   ,
-//languages
+  //languages
   formControl: {
     margin: theme.spacing(1),
     minWidth: 120,
@@ -112,478 +112,478 @@ const useStyles = theme => ({
   noLabel: {
     marginTop: theme.spacing(3),
   },
-   flexContainer : {
-  display: 'flex',
-  flexDirection: 'row',
-  padding: 0,
-}
-  
+  flexContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    padding: 0,
+  }
+
 });
 
 class SignUpPage extends Component {
   state = {
     profileImg: null,
-    languagesToTeach:[],
+    languagesToTeach: [],
     languagesToLearn: [],
-    firstName : '',
-    lastName : '',
-    email : '',
-    cities : [],
-    descriptionText : '',
-    showInputTeachLanguage : false,
-    showInputLearnLanguage : false,
-    editingTeachLanguageIndex : 0,
-    editingLearnLanguageIndex : 0
+    firstName: '',
+    lastName: '',
+    email: '',
+    cities: [],
+    descriptionText: '',
+    showInputTeachLanguage: false,
+    showInputLearnLanguage: false,
+    editingTeachLanguageIndex: 0,
+    editingLearnLanguageIndex: 0
   }
 
-onImageChange = (event) => {
-  if (event.target.files.length > 0){
-    const url = URL.createObjectURL(event.target.files[0]);
-    this.setState({
-      profileImg: event.target.files[0],
-      profileImgURL: url
-    });
+  onImageChange = (event) => {
+    if (event.target.files.length > 0) {
+      const url = URL.createObjectURL(event.target.files[0]);
+      this.setState({
+        profileImg: event.target.files[0],
+        profileImgURL: url
+      });
+    }
   }
-}
 
-onSaveButtonClicked = () =>{
-  const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/users/add")
-  console.log(url)
-  fetch(url, {
-  method: 'POST',
-  headers: {
-    'Accept': 'application/json',
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify({
-    languagesToTeach: this.state.languagesToTeach,
-    languagesToLearn: this.state.languagesToLearn,
-    firstName : this.state.firstName,
-      lastName : this.state.lastName,
-      email : this.state.email,
-      cities : this.state.cities,
-      descriptionText : this.state.descriptionText,
-      userIsActivie: true
-  })
-}).then((response) => response.json())
-.then((responseJson) => {
-  console.log(responseJson);
-  this.uploadPhoto(responseJson.userCreated._id)
-})
-.catch((error) => {
-  console.error(error);
-});
+  onSaveButtonClicked = () => {
+    const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/users/add")
+    console.log(url)
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        languagesToTeach: this.state.languagesToTeach,
+        languagesToLearn: this.state.languagesToLearn,
+        firstName: this.state.firstName,
+        lastName: this.state.lastName,
+        email: this.state.email,
+        cities: this.state.cities,
+        descriptionText: this.state.descriptionText,
+        userIsActivie: true
+      })
+    }).then((response) => response.json())
+      .then((responseJson) => {
+        console.log(responseJson);
+        this.uploadPhoto(responseJson.userCreated._id)
+      })
+      .catch((error) => {
+        console.error(error);
+      });
 
 
-//this.uploadPhoto("5daf39de47435bd5d59687c6");
-}
-
-uploadPhoto = (userId) =>{
-  const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/users/updatePicture/"+userId)
-  console.log(url)
-  var formData = new FormData()
- formData.append('profileImg', this.state.profileImg);
- console.log(formData)
-  fetch(url, {
-  method: 'POST',
-  // headers: {
-  //       'Content-Type': 'multipart/form-data',
-  //     },
-  body: formData
-}).then((response) => response.json())
-.then((responseJson) => {
-  console.log(responseJson);
-})
-.catch((error) => {
-  console.error(error);
-});
-}
-
-handleChangeTeach = event => {
-  const { options } = event.target;
-
-     var value= (event.target.value);
-    
-  this.setState(
-    {
-      languagesToTeach: value
-        }
-    )
-};
-
-handleChangeLearn = event => {
-  const { options } = event.target;
-
-     var value= (event.target.value);
-    
-  this.setState(
-    {
-      languagesToLearn: value
-        }
-    )
-};
-
-handleChangeFirstName = event => {
-  
-     var value= (event.target.value);
-    
-  this.setState(
-    {
-      firstName: value
-        }
-    )
-};
-
-handleChangeLastName = event => {
-  
-  var value= (event.target.value);
- 
-  this.setState(
-  {
-    lastName: value
-      }
-  )
-};
-
-handleChangeEmail = event => {
-  
-  var value= (event.target.value);
- 
-this.setState(
- {
-   email: value
-     }
- )
-};
-
-handleChangeCities = value => {
- if (value.length > 2) {
-
- }else{
-this.setState(
- {
-   cities: value
+    //this.uploadPhoto("5daf39de47435bd5d59687c6");
   }
- )
-}
-};
 
-handleChangeIntroduction = event => {
-  
-  var value= (event.target.value);
- 
-this.setState(
- {
-   descriptionText: value
+  uploadPhoto = (userId) => {
+    const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/users/updatePicture/" + userId)
+    console.log(url)
+    var formData = new FormData()
+    formData.append('profileImg', this.state.profileImg);
+    console.log(formData)
+    fetch(url, {
+      method: 'POST',
+      // headers: {
+      //       'Content-Type': 'multipart/form-data',
+      //     },
+      body: formData
+    }).then((response) => response.json())
+      .then((responseJson) => {
+        console.log(responseJson);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
- )
-};
 
-checkUserIsRegistered = () =>{
-  const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/users/isRegistered")
-  console.log('Checking is the user is registered...');
-  console.log(url);
+  handleChangeTeach = event => {
+    const { options } = event.target;
 
-  fetch(url, {
-    method: 'GET',
-    credentials: 'include',
-    cors:'no-cors'
-  }).then((response) => response.json())
-  .then((responseJson) => {
-    //console.log("log");
-    console.log(responseJson.email);
+    var value = (event.target.value);
+
     this.setState(
       {
-        email: responseJson.email
+        languagesToTeach: value
+      }
+    )
+  };
+
+  handleChangeLearn = event => {
+    const { options } = event.target;
+
+    var value = (event.target.value);
+
+    this.setState(
+      {
+        languagesToLearn: value
+      }
+    )
+  };
+
+  handleChangeFirstName = event => {
+
+    var value = (event.target.value);
+
+    this.setState(
+      {
+        firstName: value
+      }
+    )
+  };
+
+  handleChangeLastName = event => {
+
+    var value = (event.target.value);
+
+    this.setState(
+      {
+        lastName: value
+      }
+    )
+  };
+
+  handleChangeEmail = event => {
+
+    var value = (event.target.value);
+
+    this.setState(
+      {
+        email: value
+      }
+    )
+  };
+
+  handleChangeCities = value => {
+    if (value.length > 2) {
+
+    } else {
+      this.setState(
+        {
+          cities: value
+        }
+      )
+    }
+  };
+
+  handleChangeIntroduction = event => {
+
+    var value = (event.target.value);
+
+    this.setState(
+      {
+        descriptionText: value
+      }
+    )
+  };
+
+  checkUserIsRegistered = () => {
+    const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/users/isRegistered")
+    console.log('Checking is the user is registered...');
+    console.log(url);
+
+    fetch(url, {
+      method: 'GET',
+      credentials: 'include',
+      cors: 'no-cors'
+    }).then((response) => response.json())
+      .then((responseJson) => {
+        //console.log("log");
+        console.log(responseJson.email);
+        this.setState(
+          {
+            email: responseJson.email
           }
-      )
-  })
-  .catch((error) => {
-    console.error(error);
-  });
-}
-
-checkIfUserIsAuthenticaded = () =>{
-
-  const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/isAuthenticated")
-  console.log('Checking if the user is authenticated...');
-  //console.log(url);
-
-  fetch(url, {
-    method: 'GET',
-    credentials: 'include',
-    cors:'no-cors'
-  }).then((response) => response.json())
-  .then((responseData) => {
-    //console.log("log");
-    console.log(responseData);
-    if(responseData === false){
-        // User not authenticated
-        console.log("oi");
-        // Redirect to inicial page.
-        // TODO IMPLEMENT THIS REDIRECT
-        //browserHistory.push('/');
-    }else{
-        // Continue page render
-    }
-
-  })
-  .catch((error) => {
-    console.error(error);
-  });
-}
-
-componentDidMount(){
-  this.checkIfUserIsAuthenticaded();
-  this.checkUserIsRegistered();
-
-
-}
-onShowInputTeachLanguage = (open, index, newValue) =>  {
-  if (open === true){
-    this.setState(
-      {
-        editingTeachLanguageIndex: index
-      }
-    )
+        )
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
-  else{
-    if (newValue != null){
-      var arr = this.state.languagesToTeach
-      if (index < this.state.languagesToTeach.length){
-        arr[index] = newValue
-      }
-      else{
-        arr.push(newValue)
-      }     
+
+  checkIfUserIsAuthenticaded = () => {
+
+    const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/isAuthenticated")
+    console.log('Checking if the user is authenticated...');
+    //console.log(url);
+
+    fetch(url, {
+      method: 'GET',
+      credentials: 'include',
+      cors: 'no-cors'
+    }).then((response) => response.json())
+      .then((responseData) => {
+        //console.log("log");
+        console.log(responseData);
+        if (responseData === false) {
+          // User not authenticated
+          console.log("oi");
+          // Redirect to inicial page.
+          // TODO IMPLEMENT THIS REDIRECT
+          //browserHistory.push('/');
+        } else {
+          // Continue page render
+        }
+
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
+  componentDidMount() {
+    this.checkIfUserIsAuthenticaded();
+    this.checkUserIsRegistered();
+
+
+  }
+  onShowInputTeachLanguage = (open, index, newValue) => {
+    if (open === true) {
       this.setState(
         {
-          languagesToTeach: arr
+          editingTeachLanguageIndex: index
         }
       )
     }
-  }
-  this.setState(
-    {
-      showInputTeachLanguage: open
+    else {
+      if (newValue != null) {
+        var arr = this.state.languagesToTeach
+        if (index < this.state.languagesToTeach.length) {
+          arr[index] = newValue
+        }
+        else {
+          arr.push(newValue)
+        }
+        this.setState(
+          {
+            languagesToTeach: arr
+          }
+        )
+      }
     }
-  )
-};
-
-
-onShowInputLearnLanguage = (open, index, newValue) =>  {
-  if (open === true){
     this.setState(
       {
-        editingLearnLanguageIndex: index
+        showInputTeachLanguage: open
       }
     )
-  }
-  else{
-    if (newValue != null){
-      var arr = this.state.languagesToLearn
-      if (index < this.state.languagesToLearn.length){
-        arr[index] = newValue
-      }
-      else{
-        arr.push(newValue)
-      }  
+  };
+
+
+  onShowInputLearnLanguage = (open, index, newValue) => {
+    if (open === true) {
       this.setState(
         {
-          languagesToLearn: arr
+          editingLearnLanguageIndex: index
         }
       )
     }
-  }
-  this.setState(
-    {
-      showInputLearnLanguage: open
+    else {
+      if (newValue != null) {
+        var arr = this.state.languagesToLearn
+        if (index < this.state.languagesToLearn.length) {
+          arr[index] = newValue
+        }
+        else {
+          arr.push(newValue)
+        }
+        this.setState(
+          {
+            languagesToLearn: arr
+          }
+        )
+      }
     }
-  )
-};
+    this.setState(
+      {
+        showInputLearnLanguage: open
+      }
+    )
+  };
 
-toExcludeLanguages = () =>{
-  var langs = [];
-  
-  this.state.languagesToTeach.forEach(item => {
-    langs.push(item.language);
+  toExcludeLanguages = () => {
+    var langs = [];
+
+    this.state.languagesToTeach.forEach(item => {
+      langs.push(item.language);
+    }
+    )
+
+    return langs
   }
-  )
-  
-  return langs
-}
 
 
-render() {
-  const { classes } = this.props;
-  const excludedLanguages = this.toExcludeLanguages()
-  
-    return  (
+  render() {
+    const { classNamees } = this.props;
+    const excludedLanguages = this.toExcludeLanguages()
+
+    return (
       <div>
-          <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <div className={classes.paper}>
-          <Avatar className={classes.avatar} src={this.state.profileImgURL}>
-          
-          </Avatar>
-          <div className={classes.uploadBtnWrapper}>
-          <IconButton
-          color="primary"
-          className={classes.button}
-          aria-label="upload picture"
-          component="span"
-        >
-          <PhotoCamera />
-        </IconButton>
-        <input type="file" name="myfile" onChange={this.onImageChange} />
-        </div>
+        <Container component="main" maxWidth="xs">
+          <CssBaseline />
+          <div classNameName={classNamees.paper}>
+            <Avatar classNameName={classNamees.avatar} src={this.state.profileImgURL}>
 
-          <form className={classes.form} noValidate>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  autoComplete="fname"
-                  name="firstName"
-                  variant="outlined"
-                  required
-                  fullWidth
-                  id="firstName"
-                  label="First Name"
-                  autoFocus
-                  onChange =  {this.handleChangeFirstName}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="lname"
-                  onChange =  {this.handleChangeLastName}
-                />
-              </Grid>
+            </Avatar>
+            <div classNameName={classNamees.uploadBtnWrapper}>
+              <IconButton
+                color="primary"
+                classNameName={classNamees.button}
+                aria-label="upload picture"
+                component="span"
+              >
+                <PhotoCamera />
+              </IconButton>
+              <input type="file" name="myfile" onChange={this.onImageChange} />
+            </div>
 
-              <Grid item xs={12}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                  onChange =  {this.handleChangeEmail}
+            <form classNameName={classNamees.form} noValidate>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    autoComplete="fname"
+                    name="firstName"
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="firstName"
+                    label="First Name"
+                    autoFocus
+                    onChange={this.handleChangeFirstName}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="lastName"
+                    label="Last Name"
+                    name="lastName"
+                    autoComplete="lname"
+                    onChange={this.handleChangeLastName}
+                  />
+                </Grid>
+
+                <Grid item xs={12}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="email"
+                    label="Email Address"
+                    name="email"
+                    autoComplete="email"
+                    onChange={this.handleChangeEmail}
                   // disabled = {true}
-                />
-              </Grid>
+                  />
+                </Grid>
 
-              <Grid item xs={12}>
-             
-              <CityPicker classes = {classes}
-                selectedItem = {this.state.cities}
-                onChange = {this.handleChangeCities}
-              />
-              </Grid>
+                <Grid item xs={12}>
 
-              <Grid item xs={12}>
-              <TextField
-                        variant="outlined"
-                  id="introduction"
-                  label="Introduction"
-                  multiline
-                  fullWidth
-                  rows="4"
-                  defaultValue=""
-                  className={classes.textField}
-                  margin="normal"
-                  onChange =  {this.handleChangeIntroduction}
-                />
-              </Grid>
-             
-              <Grid item xs={12}>
-              <Typography variant="subtitle2" gutterBottom>
-                Languages I can teach
+                  <CityPicker classNamees={classNamees}
+                    selectedItem={this.state.cities}
+                    onChange={this.handleChangeCities}
+                  />
+                </Grid>
+
+                <Grid item xs={12}>
+                  <TextField
+                    variant="outlined"
+                    id="introduction"
+                    label="Introduction"
+                    multiline
+                    fullWidth
+                    rows="4"
+                    defaultValue=""
+                    classNameName={classNamees.textField}
+                    margin="normal"
+                    onChange={this.handleChangeIntroduction}
+                  />
+                </Grid>
+
+                <Grid item xs={12}>
+                  <Typography variant="subtitle2" gutterBottom>
+                    Languages I can teach
               </Typography>
 
-              <List>
-              {this.state.languagesToTeach.map(item => {
-                return (
-                    <ListItem button key={item.language} onClick={() =>this.onShowInputTeachLanguage(true, this.state.languagesToTeach.indexOf(item))}>
-                      <ListItemText primary={item.language + ",level: " + item.level} />
-                      <ListItemIcon>
-                        <EditIcon />
-                      </ListItemIcon>
-                    </ListItem>
-                )
-              })}
-              </List>
+                  <List>
+                    {this.state.languagesToTeach.map(item => {
+                      return (
+                        <ListItem button key={item.language} onClick={() => this.onShowInputTeachLanguage(true, this.state.languagesToTeach.indexOf(item))}>
+                          <ListItemText primary={item.language + ",level: " + item.level} />
+                          <ListItemIcon>
+                            <EditIcon />
+                          </ListItemIcon>
+                        </ListItem>
+                      )
+                    })}
+                  </List>
 
-              <IconButton className={classes.margin} onClick={() =>this.onShowInputTeachLanguage(true, this.state.languagesToTeach.length)}>
-                 <AddCircleOutlineIcon fontSize="small" />
-              </IconButton>
-              </Grid>
+                  <IconButton classNameName={classNamees.margin} onClick={() => this.onShowInputTeachLanguage(true, this.state.languagesToTeach.length)}>
+                    <AddCircleOutlineIcon fontSize="small" />
+                  </IconButton>
+                </Grid>
 
-              <LanguagePicker open = {this.state.showInputTeachLanguage} 
-                      type = "teach"
-                      language = {this.state.languagesToTeach[this.state.editingTeachLanguageIndex]}  
-                      onClose={(value) =>this.onShowInputTeachLanguage(false, this.state.editingTeachLanguageIndex, value)}
-                      excludedLanguages = {excludedLanguages}
-                      />
+                <LanguagePicker open={this.state.showInputTeachLanguage}
+                  type="teach"
+                  language={this.state.languagesToTeach[this.state.editingTeachLanguageIndex]}
+                  onClose={(value) => this.onShowInputTeachLanguage(false, this.state.editingTeachLanguageIndex, value)}
+                  excludedLanguages={excludedLanguages}
+                />
 
-              <Grid item xs={12}>
-              <Typography variant="subtitle2" gutterBottom>
+                <Grid item xs={12}>
+                  <Typography variant="subtitle2" gutterBottom>
                     Languages I want to learn
                     </Typography>
 
-                    <List>
-              {this.state.languagesToLearn.map(item => {
-                return (
-                    <ListItem button key={item.language} onClick={() =>this.onShowInputLearnLanguage(true, this.state.languagesToLearn.indexOf(item))}>
-                      <ListItemText primary={item.language + ",level " + item.level + ", credits: " + item.credit } />
-                      <ListItemIcon>
-                        <EditIcon />
-                      </ListItemIcon>
-                    </ListItem>
-                )
-              })}
-              </List>
-                  
-                    <IconButton className={classes.margin} onClick={() =>this.onShowInputLearnLanguage(true, this.state.languagesToLearn.length)}>
-                 <AddCircleOutlineIcon fontSize="small" />
-              </IconButton>
-              </Grid>
+                  <List>
+                    {this.state.languagesToLearn.map(item => {
+                      return (
+                        <ListItem button key={item.language} onClick={() => this.onShowInputLearnLanguage(true, this.state.languagesToLearn.indexOf(item))}>
+                          <ListItemText primary={item.language + ",level " + item.level + ", credits: " + item.credit} />
+                          <ListItemIcon>
+                            <EditIcon />
+                          </ListItemIcon>
+                        </ListItem>
+                      )
+                    })}
+                  </List>
 
-              <LanguagePicker open = {this.state.showInputLearnLanguage} 
-                      type = "learn"
-                      language = {this.state.languagesToLearn[this.state.editingLearnLanguageIndex]}  
-                      onClose={(value) =>this.onShowInputLearnLanguage(false, this.state.editingLearnLanguageIndex, value)}
-                      excludedLanguages = {excludedLanguages}
-                      />
+                  <IconButton classNameName={classNamees.margin} onClick={() => this.onShowInputLearnLanguage(true, this.state.languagesToLearn.length)}>
+                    <AddCircleOutlineIcon fontSize="small" />
+                  </IconButton>
+                </Grid>
+
+                <LanguagePicker open={this.state.showInputLearnLanguage}
+                  type="learn"
+                  language={this.state.languagesToLearn[this.state.editingLearnLanguageIndex]}
+                  onClose={(value) => this.onShowInputLearnLanguage(false, this.state.editingLearnLanguageIndex, value)}
+                  excludedLanguages={excludedLanguages}
+                />
               </Grid>
 
               <Button
-              //type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-              onClick={this.onSaveButtonClicked}
+                //type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                classNameName={classNamees.submit}
+                onClick={this.onSaveButtonClicked}
               >
-              SIGN UP
+                SIGN UP
             </Button>
-            
-          </form>
-        </div>
-        <Box mt={5}>
-        </Box>
-      </Container>
-          
-      </div> 
+
+            </form>
+          </div>
+          <Box mt={5}>
+          </Box>
+        </Container>
+
+      </div>
     );
+  }
 }
-}
-  
-  export default withStyles(useStyles) (SignUpPage);
+
+export default withStyles(useStyles)(SignUpPage);

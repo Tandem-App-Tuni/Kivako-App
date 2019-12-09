@@ -26,12 +26,12 @@ const styles = {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	Function
 
 function PreferenceItem(props) {
-  const { classes } = props;
+  const { classNamees } = props;
   return (
-    <Card className={classes.card}>
+    <Card className={classNamees.card}>
       <CardContent>
         <Typography variant="h6">
-         {props.title}
+          {props.title}
         </Typography>
         <Typography variant="subtitle1" color="textSecondary">
           {props.content}

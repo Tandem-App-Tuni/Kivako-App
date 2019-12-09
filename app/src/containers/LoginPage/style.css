@@ -1,0 +1,306 @@
+body{
+    font-family: 'Montserrat-Black', sans-serif;
+    text-align: center;
+}
+.container-fluid{
+    padding:2% 15%;
+}
+
+.colered-section{
+    background: #4E008E;
+    color: white;
+}
+.text-center{
+    text-align: center;
+}
+.section-style{
+    padding: 30px 0;
+    position: relative;
+    background-color: #FFFFFF;
+}
+
+/* first section starts here*/
+#first-section{
+    text-align: left;
+}
+.btn-style{
+    margin:20px 20px 10px 0;
+}
+.logo{
+    width: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+.navbar{
+    padding: 0 0 2rem 0;
+}
+.navbar-brand{
+    font-family: ubuntu;
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+.nav-item{
+    padding: 0 18px;
+}
+.nav-link{
+    font-family: 'Montserrat-white';
+    font-size: 1.2rem;
+}
+
+/* designing title div*/
+.title-heading{
+    font-family: 'Montserrat-Black', sans-serif;
+    font-size: 2.5rem;
+    line-height: 1.5;
+}
+.title-paragraph{
+    padding: 10% 0%;
+    font-family: 'Montserrat-Black', sans-serif;
+    
+}
+
+.title-image{
+    width:60%;
+    /* transform: rotate(25deg); */
+    position: absolute;
+    right: 5%;
+    
+}
+
+.download-btn{
+    margin:5% 3% 5% 0;
+    
+}
+.title-icon{
+  margin-right: 15px;
+}
+/* first section ends here*/
+
+
+
+/* client section starts here*/
+#client-section{
+    position: relative;
+    z-index: 1;
+    background-color: #EEEEEE;
+    padding-bottom: 20px;
+}
+
+.header-text{
+    text-transform: uppercase;
+    font-weight: 200;
+    color: #333;
+    font-size: 30px;
+    position: relative;
+    line-height: 30px;
+    margin: 30px 0 20px;
+}
+.p-text{
+    margin: 0 0 10px;
+    -webkit-font-smoothing: antialiased;
+}
+.logos {
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+}
+.list-unstyled{
+    
+}
+.list-unstyled li{
+    display: inline;
+    margin: 0 17px;
+}
+
+/* client section ends here*/
+
+
+
+/* presentation section */
+#section-presentation{
+    overflow: hidden;
+    width: 100%;
+    min-height: 600px;
+    margin-top: 10px;
+}
+.row {
+    margin-right: -15px;
+    margin-left: -15px;
+}
+.description {
+    padding: 50px 5px 0;
+}
+.presentation-image{
+    
+    width: 100%;
+}
+/* presentation section ends here*/
+
+
+
+/* demo section starts here*/
+#demo-section{
+
+}
+.carousel {
+    position: relative;
+}
+.carousel.fade {
+    opacity: 1;
+}
+#demo-section .carousel-inner {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.23);
+}
+.carousel-indicators{
+    position: absolute;
+    bottom: -50px;
+    
+}
+.carousel-indicators .active{
+   background-color: orangered;
+}
+.carousel-indicators li {
+    width: 10px;
+    height: 10px;
+    border-radius: 100%;
+    background-color: orange;
+}
+/* demo section ends here */
+
+
+
+
+
+/* feature section starts here */
+#feature-section{
+
+}
+.card {
+    width: 100%;
+    min-height: 390px;
+    padding: 10px 30px;
+    border: #DDDDDD solid 1px;
+    border-image-source: initial;
+    border-image-slice: initial;
+    border-image-width: initial;
+    border-image-outset: initial;
+    border-image-repeat: initial;
+    border-radius: 10px;
+    margin-top: 30px;
+    text-align: center;
+}
+.card:hover{
+    box-shadow: black 5px 10px 20px 1px;
+}
+.card-orange {
+    border-color: #FAD9CD;
+ }
+ .card-icon{
+     color: #ff967f;
+     font-size: 63px;
+    
+    width: 85px;
+    height: 85px;
+    line-height: 80px;
+    text-align: center;
+    border-radius: 50%;
+    margin: 0 auto;
+    margin-top: 20px;
+ }
+ .text h4{
+     color: gray;
+     margin: 20px 15px;
+ }
+/* feature section ends here */
+
+
+/* testimonial section starts from here */
+#testimonial-section{
+    margin-top: 50px;
+}
+#testimonial-section .carousel {
+    margin-top: 50px;
+}
+
+.carousel-testimonial-caption {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+#testimonial-section .carousel-inner{
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+#testimonial-section .mask {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 5px solid #ddd;
+    overflow: hidden;
+    display: block;
+    margin: 0 auto;
+}
+/* testimonial section ends here */
+
+
+
+
+/* footer section starts here */
+#footer{
+    margin-top: 50px;
+    background-color: #4E008E;
+    color: white;
+    line-height: 20px;
+}
+.col-style{
+    margin-bottom: 10px;
+  
+}
+.footer-nav{    
+
+}
+
+.footer-nav a{
+color: white;
+margin-left: 25px;
+}
+
+.copyright{
+    text-align: center;
+}
+.copyright a{
+    color: grey;
+}
+.social-icon{
+   
+    text-align: center;
+}
+.social-icon a{
+    color: white;
+}
+.social-icon-style{
+    margin-left: 25px;
+}
+
+/* footer section ends here */
+
+
+
+@media (max-width: 950px){
+    .title-image{
+       
+        visibility: hidden;
+    }
+    .btn-style{
+        width: 100%;
+        margin:20px 20px 10px 0;
+    }
+  
+}

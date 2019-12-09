@@ -1,4 +1,6 @@
 import React from 'react';
+
+
 import {
   BrowserRouter as Router,
   Switch,
@@ -6,7 +8,7 @@ import {
 } from "react-router-dom";
 
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import {Colors} from './components/constant/index'
+import { Colors } from './components/constant/index'
 
 import './App.css';
 import LoginPage from './containers/LoginPage'
@@ -19,34 +21,34 @@ import RegisterPage from './containers/RegisterPage'
 const theme = createMuiTheme({
   palette: {
     primary: {
-        main: Colors.mainColor
-      }
+      main: Colors.mainColor
     }
-  },
+  }
+},
 )
 
 function App() {
   return (
     <MuiThemeProvider theme={theme}>
-    <Router>
-      <Switch>
-        <Route exact path="/">
+      <Router>
+        <Switch>
+          <Route exact path="/">
             <LoginPage />
-        </Route>
-        <Route exact path="/edit-profile">
+          </Route>
+          <Route exact path="/edit-profile">
             <EditProfilePage />
-        </Route>
-        <Route exact path="/partner-list">
+          </Route>
+          <Route exact path="/partner-list">
             <PartnerListPage />
-        </Route>
-        <Route exact path="/browse-match">
+          </Route>
+          <Route exact path="/browse-match">
             <BrowseMatch />
-        </Route>
-        <Route exact path="/register">
+          </Route>
+          <Route exact path="/register">
             <RegisterPage />
-        </Route>
-      </Switch>
-    </Router>
+          </Route>
+        </Switch>
+      </Router>
     </MuiThemeProvider>
   );
 }

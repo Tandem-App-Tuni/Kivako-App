@@ -57,7 +57,7 @@ const useStyles = makeStyles(theme => ({
 
 function ResponsiveDrawer(props) {
   const { container } = props;
-  const classes = useStyles();
+  const classNamees = useStyles();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
@@ -67,7 +67,7 @@ function ResponsiveDrawer(props) {
 
   const drawer = (
     <div>
-      <div className={classes.toolbar} />
+      <div classNameName={classNamees.toolbar} />
       <Divider />
       <List>
       <ListItem button key="1" component={Link} 
@@ -105,16 +105,16 @@ function ResponsiveDrawer(props) {
   );
 
   return (
-    <div className={classes.root}>
+    <div classNameName={classNamees.root}>
       <CssBaseline />
-      <AppBar position="fixed" className={classes.appBar}>
+      <AppBar position="fixed" classNameName={classNamees.appBar}>
         <Toolbar>
           <IconButton
             color="inherit"
             aria-label="open drawer"
             edge="start"
             onClick={handleDrawerToggle}
-            className={classes.menuButton}
+            classNameName={classNamees.menuButton}
           >
             <MenuIcon />
           </IconButton>
@@ -123,7 +123,7 @@ function ResponsiveDrawer(props) {
           </Typography>
         </Toolbar>
       </AppBar>
-      <nav className={classes.drawer} aria-label="mailbox folders">
+      <nav classNameName={classNamees.drawer} aria-label="mailbox folders">
         {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Hidden smUp implementation="css">
           <Drawer
@@ -132,8 +132,8 @@ function ResponsiveDrawer(props) {
             anchor={theme.direction === 'rtl' ? 'right' : 'left'}
             open={mobileOpen}
             onClose={handleDrawerToggle}
-            classes={{
-              paper: classes.drawerPaper,
+            classNamees={{
+              paper: classNamees.drawerPaper,
             }}
             ModalProps={{
               keepMounted: true, // Better open performance on mobile.
@@ -144,8 +144,8 @@ function ResponsiveDrawer(props) {
         </Hidden>
         <Hidden xsDown implementation="css">
           <Drawer
-            classes={{
-              paper: classes.drawerPaper,
+            classNamees={{
+              paper: classNamees.drawerPaper,
             }}
             variant="permanent"
             open
@@ -154,8 +154,8 @@ function ResponsiveDrawer(props) {
           </Drawer>
         </Hidden>
       </nav>
-      <main className={classes.content}>
-        <div className={classes.toolbar} />
+      <main classNameName={classNamees.content}>
+        <div classNameName={classNamees.toolbar} />
         {props.children}
         
       </main>

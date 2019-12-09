@@ -1,7 +1,7 @@
 
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types';
-import {withStyles} from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import PreferenceItem from '../../components/PreferenceItem';
 import ResponsiveDrawer from '../MenuDrawer';
 //import TandemLanguages from '../../../models/TandemLanguages';
@@ -20,9 +20,9 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 
-import {strings} from '../../components/constant/localization'
-import {Colors, preferenceConfig} from '../../components/constant/index'
-export const preferenceStepType = {"general": 1, "teach": 2, "study": 3, "generalPreferences": 4, "avatar": 5};
+import { strings } from '../../components/constant/localization'
+import { Colors, preferenceConfig } from '../../components/constant/index'
+export const preferenceStepType = { "general": 1, "teach": 2, "study": 3, "generalPreferences": 4, "avatar": 5 };
 
 
 const styles = {
@@ -56,7 +56,7 @@ const styles = {
     }
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    Class
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    className
 
 class TandemPreferences extends React.Component {
     state = {
@@ -65,7 +65,7 @@ class TandemPreferences extends React.Component {
         studyLanguages: [], //credits, langId, levelId, motivation, userId, _id
 
         pickedLanguages: [], //credits, langId, levelId, motivation, userId, _id
-    
+
     };
 
     componentWillReceiveProps(nextProps) {
@@ -75,7 +75,7 @@ class TandemPreferences extends React.Component {
         let step = preferenceStepType.general;
 
         let pickedLanguages = this.state.pickedLanguages;
-       
+
         this.setState(
             {
                 teachLanguages: teachLanguages,
@@ -87,32 +87,32 @@ class TandemPreferences extends React.Component {
     }
 
     backHandler = () => {
-        
-            switch (this.state.step) {
-                case preferenceStepType.general: {
-                    //this.props.history.goBack();
-                    break;
-                }
-                case preferenceStepType.teach: {
-                    this.setState({
-                        step: preferenceStepType.general
-                    });
-                    break;
-                }
-                case preferenceStepType.study: {
-                    this.setState({
-                        step: preferenceStepType.general
-                    });
-                    break;
-                }
-                case preferenceStepType.generalPreferences: {
-                    this.setState({
-                        step: preferenceStepType.general
-                    });
-                    break;
-                }
+
+        switch (this.state.step) {
+            case preferenceStepType.general: {
+                //this.props.history.goBack();
+                break;
             }
-        
+            case preferenceStepType.teach: {
+                this.setState({
+                    step: preferenceStepType.general
+                });
+                break;
+            }
+            case preferenceStepType.study: {
+                this.setState({
+                    step: preferenceStepType.general
+                });
+                break;
+            }
+            case preferenceStepType.generalPreferences: {
+                this.setState({
+                    step: preferenceStepType.general
+                });
+                break;
+            }
+        }
+
     }
 
     editTeachLanguageHandler = () => {
@@ -138,7 +138,7 @@ class TandemPreferences extends React.Component {
     }
 
     editAccountHandler = () => {
-        
+
     }
 
     //handle when select value from drop down box
@@ -216,29 +216,29 @@ class TandemPreferences extends React.Component {
     }
 
     render() {
-        const {classes} = this.props;
+        const { classNamees } = this.props;
         let page = null;
 
 
         switch (this.state.step) {
             case preferenceStepType.general: {
                 let teachLanguagesString = 'English'//this.state.teachLanguages.map(
-                    //(languageData) => TandemLanguages.findById(languageData.langId).name).join(", ");
+                //(languageData) => TandemLanguages.findById(languageData.langId).name).join(", ");
                 let studyLanguagesString = 'Finish, Swedish'//this.state.studyLanguages.map(
-                    //(languageData) => TandemLanguages.findById(languageData.langId).name).join(", ");
+                //(languageData) => TandemLanguages.findById(languageData.langId).name).join(", ");
 
                 page = (
                     <ResponsiveDrawer title="Preferences">
-                    <div>
+                        <div>
 
-                        <PreferenceItem title={"I can teach"}
-                                        content={teachLanguagesString}
-                                        action={this.editTeachLanguageHandler}/>
-                        <PreferenceItem title={"I want to learn"}
-                                        content={studyLanguagesString}
-                                        action={this.editStudyLanguageHandler}/>
-                        
-                    </div>
+                            <PreferenceItem title={"I can teach"}
+                                content={teachLanguagesString}
+                                action={this.editTeachLanguageHandler} />
+                            <PreferenceItem title={"I want to learn"}
+                                content={studyLanguagesString}
+                                action={this.editStudyLanguageHandler} />
+
+                        </div>
                     </ResponsiveDrawer>
                 );
                 break;
@@ -267,10 +267,10 @@ class TandemPreferences extends React.Component {
             //     page = (
             //         <div>
             //             {header}
-            //             <div className={classes.infoButtonContainer}>
+            //             <div classNameName={classNamees.infoButtonContainer}>
             //                 <Tooltip title={t("info_about_language_levels")}
             //                          aria-label={t("info_about_language_levels")}>
-            //                     <IconButton className={classes.infoButton} size="big"
+            //                     <IconButton classNameName={classNamees.infoButton} size="big"
             //                                 href="https://en.wikipedia.org/wiki/Common_European_Framework_of_Reference_for_Languages#Common_reference_levels"
             //                                 target="_blank">
             //                         <InfoIcon fontSize="large" color="secondary"/>
@@ -278,10 +278,10 @@ class TandemPreferences extends React.Component {
             //                 </Tooltip>
             //             </div>
             //             <div>
-            //                 <h3 className={classes.title}>{t("preference_item_input_header_T")}</h3>
-            //                 <p className={classes.note}>{t("language_max_study_T")}</p>
+            //                 <h3 classNameName={classNamees.title}>{t("preference_item_input_header_T")}</h3>
+            //                 <p classNameName={classNamees.note}>{t("language_max_study_T")}</p>
             //             </div>
-            //             <div className={classes.scroll}>
+            //             <div classNameName={classNamees.scroll}>
             //                 {teachInputList}
             //                 {
             //                     this.state.pickedLanguages.length < preferenceConfig.maxTeachLanguage &&
@@ -297,7 +297,7 @@ class TandemPreferences extends React.Component {
             //             </div>
             //             <div>
             //                 <Typography variant="h6">
-            //                     <Button className={"tandem-more-languages-button"} variant="contained">
+            //                     <Button classNameName={"tandem-more-languages-button"} variant="contained">
             //                         {t("preference_missing_language")}
             //                     </Button>
             //                 </Typography>
@@ -330,10 +330,10 @@ class TandemPreferences extends React.Component {
             //     page = (
             //         <div>
             //             <TandemHeader title={t("Preferences_L")} displayArrow={true} backAction={this.backHandler}/>
-            //             <div className={classes.infoButtonContainer}>
+            //             <div classNameName={classNamees.infoButtonContainer}>
             //                 <Tooltip title={t("info_about_language_levels")}
             //                          aria-label={t("info_about_language_levels")}>
-            //                     <IconButton className={classes.infoButton} size="big"
+            //                     <IconButton classNameName={classNamees.infoButton} size="big"
             //                                 href="https://en.wikipedia.org/wiki/Common_European_Framework_of_Reference_for_Languages#Common_reference_levels"
             //                                 target="_blank">
             //                         <InfoIcon fontSize="large" color="secondary"/>
@@ -341,10 +341,10 @@ class TandemPreferences extends React.Component {
             //                 </Tooltip>
             //             </div>
             //             <div>
-            //                 <h3 className={classes.title}>{t("preference_item_input_header_L")}</h3>
-            //                 <p className={classes.note}>{t("language_max_study_L")}</p>
+            //                 <h3 classNameName={classNamees.title}>{t("preference_item_input_header_L")}</h3>
+            //                 <p classNameName={classNamees.note}>{t("language_max_study_L")}</p>
             //             </div>
-            //             <div className={classes.scroll}>
+            //             <div classNameName={classNamees.scroll}>
             //                 {studyInputList}
             //                 {
             //                     this.state.pickedLanguages.length < preferenceConfig.maxStudyLanguage &&
@@ -362,7 +362,7 @@ class TandemPreferences extends React.Component {
             //             </div>
             //             <div>
             //                 <Typography variant="h6">
-            //                     <Button className={"tandem-more-languages-button"} variant="contained">
+            //                     <Button classNameName={"tandem-more-languages-button"} variant="contained">
             //                         {t("preference_missing_language")}
             //                     </Button>
             //                 </Typography>
