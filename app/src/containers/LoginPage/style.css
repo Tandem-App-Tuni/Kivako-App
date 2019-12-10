@@ -27,9 +27,10 @@ body{
     margin:20px 20px 10px 0;
 }
 .logo{
-    width: 50px;
-    border-radius: 50%;
+    width: 300px;
+    /* border-radius: 50%; */
     margin-right: 10px;
+    margin-left: -5px;
 }
 .navbar{
     padding: 0 0 2rem 0;
@@ -104,9 +105,7 @@ body{
     margin: 0 auto;
     text-align: center;
 }
-.list-unstyled{
-    
-}
+
 .list-unstyled li{
     display: inline;
     margin: 0 17px;
@@ -139,9 +138,7 @@ body{
 
 
 /* demo section starts here*/
-#demo-section{
 
-}
 .carousel {
     position: relative;
 }
@@ -176,9 +173,7 @@ body{
 
 
 /* feature section starts here */
-#feature-section{
 
-}
 .card {
     width: 100%;
     min-height: 390px;
@@ -199,17 +194,19 @@ body{
 .card-orange {
     border-color: #FAD9CD;
  }
+ 
  .card-icon{
-     color: #ff967f;
-     font-size: 63px;
-    
+    color: #ff967f;
+    font-size: 63px;    
     width: 85px;
     height: 85px;
     line-height: 80px;
     text-align: center;
-    border-radius: 50%;
+    /* border-radius: 50%; */
     margin: 0 auto;
     margin-top: 20px;
+    /* background-color: orange; */
+    
  }
  .text h4{
      color: gray;
@@ -263,9 +260,7 @@ body{
     margin-bottom: 10px;
   
 }
-.footer-nav{    
 
-}
 
 .footer-nav a{
 color: white;

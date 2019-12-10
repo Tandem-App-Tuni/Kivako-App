@@ -22,7 +22,9 @@ import home_3 from "./images/home_3.jpg"
 import face_2 from "./images/face_2.jpg"
 import face_3 from "./images/face_3.jpg"
 import face_4 from "./images/face_4.jpg"
-
+import chat from "./images/chat.png"
+import translate from "./images/translate.png"
+import notification from "./images/notification.png"
 
 class LandingPage extends Component {
 
@@ -39,12 +41,12 @@ class LandingPage extends Component {
     return (
 
       <div>
-        {/* <!-- first section starts here --> */}
+        {/* <!-- first section (header) starts here --> */}
         <section id="first-section" class="colered-section">
           <div class="container-fluid">
             <nav class="navbar navbar-expand-lg navbar-dark">
               <img class="logo" src={logo} alt="logo" />
-              <a class="navbar-brand" href="#">Tandem App</a>
+              {/* <a class="navbar-brand" href="#">Tandem App</a> */}
               <button class="navbar-toggler" type="button" data-toggle="collapse"
                 data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                 aria-label="Toggle navigation">
@@ -60,7 +62,7 @@ class LandingPage extends Component {
                     <button class="btn btn-danger btn-style">Sign Up</button>
                   </li>
                   <li class="nav-item active">
-                    <button class="btn btn-danger btn-style">Sign in</button>
+                    <button class="btn btn-danger btn-style">Sign In</button>
                   </li>
                 </ul>
               </div>
@@ -76,10 +78,13 @@ class LandingPage extends Component {
                     here talking about it all day. But, if you're serious about your music, you should definitely
                         take a look. Find us one every market!</p>
 
-                <button class="btn btn-light btn-lg download-btn" type="button"><i class="fab fa-apple"></i>
+                <a id="moodle-button" href="https://moodle.tuni.fi/" class="btn btn-light btn-lg download-btn">Go to Moodle</a>
+
+                {/* <button  class="btn btn-light btn-lg download-btn" type="button">Go to Moodle</button> */}
+                {/* <button class="btn btn-light btn-lg download-btn" type="button"><i class="fab fa-apple"></i>
                   App store</button>
                 <button class="btn btn-light btn-lg download-btn" type="button"><i class="fab fa-android"></i>
-                  Play store</button>
+                  Play store</button> */}
                 {/* <!-- 
                     <i class="fab fa-windows fa-2x title-icon"></i> --> */}
 
@@ -201,7 +206,7 @@ class LandingPage extends Component {
               <div className="col-md-4">
                 <div className="card card-orange">
                   <div className="icon">
-                    <img className="logo card-icon" src={logo} alt="logo" />
+                    <img className="card-icon" src={chat} alt="logo" />
 
                   </div>
                   <div className="text">
@@ -215,7 +220,7 @@ class LandingPage extends Component {
               <div className="col-md-4">
                 <div className="card card-orange">
                   <div className="icon">
-                    <img className="logo card-icon" src={logo} alt="logo" />
+                    <img className="card-icon" src={translate} alt="logo" />
                   </div>
                   <div className="text">
                     <h4>Be serious about your music</h4>
@@ -229,7 +234,7 @@ class LandingPage extends Component {
               <div className="col-md-4">
                 <div className="card card-orange">
                   <div className="icon">
-                    <img className="logo card-icon" src={logo} alt="logo" />
+                    <img className="card-icon" src={notification} alt="logo" />
                   </div>
                   <div className="text">
                     <h4>Be serious about your music</h4>
@@ -311,7 +316,7 @@ class LandingPage extends Component {
               </div> */}
               <div class="col-md-12 col-sm-12 col-style">
                 <div class="copyright">
-                  © 2016 <a href="https://www.studywithanis.com">Anisul Islam</a>, made with love
+                  © 2019 <a href="https://www.studywithanis.com">Anisul Islam</a>, made with love
                     </div>
               </div>
               {/* <div class="col-md-4 col-sm-12 col-style">
