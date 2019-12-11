@@ -13,11 +13,9 @@ import Select from '@material-ui/core/Select';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import InfoIcon from '@material-ui/icons/Info';
-import Link from '@material-ui/core/Link';
-import {languages} from '../constant/languages';
 
+
+import {languages} from '../constant/languages';
 
 const useStyles = theme => ({
   container: {
@@ -28,9 +26,6 @@ const useStyles = theme => ({
     // margin: theme.spacing(1),
     minWidth: 120,
   },
-  buttonInfo:{
-    marginLeft: 10
-  }
 })
 
 class LanguagePicker extends Component { 
@@ -59,8 +54,7 @@ class LanguagePicker extends Component {
           language: language,
           level: level,
           credits: credits,
-          errorStr: "",
-          infoStr: ""
+          errorStr: ""
         }
     );  
       
@@ -96,14 +90,7 @@ class LanguagePicker extends Component {
     )
   }
 
-  handleShowInfo = () => {
-    this.setState(
-      {
-        infoStr : "Level is based on Common European Framework of Reference for Languages. A1-A2: Beginer. B1-B2: Intermediate. C1-C2: Advanded."
-      }
-    )
-    console.log("info: ",this.state.infoStr)
-  }
+
 
   handleDone = () => {
     if (this.state.language === "" || this.state.level === ""|| (this.props.type === "learn" && this.state.credit === "")) {
@@ -139,11 +126,7 @@ class LanguagePicker extends Component {
 
     return (<div>
       <Dialog disableBackdropClick disableEscapeKeyDown open={this.props.open}>
-        <DialogTitle>Input Language
-        <IconButton  size="small" className={classes.buttonInfo} color="primary" >
-            <InfoIcon fontSize="inherit"  onClick={this.handleShowInfo}/>
-            </IconButton>
-        </DialogTitle>    
+        <DialogTitle>Input Language</DialogTitle>    
         <DialogContent>
         <Autocomplete
                 options={filteredLanguages}
@@ -197,15 +180,6 @@ class LanguagePicker extends Component {
           {
             this.state.errorStr !== "" && <Typography variant="body2" color = "secondary" gutterBottom>
                     {this.state.errorStr}
-                    </Typography>
-
-          }
-          {
-            this.state.infoStr !== "" && <Typography variant="body2" gutterBottom>
-                    {this.state.infoStr}
-                    <Link href="https://en.wikipedia.org/wiki/Common_European_Framework_of_Reference_for_Languages">
-                      More Information
-                    </Link>
                     </Typography>
 
           }

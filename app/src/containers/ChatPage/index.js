@@ -1,9 +1,16 @@
 import React from 'react';
 import {Redirect} from 'react-router-dom';
-import {Box, List, ListItem, ListItemText, ListItemAvatar, Avatar, Typography, Tooltip, CircularProgress, Zoom} from '@material-ui/core'
+import {Box,Grid, Divider, List, ListItem, ListItemText, ListItemAvatar, Avatar, Typography, Tooltip, CircularProgress, Zoom} from '@material-ui/core'
 import Chat from '../ChatBox'
 import openSocket from 'socket.io-client';
 import ResponsiveDrawer from '../MenuDrawer';
+
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+
+import { makeStyles } from '@material-ui/core/styles';
 
 /**
  * Author: Peter Mlakar
@@ -49,8 +56,11 @@ import ResponsiveDrawer from '../MenuDrawer';
  * socket -> the openSocket connecting to the conversatin thread of this user
  * loadedServerInformation -> a flag set to true when the conversation data has been recieved from the server
  */
+
+
 class ChatPage extends React.Component
 {
+  
   constructor(props)
   {
     super(props);
@@ -58,6 +68,7 @@ class ChatPage extends React.Component
     this.state = {
       currentOpenConversation: undefined,
       peekWordCount: 5,
+      chatRooms: 0,
       user: undefined,
       chatWindow: undefined,
       socket: openSocket('http://localhost:3000'),
@@ -72,23 +83,17 @@ class ChatPage extends React.Component
      */
     this.state.socket.on('initialization', (data) => 
     {
-      var messages = data.messages;
-      var roomInformation = data.rooms;
+      let roomInformation = data.roomInformation;
 
-      var i;
-      for (i = 0; i < roomInformation.length; i++)
-      {
-        var room = roomInformation[i];
-        var partner = {name: room.name, 
-                       roomId: room.roomId,
-                       conversationName: 'Conversation with ' + room.name,
-                       conversationId: i,
-                       messages: messages[i]};
+      this.partners.push({
+        name: data.name,
+        roomId: roomInformation.roomId,
+        conversationName: 'Conversation with ' + data.name,
+        conversationId: this.state.chatRooms,
+        messages: roomInformation.messages
+      });
 
-        this.partners.push(partner);               
-      }
-
-      this.setState({loadedServerInformation: true, user: data.user});
+      this.setState({loadedServerInformation: true, user: data.user, chatRooms: this.state.chatRooms + 1});
     });
 
     /**
@@ -143,14 +148,14 @@ class ChatPage extends React.Component
         <Zoom 
           in={true}
           key={index}>
-          <Box 
-            onClick={() => this.handleClick(element.conversationId)}>
+          <Box onClick={() => this.handleClick(element.conversationId)}>
             <Tooltip 
               title='Click to open conversation...'
               placement='left'>
               <ListItem 
                 alignItems="flex-start"
-                key={index}>
+                key={index}
+                divider>
                 <ListItemAvatar>
                   <Avatar 
                     alt={element.name} 
@@ -160,20 +165,16 @@ class ChatPage extends React.Component
                   primary={element.conversationName}
                   secondary={
                     <React.Fragment>
-                      <Typography
-                        component="span"
-                        variant="body2"
-                        display='inline'
-                        color="textPrimary">
-                        {element.name}
-                      </Typography>
+
                       {"  " + this.getMessagePeek(element.messages)}
                     </React.Fragment>
                   }
               />
             </ListItem>
+
           </Tooltip>
           </Box>
+          
         </Zoom>
       );
     });
@@ -189,6 +190,8 @@ class ChatPage extends React.Component
    */
   getMessagePeek(messages)
   {
+    if (messages.length == 0) return '...';
+
     var msg = messages[messages.length - 1];
 
     var peekSplit = msg.text.split(" ");
@@ -264,26 +267,91 @@ class ChatPage extends React.Component
    */
   render()
   {
+    const classes = makeStyles(theme => ({
+        root: {
+          width: '100%',
+        },
+        heading: {
+          fontSize: theme.typography.pxToRem(15),
+          fontWeight: theme.typography.fontWeightRegular,
+        },
+      }));
+
     if (!this.isAuthenticated()) 
       return (
         <Redirect  to="/"/>
       )
 
     return(
-      <ResponsiveDrawer title = 'Conversations'>
-        <Box
-          width='80%'>
-          <Typography variant="h6" gutterBottom>
-                  Partners
-          </Typography> 
-          <List 
-            width='100%'
-            color='paper'>
-            {this.renderPartnerArray()}
-          </List>
-        </Box>
-        {this.renderChatWindow()}
-      </ResponsiveDrawer>
+          <ResponsiveDrawer title = 'Conversations'>
+
+              <Typography variant="h6" gutterBottom>
+                      Partners
+              </Typography> 
+
+            <div>
+
+          
+
+                    <ExpansionPanel defaultExpanded="true">
+                      <ExpansionPanelSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="panel1a-content"
+                        id="panel1a-header"
+                      >
+                        <Typography className={classes.heading}>Current active chats</Typography>
+                      </ExpansionPanelSummary>
+                      <ExpansionPanelDetails>
+                        
+                            <Grid
+                              
+                              spacing={1}
+                              container
+                              direction='row'
+                              justify='space-around'
+                              alignItems={this.state.side}>
+
+                                      <Grid item xs={12} sm={2}>
+                                        <Box borderRadius={10}>
+
+                                          <List 
+                                            width='100%'
+                                            color='paper'>
+                                            {this.renderPartnerArray()}
+                                          </List>
+                                        </Box>
+                                      </Grid>
+
+                                      <Grid item xs={12} sm={9}> 
+                                        {this.renderChatWindow()}
+                                      </Grid>
+                          </Grid>
+
+
+
+                      </ExpansionPanelDetails>
+                    </ExpansionPanel>
+                    <ExpansionPanel>
+                      <ExpansionPanelSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="panel2a-content"
+                        id="panel2a-header"
+                      >
+                        <Typography className={classes.heading}>Old Chats</Typography>
+                      </ExpansionPanelSummary>
+                      <ExpansionPanelDetails>
+                        <Typography>
+                          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
+                          sit amet blandit leo lobortis eget.
+                        </Typography>
+                      </ExpansionPanelDetails>
+                    </ExpansionPanel>
+  
+            </div>
+          </ResponsiveDrawer>
+        
+
+
     )}
 }
 

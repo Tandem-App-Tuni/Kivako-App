@@ -637,9 +637,7 @@ class SignUpPage extends Component {
                     />
                   </ExpansionPanelSummary>
                   <ExpansionPanelDetails>
-                    <Typography color="textSecondary">
-                      Terms and conditions can be see in <a href="url">link text</a>
-                    </Typography>
+                    <TermsAndConditions></TermsAndConditions>
                   </ExpansionPanelDetails>
                 </ExpansionPanel>
 
@@ -671,3 +669,139 @@ class SignUpPage extends Component {
 }
   
 export default withStyles(useStyles) (SignUpPage);
+
+class TermsAndConditions extends Component {
+
+  render(){
+
+
+    return(
+      <div>
+
+      <Typography color="textSecondary">
+        Terms and conditions can be see in the following languages:
+      </Typography>
+      <ExpansionPanel>
+        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
+          <Typography >English</Typography>
+        </ExpansionPanelSummary>
+        <ExpansionPanelDetails>
+          <div>
+              <Typography variant='h4' align='center' gutterBottom> UNITANDEM PRIVACY POLICY  </Typography>
+              <br></br>
+              <Typography variant='subtitle1' align='left' gutterBottom> <b>Name of the service</b></Typography>
+              <Typography variant='body' gutterBottom> UniTandem website </Typography>
+              <br></br>
+              <Typography variant='subtitle1' align='left' gutterBottom> <b>Description of the service</b> </Typography>
+              <Typography variant='body' gutterBottom> A website for tandem language and culture learning aimed at Finnish university students.  </Typography>
+              <br></br>
+              <Typography variant='subtitle1' align='left' gutterBottom> <b>Data controllers and contact persons</b> </Typography>
+              <Typography variant='body' gutterBottom> 
+                Tampere universities<br></br>
+                Henri Annala, Emmanuel Abruquah<br></br>
+                unitandemfinland@gmail.com<br></br>
+                http://www.tuni.fi/en <br></br>
+                Tampere University,Kalevantie 4, 33100 Tampere,  tel. +358 (0) 294 5211 
+              </Typography>
+              <br></br> 
+
+
+              <Typography variant='subtitle1' align='left' gutterBottom> <b>Jurisdiction</b> </Typography>
+              <Typography variant='body' gutterBottom> FI – Finland </Typography>
+              <br></br>
+              <Typography variant='subtitle1' align='left' gutterBottom> <b>Personal data processed </b> </Typography>
+              <Typography variant='body' gutterBottom>
+                Data in the log files of the server is used for technical maintenance, service security and collecting general statistics. 
+                <br></br>
+                The website stores and processes the following personal data gained through HAKA login: name, username, role (e.g. student/staff), email address, university, photo of user (if available) 
+              </Typography>
+              <br></br>
+              <Typography variant='subtitle1' align='left' gutterBottom> <b>Third parties to whom personal data is disclosed </b> </Typography>
+              <Typography variant='body' gutterBottom> Personal data is not disclosed to third parties. </Typography>
+              <br></br>
+              <Typography variant='subtitle1' align='left' gutterBottom> <b>How to access, rectify or delete personal data </b> </Typography>
+              <Typography variant='body' gutterBottom> Contact the data controller. </Typography>
+              <br></br>
+              <Typography variant='subtitle1' align='left' gutterBottom> <b>Data retention </b> </Typography>
+              <Typography variant='body' gutterBottom> Logged data is removed after the user has not logged in to the service for a year. </Typography>
+              <br></br>
+              <Typography variant='subtitle1' align='left' gutterBottom> <b>Data Protection Code of Conduct </b> </Typography>
+              <Typography variant='body' gutterBottom>Personal data is protected according to the Code of Conduct for Service Providers (http://www.geant.net/uri/dataprotection-code-of-conduct/v1/Pages/default.aspx), a common standard for the research and higher education sector to protect privacy.  </Typography>
+              <br></br>
+              <Typography variant='subtitle1' align='left' gutterBottom> <b>Statistics </b> </Typography>
+              <Typography variant='body' gutterBottom>UniTandem uses first-party cookies for collecting usage data of its website. The data is used for improving the functionality of services and it is not disclosed to third parties.  </Typography>
+              <br></br>
+              <Typography variant='subtitle1' align='left' gutterBottom> <b>Terms of use </b> </Typography>
+              <Typography variant='body' gutterBottom>The following terms and conditions are binding to all users of UniTandem: </Typography>
+              <br></br>
+
+          </div>
+        </ExpansionPanelDetails>
+      </ExpansionPanel>
+      <ExpansionPanel>
+        <ExpansionPanelSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel2a-content"
+          id="panel2a-header"
+        >
+          <Typography>Finnish</Typography>
+        </ExpansionPanelSummary>
+        <ExpansionPanelDetails>
+          <Typography>
+            <div>
+              <Typography variant='h4' align='center' gutterBottom>UNITANDEM TIETOSUOJASELOSTE   </Typography>
+              <br></br>
+              <Typography variant='subtitle1' align='left' gutterBottom> <b>Palvelun nimi </b></Typography>
+              <Typography variant='body' gutterBottom>UniTandem-sivusto </Typography>
+              <br></br>
+              <Typography variant='subtitle1' align='left' gutterBottom> <b>Palvelun kuvaus </b> </Typography>
+              <Typography variant='body' gutterBottom> Suomalaisille korkeakouluopiskelijoille tarkoitetun kielten ja kulttuurin vertaisoppimiskurssin sivusto. </Typography>
+              <br></br>
+              <Typography variant='subtitle1' align='left' gutterBottom> <b>Henkilörekisterin rekisterinpitäjät ja yhteyshenkilöt </b> </Typography>
+              <Typography variant='body' gutterBottom> 
+                Tampereen korkeakouluyhteisö <br></br>
+                Henri Annala, Emmanuel Abruquah<br></br>
+                unitandemfinland@gmail.com<br></br>
+                http://www.tuni.fi/en <br></br>
+                Tampereen yliopisto,Kalevantie 4, 33100 Tampereen yliopisto , puh. 0294 5211 
+              </Typography>
+              <br></br>
+              <Typography variant='subtitle1' align='left' gutterBottom> <b>Hallintoalue</b> </Typography>
+              <Typography variant='body' gutterBottom> Suomi</Typography>
+              <br></br>
+              <Typography variant='subtitle1' align='left' gutterBottom> <b>Käsiteltävät henkilötiedot </b> </Typography>
+              <Typography variant='body' gutterBottom>
+                Palvelun lokitiedostoissa olevia tietoja käsitellään teknisten ongelmien ratkaisemiseksi, palvelun turvallisuuden takaamiseksi sekä yleisten tilastotietojen keräämiseksi 
+                <br></br>
+                Sivusto tallentaa ja käsittelee seuraavia HAKA-kirjautumisen kautta saatavia henkilötietoja: nimi, rooli (esim. opiskelija/henkilökunta), korkeakoulu, sähköpostiosoite, käyttäjän valokuva (jos saatavilla).
+              </Typography>
+              <br></br>
+              <Typography variant='subtitle1' align='left' gutterBottom> <b>Säännönmukaiset tietolähteet </b> </Typography>
+              <Typography variant='body' gutterBottom>Henkilötietoja ei luovuteta kolmansille osapuolille.  </Typography>
+              <br></br>
+              <Typography variant='subtitle1' align='left' gutterBottom> <b>Henkilötietojen saanti, oikaisu ja poistaminen </b> </Typography>
+              <Typography variant='body' gutterBottom> Kaikissa tapauksissa otettava yhteys rekisterin pitäjään.  </Typography>
+              <br></br>
+              <Typography variant='subtitle1' align='left' gutterBottom> <b>Tietojen säilytys </b> </Typography>
+              <Typography variant='body' gutterBottom> Kaikki tallennetut tiedot poistetaan vuoden kuluttua käyttäjän viimeisestä kirjautumisesta palveluun.  </Typography>
+              <br></br>
+              <Typography variant='subtitle1' align='left' gutterBottom> <b>Tietosuojakäytäntö </b> </Typography>
+              <Typography variant='body' gutterBottom>Henkilötietojen suojaamiseksi on sitouduttu noudattamaan seuraavaa tietosuojakäytäntöä: Code of Conduct for Service Providers (http://www.geant.net/uri/dataprotection-code-of-conduct/v1/Pages/default.aspx) </Typography>
+              <br></br>
+              <Typography variant='subtitle1' align='left' gutterBottom> <b>Tilastointi </b> </Typography>
+              <Typography variant='body' gutterBottom>UniTandem käyttää omia evästeitään kerätäkseen käyttötietoja sivustostaan. Kerättyjä tietoja käytetään palvelun parantamiseksi. Tietoja ei luovuteta kolmansille osapuolille. </Typography>
+              <br></br>
+              <Typography variant='subtitle1' align='left' gutterBottom> <b>Käyttöehdot </b> </Typography>
+              <Typography variant='body' gutterBottom>Seuraavat ehdot sitovat kaikkia UniTandemin käyttäjiä: UniTandemin yleiset käyttöehdot  </Typography>
+              <br></br>
+            </div>
+          </Typography>
+        </ExpansionPanelDetails>
+      </ExpansionPanel>
+
+      </div>
+
+      
+    )
+  }
+}

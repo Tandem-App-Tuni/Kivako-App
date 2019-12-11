@@ -8,7 +8,6 @@ import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import {withStyles} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -22,19 +21,12 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 
 import { makeStyles } from '@material-ui/core/styles';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import Card from '@material-ui/core/Card';
 
-import clsx from 'clsx';
 import CardHeader from '@material-ui/core/CardHeader';
-import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
-import Collapse from '@material-ui/core/Collapse';
 import IconButton from '@material-ui/core/IconButton';
-import { red } from '@material-ui/core/colors';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Icon from '@material-ui/core/Icon';
@@ -44,23 +36,19 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 
-import Grid from '@material-ui/core/Grid'
-
-
-
-
 const styles = ({
     root: {
-        display: 'flex',
-        flexWrap: 'wrap',
-        justifyContent: 'space-around',
-        overflow: 'hidden'
+        display: 'inline',
+        //flexWrap: 'wrap',
+        // justifyContent: 'space-around',
+        //overflow: 'hidden',
     },
     gridList: {
-        flexWrap: 'nowrap',
+        //flexWrap: 'nowrap',
         // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
         transform: 'translateZ(0)',
-        width: 'calc(-120px + 100vw)'
+        width: "auto",
+        height: "auto"
     },
     fullWidth: {
         width: "100%",
@@ -81,30 +69,19 @@ const styles = ({
     cardContent: {
         padding: '0'
     },
-    introduction:{
-        flexWrap: 'wrap',
-        height: "50px", 
-        overflow: 'hidden'
-    },
-
     gridListTile: {
-        // height:"100%",
-        // width:"100%",   
-        minHeight: "450px",
-        maxHeight: "450px",
-        maxWidth: "280px",
-        minWidth: "280px",
+        height:"100%",
+        width:"100%",   
+        minHeight: "300px",
+        maxWidth: "150px",
+        minWidth: "400px",
         space:2,
         marginBottom: 5,
-        marginRight: 5,
+        marginLeft: 1
     },
     gridListTileBar: {
         background: "#3f51b5",
     },
-    action: {
-        justifyContent: 'center',
-        marginBottom: 5,
-      }
 });
 
 
@@ -195,54 +172,48 @@ class BrowseMatch extends React.Component {
                     </Typography>
       
             ) : (
-                <div className={classes.root}>
+                <div >
                 <GridList className={classes.gridList} >
                     {
                         item.matches.map((match, key) =>
+                            
                             <GridListTile key={key} className={classes.gridListTile}>
                                 <Card className={cardStyle.card}>
                                         <CardHeader
                                         avatar={
-                                            <Avatar src={match.avatar} 
+                                            <Avatar src={"https://pickaface.net/gallery/avatar/unr_test_161024_0535_9lih90.png"} 
                                                     aria-label="recipe" 
                                                     className={classes.bigAvatar}>
                                             </Avatar>
                                         }
-                                        // action={
-                                        //     <IconButton aria-label="settings">
-                                        //     <MoreVertIcon />
-                                        //     </IconButton>
-                                        // }
-                                        title={match.firstName + " " + match.lastName}
-                                        subheader={ " Cities: " + (match.cities && match.cities.join(", "))}
+                                        action={
+                                            <IconButton aria-label="settings">
+                                            <MoreVertIcon />
+                                            </IconButton>
+                                        }
+                                        title={match.firstName + match.lastName}
+                                        subheader={ match.cities}
                                         />
                                         
                                         <CardContent>
-                                                <div className={classes.introduction}>
-                                        <Typography  variant="body1" color="textSecondary" component="p">
+
+                                        <Typography variant="body1" color="textSecondary" component="p">
                                              
                                             {match.descriptionText}
 
                                         </Typography>
-                                        </div>
                                         <br></br>
                                         <Divider variant="middle" />
                                         <br></br>
-                                       
-                                        <List>
-                                        <ListItem>
-                                        <ListItemIcon><Icon fontSize="small">home</Icon></ListItemIcon>
-                                        <ListItemText primary={"Cities: " + (match.cities && match.cities.join(", "))}/>
-                                        </ListItem>
+                                        <Typography variant="body2" color="textSecondary" component="p">
+                                            <Icon fontSize="small">home</Icon>Cities: {match.cities}<br></br>
+                                            <Icon fontSize="small">language</Icon>Languages want to learn:<br></br>
 
-                                        <ListItem>
-                                        <ListItemIcon> <Icon fontSize="small">language</Icon></ListItemIcon>
-                                        <ListItemText primary={"Learn: " + (match.languagesToLearn && match.languagesToLearn.map(e => e.language).join(", "))}/>
-                                        </ListItem></List>
+                                         </Typography>
                                         </CardContent>
-                                        <CardActions disableSpacing className={classes.action} >
+                                        <CardActions disableSpacing >
        
-                                            <div >
+                                            <div align="center">
                                                 <Button variant="contained" 
                                                         color="primary"
                                                         onClick = {this.onInviteAction.bind(this, match,item.languageName)}
@@ -308,7 +279,7 @@ class BrowseMatch extends React.Component {
     onInviteAction(user,language) {
         //console.log(user)
         //console.log(language)
-        alert("convite para: " + user.firstName + " no idioma " + language);
+        //alert("convite para: " + user.firstName + " no idioma " + language);
 
         const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/usersMatch/sendRequest")
         //console.log(url)
@@ -327,7 +298,7 @@ class BrowseMatch extends React.Component {
             })
         }).then((response) => response.json())
         .then((responseJson) => {
-            console.log(responseJson);
+            //console.log(responseJson);
             if (responseJson.requested) {
                 alert("Match request sended to the user!");
                 //window.location.reload();
@@ -351,8 +322,8 @@ class BrowseMatch extends React.Component {
         }).then((response) => response.json())
         .then((responseJson) => {
             // Resposta
-            console.log(this.state.userMatches);
-            console.log(responseJson.userPossibleMatches)
+            //console.log(this.state.userMatches);
+            //console.log(responseJson.userPossibleMatches)
             this.setState({userMatches: responseJson.userPossibleMatches})
            
         }).catch((error) => {

@@ -1,46 +1,33 @@
 
 import React from 'react';
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	Material UI
+
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
-import Link from '@material-ui/core/Link';
+import { Link } from 'react-router-dom';
+
 import GridList from '@material-ui/core/GridList';
-import GridListTile from '@material-ui/core/GridListTile';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 import {withStyles} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import GridListTileBar from '@material-ui/core/GridListTileBar';
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	Styles
+import Paper from '@material-ui/core/Paper';
 
 import ResponsiveDrawer from '../MenuDrawer';
 
 import Divider from '@material-ui/core/Divider';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 
 import { makeStyles } from '@material-ui/core/styles';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import Card from '@material-ui/core/Card';
 
-import clsx from 'clsx';
 import CardHeader from '@material-ui/core/CardHeader';
-import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
-import Collapse from '@material-ui/core/Collapse';
 import IconButton from '@material-ui/core/IconButton';
-import { red } from '@material-ui/core/colors';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import ShareIcon from '@material-ui/icons/Share';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Icon from '@material-ui/core/Icon';
 
 import {Redirect} from 'react-router-dom';
 
-
+import logo from '../../tandemlogo.png'
 import Grid from '@material-ui/core/Grid'
 
 
@@ -106,7 +93,6 @@ class MatchRequests extends React.Component {
         open:false
       };
     }
-
 
     openModal = () => {
         this.setState({open: true})
@@ -308,86 +294,120 @@ class MatchRequests extends React.Component {
             return  <Redirect  to="/" />
         }
 
-        return (
-            <div>
+        // Check if user has requests
+        
+        if(this.state.userRequestMatches.length === 0){  
+
+            return  (
                 <div className={classes.root}>
                     <ResponsiveDrawer title = "Matches requests!">
-                        <List component="nav" className={classes.fullWidth}>
+                        <div align = "center">
+                            <Paper>
+                                <img src={logo} style={{ maxHeight: 100 , maxWidth: '80%', marginTop: 30,marginLeft: 20,marginRight: 20}}/>
+      
+                                <br></br>
+                                <br></br>
+                                <br></br>
+                                <br></br>
+                                <Typography variant="h5" gutterBottom>
+                                    At the moment any matches requests were found in the system!
+                                </Typography>
+                                <br></br>
+                                <Typography variant="h6" gutterBottom>
+                                    Click in the button to search some partners!
+                                </Typography>
+                                <br></br>
+                                <Button component={Link} to="/browse-match" variant="contained" color="primary">Search!</Button>
+                                <br></br>
+                                <br></br>
+                            </Paper>
+                            <br></br>
+                            <br></br>
+                            <br></br>
+                        </div>
+
+                    </ResponsiveDrawer>
+                
+
+                </div>
+                )
+        }
+
+        return (
+            <div>
+
+                <div className={classes.root}>
+                    <ResponsiveDrawer title = "Matches requests!">
+
+
+                        <GridList container cols={this.getGridListCols()} spacing={30} cellHeight={'auto'}>
                             {
 
                                 this.state.userRequestMatches.map((match, key) =>
-                                    <ListItem>
-                                    
-                                        <Card className={cardStyle.card}>
-                                            <CardHeader
-                                            avatar={
-                                                <Avatar src={"https://pickaface.net/gallery/avatar/unr_test_161024_0535_9lih90.png"} 
-                                                        aria-label="recipe" 
-                                                        className={classes.bigAvatar}>
-                                                </Avatar>
-                                            }
-                                            action={
-                                                <IconButton aria-label="settings">
-                                                <MoreVertIcon />
-                                                </IconButton>
-                                            }
-                                            title={match.requesterUser.firstName + ' ' + match.requesterUser.lastName}
-                                            subheader={ match._id}
-                                            />
-                                            
-                                            <CardContent>
-
-                                            <Typography variant="body1" color="textSecondary" component="p">
-                                                
-                                                {match.requesterUser.descriptionText}
-
-                                            </Typography>
-                                            <br></br>
-                                            <Divider variant="middle" />
-                                            <br></br>
-                                            <Typography variant="body2" color="textSecondary" component="p">
-                                                <Icon fontSize="small">home</Icon>Cities: {match.cities}<br></br>
-                                                <Icon fontSize="small">language</Icon>Languages want to learn:<br></br>
-
-                                            </Typography>
-                                            </CardContent>
-                                            <CardActions disableSpacing >
-        
-                                                <div align="left">
-                                                    <Button variant="contained" 
-                                                            color="primary"
-                                                            onClick = {this.acceptMatchRequest.bind(this,match)}
-                                                    >
-                                                        Accept
-                                                    </Button>
-                                                </div>
-                                                <div align="right">
-                                                    <Button variant="outlined" 
-                                                                color="secondary"
-                                                                onClick = {this.denyMatchRequest.bind(this,match)}
-                                                        >
-                                                        Deny
-                                                    </Button>
-                                                </div>
-                                            
-                                            </CardActions>
-                                        </Card>
-
-                                    </ListItem>
                                 
-
-
+                                    <Grid container spacing={3}>
+                                        <Grid item xs >
+                                            <Card border={1} className={cardStyle.card} key={key}>
+                                                    <CardHeader
+                                                        avatar={
+                                                            <Avatar src={"https://pickaface.net/gallery/avatar/unr_test_161024_0535_9lih90.png"} 
+                                                                    aria-label="recipe" 
+                                                                    className={classes.bigAvatar}>
+                                                            </Avatar>
+                                                        }
+                                                        action={
+                                                            <IconButton aria-label="settings">
+                                                            <MoreVertIcon />
+                                                            </IconButton>
+                                                        }
+                                                        title={match.requesterUser.firstName + ' ' + match.requesterUser.lastName}
+                                                        subheader={ match._id}
+                                                    />
+                                                    
+                                                    <CardContent>
+            
+                                                        <Typography variant="body1" color="textSecondary" component="p">
+                                                            
+                                                            {match.requesterUser.descriptionText}
+            
+                                                        </Typography>
+                                                        <br></br>
+                                                        <Divider variant="middle" />
+                                                        <br></br>
+                                                        <Typography variant="body2" color="textSecondary" component="p">
+                                                            <Icon fontSize="small">home</Icon>Cities: {match.cities}<br></br>
+                                                            <Icon fontSize="small">language</Icon>Languages want to learn:<br></br>
+                                                        </Typography>                                                    
+                                                    </CardContent>
+                                                    <CardActions disableSpacing >
+                                                        <Grid container>
+                                                        <Grid item xs={12} sm={4}>
+                                                            <Button variant="contained" 
+                                                                    color="primary"
+                                                                    onClick = {this.acceptMatchRequest.bind(this,match)}
+                                                            >
+                                                                Accept
+                                                            </Button>
+                                                        </Grid>
+                                                        <Grid item xs>
+               
+                                                        </Grid>
+                                                        <Grid item xs={12} sm={4}>
+                                                            <Button variant="outlined" 
+                                                                    color="secondary"
+                                                                    onClick = {this.denyMatchRequest.bind(this,match)}
+                                                                >
+                                                                Deny
+                                                            </Button>
+                                                        </Grid>
+                                                        </Grid>
+                                                    </CardActions>
+                                            </Card>
+                                        </Grid>
+                                    </Grid>
                                 )
-                                /*
-                                this.state.userRequestMatches.map(item => {
-                                    return item.alreadyExists ? (
-                                        this.getAlreadyExistsDiv(item, classes)
-                                    ) : (
-                                        this.getMatchesList(item, classes)
-                                    )
-                                })*/
                             }
-                        </List>
+                        </GridList>
                     </ResponsiveDrawer>
 
                 </div>

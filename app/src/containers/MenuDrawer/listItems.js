@@ -20,6 +20,8 @@ import DateRangeIcon from '@material-ui/icons/DateRange';
 import PersonIcon from '@material-ui/icons/Person';
 import PersonPinIcon from '@material-ui/icons/PersonPin';
 
+import Badge from '@material-ui/core/Badge';
+
 import { Link } from "react-router-dom";
 
 
@@ -44,7 +46,7 @@ export const mainListItems = (
       <ListItemIcon>
         <PersonPinIcon/>
       </ListItemIcon>
-      <ListItemText primary="Learning partners" />
+      <ListItemText primary="Current partners" />
     </ListItem>
 
     <ListItem button component={Link} 
@@ -100,7 +102,7 @@ export const thirdListItems = (
         <ListItemIcon>
             <ExitToAppIcon/>
         </ListItemIcon>
-        <ListItemText primary="Log out!" />
+          <ListItemText primary="Log out!" />
       </ListItem>
   
     </div>
