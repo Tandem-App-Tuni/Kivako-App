@@ -203,7 +203,7 @@ class LanguagePicker extends Component {
           {
             this.state.infoStr !== "" && <Typography variant="body2" gutterBottom>
                     {this.state.infoStr}
-                    <Link href="https://en.wikipedia.org/wiki/Common_European_Framework_of_Reference_for_Languages">
+                    <Link href="https://www.coe.int/en/web/common-european-framework-reference-languages/table-1-cefr-3.3-common-reference-levels-global-scale">
                       More Information
                     </Link>
                     </Typography>
