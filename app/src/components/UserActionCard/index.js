@@ -27,7 +27,7 @@ const useStyles = theme => ({
     },
   });
   
-  class InviteCard extends Component {
+  class UserActionCard extends Component {
 
     render (){
         const { classes } = this.props;
@@ -48,7 +48,8 @@ const useStyles = theme => ({
             {this.props.data.user.city.join(", ")}
             </Typography>
             <Typography gutterBottom variant="body2" color="textSecondary">
-            Teach: {this.props.data.user.teachLanguages.join(", ")}. Learn: {this.props.data.studyLanguage}
+            Teach: {this.props.data.user.teachLanguages.join(", ")}. 
+            Learn: {this.props.data.user.studyLanguages.join(", ")}
             </Typography>
             <Typography variant="body2" color="textSecondary" component="p">
             {this.props.data.user.intro}
@@ -56,11 +57,22 @@ const useStyles = theme => ({
           </CardContent>
         </CardActionArea>
         <CardActions>
-          <Button size="small" color="primary" onClick = {() => this.props.onClose(true)}>
-            Connect
+        {this.props.type === "invite" && <Button size="small" color="primary" onClick = {() => this.props.onClose("invite")}>
+            Invite
+          </Button>}
+
+          {this.props.type === "partner" &&
+          (<div>
+            <Button size="small" color="primary" onClick = {() => this.props.onClose("chat")}>
+            Chat
           </Button>
-          <Button size="small" color="secondary" onClick = {() => this.props.onClose(false)}>
-            Decline
+          <Button size="small" color="secondary" onClick = {() => this.props.onClose("unmatch")}>
+            Unmatch
+          </Button>
+          </div>)
+          }
+          <Button size="small" color="secondary" onClick = {() => this.props.onClose()}>
+            Close
           </Button>
         </CardActions>
       </Card>
@@ -71,5 +83,5 @@ const useStyles = theme => ({
   }
 
 
-  export default withStyles(useStyles) (InviteCard);
+  export default withStyles(useStyles) (UserActionCard);
 

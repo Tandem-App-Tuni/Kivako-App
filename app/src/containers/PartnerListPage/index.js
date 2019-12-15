@@ -10,7 +10,7 @@ import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 
 import ResponsiveDrawer from '../MenuDrawer';
-import InviteCard from '../../components/InviteCard';
+import UserActionCard from '../../components/UserActionCard';
 
 import LanguagePicker from '../../components/LanguagePicker'
 
@@ -24,31 +24,6 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const testInviteData = [
-    {
-      user:{
-        _id: 100,
-        name: "Nam Nguyen",
-        city: ["Tampere", "Helsinki"],
-        teachLanguages: ["English", "Vietnamese"],
-        photo_url: "https://pickaface.net/gallery/avatar/unr_test_161024_0535_9lih90.png",
-        intro: "The quick brown fox jumps over the lazy dog"
-      },
-      studyLanguage: "English"
-    },
-    {
-      user:{
-        _id: 101,
-        name: "Tom Holland",
-        city: ["Helsinki"],
-        teachLanguages: ["English", "Chinese"],
-        photo_url:"https://cdn.icon-icons.com/icons2/582/PNG/512/woen-2_icon-icons.com_55032.png",
-        intro: "The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog"
-      },
-      studyLanguage: "French"
-    }
-];
-
 const partnerListData = [
   {
     user:{
@@ -56,6 +31,7 @@ const partnerListData = [
       name: "Nam Nguyen",
       city: ["Tampere", "Helsinki"],
       teachLanguages: ["English", "Vietnamese"],
+      studyLanguages: ["English", "Vietnamese"],
       photo_url: "https://pickaface.net/gallery/avatar/unr_test_161024_0535_9lih90.png",
       intro: "The quick brown fox jumps over the lazy dog"
     },
@@ -67,6 +43,7 @@ const partnerListData = [
       name: "Tom Holland",
       city: ["Helsinki"],
       teachLanguages: ["English", "Chinese"],
+      studyLanguages: ["English", "Vietnamese"],
       photo_url:"https://cdn.icon-icons.com/icons2/582/PNG/512/woen-2_icon-icons.com_55032.png",
       intro: "The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog"
     }
@@ -76,40 +53,40 @@ const partnerListData = [
 
 class PartnerListPage extends Component {
   state = {
-    inviteList: testInviteData,
-    openInvite: false,
-    inviteIndex: 0,
+    openAction: false,
+    actionIndex: 0,
     partnerList: partnerListData
   }
   componentDidMount(){
     //load data
   }
 
-  onShowInviteCard= (open, index, accept) =>  {
-    console.log(open, index, accept);
+  onShowActionCard= (open, index, action) =>  {
+    console.log(open, index, action);
     if (open === true){
       this.setState(
         {
-          inviteIndex: index
+          actionIndex: index
         }
       )
     }
     else{
-      let data = this.state.inviteList[index];
-      this.responseToInvite(data, accept);
+      let data = this.state.partnerList[index];
+      if (action === "chat"){
+        this.onShowConversation(data)
+      }
+      else if (action === "unmatch"){
+        this.onUnmatchUser(data)
+      }
     }
     this.setState(
       {
-        openInvite: open
+        openAction: open
       }
     )
   };
 
-  responseToInvite = (data, accept) =>{
-    console.log("response " + accept + " to "+data.user.name)
-  }
-
-  getInviteDiv(list, classes) {
+  getPartnerDiv(list, classes) {
     if (list.length === 0){
       return null
     }
@@ -117,13 +94,13 @@ class PartnerListPage extends Component {
       return (
       <div>
       <Typography variant="h6" gutterBottom>
-         Requests
+         Partners
       </Typography>  
       <List className={classes.root}>
         {list.map(item => {
           return (<ListItem key = {item.user._id} alignItems="flex-start"
           onClick={() => 
-            this.onShowInviteCard(true, this.state.inviteList.indexOf(item), null)
+            this.onShowActionCard(true, this.state.partnerList.indexOf(item), null)
           }
           >
         <ListItemAvatar>
@@ -139,7 +116,7 @@ class PartnerListPage extends Component {
                 className={classes.inline}
                 color="textPrimary"
               >
-                Teach: {item.user.teachLanguages.join(", ")}. Learn: {item.studyLanguage}
+                Teach: {item.user.teachLanguages.join(", ")}. Learn: {item.user.studyLanguages.join(", ")}
               </Typography>
               {" — " + item.user.city.join(", ")}
             </React.Fragment>
@@ -159,64 +136,24 @@ class PartnerListPage extends Component {
     console.log("view message for: " + data.user.name)
   }
 
-  getMessageDiv(list, classes) {
-    if (list.length == 0){
-      return null
-    }
-    else{
-      return (
-      <div>
-      <Typography variant="h6" gutterBottom>
-         Conversations
-      </Typography>  
-      <List className={classes.root}>
-        {list.map(item => {
-          return (<ListItem key = {item.user._id} alignItems="flex-start"
-          onClick={() => 
-            this.onShowConversation(item)
-          }
-          >
-        <ListItemAvatar>
-          <Avatar src={item.user.photo_url} />
-        </ListItemAvatar>
-        <ListItemText
-          primary={item.user.name}
-          secondary={
-            <React.Fragment>
-              <Typography
-                component="span"
-                variant="body2"
-                className={classes.inline}
-                color="textPrimary"
-              >
-                {item.lastMessage}
-              </Typography>
-            </React.Fragment>
-            
-          }
-        />
-      </ListItem>);
-        }
-        )}
-      </List>
-      </div>
-      );
-    }
+  onUnmatchUser = (data) =>{
+    console.log("unmatch user: " + data.user.name)
   }
+
 
 
   render(){
     const { classes } = this.props;
     return (
       <div className={classes.root}>
-      <ResponsiveDrawer title = "Find a new language partner">
-       {this.getInviteDiv(this.state.inviteList, classes)}
-       <InviteCard 
-          open = {this.state.openInvite} 
-          data = {this.state.inviteList[this.state.inviteIndex]}
-          onClose = {(value) =>this.onShowInviteCard(false, this.state.inviteIndex, value)}
+      <ResponsiveDrawer title = "Current Partners">
+       {this.getPartnerDiv(this.state.partnerList, classes)}
+       <UserActionCard 
+          type = "partner"
+          open = {this.state.openAction} 
+          data = {this.state.partnerList[this.state.actionIndex]}
+          onClose = {(value) =>this.onShowActionCard(false, this.state.actionIndex, value)}
        />
-      {this.getMessageDiv(this.state.partnerList, classes)}
       </ResponsiveDrawer>
       </div>
     );
