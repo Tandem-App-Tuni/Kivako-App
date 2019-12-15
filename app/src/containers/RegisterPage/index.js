@@ -126,8 +126,8 @@ class SignUpPage extends Component {
       editingLearnLanguageIndex : 0,
       isAlreadyregistered : false,
       termsAndConditionsAccept : false,
-      isAlreadyAuthenticated : true,
-      isLoadingPage:false
+      isAlreadyAuthenticated : false,
+      isLoadingPage:true
     };
   }
 
