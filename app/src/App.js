@@ -17,6 +17,8 @@ import BrowseMatch from './containers/BrowseMatch'
 import ChatPage from './containers/ChatPage'
 import RegisterPage from './containers/RegisterPage'
 import MatchRequests from './containers/MatchRequests'
+import LocalLoginPage from './containers/LocalLoginPage'
+import LocalSignUpPage from './containers/LocalSignUpPage'
 
 const theme = createMuiTheme({
   palette: {
@@ -52,6 +54,12 @@ function App() {
         </Route>
         <Route exact path="/match-requests">
             <MatchRequests />
+        </Route>
+        <Route exact path="/local-login">
+            <LocalLoginPage />
+        </Route>
+        <Route exact path="/local-sign-up">
+            <LocalSignUpPage/>
         </Route>
       </Switch>
     </Router>
