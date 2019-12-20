@@ -2,35 +2,34 @@ body{
     font-family: 'Montserrat-Black', sans-serif;
     text-align: center;
 }
+h1,h2,h3,h4,h5,h6{
+    font-family: 'Montserrat-Black';
+}
 .container-fluid{
     padding:2% 15%;
 }
 
-.colered-section{
+.colured-section{
     background: #4E008E;
     color: white;
 }
-.text-center{
-    text-align: center;
-}
-.section-style{
-    padding: 30px 0;
-    position: relative;
-    background-color: #FFFFFF;
-}
+
+
+
 
 /* first section starts here*/
 #first-section{
     text-align: left;
+    padding-bottom: 30px;
 }
 .btn-style{
     margin:20px 20px 10px 0;
 }
-.logo{
+.website-logo{
     width: 300px;
     /* border-radius: 50%; */
     margin-right: 10px;
-    margin-left: -5px;
+    margin-left: -7px;
 }
 .navbar{
     padding: 0 0 2rem 0;
@@ -48,254 +47,273 @@ body{
     font-size: 1.2rem;
 }
 
+
 /* designing title div*/
 .title-heading{
     font-family: 'Montserrat-Black', sans-serif;
-    font-size: 2.5rem;
+    font-size: 3 rem;
     line-height: 1.5;
 }
 .title-paragraph{
-    padding: 10% 0%;
+    padding: 3% 0%;
     font-family: 'Montserrat-Black', sans-serif;
     
 }
 
 .title-image{
-    width:60%;
-    /* transform: rotate(25deg); */
+    width:70%;
+    transform: rotate(15deg);
     position: absolute;
-    right: 5%;
+    right: 15%;
+    margin-top: 50px;
     
 }
 
-.download-btn{
-    margin:5% 3% 5% 0;
+.title-btn{
+    margin:5% 5% 5% 0;
     
 }
+
+.btn-outline-success {
+    color: white;
+    border-color: white;
+}
+
 .title-icon{
   margin-right: 15px;
 }
 /* first section ends here*/
 
 
-
-/* client section starts here*/
-#client-section{
+/* second section starts */
+#second-section{
     position: relative;
     z-index: 1;
-    background-color: #EEEEEE;
-    padding-bottom: 20px;
+    color: black;
+   margin-top: -50px;
+
+}
+#second-section .card{
+   
+    background-color: white;
+    padding: 50px 0px;
+}
+#second-section .card .card-title{
+    font-size: 2 rem;
+    font-weight: bold;
+}
+#second-section .card .card-text{
+    font-size: 1.5 rem;
 }
 
-.header-text{
-    text-transform: uppercase;
-    font-weight: 200;
-    color: #333;
-    font-size: 30px;
-    position: relative;
-    line-height: 30px;
-    margin: 30px 0 20px;
+
+/* third section starts here */
+#third-section{
+    margin-top: -50px;
+    padding: 7% 0% 0% 0%;
 }
-.p-text{
-    margin: 0 0 10px;
-    -webkit-font-smoothing: antialiased;
+.feature-title{
+    font-size: 1.5rem;
+    margin-top: 20px;
 }
-.logos {
-    width: 100%;
-    margin: 0 auto;
+
+.feature-box{
     text-align: center;
-}
-
-.list-unstyled li{
-    display: inline;
-    margin: 0 17px;
-}
-
-/* client section ends here*/
-
-
-
-/* presentation section */
-#section-presentation{
-    overflow: hidden;
-    width: 100%;
-    min-height: 600px;
-    margin-top: 10px;
-}
-.row {
-    margin-right: -15px;
-    margin-left: -15px;
-}
-.description {
-    padding: 50px 5px 0;
-}
-.presentation-image{
+    padding: 3%;
     
-    width: 100%;
 }
-/* presentation section ends here*/
 
+.feature-box p{
+    color: gray;
+    font-size: 1.2rem;
+}
 
+.feature-icon{
+    border: 5px solid white;
+    border-radius: 50%;
+    padding: 7px;
+    margin-bottom: 15px;
+}
 
-/* demo section starts here*/
+.feature-box .card .face{
+   
+    height: 200px;
+    transition: 0.5s;
+}
 
-.carousel {
+.feature-box .card .face1{
     position: relative;
+    background: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    transform: translateY(100px);
 }
-.carousel.fade {
-    opacity: 1;
+
+.feature-box .card:hover .face1{
+    transform: translateY(0);
+    background: tomato;
 }
-#demo-section .carousel-inner {
+
+.feature-box .card .face1 .content{
+    text-align: center;
+    opacity: 0.5;
+    transition: 0.5s;
+}
+
+.feature-box .card:hover .face1 .content{
+   opacity: 1;
+}
+
+.feature-box .card .face2{
     position: relative;
-    width: 100%;
-    overflow: hidden;
-    border-radius: 10px;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.23);
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+    box-shadow: 0,20,15 rgba(0,0,0,0.8);
+    transform: translateY(-100px);
+    border: 2px solid transparent;
+
 }
-.carousel-indicators{
+
+.feature-box .card:hover .face2{
+    
+   transform: translateY(0);
+   border-color: tomato;
+}
+
+
+/* fourth section starts here */
+#fourth-section{
+    margin-top: 50px;
+}
+.timeline{
+    position: relative;
+    margin-top: 50px;
+}
+
+.timeline:before{
+    content: '';
     position: absolute;
-    bottom: -50px;
-    
+    left: 50%;
+    width: 2px;
+    height: 100%;
+    background: #c5c5c5;
 }
-.carousel-indicators .active{
-   background-color: orangered;
+
+.timeline ul{
+    margin: 0;
+    padding: 0;
+
 }
-.carousel-indicators li {
+.timeline ul li{
+    list-style: none;
+    position: relative;
+    width: 50%;
+    padding: 20px 40px;
+    box-sizing: border-box;
+}
+.timeline ul li:nth-child(odd){
+   float: left;
+   text-align: right;
+   clear: both;
+}
+
+.timeline ul li:nth-child(even){
+    float: right;
+    text-align: left;
+    clear: both;
+ }
+ #fourth-section .content{
+     padding-bottom: 20px;
+ }
+
+ .timeline ul li:nth-child(odd):before{
+    content: '';
+    position: absolute;
+    top: 24px;
+    right: -6px;
     width: 10px;
     height: 10px;
-    border-radius: 100%;
-    background-color: orange;
-}
-/* demo section ends here */
-
-
-
-
-
-/* feature section starts here */
-
-.card {
-    width: 100%;
-    min-height: 390px;
-    padding: 10px 30px;
-    border: #DDDDDD solid 1px;
-    border-image-source: initial;
-    border-image-slice: initial;
-    border-image-width: initial;
-    border-image-outset: initial;
-    border-image-repeat: initial;
-    border-radius: 10px;
-    margin-top: 30px;
-    text-align: center;
-}
-.card:hover{
-    box-shadow: black 5px 10px 20px 1px;
-}
-.card-orange {
-    border-color: #FAD9CD;
- }
- 
- .card-icon{
-    color: #ff967f;
-    font-size: 63px;    
-    width: 85px;
-    height: 85px;
-    line-height: 80px;
-    text-align: center;
-    /* border-radius: 50%; */
-    margin: 0 auto;
-    margin-top: 20px;
-    /* background-color: orange; */
-    
- }
- .text h4{
-     color: gray;
-     margin: 20px 15px;
- }
-/* feature section ends here */
-
-
-/* testimonial section starts from here */
-#testimonial-section{
-    margin-top: 50px;
-}
-#testimonial-section .carousel {
-    margin-top: 50px;
-}
-
-.carousel-testimonial-caption {
-    text-align: center;
-    max-width: 700px;
-    margin: 0 auto;
-}
-
-#testimonial-section .carousel-inner{
-    position: relative;
-    width: 100%;
-    overflow: hidden;
-}
-
-#testimonial-section .mask {
-    width: 120px;
-    height: 120px;
+    background: tomato;
     border-radius: 50%;
-    border: 5px solid #ddd;
-    overflow: hidden;
-    display: block;
-    margin: 0 auto;
+    box-shadow: 0 0 0 3px rgba(233,33,99,0.2);
+ }
+
+
+ .timeline ul li:nth-child(even):before{
+    content: '';
+    position: absolute;
+    top: 24px;
+    left: -4px;
+    width: 10px;
+    height: 10px;
+    background:tomato;
+    border-radius: 50%;
+    box-shadow: 0 0 0 3px rgba(233,33,99,0.2);
+ }
+
+ .timeline ul li h3{
+     font-weight: 600;
+     background:tomato; 
+     color: #fff;
+     border-radius: 18px;
+     display: inline;
+     padding: 1%;
+
+ }
+
+ .timeline ul li p{
+    margin: 10px 0 0;
+    
 }
-/* testimonial section ends here */
+
+/* fourth section ends here */
 
 
+/* contact section starts here */
+#contact-section{
+    margin-top: 15px;
+    color: black;
+    padding: 1%;
+    text-align: center;
+    
+}
 
+#contact-section .container-fluid .row .card{
+    margin-left: auto;
+    margin-right: auto;
+ 
+}
 
-/* footer section starts here */
-#footer{
-    margin-top: 50px;
-    background-color: #4E008E;
+#contact-section .my-title{
+    /* margin-top: -50px; */
+    font-weight: bold;
+}
+
+.clear-div{
+    clear: both;
+    margin-bottom: 5px;
+}
+
+.copyright{
+    margin-top: 15px;
     color: white;
-    line-height: 20px;
-}
-.col-style{
-    margin-bottom: 10px;
   
 }
 
 
-.footer-nav a{
-color: white;
-margin-left: 25px;
-}
-
-.copyright{
-    text-align: center;
-}
-.copyright a{
-    color: grey;
-}
-.social-icon{
-   
-    text-align: center;
-}
-.social-icon a{
-    color: white;
-}
-.social-icon-style{
-    margin-left: 25px;
-}
-
-/* footer section ends here */
-
+/* contact section ends here */
 
 
 @media (max-width: 950px){
-    .title-image{
-       
+    .title-image{       
         visibility: hidden;
     }
-    .btn-style{
-        width: 100%;
-        margin:20px 20px 10px 0;
-    }
+   
   
 }
