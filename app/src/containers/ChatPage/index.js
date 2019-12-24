@@ -1,15 +1,13 @@
 import React from 'react';
 import {Redirect} from 'react-router-dom';
-import {Box,Grid, Divider, List, ListItem, ListItemText, ListItemAvatar, Avatar, Typography, Tooltip, CircularProgress, Zoom} from '@material-ui/core'
+import {Box,Grid, List, ListItem, ListItemText, ListItemAvatar, Avatar, Typography, Tooltip, CircularProgress, Zoom} from '@material-ui/core'
 import Chat from '../ChatBox'
 import openSocket from 'socket.io-client';
 import ResponsiveDrawer from '../MenuDrawer';
-
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-
 import { makeStyles } from '@material-ui/core/styles';
 
 /**
@@ -283,75 +281,45 @@ class ChatPage extends React.Component
       )
 
     return(
-          <ResponsiveDrawer title = 'Conversations'>
+      <ResponsiveDrawer title = 'Conversations'>
+        <Typography variant="h6" gutterBottom>
+                Partners
+        </Typography> 
+        <div>
+          <ExpansionPanel defaultExpanded="true">
+            <ExpansionPanelSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header">
+              <Typography className={classes.heading}>Current active chats</Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+                  <Grid
+                    spacing={1}
+                    container
+                    direction='row'
+                    justify='space-around'
+                    alignItems={this.state.side}>
 
-              <Typography variant="h6" gutterBottom>
-                      Partners
-              </Typography> 
+                            <Grid item xs={12} sm={2}>
+                              <Box borderRadius={10}>
 
-            <div>
+                                <List 
+                                  width='100%'
+                                  color='paper'>
+                                  {this.renderPartnerArray()}
+                                </List>
+                              </Box>
+                            </Grid>
 
-          
-
-                    <ExpansionPanel defaultExpanded="true">
-                      <ExpansionPanelSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel1a-content"
-                        id="panel1a-header"
-                      >
-                        <Typography className={classes.heading}>Current active chats</Typography>
-                      </ExpansionPanelSummary>
-                      <ExpansionPanelDetails>
-                        
-                            <Grid
-                              
-                              spacing={1}
-                              container
-                              direction='row'
-                              justify='space-around'
-                              alignItems={this.state.side}>
-
-                                      <Grid item xs={12} sm={2}>
-                                        <Box borderRadius={10}>
-
-                                          <List 
-                                            width='100%'
-                                            color='paper'>
-                                            {this.renderPartnerArray()}
-                                          </List>
-                                        </Box>
-                                      </Grid>
-
-                                      <Grid item xs={12} sm={9}> 
-                                        {this.renderChatWindow()}
-                                      </Grid>
-                          </Grid>
-
-
-
-                      </ExpansionPanelDetails>
-                    </ExpansionPanel>
-                    <ExpansionPanel>
-                      <ExpansionPanelSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel2a-content"
-                        id="panel2a-header"
-                      >
-                        <Typography className={classes.heading}>Old Chats</Typography>
-                      </ExpansionPanelSummary>
-                      <ExpansionPanelDetails>
-                        <Typography>
-                          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
-                          sit amet blandit leo lobortis eget.
-                        </Typography>
-                      </ExpansionPanelDetails>
-                    </ExpansionPanel>
-  
-            </div>
-          </ResponsiveDrawer>
-        
-
-
+                            <Grid item xs={12} sm={9}> 
+                              {this.renderChatWindow()}
+                            </Grid>
+                </Grid>
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+        </div>
+      </ResponsiveDrawer>
     )}
 }
 

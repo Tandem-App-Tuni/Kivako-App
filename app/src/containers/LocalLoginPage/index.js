@@ -50,7 +50,33 @@ class LocalLoginPage extends Component
   {
     super(props);
 
-    this.state = ({email:'', password: '', signUp: 'Login', signUpServer: 'http://localhost:3000/login', redirectURL: ''});
+    this.state = 
+    ({
+      email:'', 
+      password: '', 
+      signUp: 'Login', 
+      signUpServer: 'http://localhost:3000/login', 
+      logOut: 'http://localhost:3000/logout-user',
+      signInCheck: 'http://localhost:3000/login/check',
+      redirectURL: ''
+    });
+
+    fetch(this.state.signInCheck, 
+    {
+      method: 'GET',
+      credentials: 'include',
+      headers: 
+      {
+        'Access-Control-Allow-Origin': '*'
+      }
+    }).then(response => response.text())
+      .then(regUrl => 
+        {
+          if (regUrl != '/') 
+          {
+            this.setState({redirectURL: regUrl});
+          }
+        });
   }
 
   handleEmailFormChange = (e) =>
@@ -61,6 +87,19 @@ class LocalLoginPage extends Component
   handlePasswordFormChange = (e) =>
   {
     this.setState({password: e.target.value});
+  };
+
+  logOutUser = () =>
+  {
+    fetch(this.state.logOut, 
+    {
+      method: 'GET',
+      headers:
+      {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'
+    });
   };
 
   /**
@@ -91,6 +130,12 @@ class LocalLoginPage extends Component
     }).then(response => response.text())
       .then(checkUrl =>
         {
+          if (checkUrl == '/') 
+          {
+            alert('Wrong credentials!');
+            return;
+          }
+
           fetch('http://localhost:3000' + checkUrl, 
           {
             method: 'GET',
