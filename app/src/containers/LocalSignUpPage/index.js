@@ -50,7 +50,14 @@ class LocalSignUpPage extends Component
   {
     super(props);
 
-    this.state = ({email:'', password: '', signUp: 'Sign Up', signUpServer: 'http://localhost:3000/register-user', redirectURL:''});
+    this.state = 
+    ({
+      email:'', 
+      password: '', 
+      signUp: 'Sign Up', 
+      api: 'https://www.unitandem.fi:3000', //'http://localhost:3000',
+      signUpServer: 'https://www.unitandem.fi:3000/register-user', //'http://localhost:3000/register-user', 
+      redirectURL:''});
   }
 
   handleEmailFormChange = (e) =>
@@ -91,7 +98,7 @@ class LocalSignUpPage extends Component
       {
         if (text == 'User has registered successfully!')
         {
-          fetch('http://localhost:3000/login', 
+          fetch(this.state.api + '/login', 
           {
             method: 'POST',
             headers:
@@ -108,7 +115,7 @@ class LocalSignUpPage extends Component
             .then(checkUrl => 
               {
                 console.log('CheckUrl', checkUrl);
-                fetch('http://localhost:3000' + checkUrl, 
+                fetch(this.state.api + checkUrl, 
                   {
                     method: 'GET',
                     credentials: 'include',
