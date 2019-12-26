@@ -50,14 +50,30 @@ class LocalSignUpPage extends Component
   {
     super(props);
 
-    this.state = 
-    ({
-      email:'', 
-      password: '', 
-      signUp: 'Sign Up', 
-      api: 'https://www.unitandem.fi:3000', //'http://localhost:3000',
-      signUpServer: 'https://www.unitandem.fi:3000/register-user', //'http://localhost:3000/register-user', 
-      redirectURL:''});
+    var localTest = false;
+
+    if (localTest)
+    {
+      this.state = 
+      ({
+        email:'', 
+        password: '', 
+        signUp: 'Sign Up', 
+        api: 'http://localhost:3000',
+        signUpServer: 'http://localhost:3000/register-user', 
+        redirectURL:''});
+    }
+    else
+    {
+      this.state = 
+      ({
+        email:'', 
+        password: '', 
+        signUp: 'Sign Up', 
+        api: 'https://www.unitandem.fi:3000', //'http://localhost:3000',
+        signUpServer: 'https://www.unitandem.fi:3000/register-user', //'http://localhost:3000/register-user', 
+        redirectURL:''});
+    }
   }
 
   handleEmailFormChange = (e) =>
