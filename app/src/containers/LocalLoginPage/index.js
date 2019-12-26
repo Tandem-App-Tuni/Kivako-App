@@ -50,16 +50,36 @@ class LocalLoginPage extends Component
   {
     super(props);
 
-    this.state = 
-    ({
-      email:'', 
-      password: '', 
-      signUp: 'Login', 
-      signUpServer: 'http://localhost:3000/login', 
-      logOut: 'http://localhost:3000/logout-user',
-      signInCheck: 'http://localhost:3000/login/check',
-      redirectURL: ''
-    });
+    var localTest = false;
+
+    if (localTest)
+    {
+      this.state = 
+      ({
+        email:'', 
+        password: '', 
+        signUp: 'Login',
+        api: 'http://localhost:3000',
+        signUpServer: 'http://localhost:3000/login', 
+        logOut: 'http://localhost:3000/logout-user',
+        signInCheck: 'http://localhost:3000/login/check',
+        redirectURL: ''
+      });
+    }
+    else
+    {
+      this.state = 
+      ({
+        email:'', 
+        password: '', 
+        signUp: 'Login',
+        api: 'https://www.unitandem.fi:3000',
+        signUpServer: 'https://www.unitandem.fi:3000/login', 
+        logOut: 'https://www.unitandem.fi:3000/logout-user',
+        signInCheck: 'https://www.unitandem.fi:3000/login/check',
+        redirectURL: ''
+      });
+    }
 
     fetch(this.state.signInCheck, 
     {
