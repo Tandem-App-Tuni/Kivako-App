@@ -54,7 +54,7 @@ class LandingPage extends Component {
 
                   </li>
                   <li className="nav-item">
-                    <a className="nav-link" href="#contact-section">Contact <span
+                    <a className="nav-link" href="#footer-section">Contact <span
                       className="sr-only">(current)</span></a>
 
                   </li>
@@ -278,59 +278,46 @@ class LandingPage extends Component {
         </section>
         {/* fourth section ends here  */}
 
+        {/*  footer-section starts her*/}
 
-        {/* contact-section starts here  */}
-        <section id="contact-section" className="colured-section">
-          <div className="container-fluid">
+        <section id="footer-section" className="colured-section">
 
-            <div className="row">
-
-              <div className="card">
-                <div className="card-body">
-                  <h3 className="card-title my-title">Contact Information</h3>
-
-                  <div className="contact-content">
-
-                    <img src={address} alt="address icon" />
-                    <p>Tampere University <br />
-                      Kalevantie 4<br />
-                      33104 Tampere</p>
-
-                  </div>
-                  <div className="clear-div"></div>
-
-                  <div className="contact-content">
-
-                    <img src={smartphone} alt="smartphone icon" />
-                    <span><a href="tel:+358 (0) 294 5211">+358 (0) 294 5211</a></span>
-
-                  </div>
-
-
-
-                  <div className="clear-div"></div>
-
-                  <div className="contact-content">
-                    <img src={email} alt="" />
-                    <span><a href="mailto:info@unitandem.fi"> info@unitandem.fi</a></span>
-                  </div>
-                </div>
-
-              </div>
+          <div className="container-fluid" >
+            <div className="footer-left">
+              <img className="website-logo" src={logo} alt="website-logo" />
+              <p className="footer-left-links">
+                <a href="#first-section" className="first-link">Home</a>
+                <a href="#second-section">About</a>
+                <a href="#third-section">Features</a>
+              </p>
+              <p>studywithanis © 2019</p>
             </div>
 
+            <div className="footer-right">
+              <div>
+                <img src={address} alt="address logo" />
+                <span>Tampere University</span>
+                <p>Kalevantie 4, 33104 Tampere</p>
+              </div>
+
+              <div>
+                <img src={smartphone} alt="smartphone logo" />
+                <span><a href="tel:+358 (0) 294 5211">+358 (0) 294 5211</a></span>
+              </div>
+
+              <div>
+                <img src={email} alt="email logo" />
+                <span><a href="mailto:info@unitandem.fi"> info@unitandem.fi</a></span>
+              </div>
+
+            </div>
 
 
           </div>
 
-          <div className="copyright">
-            © 2019 <a href="https://www.studywithanis.com">Anisul Islam</a>, made with love
-        </div>
+        </section>
 
-
-        </section >
-
-        {/*  contact-section ends here  */}
+        {/*  footer-section ends here  */}
 
 
 

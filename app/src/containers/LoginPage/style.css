@@ -14,7 +14,9 @@ h1,h2,h3,h4,h5,h6{
     color: white;
 }
 
-
+.clear-div{
+    clear: both;
+}
 
 
 /* first section starts here*/
@@ -190,13 +192,14 @@ h1,h2,h3,h4,h5,h6{
 /* fourth section starts here */
 #fourth-section{
     margin-top: 50px;
+   
 }
-.timeline{
+#fourth-section .timeline{
     position: relative;
     margin-top: 50px;
 }
 
-.timeline:before{
+#fourth-section .timeline:before{
     content: '';
     position: absolute;
     left: 50%;
@@ -205,25 +208,25 @@ h1,h2,h3,h4,h5,h6{
     background: #c5c5c5;
 }
 
-.timeline ul{
+#fourth-section .timeline ul{
     margin: 0;
     padding: 0;
 
 }
-.timeline ul li{
+#fourth-section .timeline ul li{
     list-style: none;
     position: relative;
     width: 50%;
     padding: 20px 40px;
     box-sizing: border-box;
 }
-.timeline ul li:nth-child(odd){
+#fourth-section .timeline ul li:nth-child(odd){
    float: left;
    text-align: right;
    clear: both;
 }
 
-.timeline ul li:nth-child(even){
+#fourth-section .timeline ul li:nth-child(even){
     float: right;
     text-align: left;
     clear: both;
@@ -232,7 +235,7 @@ h1,h2,h3,h4,h5,h6{
      padding-bottom: 20px;
  }
 
- .timeline ul li:nth-child(odd):before{
+ #fourth-section .timeline ul li:nth-child(odd):before{
     content: '';
     position: absolute;
     top: 24px;
@@ -245,7 +248,7 @@ h1,h2,h3,h4,h5,h6{
  }
 
 
- .timeline ul li:nth-child(even):before{
+ #fourth-section .timeline ul li:nth-child(even):before{
     content: '';
     position: absolute;
     top: 24px;
@@ -257,17 +260,17 @@ h1,h2,h3,h4,h5,h6{
     box-shadow: 0 0 0 3px rgba(233,33,99,0.2);
  }
 
- .timeline ul li h3{
+ #fourth-section .timeline ul li h3{
      font-weight: 600;
      background:tomato; 
      color: #fff;
      border-radius: 18px;
      display: inline;
-     padding: 1%;
+     padding: 2%;
 
  }
 
- .timeline ul li p{
+ #fourth-section .timeline ul li p{
     margin: 10px 0 0;
     
 }
@@ -275,45 +278,88 @@ h1,h2,h3,h4,h5,h6{
 /* fourth section ends here */
 
 
-/* contact section starts here */
-#contact-section{
-    margin-top: 15px;
-    color: black;
-    padding: 1%;
-    text-align: center;
+/* footer section starts here */
+#footer-section{
+
+}
+#footer-section .footer-left,
+#footer-section .footer-right{
+    display: inline-block;
+	vertical-align: top;
+}
+#footer-section .footer-left{
+	width: 50%;
+}
+
+#footer-section .footer-left-links{
+	color:  red;
+	margin: 20px 0;	
+}
+#footer-section .footer-left-links a{
+	display:inline-block;
+	line-height: 1.5;
+    font-weight:500;
+	text-decoration: none;
+	color:  white;
+}
+#footer-section .footer-left-links a:before {
+    content: "|";
+    font-weight: 400;
+    font-size: 25px;
+    color: #fff;
+    display: inline-block;
+    padding: 0 5px;
+}
+#footer-section .footer-left-links .first-link:before {
+    content: none;
+}
+#footer-section .footer-right{
+    width: 49%;
+    padding-left: 100px;
+}
+
+#footer-section .footer-right img{	
+	color: white;
+	font-size: 25px;	
+	text-align: center;
+	line-height: 42px;
+	margin: 10px;
+    vertical-align: middle;
     
 }
-
-#contact-section .container-fluid .row .card{
-    margin-left: auto;
-    margin-right: auto;
- 
+#footer-section .footer-right p{
+    
+    margin-left: 120px;
 }
 
-#contact-section .my-title{
-    /* margin-top: -50px; */
-    font-weight: bold;
-}
-
-.clear-div{
-    clear: both;
-    margin-bottom: 5px;
-}
-
-.copyright{
-    margin-top: 15px;
+#footer-section .footer-right a{
     color: white;
-  
 }
+/* footer section ends here */
 
 
-/* contact section ends here */
-
-
-@media (max-width: 950px){
+@media (max-width: 900px){
     .title-image{       
         visibility: hidden;
     }
-   
+
+    #footer-section .footer-left,
+	#footer-section .footer-right{
+		display: block;
+		width: 100%;
+		margin-bottom: 20px;
+        text-align: center;
+         padding-left: 0px;
+	} 
+
+	#footer-section .footer-right img{
+		margin-left: 0;
+    }
+    
+    #footer-section .footer-right p{
+    
+        margin-left: 110px;
+    }
+     
   
 }
