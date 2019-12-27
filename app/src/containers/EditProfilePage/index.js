@@ -356,8 +356,8 @@ class EditProfilePage extends Component {
           firstName: responseData.data.firstName,
           lastName: responseData.data.lastName,
           email: responseData.data.email,
-          languagesToLearn: responseData.data.languagesToLearn,
-          languagesToTeach: responseData.data.languagesToTeach,
+          languagesToLearn: responseData.data.languagesToLearn.filter(language => language.language != null),
+          languagesToTeach: responseData.data.languagesToTeach.filter(language => language.language != null),
           descriptionText: responseData.data.descriptionText,
           cities: responseData.data.cities
         })

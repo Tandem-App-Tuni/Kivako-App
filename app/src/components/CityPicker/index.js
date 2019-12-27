@@ -16,7 +16,6 @@ import Chip from '@material-ui/core/Chip';
 
 function renderInput(inputProps) {
   const { InputProps, classes, ref, ...other } = inputProps;
-
   return (
     <TextField
       helperText = "Maximum number of cities is 2."
@@ -91,10 +90,10 @@ function getSuggestions(value, { showEmpty = false } = {}) {
 }
 
 export function CityPicker(props) {
+  React.useEffect(() => { setSelectedItem(props.selectedItem) });
   const { classes } = props;
   const [inputValue, setInputValue] = React.useState('');
   const [selectedItem, setSelectedItem] = React.useState(props.selectedItem);
-  
   const handleKeyDown = event => {
     if (selectedItem.length && !inputValue.length && event.key === 'Backspace') {
       setSelectedItem(selectedItem.slice(0, selectedItem.length - 1));
