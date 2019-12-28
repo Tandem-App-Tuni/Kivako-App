@@ -2,6 +2,7 @@
   "name": "kivako-tandem-app",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://www.unitandem.fi",
   "dependencies": {
     "@material-ui/core": "^4.5.0",
     "@material-ui/icons": "^4.5.1",
@@ -28,7 +29,8 @@
     "start": "PORT=3001 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "install": "react-scripts install"
   },
   "eslintConfig": {
     "extends": "react-app"

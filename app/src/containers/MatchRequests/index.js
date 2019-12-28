@@ -90,7 +90,8 @@ class MatchRequests extends React.Component {
         isAlreadyregistered : false,
         isAlreadyAuthenticated : false,
         isLoadingPage:true,
-        open:false
+        open:false,
+        portOption:''
       };
     }
 
@@ -107,7 +108,7 @@ class MatchRequests extends React.Component {
         //console.log(language)
         alert("Match "+match._id);
 
-        const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/usersMatch/acceptMatchRequest/"+match._id);
+        const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/usersMatch/acceptMatchRequest/"+match._id);
 
         if (window.confirm("Confirm the accept of match request?")) {
             fetch(url, {
@@ -140,7 +141,7 @@ class MatchRequests extends React.Component {
         //console.log(language)
         alert("Match "+ match._id);
 
-        const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/usersMatch/denyMatchRequest/"+match._id);
+        const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/usersMatch/denyMatchRequest/"+match._id);
 
         if (window.confirm("Confirm the deny of match request?")) {
             fetch(url, {
@@ -169,7 +170,7 @@ class MatchRequests extends React.Component {
     }
 
     getUserMatchsRequestListAPI = (callback) =>{
-        const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/usersMatch/receiptMatchsRequests");
+        const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/usersMatch/receiptMatchsRequests");
     
         fetch(url, {
             method: 'GET',
@@ -190,7 +191,7 @@ class MatchRequests extends React.Component {
     };
 
     checkIfUserIsRegistered(callback) {
-        const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/users/isRegistered")
+        const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/users/isRegistered")
     
         fetch(url, {
           method: 'GET',
@@ -217,7 +218,7 @@ class MatchRequests extends React.Component {
     
     checkIfUserIsAuthenticaded (callback){
 
-    const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/isAuthenticated");
+    const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/isAuthenticated");
 
     fetch(url, {
         method: 'GET',

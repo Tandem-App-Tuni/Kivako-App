@@ -55,6 +55,8 @@ import { makeStyles } from '@material-ui/core/styles';
  * loadedServerInformation -> a flag set to true when the conversation data has been recieved from the server
  */
 
+var chatUrlLocal = "http://localhost:3000";
+var chatUrl = "https://www.unitandem.fi";
 
 class ChatPage extends React.Component
 {
@@ -69,7 +71,7 @@ class ChatPage extends React.Component
       chatRooms: 0,
       user: undefined,
       chatWindow: undefined,
-      socket: openSocket('http://localhost:3000'),
+      socket: openSocket(chatUrl),
       loadedServerInformation: false
     }; 
 

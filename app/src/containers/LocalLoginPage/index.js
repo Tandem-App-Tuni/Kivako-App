@@ -73,10 +73,10 @@ class LocalLoginPage extends Component
         email:'', 
         password: '', 
         signUp: 'Login',
-        api: 'https://www.unitandem.fi:3000',
-        signUpServer: 'https://www.unitandem.fi:3000/login', 
-        logOut: 'https://www.unitandem.fi:3000/logout-user',
-        signInCheck: 'https://www.unitandem.fi:3000/login/check',
+        api: 'https://www.unitandem.fi',
+        signUpServer: 'https://www.unitandem.fi/login', 
+        logOut: 'https://www.unitandem.fi/logout-user',
+        signInCheck: 'https://www.unitandem.fi/login/check',
         redirectURL: ''
       });
     }
@@ -156,7 +156,7 @@ class LocalLoginPage extends Component
             return;
           }
 
-          fetch('http://localhost:3000' + checkUrl, 
+          fetch(this.state.api + checkUrl, 
           {
             method: 'GET',
             credentials: 'include',

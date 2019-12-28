@@ -109,7 +109,8 @@ const useStyles = theme => ({
 class SignUpPage extends Component {
   _isMounted = false;
 
-  constructor(props) {
+  constructor(props) 
+  {
     super(props);
     this.state = {
       profileImg: null,
@@ -127,7 +128,8 @@ class SignUpPage extends Component {
       isAlreadyregistered : false,
       termsAndConditionsAccept : false,
       isAlreadyAuthenticated : false,
-      isLoadingPage:true
+      isLoadingPage:true,
+      portOption:'' //set to 3000 for local testing
     };
   }
 
@@ -305,7 +307,7 @@ class SignUpPage extends Component {
   // API Call to insert user
   //TODO -> MAKE A CHECK, IF ALL FIELDS ARE NOT VALID, DON'T SEND API CALL
   onSaveButtonClicked = () =>{
-    const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/users/add")
+    const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/users/add")
     //console.log(url)
     fetch(url, {
     method: 'POST',
@@ -342,7 +344,7 @@ class SignUpPage extends Component {
 
   // Load page functions
   checkIfUserIsRegistered(callback) {
-    const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/users/isRegistered")
+    const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/users/isRegistered")
 
     fetch(url, {
       method: 'GET',
@@ -374,7 +376,7 @@ class SignUpPage extends Component {
 
   checkIfUserIsAuthenticaded (callback){
 
-    const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/isAuthenticated");
+    const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/isAuthenticated");
 
     fetch(url, {
       method: 'GET',

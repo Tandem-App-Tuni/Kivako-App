@@ -24,6 +24,8 @@ import Badge from '@material-ui/core/Badge';
 
 import { Link } from "react-router-dom";
 
+var logoutUrlLocal = "http://localhost:3000/logout";
+var logoutUrl = "https://www.unitandem.fi/logout";
 
 export const mainListItems = (
   <div>
@@ -98,7 +100,7 @@ export const secondaryListItems = (
 export const thirdListItems = (
     <div>
       <ListSubheader inset></ListSubheader>
-      <ListItem button  component="a" href="http://localhost:3000/logout">
+      <ListItem button  component="a" href={logoutUrl}>
         <ListItemIcon>
             <ExitToAppIcon/>
         </ListItemIcon>

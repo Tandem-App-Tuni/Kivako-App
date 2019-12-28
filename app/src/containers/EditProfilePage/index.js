@@ -123,7 +123,8 @@ class EditProfilePage extends Component {
       editingLearnLanguageIndex: 0,
       isAlreadyregistered : false,
       isAlreadyAuthenticated : false,
-      isLoadingPage:true
+      isLoadingPage:true,
+      portOption:'' //set to 3000 for local testing
     };
   }
 
@@ -140,7 +141,7 @@ class EditProfilePage extends Component {
   // API Call to insert user
   //TODO -> MAKE A CHECK, IF ALL FIELDS ARE NOT VALID, DON'T SEND API CALL
   onSaveButtonClicked = () => {
-    const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/users/update")
+    const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/users/update")
     //console.log(url)
     fetch(url, {
         method: 'POST',
@@ -182,7 +183,7 @@ class EditProfilePage extends Component {
   }
 
   uploadPhoto = (userId) => {
-    const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/users/updatePicture/" + userId)
+    const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/users/updatePicture/" + userId)
     console.log(url)
     var formData = new FormData()
     formData.append('profileImg', this.state.profileImg);
@@ -285,7 +286,7 @@ class EditProfilePage extends Component {
 
   // Load page functions
   checkIfUserIsRegistered(callback) {
-    const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/users/isRegistered")
+    const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/users/isRegistered")
 
     fetch(url, {
       method: 'GET',
@@ -312,7 +313,7 @@ class EditProfilePage extends Component {
 
   checkIfUserIsAuthenticaded (callback){
 
-    const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/isAuthenticated");
+    const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/isAuthenticated");
 
     fetch(url, {
       method: 'GET',
@@ -340,8 +341,8 @@ class EditProfilePage extends Component {
 
   preLoadUserInformations = (callback) => {
 
-    //http://localhost:3000/api/v1/users/userInfo
-    const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/users/userInfo")
+    //http://localhost/api/v1/users/userInfo
+    const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/users/userInfo")
     console.log('[INFO]Loading user information...');
     //console.log(url);
 

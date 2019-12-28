@@ -70,8 +70,8 @@ class LocalSignUpPage extends Component
         email:'', 
         password: '', 
         signUp: 'Sign Up', 
-        api: 'https://www.unitandem.fi:3000', //'http://localhost:3000',
-        signUpServer: 'https://www.unitandem.fi:3000/register-user', //'http://localhost:3000/register-user', 
+        api: 'https://www.unitandem.fi',
+        signUpServer: 'https://www.unitandem.fi/register-user', 
         redirectURL:''});
     }
   }
@@ -114,6 +114,9 @@ class LocalSignUpPage extends Component
       {
         if (text == 'User has registered successfully!')
         {
+          console.log('Registering the user!');
+          console.log(this.state.api + '/login');
+
           fetch(this.state.api + '/login', 
           {
             method: 'POST',

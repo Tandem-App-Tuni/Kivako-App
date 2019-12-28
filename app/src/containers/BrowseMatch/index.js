@@ -45,9 +45,6 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 
 import Grid from '@material-ui/core/Grid'
 
-
-
-
 const styles = ({
     root: {
         display: 'inline',
@@ -98,16 +95,6 @@ const styles = ({
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	Class
-    /*
-    {"cities":["Tammela"],
-    "_id":"5dd874cb523c731b688846cf",
-    "firstName":"User One",
-    "lastName":"Test Case",
-    "email":"user1@example.com",
-    "descriptionText":"Hi, i'm a user test case",
-    "languagesToTeach":[{"language":"Albanian","level":"C1","credits":2}],
-    "languagesToLearn":[{"language":"Arbëresh","level":"A2","credits":1}
-    */
 class BrowseMatch extends React.Component {
 
     _isMounted = false;
@@ -153,6 +140,7 @@ class BrowseMatch extends React.Component {
         isAlreadyregistered : false,
         isAlreadyAuthenticated : false,
         isLoadingPage:true,
+        portOption:'', //3000 if local
         open:false
       };
     }
@@ -293,7 +281,7 @@ class BrowseMatch extends React.Component {
         //console.log(language)
         alert("convite para: " + user.firstName + " no idioma " + language);
 
-        const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/usersMatch/sendRequest")
+        const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/usersMatch/sendRequest")
         //console.log(url)
         
         fetch(url, {
@@ -325,7 +313,7 @@ class BrowseMatch extends React.Component {
     }
 
     getUserPossibleMatchsListAPI = (callback) =>{
-        const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/usersMatch/possibleMatchs");
+        const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/usersMatch/possibleMatchs");
     
         fetch(url, {
             method: 'GET',
@@ -346,7 +334,7 @@ class BrowseMatch extends React.Component {
     };
 
     checkIfUserIsRegistered(callback) {
-        const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/users/isRegistered")
+        const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/users/isRegistered")
     
         fetch(url, {
           method: 'GET',
@@ -373,7 +361,7 @@ class BrowseMatch extends React.Component {
     
     checkIfUserIsAuthenticaded (callback){
 
-    const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/isAuthenticated");
+    const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/isAuthenticated");
 
     fetch(url, {
         method: 'GET',
