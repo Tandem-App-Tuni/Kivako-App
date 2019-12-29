@@ -88,6 +88,9 @@ const styles = ({
         marginBottom: 5,
         marginLeft: 1
     },
+    card:{
+        margin: '5px'
+    },
     gridListTileBar: {
         background: "#3f51b5",
     },
@@ -178,7 +181,7 @@ class BrowseMatch extends React.Component {
                         item.matches.map((match, key) =>
                             
                             <GridListTile key={key} className={classes.gridListTile}>
-                                <Card className={cardStyle.card}>
+                                <Card className={classes.card}>
                                         <CardHeader
                                         avatar={
                                             <Avatar src={"https://pickaface.net/gallery/avatar/unr_test_161024_0535_9lih90.png"} 
@@ -186,11 +189,11 @@ class BrowseMatch extends React.Component {
                                                     className={classes.bigAvatar}>
                                             </Avatar>
                                         }
-                                        action={
-                                            <IconButton aria-label="settings">
-                                            <MoreVertIcon />
-                                            </IconButton>
-                                        }
+                                        // action={
+                                        //     <IconButton aria-label="settings">
+                                        //     <MoreVertIcon />
+                                        //     </IconButton>
+                                        // }
                                         title={match.firstName + match.lastName}
                                         subheader={ match.cities}
                                         />
@@ -207,7 +210,9 @@ class BrowseMatch extends React.Component {
                                         <br></br>
                                         <Typography variant="body2" color="textSecondary" component="p">
                                             <Icon fontSize="small">home</Icon>Cities: {match.cities}<br></br>
-                                            <Icon fontSize="small">language</Icon>Languages want to learn:<br></br>
+                                            <Icon fontSize="small">language</Icon>Languages want to learn: 
+                                    {" " + match.languagesToLearn.map(e => e.language).join(", ")}
+                                            <br></br>
 
                                          </Typography>
                                         </CardContent>
