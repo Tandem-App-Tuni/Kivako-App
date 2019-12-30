@@ -10,6 +10,8 @@ import Paper from '@material-ui/core/Paper';
 import { withStyles } from '@material-ui/styles';
 import { Redirect } from 'react-router';
 
+import ConstantsList from '../../config_constants';
+
 /**
  * The login page is based on a template available on: https://github.com/mui-org/material-ui/tree/master/docs/src/pages/getting-started/templates/sign-in
  * For conveniance it is converted to a non-funcitonal, standard component. The login functionality is authored by Peter Mlakar.
@@ -50,7 +52,7 @@ class LocalLoginPage extends Component
   {
     super(props);
 
-    var localTest = false;
+    var localTest = ConstantsList.IS_LOCAL_TEST_ENV;
 
     if (localTest)
     {
@@ -92,7 +94,7 @@ class LocalLoginPage extends Component
     }).then(response => response.text())
       .then(regUrl => 
         {
-          if (regUrl != '/') 
+          if (regUrl !== '/') 
           {
             this.setState({redirectURL: regUrl});
           }
@@ -150,7 +152,7 @@ class LocalLoginPage extends Component
     }).then(response => response.text())
       .then(checkUrl =>
         {
-          if (checkUrl == '/') 
+          if (checkUrl === '/') 
           {
             alert('Wrong credentials!');
             return;
@@ -176,14 +178,15 @@ class LocalLoginPage extends Component
   {
     const {classes} = this.props;
 
-    if (this.state.redirectURL != '') return(<Redirect to={this.state.redirectURL}/>);
+    if (this.state.redirectURL !== '') return(<Redirect to={this.state.redirectURL}/>);
 
     return(
       <Container 
       component="main" 
       maxWidth="xs">
       <Paper className={classes.paper}>
-        <img 
+        <img
+            alt="" 
             src={logo} 
             style={{ maxHeight: 100 , maxWidth: '80%', marginTop: 30, marginLeft: 20, marginRight: 20}}/>
         <Typography 

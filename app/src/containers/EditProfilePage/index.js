@@ -25,13 +25,13 @@ import ListItemText from '@material-ui/core/ListItemText';
 
 import {Redirect} from 'react-router-dom';
 
-//Data
-//import {municipality} from '../../components/constant/municipality'
-
 //Components
 import {CityPicker} from '../../components/CityPicker';
 import LanguagePicker from '../../components/LanguagePicker'
 import {AlertView} from '../../components/AlertView'
+
+import ConstantsList from '../../config_constants';
+
 
 const useStyles = theme => ({
   '@global': {
@@ -124,7 +124,7 @@ class EditProfilePage extends Component {
       isAlreadyregistered : false,
       isAlreadyAuthenticated : false,
       isLoadingPage:true,
-      portOption:'' //set to 3000 for local testing
+      portOption: ConstantsList.PORT_IN_USE //set to 3000 for local testing
     };
   }
 
@@ -179,7 +179,6 @@ class EditProfilePage extends Component {
       });
 
 
-    //this.uploadPhoto("5daf39de47435bd5d59687c6");
   }
 
   uploadPhoto = (userId) => {

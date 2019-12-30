@@ -23,15 +23,16 @@ import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import { mainListItems, secondaryListItems, thirdListItems } from './listItems';
 import { Link } from 'react-router-dom';
 
-
 import logo from '../../tandemlogo.png'
+
+import ConstantsList from '../../config_constants';
 
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
       <Link color="inherit" href="">
-       Kivako Tandem App
+       {ConstantsList.APPLICATION_NAME}
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}

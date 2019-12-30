@@ -10,6 +10,8 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { makeStyles } from '@material-ui/core/styles';
 
+import ConstantsList from '../../config_constants';
+
 /**
  * Author: Peter Mlakar
  * 
@@ -55,8 +57,8 @@ import { makeStyles } from '@material-ui/core/styles';
  * loadedServerInformation -> a flag set to true when the conversation data has been recieved from the server
  */
 
-var chatUrlLocal = "http://localhost:3000";
-var chatUrl = "https://www.unitandem.fi";
+//var chatUrlLocal = ConstantsList.APPLICATION_LOCAL_URL;//"http://localhost:3000"; 
+var chatUrl = ConstantsList.APPLICATION_SERVER_URL;//"https://www.unitandem.fi";
 
 class ChatPage extends React.Component
 {

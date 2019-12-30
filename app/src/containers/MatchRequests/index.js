@@ -30,6 +30,8 @@ import {Redirect} from 'react-router-dom';
 import logo from '../../tandemlogo.png'
 import Grid from '@material-ui/core/Grid'
 
+import ConstantsList from '../../config_constants';
+
 
 const styles = ({
     root: {
@@ -91,7 +93,7 @@ class MatchRequests extends React.Component {
         isAlreadyAuthenticated : false,
         isLoadingPage:true,
         open:false,
-        portOption:''
+        portOption:ConstantsList.PORT_IN_USE
       };
     }
 
@@ -106,7 +108,7 @@ class MatchRequests extends React.Component {
     acceptMatchRequest(match) {
         //console.log(user)
         //console.log(language)
-        alert("Match "+match._id);
+        //alert("Match "+match._id);
 
         const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/usersMatch/acceptMatchRequest/"+match._id);
 
@@ -139,7 +141,7 @@ class MatchRequests extends React.Component {
     denyMatchRequest(match) {
         //console.log(user)
         //console.log(language)
-        alert("Match "+ match._id);
+        //alert("Match "+ match._id);
 
         const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/usersMatch/denyMatchRequest/"+match._id);
 

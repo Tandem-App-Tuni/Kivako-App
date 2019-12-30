@@ -104,38 +104,6 @@ class BrowseMatch extends React.Component {
     
 
     constructor(props) {
-        //Test purposes
-        const userMatchesTest = [
-            {
-                languageName: "English",
-                matches:
-                [
-                    {_id: "1", name:"Nam",firstName:"User Test",lastName:"lastName",cities:["Tammela","Tampere"],languagesToTeach:[{"language":"Albanian","level":"C1","credits":2}],
-                    languagesToLearn:[{"language":"Arbëresh","level":"A2","credits":1}],descriptionText:"Hi, i'm a user test case"},
-                    {name:"Peter"},
-                    {name:"Jp"},
-                    {name:"Nam"},
-                    {name:"Peter"},
-                    {name:"Jp"},
-                    {name:"Nam"},
-                    {name:"Peter"},
-                    {name:"Jp"},
-                    {name:"Nam"},
-                    {name:"Peter"},
-                    {name:"Jp"}
-                ]
-            },
-            {
-                languageName: "Finnish",
-                matches:
-                [
-                    {name:"Nam"},
-                    {name:"Peter"},
-                    {name:"Jp"}
-                ]
-            }
-        ]
-
 
       super(props);
       this.state = {
@@ -282,9 +250,6 @@ class BrowseMatch extends React.Component {
     }
 
     onInviteAction(user,language) {
-        //console.log(user)
-        //console.log(language)
-        alert("convite para: " + user.firstName + " no idioma " + language);
 
         const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/usersMatch/sendRequest")
         //console.log(url)
