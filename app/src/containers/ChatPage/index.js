@@ -106,7 +106,7 @@ class ChatPage extends React.Component
     {
       this.partners.forEach((element) => 
       {
-        if (element.roomId == data.roomId)
+        if (element.roomId === data.roomId)
         {
           element.messages = data.room.messages;
         }
@@ -192,7 +192,7 @@ class ChatPage extends React.Component
    */
   getMessagePeek(messages)
   {
-    if (messages.length == 0) return '...';
+    if (messages.length === 0) return '...';
 
     var msg = messages[messages.length - 1];
 
@@ -225,20 +225,20 @@ class ChatPage extends React.Component
     if (typeof this.state.currentOpenConversation == 'undefined') currentId = -1;
     else currentId = this.state.currentOpenConversation.conversationId;
 
-    if (id != currentId) this.setState({currentOpenConversation: this.partners[id]})
+    if (id !== currentId) this.setState({currentOpenConversation: this.partners[id]})
     else this.setState({currentOpenConversation: undefined})
 
-    if (id != currentId) 
+    if (id !== currentId) 
     {
       this.state.socket.emit('subscribe', 
           {to: this.partners[id].roomId, 
-           from: currentId != -1 ? this.partners[currentId].roomId : 'null'});
+           from: currentId !== -1 ? this.partners[currentId].roomId : 'null'});
     }
     else 
     {
       this.state.socket.emit('subscribe', 
           {to: 'null', 
-           from: currentId != -1 ? this.partners[currentId].roomId : 'null'});
+           from: currentId !== -1 ? this.partners[currentId].roomId : 'null'});
     }
   }
 

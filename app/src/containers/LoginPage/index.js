@@ -65,7 +65,8 @@ class LandingPage extends Component
       component="main" 
       maxWidth="xs">
       <Paper className={classes.paper}>
-      <img 
+      <img
+        alt=""
         src={logo} 
         style={{ maxHeight: 100 , maxWidth: '80%', marginTop: 30,marginLeft: 20,marginRight: 20}}/>
         <Button 

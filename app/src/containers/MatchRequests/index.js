@@ -306,7 +306,7 @@ class MatchRequests extends React.Component {
                     <ResponsiveDrawer title = "Matches requests!">
                         <div align = "center">
                             <Paper>
-                                <img src={logo} style={{ maxHeight: 100 , maxWidth: '80%', marginTop: 30,marginLeft: 20,marginRight: 20}}/>
+                                <img alt="" src={logo} style={{ maxHeight: 100 , maxWidth: '80%', marginTop: 30,marginLeft: 20,marginRight: 20}}/>
       
                                 <br></br>
                                 <br></br>

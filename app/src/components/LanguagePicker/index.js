@@ -47,6 +47,7 @@ class LanguagePicker extends Component {
     var level = "";
     var credits = "";
     var excludedLanguages = [];
+    
     if  (nextProps.language != null){
      language = nextProps.language.language;
      level = nextProps.language.level;
