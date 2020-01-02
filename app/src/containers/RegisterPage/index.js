@@ -119,6 +119,8 @@ class SignUpPage extends Component {
       languagesToLearn: [],
       firstName : '',
       lastName : '',
+      password:'',
+      passwordConfirmation:'',
       email : '',
       cities : [],
       descriptionText : '',
@@ -225,6 +227,39 @@ class SignUpPage extends Component {
 
   };
 
+  handleFirstPasswordField = event => {
+    
+    var value= (event.target.value);
+    this.setState({password: value});
+
+    if (value.length < 6 || value.length > 20) {
+      this.setState( {passwordError: true, passwordErrorMessage: 'The password must have at least 6 characters and a maximum of 20'} );
+    }else{
+      this.setState( {passwordError: false, passwordErrorMessage: ''} );
+      this.setState({password: value});
+    }
+
+  };
+
+  handleConfirmationPasswordField = event => {
+    
+    var value= (event.target.value);
+    this.setState({passwordConfirmation: value});
+
+    if (value.length < 6 || value.length > 20) {
+      this.setState( {passwordConfirmationError: true, passwordConfirmationErrorMessage: 'The password must have at least 6 characters and a maximum of 20'} );
+    }else if(value !== this.state.password){
+      this.setState( {passwordConfirmationError: true, passwordConfirmationErrorMessage: 'The password must be equal'} );
+      this.setState( {passwordError: true, passwordErrorMessage: 'The password must be equal'} );
+    }else{
+      this.setState( {passwordConfirmationError: false, passwordConfirmationErrorMessage: ''} );
+      this.setState( {passwordError: false, passwordErrorMessage: ''} );
+      this.setState({passwordConfirmation: value});
+    }
+
+  };
+
+
   handleTermsAndConditionsCheckboxChange = name => event => {
     this.setState({
       termsAndConditionsAccept : name,
@@ -306,10 +341,9 @@ class SignUpPage extends Component {
   }
 
   // API Call to insert user
-  //TODO -> MAKE A CHECK, IF ALL FIELDS ARE NOT VALID, DON'T SEND API CALL
   onSaveButtonClicked = () =>{
     const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/users/add")
-    //console.log(url)
+    
     fetch(url, {
     method: 'POST',
     headers: {
@@ -324,7 +358,8 @@ class SignUpPage extends Component {
         email : this.state.email,
         cities : this.state.cities,
         descriptionText : this.state.descriptionText,
-        userIsActivie: true
+        userIsActivie: true,
+        password:this.state.password
     })
     }).then((response) => response.json())
     .then((responseJson) => {
@@ -353,11 +388,9 @@ class SignUpPage extends Component {
       cors:'no-cors'
     }).then((response) => response.json())
     .then((responseJson) => {
-      console.log("aqui")
-      console.log(responseJson.isRegistered);
+      //console.log(responseJson.isRegistered);
 
       if(responseJson.isRegistered){
-        console.log("entrou")
         //User is already registered. Redirect to dashboard
         this.setState({ isAlreadyregistered: true });
       }else{
@@ -411,9 +444,6 @@ class SignUpPage extends Component {
 
         this.checkIfUserIsRegistered( () => {
           //console.log("Register control finished");
-          console.log("aqui2")
-          console.log(this.state.isAlreadyregistered)
-
           this.setState({isLoadingPage:false});
         });
 
@@ -510,14 +540,41 @@ class SignUpPage extends Component {
                   name="email"
                   autoComplete="email"
                   onChange =  {this.handleChangeEmail}
-                  //disabled = {true}
-                  InputProps={{
-                    readOnly: true,
-                  }}
+                  helperText="Please, use your university email. Ex: email@tuni.fi"
+                />
+              </Grid>
+              
+              <Grid item xs={12}>
+                <TextField
+                  id="password"
+                  label="Password"
+                  type="password"
+                  autoComplete="current-password"
+                  variant="outlined"
+                  required
+                  fullWidth
+                  onChange =  {this.handleFirstPasswordField}
+                  helperText={ this.state.passwordError === false ? '' : this.state.passwordErrorMessage}
+                  error={this.state.passwordError}
                 />
               </Grid>
 
               <Grid item xs={12}>
+                <TextField
+                    id="passwordConfirmation"
+                    label="Password Confirmation"
+                    type="password"
+                    autoComplete="current-password"
+                    variant="outlined"
+                    required
+                    fullWidth
+                    onChange =  {this.handleConfirmationPasswordField}
+                    helperText={ this.state.passwordConfirmationError === false ? '' : this.state.passwordConfirmationErrorMessage}
+                    error={this.state.passwordConfirmationError}
+                  />
+              </Grid>
+              
+              <Grid item xs={12} mt={5}>
                 <CityPicker classes = {classes}
                   selectedItem = {this.state.cities}
                   onChange = {this.handleChangeCities}

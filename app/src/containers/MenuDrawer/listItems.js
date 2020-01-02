@@ -18,6 +18,7 @@ import { Link } from "react-router-dom";
 
 import ConstantsList from '../../config_constants';
 
+// Assign the value of the PORT based on the state of test or production.
 var logoutUrl = ConstantsList.IS_LOCAL_TEST_ENV ? ConstantsList.LOCAL_LOGOUT_URL : ConstantsList.SERVER_LOGOUT_URL;
 
 export const mainListItems = (

@@ -11,6 +11,7 @@ import { withStyles } from '@material-ui/styles';
 import { Redirect } from 'react-router';
 
 import ConstantsList from '../../config_constants';
+import Grid from '@material-ui/core/Grid';
 
 /**
  * The login page is based on a template available on: https://github.com/mui-org/material-ui/tree/master/docs/src/pages/getting-started/templates/sign-in
@@ -21,8 +22,7 @@ import ConstantsList from '../../config_constants';
  * @param {*} theme The default application theme.
  */
 
-const styles = theme => 
-({
+const styles = theme => ({
   paper: 
   {
     marginTop: theme.spacing(8),
@@ -51,13 +51,10 @@ class LocalLoginPage extends Component
   constructor(props)
   {
     super(props);
-
     var localTest = ConstantsList.IS_LOCAL_TEST_ENV;
 
-    if (localTest)
-    {
-      this.state = 
-      ({
+    if (localTest){
+      this.state =({
         email:'', 
         password: '', 
         signUp: 'Login',
@@ -65,13 +62,11 @@ class LocalLoginPage extends Component
         signUpServer: 'http://localhost:3000/login', 
         logOut: 'http://localhost:3000/logout-user',
         signInCheck: 'http://localhost:3000/login/check',
-        redirectURL: ''
+        redirectURL: '',
+        initialPage:'http://localhost:3001'
       });
-    }
-    else
-    {
-      this.state = 
-      ({
+    }else{
+      this.state =({
         email:'', 
         password: '', 
         signUp: 'Login',
@@ -79,7 +74,8 @@ class LocalLoginPage extends Component
         signUpServer: 'https://www.unitandem.fi/login', 
         logOut: 'https://www.unitandem.fi/logout-user',
         signInCheck: 'https://www.unitandem.fi/login/check',
-        redirectURL: ''
+        redirectURL: '',
+        initialPage:'https://www.unitandem.fi'
       });
     }
 
@@ -185,39 +181,53 @@ class LocalLoginPage extends Component
       component="main" 
       maxWidth="xs">
       <Paper className={classes.paper}>
-        <img
-            alt="" 
-            src={logo} 
-            style={{ maxHeight: 100 , maxWidth: '80%', marginTop: 30, marginLeft: 20, marginRight: 20}}/>
+        <a href={this.state.initialPage}>
+          <img
+              alt="" 
+              src={logo} 
+              style={{ maxHeight: 100 , maxWidth: '80%', marginTop: 30, marginLeft: 20, marginRight: 20}}
+          />
+        </a>
         <Typography 
             component="h1" 
             variant="h5">
           {this.state.signUp}
         </Typography>
-        <form 
-            className={classes.form} noValidate>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            onChange={(e)=>{this.handleEmailFormChange(e)}}
-            autoFocus/>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-            onChange={(e)=>{this.handlePasswordFormChange(e)}}/>
+        
+        <form  className={classes.form} noValidate>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  autoComplete="email"
+                  onChange={(e)=>{this.handleEmailFormChange(e)}}
+                  autoFocus
+                />
+            </Grid>
+
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                onChange={(e)=>{this.handlePasswordFormChange(e)}}
+              />
+            </Grid>
+
+          </Grid>
+
           <Button
             type="submit"
             fullWidth

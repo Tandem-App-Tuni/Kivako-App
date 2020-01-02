@@ -57,7 +57,7 @@ class LandingPage extends Component
   {
     const { classes } = this.props;
 
-    if (this.state.redirectToSingUp) return (<Redirect to='/local-sign-up'/>);
+    if (this.state.redirectToSingUp) return (<Redirect to='/register'/>);
     if (this.state.redirectToLogin) return (<Redirect to='/local-login'/>);
 
     return (
