@@ -340,7 +340,9 @@ class RegisterAdminPage extends Component {
         <Container component="main" maxWidth="xs">
           <CssBaseline />
             <Snackbar
+              // eslint-disable-next-line
               anchorOrigin={'top','center'}
+              // eslint-disable-next-line
               key={'top','center'}
               open={this.openSnackBar}
               onClose={this.handleClose}

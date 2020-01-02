@@ -112,6 +112,7 @@ class BrowseMatch extends React.Component {
     };
 
     getMatchesTiles(item, classes) {
+        // eslint-disable-next-line
         const cardStyle =makeStyles(theme => ({
             card: {
               maxWidth: 345

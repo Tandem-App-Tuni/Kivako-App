@@ -88,6 +88,7 @@ function getSuggestions(value, { showEmpty = false } = {}) {
 }
 
 export function CityPicker(props) {
+  // eslint-disable-next-line
   React.useEffect(() => { setSelectedItem(props.selectedItem) });
   const { classes } = props;
   const [inputValue, setInputValue] = React.useState('');
