@@ -15,6 +15,7 @@ import RegisterAdminPage from './containers/RegisterAdmin'
 import ListOfAdmins from './containers/ListOfAdmins'
 import ListOfStudents from './containers/ListOfStudents'
 import Statitics from './containers/Statitics'
+import LocalLoginPage from './containers/LocalLoginPage'
 
 
 const theme = createMuiTheme({
@@ -46,6 +47,9 @@ function App() {
         </Route>
         <Route exact path="/statitics">
             <Statitics />
+        </Route>
+        <Route exact path="/local-login">
+            <LocalLoginPage />
         </Route>
         
 
