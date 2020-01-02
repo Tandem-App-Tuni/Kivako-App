@@ -37,6 +37,7 @@ import {Redirect} from 'react-router-dom';
 import {CityPicker} from '../../components/CityPicker';
 import LanguagePicker from '../../components/LanguagePicker'
 
+import ConstantsList from '../../config_constants';
 
 const useStyles = theme => ({
   '@global': {
@@ -129,7 +130,7 @@ class SignUpPage extends Component {
       termsAndConditionsAccept : false,
       isAlreadyAuthenticated : false,
       isLoadingPage:true,
-      portOption:'' //set to 3000 for local testing
+      portOption:ConstantsList.PORT_IN_USE, //set to 3000 for local testing
     };
   }
 

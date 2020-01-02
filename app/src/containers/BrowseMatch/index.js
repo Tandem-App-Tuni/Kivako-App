@@ -30,6 +30,8 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 
+import ConstantsList from '../../config_constants';
+
 
 const styles = ({
     root: {
@@ -97,7 +99,7 @@ class BrowseMatch extends React.Component {
         isAlreadyregistered : false,
         isAlreadyAuthenticated : false,
         isLoadingPage:true,
-        portOption:'', //3000 if local
+        portOption:ConstantsList.PORT_IN_USE,
         open:false
       };
     }

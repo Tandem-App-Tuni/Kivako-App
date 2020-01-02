@@ -18,9 +18,7 @@ import { Link } from "react-router-dom";
 
 import ConstantsList from '../../config_constants';
 
-
-//var logoutUrlLocal = ConstantsList.LOCAL_LOGOUT_URL;//"http://localhost:3000/logout";
-var logoutUrl = ConstantsList.SERVER_LOGOUT_URL;//"https://www.unitandem.fi/logout";
+var logoutUrl = ConstantsList.IS_LOCAL_TEST_ENV ? ConstantsList.LOCAL_LOGOUT_URL : ConstantsList.SERVER_LOGOUT_URL;
 
 export const mainListItems = (
   <div>
