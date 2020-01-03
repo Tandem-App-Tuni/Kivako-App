@@ -5,6 +5,7 @@ import
   withStyles
 } from '@material-ui/core/styles';
 
+import InfoTable from './statiticsTable'
 
 import './bootstrap.min.css'
 import './style.css'
@@ -168,7 +169,7 @@ class LandingPage extends Component
                 <div className="face face2">
                   <div className="content">
                     <p>an unmatched selection of languages available – see it yourself ! </p>
-                    <a href="#">Click here to see the available languages</a>
+                    <a href="#fifth-section">Click here to see the available languages</a>
                   </div>
                 </div>
               </div>
@@ -227,7 +228,7 @@ class LandingPage extends Component
               <li>
                 <div className="content">
                   <h3>Step 1</h3>
-                  <p> Take a look at the <a href="#">UniTandem data sheet</a> to see if there are people who
+                  <p> Take a look at the <a href="#fifth-section">UniTandem data sheet</a> to see if there are people who
                               could teach you the language you’re interested in learning </p>
                 </div>
 
@@ -237,7 +238,7 @@ class LandingPage extends Component
               <li>
                 <div className="content">
                   <h3>Step 2</h3>
-                  <p><a href=""  onClick={() => {this.onSignUpButtonClicked()}}> Sign up to UniTandem</a> using your university or university of
+                  <p><a href="#"  onClick={() => {this.onSignUpButtonClicked()}}> Sign up to UniTandem</a> using your university or university of
                               applied sciences email address (HAKA).</p>
                 </div>
 
@@ -302,6 +303,19 @@ class LandingPage extends Component
         </div>
       </section>
       {/* fourth section ends here  */}
+
+
+      <section id="fifth-section" className="colured-section">
+        <div className="container-fluid">
+          <h2>Languages already been used in Unitandem!</h2>
+          
+            <InfoTable></InfoTable>
+            <br></br>
+            <h3>More than 150 languages</h3>
+        </div>
+      </section>
+
+
 
       {/*  footer-section starts her*/}
 
