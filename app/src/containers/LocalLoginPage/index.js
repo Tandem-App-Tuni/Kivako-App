@@ -139,8 +139,7 @@ class LocalLoginPage extends Component
       {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify
-      ({
+      body: JSON.stringify({
         username:email,
         password:password
       }),

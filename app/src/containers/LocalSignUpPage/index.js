@@ -107,8 +107,7 @@ class LocalSignUpPage extends Component
       {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify
-      ({
+      body: JSON.stringify({
         email:email,
         password:password
       })
@@ -126,8 +125,7 @@ class LocalSignUpPage extends Component
             {
               'Content-Type': 'application/json'
             },
-            body: JSON.stringify
-            ({
+            body: JSON.stringify({
               username:email,
               password:password
             }),
