@@ -54,7 +54,7 @@ class LandingPage extends Component
   
           <Paper className={classes.paper}>
           <img alt="" src={logo} style={{ maxHeight: 100 , maxWidth: '100%', marginTop: 30,marginLeft: 20,marginRight: 20}}/>
-          <Typography component="h1" variant="h6" color="inherit">
+          <Typography component="h1" variant="h6" color="primary">
             Admin page
           </Typography>
           <Button variant="contained" color = "primary" onClick={() => {this.onLoginButtonClicked()}}

@@ -116,17 +116,17 @@ export default function Dashboard(props) {
         <Toolbar className={classes.toolbar}>
           <IconButton
             edge="start"
-            color="inherit"
+            color="primary"
             aria-label="open drawer"
             onClick={handleDrawerOpen}
             className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
           >
             <MenuIcon />
           </IconButton>
-          <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
+          <Typography component="h1" variant="h6" color="primary" noWrap className={classes.title}>
             {props.title}
           </Typography>
-          <Typography component="h1" variant="h6" color="inherit">
+          <Typography component="h1" variant="h6" color="primary">
               ADMIN PAGE
           </Typography>
 

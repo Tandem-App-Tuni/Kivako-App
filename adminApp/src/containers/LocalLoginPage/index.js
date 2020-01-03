@@ -246,7 +246,7 @@ class LocalLoginPage extends Component
           align="center">
           {'Copyright © '}
         <Link 
-          color="inherit" 
+          color="primary" 
           href={this.state.initialPage}>
           Unitandem
         </Link>{' '}
