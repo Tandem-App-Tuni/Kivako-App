@@ -46,7 +46,9 @@ class LanguagePicker extends Component {
     var language = "";
     var level = "";
     var credits = "";
+    // eslint-disable-next-line
     var excludedLanguages = [];
+    
     if  (nextProps.language != null){
      language = nextProps.language.language;
      level = nextProps.language.level;

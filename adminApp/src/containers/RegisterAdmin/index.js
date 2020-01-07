@@ -108,7 +108,8 @@ class RegisterAdminPage extends Component {
       isLoadingPage:true,
       userIsAdmin:false,
       openSnackBar:false,
-      snackBarMessageError:""
+      snackBarMessageError:"",
+      password:''
     };
   }
 
@@ -144,7 +145,8 @@ class RegisterAdminPage extends Component {
           cities:["Admin"],
           descriptionText: "Admin User",
           userIsActivie: true,
-          isAdmin:true
+          isAdmin:true,
+          password:this.state.password
         })
       }).then((response) => response.json())
       .then((responseJson) => {
@@ -226,6 +228,20 @@ class RegisterAdminPage extends Component {
     this.setState({
       email: value
     })
+  };
+
+  handleFirstPasswordField = event => {
+    
+    var value= (event.target.value);
+    this.setState({password: value});
+
+    if (value.length < 6 || value.length > 20) {
+      this.setState( {passwordError: true, passwordErrorMessage: 'The password must have at least 6 characters and a maximum of 20'} );
+    }else{
+      this.setState( {passwordError: false, passwordErrorMessage: ''} );
+      this.setState({password: value});
+    }
+
   };
 
 
@@ -340,7 +356,9 @@ class RegisterAdminPage extends Component {
         <Container component="main" maxWidth="xs">
           <CssBaseline />
             <Snackbar
+              // eslint-disable-next-line
               anchorOrigin={'top','center'}
+              // eslint-disable-next-line
               key={'top','center'}
               open={this.openSnackBar}
               onClose={this.handleClose}
@@ -420,6 +438,21 @@ class RegisterAdminPage extends Component {
                     helperText="Insert the email carefully. This needs to match with the user email used during login process!"
                   />
                 </Grid>
+
+                <Grid item xs={12}>
+                <TextField
+                  id="password"
+                  label="Password"
+                  type="password"
+                  autoComplete="current-password"
+                  variant="outlined"
+                  required
+                  fullWidth
+                  onChange =  {this.handleFirstPasswordField}
+                  helperText={ this.state.passwordError === false ? '' : this.state.passwordErrorMessage}
+                  error={this.state.passwordError}
+                />
+              </Grid>
             
               </Grid>
 

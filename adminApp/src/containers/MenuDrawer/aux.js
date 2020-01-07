@@ -111,7 +111,7 @@ function ResponsiveDrawer(props) {
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
           <IconButton
-            color="inherit"
+            color="primary"
             aria-label="open drawer"
             edge="start"
             onClick={handleDrawerToggle}

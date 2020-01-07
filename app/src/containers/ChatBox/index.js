@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, TextField, Grid, Box, Divider, Zoom, Toolbar} from '@material-ui/core'
+import {Button, TextField, Grid, Box, Divider, Toolbar} from '@material-ui/core'
 import Icon from '@material-ui/core/Icon';
 import Avatar from '@material-ui/core/Avatar';
 import Paper from '@material-ui/core/Paper';
@@ -163,7 +163,7 @@ class Chat extends React.Component
      */
     sendMessageClick()
     {
-        if (this.state.textFieldContent == '') return;
+        if (this.state.textFieldContent === '') return;
         this.handleSend(this.state.sendMessageFunction(this.state.textFieldContent, this.state.messages, this.state.user));
     }
 
@@ -173,7 +173,7 @@ class Chat extends React.Component
      */
     sendMessageEnter(event)
     {
-        if (event.key == 'Enter' && this.setState.textFieldContent != '') this.handleSend(this.state.sendMessageFunction(this.state.textFieldContent, this.state.messages, this.state.user));
+        if (event.key === 'Enter' && this.setState.textFieldContent !== '') this.handleSend(this.state.sendMessageFunction(this.state.textFieldContent, this.state.messages, this.state.user));
     }
 
     render()
@@ -256,9 +256,9 @@ class ChatBubble extends React.Component
         {
             message: props.message,
             text: props.message.text,
-            side: props.message.id == props.user ? 'flex-start' : 'flex-end',
-            color: props.message.id == props.user ? '#2073E8' : '#24B8FF',
-            align: props.message.id == props.user ? 'left' : 'right'
+            side: props.message.id === props.user ? 'flex-start' : 'flex-end',
+            color: props.message.id === props.user ? '#2073E8' : '#24B8FF',
+            align: props.message.id === props.user ? 'left' : 'right'
         };
     }
 
@@ -269,9 +269,9 @@ class ChatBubble extends React.Component
             user: props.user,
             message: props.message,
             text: props.message.text,
-            side: props.message.id == props.user ? 'flex-start' : 'flex-end',
-            color: props.message.id == props.user ? '#EBFFBE' : '#EEEBEB',
-            align: props.message.id == props.user ? 'left' : 'right'
+            side: props.message.id === props.user ? 'flex-start' : 'flex-end',
+            color: props.message.id === props.user ? '#EBFFBE' : '#EEEBEB',
+            align: props.message.id === props.user ? 'left' : 'right'
         };
 
         return newState;
@@ -287,7 +287,7 @@ class ChatBubble extends React.Component
     render()
     {
         // Message of the other user
-        if(this.state.align=='right'){
+        if(this.state.align === 'right'){
             console.log(this.state)
             return(
                 <div>

@@ -11,10 +11,11 @@ import {Colors} from './components/constant/index'
 import './App.css';
 import LoginPage from './containers/LoginPage'
 import RegisterAdminPage from './containers/RegisterAdmin'
-import RegisterPage from './containers/RegisterPage'
+//import RegisterPage from './containers/RegisterPage'
 import ListOfAdmins from './containers/ListOfAdmins'
 import ListOfStudents from './containers/ListOfStudents'
 import Statitics from './containers/Statitics'
+import LocalLoginPage from './containers/LocalLoginPage'
 
 
 const theme = createMuiTheme({
@@ -40,14 +41,15 @@ function App() {
         <Route exact path="/list-admins">
             <ListOfAdmins />
         </Route>
-        <Route exact path="/register">
-            <RegisterPage />
-        </Route>
+
         <Route exact path="/list-students">
             <ListOfStudents />
         </Route>
         <Route exact path="/statitics">
             <Statitics />
+        </Route>
+        <Route exact path="/local-login">
+            <LocalLoginPage />
         </Route>
         
 

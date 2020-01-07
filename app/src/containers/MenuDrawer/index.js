@@ -3,41 +3,37 @@ import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
-import Box from '@material-ui/core/Box';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import Badge from '@material-ui/core/Badge';
 import Container from '@material-ui/core/Container';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import AccountCircle from '@material-ui/icons/AccountCircle';
 import MessageIcon from '@material-ui/icons/Message';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import { mainListItems, secondaryListItems, thirdListItems } from './listItems';
 import { Link } from 'react-router-dom';
 
-
 import logo from '../../tandemlogo.png'
 
+//import ConstantsList from '../../config_constants';
+
+/*
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
       <Link color="inherit" href="">
-       Kivako Tandem App
+       {ConstantsList.APPLICATION_NAME}
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
     </Typography>
   );
-}
+}*/
 
 const drawerWidth = 240;
 
@@ -121,7 +117,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function Dashboard(props) {
-  const { container } = props;
+  //const { container } = props;
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const handleDrawerOpen = () => {
@@ -130,7 +126,7 @@ export default function Dashboard(props) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+  //const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
   
 
   return (
@@ -167,7 +163,7 @@ export default function Dashboard(props) {
         open={open}
       > 
             <div className={classes.toolbarIcon}>
-              <img src={logo} style={{ maxHeight: 100 , maxWidth: '70%', align:'center'}}/>
+              <img alt="" src={logo} style={{ maxHeight: 100 , maxWidth: '70%', align:'center'}}/>
               <IconButton onClick={handleDrawerClose}>
                 <ChevronLeftIcon />
               </IconButton>

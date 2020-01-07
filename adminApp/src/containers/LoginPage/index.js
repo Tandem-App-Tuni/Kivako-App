@@ -8,6 +8,7 @@ import {
 
 import logo from '../../tandemlogo.png'
 import Typography from '@material-ui/core/Typography';
+import {Redirect} from 'react-router-dom';
 
 
 const useStyles = theme => ({
@@ -30,26 +31,33 @@ const useStyles = theme => ({
 
 class LandingPage extends Component 
 {
-  onLoginButtonClicked = () =>{
-    const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/login");
+  constructor(props){
+    super(props);
 
-    window.open(url,'_self');
+    this.state = ({redirectToSingUp: false, redirectToLogin: false});
+  }
+
+  onLoginButtonClicked()
+  {
+    this.setState({redirectToLogin: true});
   };
 
   
 
   render() {
     const { classes } = this.props;
-     return ( 
+    if (this.state.redirectToLogin) return (<Redirect to='/local-login'/>);
+
+     return (
      <div>
          <Container component="main" maxWidth="xs">
   
           <Paper className={classes.paper}>
           <img alt="" src={logo} style={{ maxHeight: 100 , maxWidth: '100%', marginTop: 30,marginLeft: 20,marginRight: 20}}/>
-          <Typography component="h1" variant="h6" color="inherit">
+          <Typography component="h1" variant="h6" color="primary">
             Admin page
           </Typography>
-          <Button variant="contained" color = "primary" onClick={this.onLoginButtonClicked}
+          <Button variant="contained" color = "primary" onClick={() => {this.onLoginButtonClicked()}}
           style={{ maxHeight: 100 , maxWidth: '80%', marginTop: 30,marginLeft: 20,marginRight: 20,marginBottom: 20}}>
             Sign in
         </Button>

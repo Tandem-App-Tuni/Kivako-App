@@ -6,36 +6,23 @@ import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
-import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 import {withStyles} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import GridListTileBar from '@material-ui/core/GridListTileBar';
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	Styles
 
 import ResponsiveDrawer from '../MenuDrawer';
 
 import Divider from '@material-ui/core/Divider';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 
 import { makeStyles } from '@material-ui/core/styles';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import Card from '@material-ui/core/Card';
 
-import clsx from 'clsx';
 import CardHeader from '@material-ui/core/CardHeader';
-import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
-import Collapse from '@material-ui/core/Collapse';
-import IconButton from '@material-ui/core/IconButton';
-import { red } from '@material-ui/core/colors';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Icon from '@material-ui/core/Icon';
 
 import {Redirect} from 'react-router-dom';
@@ -43,7 +30,8 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 
-import Grid from '@material-ui/core/Grid'
+import ConstantsList from '../../config_constants';
+
 
 const styles = ({
     root: {
@@ -104,38 +92,6 @@ class BrowseMatch extends React.Component {
     
 
     constructor(props) {
-        //Test purposes
-        const userMatchesTest = [
-            {
-                languageName: "English",
-                matches:
-                [
-                    {_id: "1", name:"Nam",firstName:"User Test",lastName:"lastName",cities:["Tammela","Tampere"],languagesToTeach:[{"language":"Albanian","level":"C1","credits":2}],
-                    languagesToLearn:[{"language":"Arbëresh","level":"A2","credits":1}],descriptionText:"Hi, i'm a user test case"},
-                    {name:"Peter"},
-                    {name:"Jp"},
-                    {name:"Nam"},
-                    {name:"Peter"},
-                    {name:"Jp"},
-                    {name:"Nam"},
-                    {name:"Peter"},
-                    {name:"Jp"},
-                    {name:"Nam"},
-                    {name:"Peter"},
-                    {name:"Jp"}
-                ]
-            },
-            {
-                languageName: "Finnish",
-                matches:
-                [
-                    {name:"Nam"},
-                    {name:"Peter"},
-                    {name:"Jp"}
-                ]
-            }
-        ]
-
 
       super(props);
       this.state = {
@@ -143,7 +99,7 @@ class BrowseMatch extends React.Component {
         isAlreadyregistered : false,
         isAlreadyAuthenticated : false,
         isLoadingPage:true,
-        portOption:'', //3000 if local
+        portOption:ConstantsList.PORT_IN_USE,
         open:false
       };
     }
@@ -158,6 +114,7 @@ class BrowseMatch extends React.Component {
     };
 
     getMatchesTiles(item, classes) {
+        // eslint-disable-next-line
         const cardStyle =makeStyles(theme => ({
             card: {
               maxWidth: 345
@@ -282,9 +239,6 @@ class BrowseMatch extends React.Component {
     }
 
     onInviteAction(user,language) {
-        //console.log(user)
-        //console.log(language)
-        alert("convite para: " + user.firstName + " no idioma " + language);
 
         const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/usersMatch/sendRequest")
         //console.log(url)

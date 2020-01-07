@@ -57,19 +57,19 @@ class LocalLoginPage extends Component
       this.state =({
         email:'', 
         password: '', 
-        signUp: 'Login',
+        signUp: 'Admin Login',
         api: 'http://localhost:3000',
         signUpServer: 'http://localhost:3000/login', 
         logOut: 'http://localhost:3000/logout-user',
         signInCheck: 'http://localhost:3000/login/check',
         redirectURL: '',
-        initialPage:'http://localhost:3001'
+        initialPage:'http://localhost:3002'
       });
     }else{
       this.state =({
         email:'', 
         password: '', 
-        signUp: 'Login',
+        signUp: 'Admin Login',
         api: 'https://www.unitandem.fi',
         signUpServer: 'https://www.unitandem.fi/login', 
         logOut: 'https://www.unitandem.fi/logout-user',
@@ -139,7 +139,8 @@ class LocalLoginPage extends Component
       {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
+      body: JSON.stringify
+      ({
         username:email,
         password:password
       }),
@@ -245,8 +246,8 @@ class LocalLoginPage extends Component
           align="center">
           {'Copyright © '}
         <Link 
-          color="inherit" 
-          href="https://material-ui.com/">
+          color="primary" 
+          href={this.state.initialPage}>
           Unitandem
         </Link>{' '}
           {new Date().getFullYear()}
