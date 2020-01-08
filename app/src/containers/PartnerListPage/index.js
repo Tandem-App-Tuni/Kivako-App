@@ -11,6 +11,8 @@ import Typography from '@material-ui/core/Typography';
 import ResponsiveDrawer from '../MenuDrawer';
 import UserActionCard from '../../components/UserActionCard';
 
+import ConstantsList from '../../config_constants';
+
 const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
@@ -51,11 +53,111 @@ const partnerListData = [
 class PartnerListPage extends Component {
   state = {
     openAction: false,
-    actionIndex: 0,
-    partnerList: partnerListData
+    actionIndex: -1,
+    partnerList: [],
+    isAlreadyregistered : false,
+        isAlreadyAuthenticated : false,
+        isLoadingPage:true,
+        portOption:ConstantsList.PORT_IN_USE,
   }
-  componentDidMount(){
-    //load data
+  
+  componentDidMount() {
+    this._isMounted = true;
+
+    if(this._isMounted){
+          
+      this.checkIfUserIsAuthenticaded(() => {
+
+        this.checkIfUserIsRegistered( () => {
+
+          this.loadPartnersData( () => {
+            this.setState({isLoadingPage:false});
+          });
+
+        });
+
+      });
+    }
+
+  }
+
+  // Load page functions
+  checkIfUserIsRegistered(callback) {
+    const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/users/isRegistered")
+
+    fetch(url, {
+      method: 'GET',
+      credentials: 'include',
+      cors:'no-cors'
+    }).then((response) => response.json())
+    .then((responseJson) => {
+
+      if(responseJson.isRegistered){
+        //User is already registered. Redirect to dashboard in render
+        this.setState({ isAlreadyregistered: true });
+      }else{
+        // Continue render normaly to register user
+        this.setState({ isAlreadyregistered: false });
+      }
+
+      callback();
+
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  }
+
+  checkIfUserIsAuthenticaded (callback){
+
+    const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/isAuthenticated");
+
+    fetch(url, {
+      method: 'GET',
+      credentials: 'include',
+      cors:'no-cors'
+    }).then((response) => response.json())
+    .then((responseData) => {
+      
+      if(responseData.isAuthenticated === false){
+        // Nothing to do, user will be redirect in render;
+      }else{
+        // User is already authenticated
+        // Set email automaticaly
+        this.setState({isAlreadyAuthenticated: true});
+        this.setState({email: responseData.email});
+      }
+
+      callback();
+
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  }
+
+  loadPartnersData = (callback) => {
+    const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/usersMatch/getUserActiveMatches")
+    console.log('[INFO]Loading user information...');
+    //console.log(url);
+
+    fetch(url, {
+        method: 'GET',
+        credentials: 'include',
+        cors: 'no-cors'
+      }).then((response) => response.json())
+      .then((responseData) => {
+        console.log(responseData);
+        this.setState({
+          partnerList: responseData.data
+        })
+
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+      callback();
   }
 
   onShowActionCard= (open, index, action) =>  {
@@ -145,12 +247,12 @@ class PartnerListPage extends Component {
       <div className={classes.root}>
       <ResponsiveDrawer title = "Current Partners">
        {this.getPartnerDiv(this.state.partnerList, classes)}
-       <UserActionCard 
+       {this.actionIndex >= 0 && <UserActionCard 
           type = "partner"
           open = {this.state.openAction} 
           data = {this.state.partnerList[this.state.actionIndex]}
           onClose = {(value) =>this.onShowActionCard(false, this.state.actionIndex, value)}
-       />
+       />}
       </ResponsiveDrawer>
       </div>
     );

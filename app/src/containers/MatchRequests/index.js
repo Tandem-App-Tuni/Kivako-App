@@ -31,7 +31,7 @@ import logo from '../../tandemlogo.png'
 import Grid from '@material-ui/core/Grid'
 
 import ConstantsList from '../../config_constants';
-
+import withWidth, { isWidthUp } from '@material-ui/core/withWidth';
 
 const styles = ({
     root: {
@@ -269,6 +269,23 @@ class MatchRequests extends React.Component {
         this._isMounted = false;
       }
 
+      getGridListCols() {
+        if (isWidthUp('xl', this.props.width)) {
+          return 6;
+        }
+  
+        if (isWidthUp('lg', this.props.width)) {
+          return 5;
+        }
+  
+        if (isWidthUp('md', this.props.width)) {
+          return 4;
+        }
+        if (isWidthUp('sm', this.props.width)) {
+          return 2
+        }
+        return 1;
+    }
 
     render() {
         const {classes} = this.props;
