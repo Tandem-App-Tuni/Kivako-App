@@ -290,7 +290,7 @@ class ChatPage extends React.Component
                 Partners
         </Typography> 
         <div>
-          <ExpansionPanel defaultExpanded="true">
+          <ExpansionPanel defaultExpanded={true}>
             <ExpansionPanelSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel1a-content"

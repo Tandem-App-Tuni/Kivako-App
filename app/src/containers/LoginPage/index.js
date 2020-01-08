@@ -238,7 +238,7 @@ class LandingPage extends Component
               <li>
                 <div className="content">
                   <h3>Step 2</h3>
-                  <p><a href="#"  onClick={() => {this.onSignUpButtonClicked()}}> Sign up to UniTandem</a> using your university or university of
+                  <p><button onClick={this.onSignUpButtonClicked}> Sign up to UniTandem</button> using your university or university of
                               applied sciences email address (HAKA).</p>
                 </div>
 

@@ -1,13 +1,6 @@
 
 import React, {Component} from 'react';
-
-import {
-  withStyles
-} from '@material-ui/core/styles';
-
-import {Redirect} from 'react-router-dom';
 import MaterialTable from "material-table";
-
 
 export default class StatiticsTable extends Component {
     _isTableMounted=false;
@@ -33,7 +26,8 @@ export default class StatiticsTable extends Component {
     }
   
   
-    loadDataInTable(callback){
+    loadDataInTable(callback)
+    {
       // http://localhost:3000/api/v1/admin/statiticsOpen
       const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/admin/statiticsOpen")
   

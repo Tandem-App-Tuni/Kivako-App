@@ -407,20 +407,26 @@ class SignUpPage extends Component {
 
   }
 
-  checkIfUserIsAuthenticaded (callback){
-
+  checkIfUserIsAuthenticaded (callback)
+  {
+    console.log('Checking authentication...');
     const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/isAuthenticated");
+    console.log(url);
 
-    fetch(url, {
+    fetch(url, 
+    {
       method: 'GET',
-      credentials: 'include',
-      cors:'no-cors'
-    }).then((response) => response.json())
-    .then((responseData) => {
-      
-      if(responseData.isAuthenticated === false){
+      credentials: 'include'
+    })
+    .then((response) => response.json())
+    .then((responseData) => 
+    {
+      if(responseData.isAuthenticated === false)
+      {
         // Nothing to do, user will be redirect in render;
-      }else{
+      }
+      else
+      {
         // User is already authenticated
         // Set email automaticaly
         this.setState({email: responseData.email});
@@ -435,9 +441,12 @@ class SignUpPage extends Component {
     });
   }
 
-  componentDidMount(){
+  componentDidMount()
+  {
     this._isMounted = true;
-    if(this._isMounted){   
+
+    if(this._isMounted)
+    {   
       this.checkIfUserIsAuthenticaded(() => {
         //console.log("Authentication control finished");
 
@@ -449,7 +458,6 @@ class SignUpPage extends Component {
       });
 
     }
-
   }
 
   componentWillUnmount() {

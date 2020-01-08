@@ -212,28 +212,24 @@ class BrowseMatch extends React.Component {
 
     getMatchesList(item, classes){
         return (
-                <div>
-                    <div key={item.languageName}>
-                        <ExpansionPanel>
-                            <ExpansionPanelSummary
-                                expandIcon={<ExpandMoreIcon />}
-                                aria-controls="panel1a-content"
-                                id="panel1a-header"
-                            >
-                            <Typography className={classes.heading}>Possible matches to learn {item.languageName}</Typography>
-                            </ExpansionPanelSummary>
-                            <ExpansionPanelDetails>
-                                {
-                                    this.getMatchesTiles(item, classes)
-                                }
-                                <br></br>
-                                <Divider variant="middle" />
-                            </ExpansionPanelDetails>
-                        </ExpansionPanel>
-                        <br></br>
-                    </div>
-                
-
+                <div key={item.languageName}>
+                    <ExpansionPanel>
+                        <ExpansionPanelSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="panel1a-content"
+                            id="panel1a-header"
+                        >
+                        <Typography className={classes.heading}>Possible matches to learn {item.languageName}</Typography>
+                        </ExpansionPanelSummary>
+                        <ExpansionPanelDetails>
+                            {
+                                this.getMatchesTiles(item, classes)
+                            }
+                            <br></br>
+                            <Divider variant="middle" />
+                        </ExpansionPanelDetails>
+                    </ExpansionPanel>
+                    <br></br>
                 </div>
             );
     }

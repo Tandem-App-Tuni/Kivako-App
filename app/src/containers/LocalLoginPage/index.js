@@ -82,11 +82,7 @@ class LocalLoginPage extends Component
     fetch(this.state.signInCheck, 
     {
       method: 'GET',
-      credentials: 'include',
-      headers: 
-      {
-        'Access-Control-Allow-Origin': '*'
-      }
+      credentials: 'include'
     }).then(response => response.text())
       .then(regUrl => 
         {
