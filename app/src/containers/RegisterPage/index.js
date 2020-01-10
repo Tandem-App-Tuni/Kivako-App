@@ -363,7 +363,8 @@ class SignUpPage extends Component {
     }).then((response) => response.json())
     .then((responseJson) => {
       console.log(responseJson.userAdded);
-      if (responseJson.userAdded) {
+      if (responseJson.userAdded) 
+      {
         alert("User registered succesfully!");
         this.setState({ isAlreadyregistered: true });
       } else {
@@ -377,43 +378,11 @@ class SignUpPage extends Component {
 
   }
 
-  // Load page functions
-  checkIfUserIsRegistered(callback) {
-    const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/users/isRegistered")
-
-    fetch(url, {
-      method: 'GET',
-      credentials: 'include',
-      cors:'no-cors'
-    }).then((response) => response.json())
-    .then((responseJson) => {
-      //console.log(responseJson.isRegistered);
-
-      if(responseJson.isRegistered){
-        //User is already registered. Redirect to dashboard
-        this.setState({ isAlreadyregistered: true });
-      }else{
-        // Continue render to register user
-        this.setState({ isAlreadyregistered: false });
-      }
-
-      callback();
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-
-   
-
-  }
-
   checkIfUserIsAuthenticaded (callback)
   {
     console.log('Checking authentication...');
-    const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/isAuthenticated");
-    console.log(url);
 
-    fetch(url, 
+    fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/isAuthenticated', 
     {
       method: 'GET',
       credentials: 'include'
@@ -447,14 +416,9 @@ class SignUpPage extends Component {
 
     if(this._isMounted)
     {   
-      this.checkIfUserIsAuthenticaded(() => {
-        //console.log("Authentication control finished");
-
-        this.checkIfUserIsRegistered( () => {
-          //console.log("Register control finished");
-          this.setState({isLoadingPage:false});
-        });
-
+      this.checkIfUserIsAuthenticaded(() => 
+      {
+        this.setState({isLoadingPage:false});
       });
 
     }
@@ -464,23 +428,26 @@ class SignUpPage extends Component {
     this._isMounted = false;
   }
 
-  render() {
+  render() 
+  {
     const { classes } = this.props;
     const excludedLanguages = this.toExcludeLanguages();
 
     //Wait until all informations be render until continue
-    if(this.state.isLoadingPage) {
+    if(this.state.isLoadingPage) 
+    {
       return null;
     }
 
     // In case user is not authenticated, redirect to initial page.
-    if(!this.state.isAlreadyAuthenticated){  
-      return  <Redirect  to="/" />
+    if(this.state.isAlreadyAuthenticated)
+    {  
+      return  <Redirect to="/browse-match"/>
     }
 
-    // In case user is ALREADY registered, just redirect to other system page.
-    if(this.state.isAlreadyregistered){  
-      return  <Redirect  to="/browse-match" />
+    if(this.state.isAlreadyregistered)
+    {
+      return <Redirect to='/local-login'/>
     }
 
     return  (

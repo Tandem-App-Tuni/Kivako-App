@@ -136,29 +136,28 @@ class BrowseMatch extends React.Component {
                 <GridList className={classes.gridList} >
                     {
                         item.matches.map((match, key) =>
-                            
-                            <GridListTile key={key} className={classes.gridListTile}>
-                                <Card className={classes.card}>
-                                        <CardHeader
-                                        avatar={
-                                            <Avatar src={"https://pickaface.net/gallery/avatar/unr_test_161024_0535_9lih90.png"} 
-                                                    aria-label="recipe" 
-                                                    className={classes.bigAvatar}>
-                                            </Avatar>
-                                        }
-                                        // action={
-                                        //     <IconButton aria-label="settings">
-                                        //     <MoreVertIcon />
-                                        //     </IconButton>
-                                        // }
-                                        title={match.firstName + match.lastName}
-                                        subheader={ match.cities}
-                                        />
-                                        
-                                        <CardContent>
-
+                            <GridListTile 
+                                key={key} 
+                                className={classes.gridListTile}>
+                                <Card 
+                                    className={classes.card}>
+                                    <CardHeader
+                                    avatar={
+                                        <Avatar src={"https://pickaface.net/gallery/avatar/unr_test_161024_0535_9lih90.png"} 
+                                                aria-label="recipe" 
+                                                className={classes.bigAvatar}>
+                                        </Avatar>
+                                    }
+                                    // action={
+                                    //     <IconButton aria-label="settings">
+                                    //     <MoreVertIcon />
+                                    //     </IconButton>
+                                    // }
+                                    title={match.firstName + ' ' + match.lastName}
+                                    subheader={ match.cities}/>
+                                    <CardContent>
                                         <Typography variant="body1" color="textSecondary" component="p">
-                                             
+                                                
                                             {match.descriptionText}
 
                                         </Typography>
@@ -168,23 +167,20 @@ class BrowseMatch extends React.Component {
                                         <Typography variant="body2" color="textSecondary" component="p">
                                             <Icon fontSize="small">home</Icon>Cities: {match.cities}<br></br>
                                             <Icon fontSize="small">language</Icon>Languages want to learn: 
-                                    {" " + match.languagesToLearn.map(e => e.language).join(", ")}
+                                            {" " + match.languagesToLearn.map(e => e.language).join(", ")}
                                             <br></br>
 
-                                         </Typography>
-                                        </CardContent>
-                                        <CardActions disableSpacing >
-       
-                                            <div align="center">
-                                                <Button variant="contained" 
-                                                        color="primary"
-                                                        onClick = {this.onInviteAction.bind(this, match,item.languageName)}
-                                                >
-                                                    Request Match
-                                                </Button>
-                                            </div>
-                                           
-                                        </CardActions>
+                                        </Typography>
+                                    </CardContent>
+                                    <CardActions disableSpacing>
+                                        <div align="center">
+                                            <Button variant="contained" 
+                                                    color="primary"
+                                                    onClick = {this.onInviteAction.bind(this, match,item.languageName)}>
+                                                Request Match
+                                            </Button>
+                                        </div>
+                                    </CardActions>
                                 </Card>
                             </GridListTile>
                         )
@@ -234,12 +230,13 @@ class BrowseMatch extends React.Component {
             );
     }
 
-    onInviteAction(user,language) {
-
+    onInviteAction(user,language) 
+    {
         const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/usersMatch/sendRequest")
         //console.log(url)
         
-        fetch(url, {
+        fetch(url, 
+        {
             method: 'POST',
             headers: {
             'Accept': 'application/json',
@@ -254,9 +251,10 @@ class BrowseMatch extends React.Component {
         }).then((response) => response.json())
         .then((responseJson) => {
             console.log(responseJson);
-            if (responseJson.requested) {
+            if (responseJson.requested) 
+            {
                 alert("Match request sended to the user!");
-                //window.location.reload();
+                window.location.reload();
             } else {
                 alert("Match request failed! Please, try again later")
             }
@@ -276,11 +274,8 @@ class BrowseMatch extends React.Component {
             cors:'no-cors'
         }).then((response) => response.json())
         .then((responseJson) => {
-            // Resposta
-            console.log(this.state.userMatches);
-            console.log(responseJson.userPossibleMatches)
+            console.log('Displaying possible matches:');
             this.setState({userMatches: responseJson.userPossibleMatches})
-           
         }).catch((error) => {
             console.error(error);
         });

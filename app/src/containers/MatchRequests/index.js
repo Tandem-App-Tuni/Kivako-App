@@ -126,7 +126,7 @@ class MatchRequests extends React.Component {
                 console.log(responseJson);
                 if (responseJson.requested) {
                     alert("Match request accepted!");
-                    //window.location.reload();
+                    window.location.reload();
                 } else {
                     alert("Request failed! Please, try again later")
                 }
@@ -159,7 +159,7 @@ class MatchRequests extends React.Component {
                 console.log(responseJson);
                 if (responseJson.requested) {
                     alert("Match request denied!");
-                    //window.location.reload();
+                    window.location.reload();
                 } else {
                     alert("Request failed! Please, try again later")
                 }
@@ -341,14 +341,11 @@ class MatchRequests extends React.Component {
 
                 <div className={classes.root}>
                     <ResponsiveDrawer title = "Matches requests!">
-
-
-                        <GridList container cols={this.getGridListCols()} spacing={30} cellHeight={'auto'}>
+                        <GridList container cols={1} spacing={30} cellHeight={'auto'}>
                             {
-
                                 this.state.userRequestMatches.map((match, key) =>
-                                
-                                    <Grid container spacing={3}>
+                            
+                                    <Grid container spacing={3} key={key}>
                                         <Grid item xs >
                                             <Card border={1} className={cardStyle.card} key={key}>
                                                     <CardHeader
@@ -364,7 +361,7 @@ class MatchRequests extends React.Component {
                                                             </IconButton>
                                                         }
                                                         title={match.requesterUser.firstName + ' ' + match.requesterUser.lastName}
-                                                        subheader={ match._id}
+                                                        //subheader={ match._id}
                                                     />
                                                     
                                                     <CardContent>
