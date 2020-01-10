@@ -27,21 +27,21 @@ const useStyles = theme => ({
           <CardMedia
             component="img"
             height="200"
-            image={this.props.data.user.photo_url}
+            image={this.props.data.photo_url}
           />
           <CardContent>
             <Typography gutterBottom variant="h5" component="h2">
-            {this.props.data.user.name}
+            {this.props.data.name}
             </Typography>
             <Typography gutterBottom variant="subtitle2" color="textSecondary">
-            {this.props.data.user.city.join(", ")}
+            {this.props.data.city.join(", ")}
             </Typography>
             <Typography gutterBottom variant="body2" color="textSecondary">
-            Teach: {this.props.data.user.teachLanguages.join(", ")}. 
-            Learn: {this.props.data.user.studyLanguages.join(", ")}
+            Teach: {this.props.data.teachLanguages.join(", ")}. 
+            Learn: {this.props.data.studyLanguages.join(", ")}
             </Typography>
             <Typography variant="body2" color="textSecondary" component="p">
-            {this.props.data.user.intro}
+            {this.props.data.intro}
             </Typography>
           </CardContent>
         </CardActionArea>
@@ -52,9 +52,6 @@ const useStyles = theme => ({
 
           {this.props.type === "partner" &&
           (<div>
-            <Button size="small" color="primary" onClick = {() => this.props.onClose("chat")}>
-            Chat
-          </Button>
           <Button size="small" color="secondary" onClick = {() => this.props.onClose("unmatch")}>
             Unmatch
           </Button>
