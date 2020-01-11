@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import { withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -14,18 +13,23 @@ import UserActionCard from '../../components/UserActionCard';
 import Constants from '../../config_constants';
 import {Redirect} from 'react-router-dom';
 
-const useStyles = makeStyles(theme => 
+import Divider from '@material-ui/core/Divider';
+const useStyles =  theme => 
 ({
   root: 
   {
     width: '100%',
-    backgroundColor: theme.palette.background.paper,
+    // backgroundColor: theme.palette.background.paper,
   },
   inline: 
   {
     display: 'inline',
   },
-}));
+  item: 
+  {
+    backgroundColor: 'white',
+  },
+});
 
 class PartnerListPage extends Component 
 {
@@ -138,8 +142,9 @@ class PartnerListPage extends Component
         {list.map(item => 
         {
           return (
+            <div  key = {item._id}>
             <ListItem 
-              key = {item._id} 
+              className = {classes.item}
               alignItems="flex-start"
               onClick={() => this.onShowActionCard(true, this.state.partnerList.indexOf(item), null)}>
             <ListItemAvatar>
@@ -158,7 +163,10 @@ class PartnerListPage extends Component
                 </Typography>
               {" — " + item.city.join(", ")}
             </React.Fragment>}/>
-          </ListItem>);
+          </ListItem>
+          <Divider variant="inset" component="li" />
+          </div>
+          );
         })}
       </List>
       <UserActionCard 

@@ -13,7 +13,11 @@ const useStyles = theme => ({
    
     card: {
       maxWidth: 400,
+      textAlign: 'left'
     },
+    leftText:{
+      textAlign: 'left'
+  }
   });
   
   class UserActionCard extends Component {
@@ -34,14 +38,18 @@ const useStyles = theme => ({
             {this.props.data.name}
             </Typography>
             <Typography gutterBottom variant="subtitle2" color="textSecondary">
-            {this.props.data.city.join(", ")}
+            Cities: {this.props.type === "partner" &&  this.props.data.city.join(", ")}
+            {this.props.type === "invite" &&  this.props.data.cities.join(", ")}
             </Typography>
             <Typography gutterBottom variant="body2" color="textSecondary">
-            Teach: {this.props.data.teachLanguages.join(", ")}. 
-            Learn: {this.props.data.studyLanguages.join(", ")}
+            Teach:  {this.props.type === "partner" &&this.props.data.teachLanguages.join(", ")}
+            {this.props.type === "invite" &&this.props.data.languagesToTeach.map(e => e.language + " " + e.level).join(", ")}. 
+            <br></br>
+            Learn:  {this.props.type === "partner" &&this.props.data.studyLanguages.join(", ")}
+            {this.props.type === "invite" &&this.props.data.languagesToLearn.map(e => e.language + " " + e.level).join(", ")}
             </Typography>
             <Typography variant="body2" color="textSecondary" component="p">
-            {this.props.data.intro}
+            {this.props.data.descriptionText}
             </Typography>
           </CardContent>
         </CardActionArea>

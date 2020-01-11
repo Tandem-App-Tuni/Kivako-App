@@ -9,6 +9,9 @@ import GridListTile from '@material-ui/core/GridListTile';
 import ListItem from '@material-ui/core/ListItem';
 import {withStyles} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+import List from '@material-ui/core/List';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	Styles
 
 import ResponsiveDrawer from '../MenuDrawer';
@@ -31,7 +34,7 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 
 import ConstantsList from '../../config_constants';
-
+import UserActionCard from '../../components/UserActionCard';
 
 const styles = ({
     root: {
@@ -69,19 +72,25 @@ const styles = ({
     gridListTile: {
         height:"100%",
         width:"100%",   
-        minHeight: "300px",
-        maxWidth: "150px",
-        minWidth: "400px",
+        minHeight: "310px",
+        maxHeight: "310px",
+        maxWidth: "310px",
+        minWidth: "310px",
         space:2,
         marginBottom: 5,
         marginLeft: 1
     },
     card:{
-        margin: '5px'
+        margin: '5px',
+        height:"300px",
+        width:"300px"
     },
     gridListTileBar: {
         background: "#3f51b5",
     },
+    leftText:{
+        textAlign: 'left'
+    }
 });
 
 
@@ -100,7 +109,9 @@ class BrowseMatch extends React.Component {
         isAlreadyAuthenticated : false,
         isLoadingPage:true,
         portOption:ConstantsList.PORT_IN_USE,
-        open:false
+        open:false,
+        modalData: null,
+        modalLanguage: null
       };
     }
 
@@ -140,6 +151,7 @@ class BrowseMatch extends React.Component {
                                 key={key} 
                                 className={classes.gridListTile}>
                                 <Card 
+                                onClick = {() => this.onShowActionCard(true, match, item.languageName)}
                                     className={classes.card}>
                                     <CardHeader
                                     avatar={
@@ -148,31 +160,25 @@ class BrowseMatch extends React.Component {
                                                 className={classes.bigAvatar}>
                                         </Avatar>
                                     }
-                                    // action={
-                                    //     <IconButton aria-label="settings">
-                                    //     <MoreVertIcon />
-                                    //     </IconButton>
-                                    // }
+                                    className = {classes.leftText}
                                     title={match.firstName + ' ' + match.lastName}
                                     subheader={ match.cities}/>
                                     <CardContent>
-                                        <Typography variant="body1" color="textSecondary" component="p">
-                                                
-                                            {match.descriptionText}
-
-                                        </Typography>
-                                        <br></br>
+                                        
                                         <Divider variant="middle" />
-                                        <br></br>
-                                        <Typography variant="body2" color="textSecondary" component="p">
-                                            <Icon fontSize="small">home</Icon>Cities: {match.cities}<br></br>
-                                            <Icon fontSize="small">language</Icon>Languages want to learn: 
-                                            {" " + match.languagesToLearn.map(e => e.language).join(", ")}
-                                            <br></br>
+                                        
+                                        <List>
+                                        <ListItem>
+                                        <ListItemIcon><Icon fontSize="small">home</Icon></ListItemIcon>
+                                        <ListItemText primary={"Cities: " + (match.cities && match.cities.join(", "))}/>
+                                        </ListItem>
 
-                                        </Typography>
+                                        <ListItem>
+                                        <ListItemIcon><Icon fontSize="small">language</Icon></ListItemIcon>
+                                        <ListItemText primary={"Wants to learn: " + (match.languagesToLearn && match.languagesToLearn.map(e => e.language).join(", "))}/>
+                                        </ListItem></List>
                                     </CardContent>
-                                    <CardActions disableSpacing>
+                                    {/* <CardActions disableSpacing>
                                         <div align="center">
                                             <Button variant="contained" 
                                                     color="primary"
@@ -180,17 +186,42 @@ class BrowseMatch extends React.Component {
                                                 Request Match
                                             </Button>
                                         </div>
-                                    </CardActions>
+                                    </CardActions> */}
+                                    
                                 </Card>
                             </GridListTile>
                         )
                     }
                 </GridList>
+                {this.state.modalData != null && <UserActionCard 
+          type = "invite"
+          open = {this.state.open} 
+          data = {this.state.modalData}
+          onClose = {(data) =>this.onShowActionCard(false, null, data)}/>}
             </div>
                 
             )
         )
     }
+
+    onShowActionCard= (open, data, action) =>  
+  {
+    console.log(open, data, action);
+    if (open === true) {
+        this.setState({modalData: data});
+        this.setState({modalLanguage: action});
+    }
+    else
+    {
+      if (action === "invite") {
+        console.log(this.state.modalData, this.state.modalLanguage);
+
+        this.onInviteAction(this.state.modalData, this.state.modalLanguage);
+      }
+    }
+
+    this.setState({open: open});
+  };
 
     getAlreadyExistsDiv(item, classes) {
         return (
@@ -230,7 +261,7 @@ class BrowseMatch extends React.Component {
             );
     }
 
-    onInviteAction(user,language) 
+    onInviteAction = (user,language) =>
     {
         const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/usersMatch/sendRequest")
         //console.log(url)
