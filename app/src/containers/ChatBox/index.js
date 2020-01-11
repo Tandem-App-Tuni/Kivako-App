@@ -270,7 +270,7 @@ class ChatBubble extends React.Component
             message: props.message,
             text: props.message.text,
             side: props.message.id === props.user ? 'flex-start' : 'flex-end',
-            color: props.message.id === props.user ? '#EBFFBE' : '#EEEBEB',
+            color: props.message.id === props.user ? '#D5BDFF' : '#8A72B3',
             align: props.message.id === props.user ? 'left' : 'right'
         };
 
@@ -286,97 +286,36 @@ class ChatBubble extends React.Component
 
     render()
     {
-        // Message of the other user
-        if(this.state.align === 'right'){
-            console.log(this.state)
-            return(
-                <div>
-                    <Grid
-                        spacing={5}
-                        container
-                        direction='row'
-                        justify='space-around'
-                        alignItems={this.state.side}>
-                                
-                                <Grid item xs={12} sm={1} alignContent='center' alignItems="center"> 
-                                    <div align="right">
-                                        <Avatar src={"https://pickaface.net/gallery/avatar/unr_test_161024_0535_9lih90.png"} 
-                                                                    aria-label="recipe" 
-                                                                    >
-                                        </Avatar>      
+        const alignmentLeft = this.state.align === 'left';
+        const avatarUrl0 ='https://www.stickees.com/files/avatars/male-avatars/1697-andrew-sticker.png';
+        const avatarUrl1 ='https://cdn.iconscout.com/icon/free/png-256/avatar-367-456319.png';
 
-                                    </div>        
-                                </Grid>
-                                <Grid item xs={12} sm={9}> 
-                                    <div align="left">
-                                        <Paper square={false} style={{backgroundColor: this.state.color}}>
-                                            <Typography variant="subtitle2">
-                                              
-                                            </Typography>
-                                            <Typography variant="body2" ml={2}>
-                                              {this.state.text}
-                                            </Typography>
-                                            <div align="right">
-                                                <Typography variant="caption" align="right" color='textSecondary'>
-                                                    {this.convertTimeStampToDate(this.state.message.timestamp)} 
-                                                </Typography>
-                                            </div>
-                                        </Paper> 
-                                    </div>      
-                                </Grid>
-                                <Grid item xs={12} sm={2}> 
-                                
-                                    
-                                </Grid>
-                    </Grid>
-                </div> 
-            )
-        }else{
-            return(
-                <div>
-                    <Grid
-                        spacing={5}
-                        container
-                        direction='row'
-                        justify='space-around'
-                        alignItems={this.state.side}>
-                            <Grid item xs={12} sm={2}> 
-                            
-                                
-                            </Grid>
-
-                            <Grid item xs={12} sm={9}> 
-                            
-                                <Paper square={false} style={{backgroundColor: this.state.color}}>
-                                    <Typography variant="subtitle2">
-                                    </Typography>
-                                    <Typography variant="body2">
-                                        {this.state.text}
-                                    </Typography>
-                                    <div align="right">
-                                        <Typography variant="caption" align="right" color='textSecondary'>
-                                            {this.convertTimeStampToDate(this.state.message.timestamp)} 
-                                        </Typography>
-                                    </div>
-                                </Paper>          
-                            </Grid>
-
-                            <Grid item xs={12} sm={1} alignContent='center' alignItems="center"> 
-                                <div align="center">
-                                    <Avatar src={"https://pickaface.net/gallery/avatar/unr_test_161024_0535_9lih90.png"} 
-                                                                aria-label="recipe" 
-                                                                >
-                                    </Avatar>      
-
-                                </div>        
-                            </Grid>
-
-                    </Grid>
-                </div> 
-            )
-            // Message of the current user(own message)
-        }
- 
+        return(
+            <Grid
+            container
+            direction='column'>
+                <Grid
+                container
+                direction='row'
+                justify={alignmentLeft ? 'flex-start' : 'flex-end'}>
+                    {alignmentLeft ? <Avatar src={avatarUrl0}></Avatar> : <div></div>}
+                    <Paper
+                    elevation={3}
+                    style={{backgroundColor: this.state.color}}>
+                        <Typography>
+                            {this.state.text}
+                        </Typography>
+                        <Typography
+                        variant='caption'
+                        align='left'
+                        color='textSecondary'>
+                            {this.convertTimeStampToDate(this.state.message.timestamp)}
+                        </Typography>
+                    </Paper>
+                    {!alignmentLeft ? <Avatar src={avatarUrl1}></Avatar> : <div></div>}
+                </Grid>
+            </Grid>
+        );
     }
 }
 

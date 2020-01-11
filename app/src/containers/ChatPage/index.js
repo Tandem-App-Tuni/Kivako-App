@@ -58,7 +58,7 @@ import ConstantsList from '../../config_constants';
  */
 
 //var chatUrlLocal = ConstantsList.APPLICATION_LOCAL_URL;//"http://localhost:3000"; 
-var chatUrl = ConstantsList.APPLICATION_SERVER_URL;//"https://www.unitandem.fi";
+var chatUrl = ConstantsList.APPLICATION_LOCAL_URL;//"https://www.unitandem.fi";
 
 class ChatPage extends React.Component
 {
