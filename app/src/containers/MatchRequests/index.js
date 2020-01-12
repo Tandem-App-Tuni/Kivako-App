@@ -79,6 +79,9 @@ const styles = ({
     gridListTileBar: {
         background: "#3f51b5",
     },
+    leftText:{
+        textAlign: 'left'
+    }
 });
 
 class MatchRequests extends React.Component {
@@ -274,12 +277,12 @@ class MatchRequests extends React.Component {
         const {classes} = this.props;
         const cardStyle =makeStyles(theme => ({
             card: {
-              maxWidth: 345
+              maxWidth: 345,
             },
             media: {
               height: 0,
               paddingTop: '56.25%', // 16:9
-            },
+            }
           }));
         
         //Wait until all informations be render until continue
@@ -349,22 +352,19 @@ class MatchRequests extends React.Component {
                                         <Grid item xs >
                                             <Card border={1} className={cardStyle.card} key={key}>
                                                     <CardHeader
+                                                    className = {classes.leftText}
                                                         avatar={
                                                             <Avatar src={"https://pickaface.net/gallery/avatar/unr_test_161024_0535_9lih90.png"} 
                                                                     aria-label="recipe" 
                                                                     className={classes.bigAvatar}>
                                                             </Avatar>
                                                         }
-                                                        action={
-                                                            <IconButton aria-label="settings">
-                                                            <MoreVertIcon />
-                                                            </IconButton>
-                                                        }
+                                                        
                                                         title={match.requesterUser.firstName + ' ' + match.requesterUser.lastName}
                                                         //subheader={ match._id}
                                                     />
                                                     
-                                                    <CardContent>
+                                                    <CardContent className = {classes.leftText}>
             
                                                         <Typography variant="body1" color="textSecondary" component="p">
                                                             
@@ -375,8 +375,8 @@ class MatchRequests extends React.Component {
                                                         <Divider variant="middle" />
                                                         <br></br>
                                                         <Typography variant="body2" color="textSecondary" component="p">
-                                                            <Icon fontSize="small">home</Icon>Cities: {match.cities}<br></br>
-                                                            <Icon fontSize="small">language</Icon>Languages want to learn:<br></br>
+                                                            <Icon fontSize="small">home</Icon> Cities: {match.requesterUser.cities.join(', ')}<br></br>
+                                                            <Icon fontSize="small">language</Icon> Languages want to learn: {(match.requesterUser.languagesToLearn && match.requesterUser.languagesToLearn.map(e => e.language).join(", "))}<br></br>
                                                         </Typography>                                                    
                                                     </CardContent>
                                                     <CardActions disableSpacing >
