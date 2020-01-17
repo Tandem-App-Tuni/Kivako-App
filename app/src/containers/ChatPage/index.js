@@ -92,7 +92,8 @@ class ChatPage extends React.Component
         roomId: roomInformation.roomId,
         conversationName: 'Conversation with ' + data.name,
         conversationId: this.state.chatRooms,
-        messages: roomInformation.messages
+        messages: roomInformation.messages,
+        email: data.email
       });
 
       this.setState({loadedServerInformation: true, user: data.user, chatRooms: this.state.chatRooms + 1});
@@ -161,7 +162,7 @@ class ChatPage extends React.Component
                 <ListItemAvatar>
                   <Avatar 
                     alt={element.name} 
-                    src='https://www.stickees.com/files/avatars/male-avatars/1697-andrew-sticker.png'/>
+                    src={window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/api/v1/avatar/getAvatar/' + element.email}/>
                 </ListItemAvatar>
                 <ListItemText
                   primary={element.conversationName}
@@ -258,7 +259,7 @@ class ChatPage extends React.Component
   renderChatWindow()
   {
     if (typeof this.state.currentOpenConversation == 'undefined') return(<div></div>);
-    else return(<Chat user={this.state.user} roomId={this.state.currentOpenConversation.roomId} socket={this.state.socket} messages={this.state.currentOpenConversation.messages} conversationName={this.state.currentOpenConversation.conversationName}/>);
+    else return(<Chat partner={this.state.currentOpenConversation.email} user={this.state.user} roomId={this.state.currentOpenConversation.roomId} socket={this.state.socket} messages={this.state.currentOpenConversation.messages} conversationName={this.state.currentOpenConversation.conversationName}/>);
   }
 
   /**
@@ -304,21 +305,20 @@ class ChatPage extends React.Component
                     direction='row'
                     justify='space-around'
                     alignItems={this.state.side}>
+                    <Grid item xs={12} sm={2}>
+                      <Box borderRadius={10}>
 
-                            <Grid item xs={12} sm={2}>
-                              <Box borderRadius={10}>
+                        <List 
+                          width='100%'
+                          color='paper'>
+                          {this.renderPartnerArray()}
+                        </List>
+                      </Box>
+                    </Grid>
 
-                                <List 
-                                  width='100%'
-                                  color='paper'>
-                                  {this.renderPartnerArray()}
-                                </List>
-                              </Box>
-                            </Grid>
-
-                            <Grid item xs={12} sm={9}> 
-                              {this.renderChatWindow()}
-                            </Grid>
+                    <Grid item xs={12} sm={9}> 
+                      {this.renderChatWindow()}
+                    </Grid>
                 </Grid>
             </ExpansionPanelDetails>
           </ExpansionPanel>

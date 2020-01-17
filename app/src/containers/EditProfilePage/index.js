@@ -22,6 +22,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import Resizer from 'react-image-file-resizer';
 
 import {Redirect} from 'react-router-dom';
 
@@ -31,7 +32,6 @@ import LanguagePicker from '../../components/LanguagePicker'
 import {AlertView} from '../../components/AlertView'
 
 import ConstantsList from '../../config_constants';
-
 
 const useStyles = theme => ({
   '@global': {
@@ -106,7 +106,7 @@ class EditProfilePage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      profileImg: null,
+      profileImgURL: window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/api/v1/avatar/getAvatar',
       languagesToTeach: [],
       languagesToLearn: [],
       firstName: '',
@@ -128,21 +128,43 @@ class EditProfilePage extends Component {
     };
   }
 
-  onImageChange = (event) => {
-    if (event.target.files.length > 0) {
-      const url = URL.createObjectURL(event.target.files[0]);
-      this.setState({
-        profileImg: event.target.files[0],
-        profileImgURL: url
-      });
+  onImageChange = (event) => 
+  {
+    if (event.target.files.length > 0)
+    {
+      if (!event.target.files[0].name.match(/.(jpg|jpeg|png|gif)$/)) alert('Selected file is not an image.');
+      else
+      {
+        let form = new FormData()
+        form.append('avatar', event.target.files[0]);
+
+        fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/avatar/uploadAvatar',
+        {
+          method: 'POST',
+          credentials: 'include',
+          body: form
+        })
+        .then(response => response.json())
+        .then(responseJson => 
+          {
+            if (responseJson.message === 'Avatar saved!')
+            {
+              console.log('Fetching image...');
+
+              this.setState({profileImgURL:window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/avatar/getAvatar'});
+              window.location.reload();
+            }
+          });
+      }
     }
   }
 
   // API Call to insert user
   //TODO -> MAKE A CHECK, IF ALL FIELDS ARE NOT VALID, DON'T SEND API CALL
-  onSaveButtonClicked = () => {
+  onSaveButtonClicked = () => 
+  {
     const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/users/update")
-    //console.log(url)
+
     fetch(url, {
         method: 'POST',
         headers: {
@@ -161,41 +183,16 @@ class EditProfilePage extends Component {
           descriptionText: this.state.descriptionText,
           userIsActivie: true
         })
-      }).then((response) => response.json())
-      .then((responseJson) => {
-        console.log(responseJson);
-        if (responseJson.update) {
-          this.toogleAlert(true, 'success', 'User informations updated succesfully!')
-          // alert("User informations updated succesfully!");
-          window.location.reload();
-        } else {
-          this.toogleAlert(true, 'error', 'Update failed. Please try again later')
-          // alert("Update failed. Please try again later");
-        }
-        //this.uploadPhoto(responseJson.userCreated._id)
       })
-      .catch((error) => {
-        console.error(error);
-      });
-
-
-  }
-
-  uploadPhoto = (userId) => {
-    const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/users/updatePicture/" + userId)
-    console.log(url)
-    var formData = new FormData()
-    formData.append('profileImg', this.state.profileImg);
-    console.log(formData)
-    fetch(url, {
-        method: 'POST',
-        // headers: {
-        //       'Content-Type': 'multipart/form-data',
-        //     },
-        body: formData
-      }).then((response) => response.json())
-      .then((responseJson) => {
+      .then((response) => response.json())
+      .then((responseJson) => 
+      {
         console.log(responseJson);
+        if (responseJson.update) 
+        {
+          this.toogleAlert(true, 'success', 'User informations updated succesfully!')
+          window.location.reload();
+        } else this.toogleAlert(true, 'error', 'Update failed. Please try again later')
       })
       .catch((error) => {
         console.error(error);
@@ -218,16 +215,13 @@ class EditProfilePage extends Component {
     var formFirstName= (event.target.value);
     const validNameRegex = RegExp(/^.*(?=.{1,})(?=.*[a-zA-Z\\u0080-\\uFFFF])(?=.*\d).*$/);
 
-    if(validNameRegex.test(formFirstName)===true){
-      this.setState( {firstNameError: true, firstNameErrorMessage: 'Special characters are not accepted'} )
-    }else if(formFirstName.length <= 2 || formFirstName.length >=20){
-      this.setState( {firstNameError: true, firstNameErrorMessage: 'Number of characters not accepted'} )
-    }else{
+    if(validNameRegex.test(formFirstName)===true) this.setState( {firstNameError: true, firstNameErrorMessage: 'Special characters are not accepted'} )
+    else if(formFirstName.length <= 2 || formFirstName.length >=20) this.setState( {firstNameError: true, firstNameErrorMessage: 'Number of characters not accepted'} )
+    else
+    {
       this.setState( {firstNameError: false, firstNameErrorMessage: ''} )
       this.setState( {firstName: formFirstName} )
     }
-      
-    
   };
 
   handleChangeLastName = event => {

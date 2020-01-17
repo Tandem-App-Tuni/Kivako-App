@@ -302,8 +302,8 @@ class MatchRequests extends React.Component {
 
         // Check if user has requests
         
-        if(this.state.userRequestMatches.length === 0){  
-
+        if(this.state.userRequestMatches.length === 0)
+        {  
             return  (
                 <div className={classes.root}>
                     <ResponsiveDrawer title = "Matches requests!">
@@ -344,7 +344,7 @@ class MatchRequests extends React.Component {
 
                 <div className={classes.root}>
                     <ResponsiveDrawer title = "Matches requests!">
-                        <GridList container cols={1} spacing={30} cellHeight={'auto'}>
+                        <GridList container='true' cols={1} spacing={30} cellHeight={'auto'}>
                             {
                                 this.state.userRequestMatches.map((match, key) =>
                             
@@ -354,7 +354,7 @@ class MatchRequests extends React.Component {
                                                     <CardHeader
                                                     className = {classes.leftText}
                                                         avatar={
-                                                            <Avatar src={"https://pickaface.net/gallery/avatar/unr_test_161024_0535_9lih90.png"} 
+                                                            <Avatar src={window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/avatar/getAvatar/' + match.requesterUser.email} 
                                                                     aria-label="recipe" 
                                                                     className={classes.bigAvatar}>
                                                             </Avatar>

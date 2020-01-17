@@ -5,6 +5,8 @@ import Avatar from '@material-ui/core/Avatar';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
+import ConstantsList from '../../config_constants';
+
 /**
  * Author: Peter Mlakar
  * 
@@ -35,8 +37,9 @@ class Chat extends React.Component
                       conversationName: props.conversationName,
                       socket: props.socket,
                       roomId: props.roomId,
-                      user: props.user};
-
+                      user: props.user,
+                      partner: props.partner};
+        
         this.handleSend = this.handleSend.bind(this);
         this.sendMessageClick = this.sendMessageClick.bind(this);
         this.sendMessageEnter = this.sendMessageEnter.bind(this);
@@ -110,7 +113,7 @@ class Chat extends React.Component
 
         this.state.messages.forEach((element, index) => 
         {
-            bubbles.push(<ChatBubble key={index} user={this.state.user} message={element}></ChatBubble>);
+            bubbles.push(<ChatBubble key={index} partner={this.state.partner} user={this.state.user} message={element}></ChatBubble>);
         });
 
         return bubbles;
@@ -216,9 +219,7 @@ class Chat extends React.Component
                                 onChange={(e) => this.handleTextChange(e)}
                                 value={this.state.textFieldContent}>
                             </TextField>               
-                      
                         </Grid>
-
 
                         <Grid item xs={12} sm={1}> 
                             <Button
@@ -254,8 +255,10 @@ class ChatBubble extends React.Component
 
         this.state = 
         {
+            user: props.user,
             message: props.message,
             text: props.message.text,
+            partner: props.partner,
             side: props.message.id === props.user ? 'flex-start' : 'flex-end',
             color: props.message.id === props.user ? '#2073E8' : '#24B8FF',
             align: props.message.id === props.user ? 'left' : 'right'
@@ -269,6 +272,7 @@ class ChatBubble extends React.Component
             user: props.user,
             message: props.message,
             text: props.message.text,
+            partner: props.partner,
             side: props.message.id === props.user ? 'flex-start' : 'flex-end',
             color: props.message.id === props.user ? '#D5BDFF' : '#8A72B3',
             align: props.message.id === props.user ? 'left' : 'right'
@@ -287,13 +291,11 @@ class ChatBubble extends React.Component
     render()
     {
         const alignmentLeft = this.state.align === 'left';
-        const avatarUrl0 ='https://www.stickees.com/files/avatars/male-avatars/1697-andrew-sticker.png';
-        const avatarUrl1 ='https://cdn.iconscout.com/icon/free/png-256/avatar-367-456319.png';
+        const avatarUrl0 = window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/api/v1/avatar/getAvatar';
+        const avatarUrl1 = window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/api/v1/avatar/getAvatar/' + this.state.partner;
 
         return(
-            <Grid
-            container
-            direction='column'>
+            <div>
                 <Grid
                 container
                 direction='row'
@@ -314,7 +316,8 @@ class ChatBubble extends React.Component
                     </Paper>
                     {!alignmentLeft ? <Avatar src={avatarUrl1}></Avatar> : <div></div>}
                 </Grid>
-            </Grid>
+            <br></br>    
+            </div>
         );
     }
 }

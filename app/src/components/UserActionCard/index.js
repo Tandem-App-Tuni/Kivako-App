@@ -9,6 +9,8 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 
+import ConstantsList from '../../config_constants';
+
 const useStyles = theme => ({
    
     card: {
@@ -20,19 +22,16 @@ const useStyles = theme => ({
   }
   });
   
-  class UserActionCard extends Component {
-
-    render (){
+  class UserActionCard extends Component 
+  {
+    render ()
+    {
         const { classes } = this.props;
+
         return(
             <Dialog className={classes.container}  open={this.props.open}>
          <Card className={classes.card}>
-        <CardActionArea>
-          <CardMedia
-            component="img"
-            height="200"
-            image={this.props.data.photo_url}
-          />
+        <CardActionArea>  
           <CardContent>
             <Typography gutterBottom variant="h5" component="h2">
             {this.props.data.name}

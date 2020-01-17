@@ -97,7 +97,7 @@ class PartnerListPage extends Component
                   city: user.cities,
                   teachLanguages: ltt,
                   studyLanguages: ltl,
-                  photo_url:"https://pickaface.net/gallery/avatar/unr_test_161024_0535_9lih90.png",
+                  photo_url:window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/avatar/getAvatar/' + user.email,
               });
             }
 
@@ -113,7 +113,7 @@ class PartnerListPage extends Component
 
   onShowActionCard= (open, index, action) =>  
   {
-    console.log(open, index, action);
+    console.log('Hello there:', open, index, action);
 
     if (open === true) this.setState({actionIndex: index});
     else
@@ -181,8 +181,6 @@ class PartnerListPage extends Component
 
   onUnmatchUser = (data) =>
   {
-    console.log(data)
-
     fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/usersMatch/removeExistingMatch', 
     {
       method: 'POST',
