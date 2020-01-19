@@ -19,30 +19,12 @@ import ConstantsList from '../../config_constants';
  * There are two arrays that need to be recieved from the
  * api called on the url /user/request&partner, the request array and the partners array.
  * There are is one parrameter that can be set: peekWordCount which controlls how many words of the last message of the conversation are shown in the preview.
- * The request array has the following structure:
- * 
- * requests = [{
- *   name: 'Remy Sharp',
- *   teach: 'English',
- *   learn: 'Finnish',
- *   city0: 'Helsinki',
- *   city1: 'Tampere'
- *  },...];
  * 
  * The name property holds the name of the user requesting the connection.
  * The teach, learn properties are self evident. The city0 is the city where the user lives, city1 is the
  * city in which the user studies.
  * 
  * The second array holds all the partners with which the user is conversing.
- * It has the following structure:
- * 
- * this.partners = [
- *  {
- *    name: 'Ali Connors',
- *    conversationName: 'Brunch this weekend?',
- *    conversationId: 0,
- *    messages: [...]
- *  },...];
  * 
  * The name property holds the name of the user with which we are conversing. The conversationName describes the
  * topic of conversation. ConversationId property is the index in the array of this.parent where this conversation is located.
@@ -74,7 +56,8 @@ class ChatPage extends React.Component
       user: undefined,
       chatWindow: undefined,
       socket: openSocket(chatUrl),
-      loadedServerInformation: false
+      loadedServerInformation: false,
+      isAuthenticated: true
     }; 
 
     /**
@@ -83,7 +66,7 @@ class ChatPage extends React.Component
      * data recieved from the server via the socket io
      * connection.
      */
-    this.state.socket.on('initialization', (data) => 
+    this.state.socket.on('initialization', (data) =>  
     {
       let roomInformation = data.roomInformation;
 
@@ -122,8 +105,21 @@ class ChatPage extends React.Component
     this.renderChatWindow = this.renderChatWindow.bind(this);
     this.getMessagePeek = this.getMessagePeek.bind(this);
     this.handleClick = this.handleClick.bind(this);
+  }
 
-    this.isAuthenticated = this.isAuthenticated.bind(this);
+  componentWillMount()
+  {
+    fetch(window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/isAuthenticated', 
+    {
+      method: 'GET',
+      credentials: 'include'
+    })
+    .then(response => response.json())
+    .then(responseData => 
+    {
+      console.log('Is authenticated check:', responseData.isAuthenticated);
+      this.setState({isAuthenticated: responseData.isAuthenticated});
+    });
   }
 
   /**
@@ -244,15 +240,6 @@ class ChatPage extends React.Component
   }
 
   /**
-   * The authentication check to the backend server checking if the
-   * user is logged in. Currently always returns true. TODO
-   */
-  isAuthenticated()
-  {
-    return true;
-  }
-
-  /**
    * Renders the apropriate chat window
    * if one is open.
    */
@@ -280,10 +267,7 @@ class ChatPage extends React.Component
         },
       }));
 
-    if (!this.isAuthenticated()) 
-      return (
-        <Redirect  to="/"/>
-      )
+    if (!this.state.isAuthenticated) return (<Redirect  to="/"/>);
 
     return(
       <ResponsiveDrawer title = 'Conversations'>
