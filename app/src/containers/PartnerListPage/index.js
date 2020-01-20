@@ -31,6 +31,12 @@ const useStyles =  theme =>
   },
 });
 
+/**
+ * Displays the current partners from the
+ * match data returned from the server.
+ * The user can the choose to unadd the partner,
+ * resulting in the match being removed from the server.
+ */
 class PartnerListPage extends Component 
 {
   state = 
@@ -71,6 +77,10 @@ class PartnerListPage extends Component
             const userId = jsonResponse.userId;
             let partners = [];
 
+            /**
+             * Loop through all the matches and
+             * and extract important data to be displayed.
+             */
             for (let i = 0; i < jsonResponse.data.length; i++)
             {
               let match = jsonResponse.data[i];

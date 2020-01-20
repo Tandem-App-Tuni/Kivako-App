@@ -367,9 +367,8 @@ class SignUpPage extends Component {
       {
         alert("User registered succesfully!");
         this.setState({ isAlreadyregistered: true });
-      } else {
-        alert("Register failed. Please try again later");
-      }
+      } 
+      else alert(responseJson.description);
 
     })
     .catch((error) => {
