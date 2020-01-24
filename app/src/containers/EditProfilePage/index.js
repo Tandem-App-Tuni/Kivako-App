@@ -22,7 +22,6 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import Resizer from 'react-image-file-resizer';
 
 import {Redirect} from 'react-router-dom';
 

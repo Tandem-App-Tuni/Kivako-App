@@ -29,18 +29,25 @@ export default class StatiticsTable extends Component {
     loadDataInTable(callback)
     {
       // http://localhost:3000/api/v1/admin/statiticsOpen
-      const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/admin/statiticsOpen")
-  
-      fetch(url, {
+      //const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/admin/statiticsOpen")
+      //const url = new URL(window.location.protocol + '//' + window.location.hostname + "/api/v1/admin/statiticsOpen");
+
+      fetch(window.location.protocol + '//' + window.location.hostname + '/api/v1/admin/statiticsOpen', 
+      {
         method: 'GET',
-        credentials: 'include',
-        cors:'no-cors'
-      }).then((response) => response.json())
-      .then((responseJson) => {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        }
+      })
+      .then((response) => 
+      {
+        return response.json();
+      })
+      .then((responseJson) => 
+      {
         this.setState({ rows: responseJson.data });
-        //console.log(responseJson.data)
         callback();
-  
       })
       .catch((error) => {
         console.error(error);

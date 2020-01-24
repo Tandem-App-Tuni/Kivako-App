@@ -39,8 +39,8 @@ import ConstantsList from '../../config_constants';
  * loadedServerInformation -> a flag set to true when the conversation data has been recieved from the server
  */
 
-//var chatUrlLocal = ConstantsList.APPLICATION_LOCAL_URL;//"http://localhost:3000"; 
-var chatUrl = ConstantsList.APPLICATION_LOCAL_URL;//"https://www.unitandem.fi";
+//var chatUrl = ConstantsList.APPLICATION_LOCAL_URL;
+var chatUrl = ConstantsList.APPLICATION_SERVER_URL;
 
 class ChatPage extends React.Component
 {

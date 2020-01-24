@@ -23,14 +23,7 @@ var logoutUrl = ConstantsList.IS_LOCAL_TEST_ENV ? ConstantsList.LOCAL_LOGOUT_URL
 
 export const mainListItems = (
   <div>
-    <ListItem button>
-      <ListItemIcon>
-        <DashboardIcon />
-      </ListItemIcon>
-      <ListItemText primary="Dashboard" />
-    </ListItem>
-
-    <ListItem button component="a" href="https://moodle.tuni.fi/">
+    <ListItem button component="a" href="https://digicampus.fi/course/view.php?id=272">
       <ListItemIcon>
         <CollectionsBookmarkIcon/>
       </ListItemIcon>

@@ -108,15 +108,14 @@ class MatchRequests extends React.Component {
         this.setState({open: false});
     };
 
-    acceptMatchRequest(match) {
-        //console.log(user)
-        //console.log(language)
-        //alert("Match "+match._id);
+    acceptMatchRequest(match) 
+    {
+        //const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/usersMatch/acceptMatchRequest/"+match._id);
 
-        const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/usersMatch/acceptMatchRequest/"+match._id);
-
-        if (window.confirm("Confirm the accept of match request?")) {
-            fetch(url, {
+        if (window.confirm("Accept match request?")) 
+        {
+            fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/usersMatch/acceptMatchRequest/' + match._id, 
+            {
                 method: 'POST',
                 headers: {
                 'Accept': 'application/json',
@@ -124,8 +123,11 @@ class MatchRequests extends React.Component {
                 },
                 credentials: 'include',
                 cors: 'no-cors',
-            }).then((response) => response.json())
-            .then((responseJson) => {
+                body: JSON.stringify({})
+            })
+            .then((response) => response.json())
+            .then((responseJson) => 
+            {
                 console.log(responseJson);
                 if (responseJson.requested) {
                     alert("Match request accepted!");
@@ -134,7 +136,9 @@ class MatchRequests extends React.Component {
                     alert("Request failed! Please, try again later")
                 }
             })
-            .catch((error) => {
+            .catch((error) => 
+            {
+                console.log('Error');
                 console.error(error);
             }); 
         }
@@ -148,7 +152,7 @@ class MatchRequests extends React.Component {
 
         const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/usersMatch/denyMatchRequest/"+match._id);
 
-        if (window.confirm("Confirm the deny of match request?")) {
+        if (window.confirm("Deny match request?")) {
             fetch(url, {
                 method: 'POST',
                 headers: {
