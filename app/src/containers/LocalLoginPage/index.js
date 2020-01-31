@@ -51,33 +51,18 @@ class LocalLoginPage extends Component
   constructor(props)
   {
     super(props);
-    var localTest = ConstantsList.IS_LOCAL_TEST_ENV;
 
-    if (localTest){
-      this.state =({
-        email:'', 
-        password: '', 
-        signUp: 'Login',
-        api: 'http://localhost:3000',
-        signUpServer: 'http://localhost:3000/login', 
-        logOut: 'http://localhost:3000/logout-user',
-        signInCheck: 'http://localhost:3000/login/check',
-        redirectURL: '',
-        initialPage:'http://localhost:3001'
-      });
-    }else{
-      this.state =({
-        email:'', 
-        password: '', 
-        signUp: 'Login',
-        api: 'https://www.unitandem.fi',
-        signUpServer: 'https://www.unitandem.fi/login', 
-        logOut: 'https://www.unitandem.fi/logout-user',
-        signInCheck: 'https://www.unitandem.fi/login/check',
-        redirectURL: '',
-        initialPage:'https://www.unitandem.fi'
-      });
-    }
+    this.state = ({
+      email: '',
+      password: '',
+      signUp: 'Login',
+      api: ConstantsList.APPLICATION_URL,
+      signUpServer: ConstantsList.APPLICATION_URL + '/login',
+      logOut: ConstantsList.APPLICATION_URL + '/logout-user',
+      signInCheck: ConstantsList.APPLICATION_URL + '/login/check',
+      redirectURL: '',
+      initialPage: ConstantsList.IS_LOCAL_TEST_ENV ? 'http://localhost:3001' : ConstantsList.APPLICATION_URL
+    });
 
     fetch(this.state.signInCheck, 
     {

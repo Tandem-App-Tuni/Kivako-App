@@ -39,8 +39,8 @@ import ConstantsList from '../../config_constants';
  * loadedServerInformation -> a flag set to true when the conversation data has been recieved from the server
  */
 
-//var chatUrl = ConstantsList.APPLICATION_LOCAL_URL;
-var chatUrl = ConstantsList.APPLICATION_SERVER_URL;
+
+var chatUrl = ConstantsList.APPLICATION_URL;
 
 class ChatPage extends React.Component
 {
@@ -107,7 +107,7 @@ class ChatPage extends React.Component
     this.handleClick = this.handleClick.bind(this);
   }
 
-  componentWillMount()
+  componentDidMount()
   {
     fetch(window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/isAuthenticated', 
     {

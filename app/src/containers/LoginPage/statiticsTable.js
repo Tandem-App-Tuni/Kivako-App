@@ -1,6 +1,7 @@
 
 import React, {Component} from 'react';
 import MaterialTable from "material-table";
+import Constants from '../../config_constants';
 
 export default class StatiticsTable extends Component {
     _isTableMounted=false;
@@ -28,11 +29,7 @@ export default class StatiticsTable extends Component {
   
     loadDataInTable(callback)
     {
-      // http://localhost:3000/api/v1/admin/statiticsOpen
-      //const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/admin/statiticsOpen")
-      //const url = new URL(window.location.protocol + '//' + window.location.hostname + "/api/v1/admin/statiticsOpen");
-
-      fetch(window.location.protocol + '//' + window.location.hostname + '/api/v1/admin/statiticsOpen', 
+      fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE +'/api/v1/admin/statiticsOpen', 
       {
         method: 'GET',
         headers: {
