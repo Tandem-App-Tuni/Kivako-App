@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import ResponsiveDrawer from '../MenuDrawer';
-
 import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -8,21 +7,18 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
-import {
-  withStyles
-} from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
 import IconButton from '@material-ui/core/IconButton';
-
 import EditIcon from '@material-ui/icons/Edit';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
-
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-
+import {ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails} from '@material-ui/core';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {Redirect} from 'react-router-dom';
 
 //Components
@@ -158,8 +154,6 @@ class EditProfilePage extends Component {
     }
   }
 
-  // API Call to insert user
-  //TODO -> MAKE A CHECK, IF ALL FIELDS ARE NOT VALID, DON'T SEND API CALL
   onSaveButtonClicked = () => 
   {
     const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/users/update")
@@ -196,6 +190,32 @@ class EditProfilePage extends Component {
       .catch((error) => {
         console.error(error);
       });
+  }
+
+  onDeleteButtonClicked = () =>
+  {
+    if (window.confirm('Are you sure you want to delete your profile?'))
+    {
+      fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/users/delete',
+      {
+        method: 'DELETE',
+        headers:
+        {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include'
+      })
+      .then((response) => 
+      {
+        if (response.status === 200)
+        {
+          alert('You can always create a new account at the Sing Up page. Goodbye!');
+          window.location.reload();
+        }
+        else alert('Something went wrong. Try again later.');
+      });
+    }
   }
 
   handleChangeTeach = event => {
@@ -303,11 +323,10 @@ class EditProfilePage extends Component {
     });
   }
 
-  checkIfUserIsAuthenticaded (callback){
-
-    const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/isAuthenticated");
-
-    fetch(url, {
+  checkIfUserIsAuthenticaded (callback)
+  {
+    fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/isAuthenticated", 
+    {
       method: 'GET',
       credentials: 'include',
       cors:'no-cors'
@@ -331,14 +350,12 @@ class EditProfilePage extends Component {
     });
   }
 
-  preLoadUserInformations = (callback) => {
-
-    //http://localhost/api/v1/users/userInfo
-    const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/users/userInfo")
+  preLoadUserInformations = (callback) => 
+  {
     console.log('[INFO]Loading user information...');
-    //console.log(url);
 
-    fetch(url, {
+    fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/users/userInfo", 
+    {
         method: 'GET',
         credentials: 'include',
         cors: 'no-cors'
@@ -662,8 +679,28 @@ class EditProfilePage extends Component {
                   className={classes.submit}
                   onClick={this.onSaveButtonClicked}
                   >
-                  Save
+                  Save changes
                 </Button>
+
+                <ExpansionPanel 
+                  defaultExpanded={false}> 
+                  <ExpansionPanelSummary
+                    expandIcon={<ExpandMoreIcon/>}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header">
+                    <Typography>Delete your profile</Typography>
+                  </ExpansionPanelSummary>
+                  <ExpansionPanelDetails>
+                    <Button
+                      fullWidth
+                      variant='contained'
+                      color='primary'
+                      className={classes.submit}
+                      onClick={this.onDeleteButtonClicked}>
+                      Delete profile
+                    </Button>
+                </ExpansionPanelDetails>
+                </ExpansionPanel>
               
             </form>
 
