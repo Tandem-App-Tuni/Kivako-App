@@ -16,10 +16,6 @@ import Grid from '@material-ui/core/Grid';
 /**
  * The login page is based on a template available on: https://github.com/mui-org/material-ui/tree/master/docs/src/pages/getting-started/templates/sign-in
  * For conveniance it is converted to a non-funcitonal, standard component. The login functionality is authored by Peter Mlakar.
- * The purpose of the page is to collect the users login credentials and create a new user in the database.
- * 
- * 
- * @param {*} theme The default application theme.
  */
 
 const styles = theme => ({
@@ -81,31 +77,13 @@ class LocalLoginPage extends Component
   handleEmailFormChange = (e) =>
   {
     this.setState({email: e.target.value});
-  };
+  }
 
   handlePasswordFormChange = (e) =>
   {
     this.setState({password: e.target.value});
-  };
+  }
 
-  logOutUser = () =>
-  {
-    fetch(this.state.logOut, 
-    {
-      method: 'GET',
-      headers:
-      {
-        'Content-Type': 'application/json'
-      },
-      credentials: 'include'
-    });
-  };
-
-  /**
-   * The function processes the request to sign up by the user.
-   * It checks basic validity of the password and email.
-   * Then the appropriate request is sent to the server.
-   */
   handleSignUpButtonClick = (e) =>
   {
     e.preventDefault();
@@ -148,7 +126,19 @@ class LocalLoginPage extends Component
                 this.setState({redirectURL: regUrl});
               });
         });
-  };
+  }
+
+  onForgotPassword = (e) =>
+  {
+    e.preventDefault();
+    this.setState({redirectURL: '/'});
+  }
+
+  onReactivate = (e) => 
+  {
+    e.preventDefault();
+    this.setState({redirectURL: '/activate-account'});
+  }
 
   render()
   {
@@ -219,17 +209,32 @@ class LocalLoginPage extends Component
           </Button>
         </form>
       </Paper>
-      <Box mt={8}>
+      <Box mt={3}>
         <Typography 
           variant="body2" 
           color="textSecondary" 
           align="center">
-          {'Copyright © '}
-        <Link 
-          color="inherit" 
-          href="https://material-ui.com/">
-          Unitandem
-        </Link>{' '}
+          <Link 
+            color="inherit" 
+            href="#"
+            onClick={e => this.onForgotPassword(e)}>
+            Forgot password?
+          </Link>
+          <br/>
+          <Link 
+            color="inherit" 
+            href="#"
+            onClick={e => this.onReactivate(e)}>
+            Did not receive activation link?
+          </Link>
+        </Typography>
+      </Box>
+      <Box mt={5}>
+        <Typography 
+          variant="body2" 
+          color="textSecondary" 
+          align="center">
+          {'Copyright © Unitandem '}
           {new Date().getFullYear()}
           {'.'}
         </Typography>

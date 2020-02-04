@@ -17,6 +17,7 @@ import ChatPage from './containers/ChatPage'
 import RegisterPage from './containers/RegisterPage'
 import MatchRequests from './containers/MatchRequests'
 import LocalLoginPage from './containers/LocalLoginPage'
+import ActivationPage from './containers/ActivationPage'
 
 const theme = createMuiTheme({
   palette: {
@@ -55,6 +56,9 @@ function App() {
         </Route>
         <Route exact path="/local-login">
             <LocalLoginPage />
+        </Route>
+        <Route exact path="/activate-account">
+          <ActivationPage/>
         </Route>
       </Switch>
     </Router>

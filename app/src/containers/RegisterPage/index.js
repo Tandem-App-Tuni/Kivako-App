@@ -360,12 +360,14 @@ class SignUpPage extends Component {
         userIsActivie: true,
         password:this.state.password
     })
-    }).then((response) => response.json())
-    .then((responseJson) => {
+    })
+    .then((response) => response.json())
+    .then((responseJson) => 
+    {
       console.log(responseJson.userAdded);
       if (responseJson.userAdded) 
       {
-        alert("User registered succesfully!");
+        alert("User registered succesfully. Please check your email for an activation link.");
         this.setState({ isAlreadyregistered: true });
       } 
       else alert(responseJson.description);
