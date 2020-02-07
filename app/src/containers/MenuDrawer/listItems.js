@@ -103,7 +103,7 @@ export const adminListItems = (
     </ListItem>
     
     <ListItem button component={Link} 
-      to={'/statitics'}>
+      to={'/statistics'}>
       <ListItemIcon>
         <SearchIcon />
       </ListItemIcon>
