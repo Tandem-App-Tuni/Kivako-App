@@ -19,6 +19,10 @@ import MatchRequests from './containers/MatchRequests'
 import LocalLoginPage from './containers/LocalLoginPage'
 import ActivationPage from './containers/ActivationPage'
 
+import ListOfAdmins from './containers/ListOfAdmins'
+import ListOfStudents from './containers/ListOfStudents'
+import Statitics from './containers/Statitics'
+
 const theme = createMuiTheme({
   palette: {
     primary: {
@@ -59,6 +63,16 @@ function App() {
         </Route>
         <Route exact path="/activate-account">
           <ActivationPage/>
+        </Route>
+
+        <Route exact path="/list-admins">
+            <ListOfAdmins />
+        </Route>
+        <Route exact path="/list-students">
+            <ListOfStudents />
+        </Route>
+        <Route exact path="/statistics">
+            <Statitics />
         </Route>
       </Switch>
     </Router>

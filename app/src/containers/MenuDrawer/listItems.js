@@ -54,7 +54,6 @@ export const mainListItems = (
 
 export const secondaryListItems = (
   <div>
-    <ListSubheader inset>Matches</ListSubheader>
     <ListItem button component={Link} 
       to={"/browse-match"}>
       <ListItemIcon>
@@ -84,3 +83,31 @@ export const thirdListItems = (
   
     </div>
   );
+
+export const adminListItems = (
+  <div>
+    <ListItem button component={Link} 
+      to={'/list-admins'}>
+      <ListItemIcon>
+        <SearchIcon />
+      </ListItemIcon>
+      <ListItemText primary="List of administrators" />
+    </ListItem>
+
+    <ListItem button component={Link} 
+      to={'/list-students'}>
+      <ListItemIcon>
+        <SearchIcon />
+      </ListItemIcon>
+      <ListItemText primary="List of students" />
+    </ListItem>
+    
+    <ListItem button component={Link} 
+      to={'/statitics'}>
+      <ListItemIcon>
+        <SearchIcon />
+      </ListItemIcon>
+      <ListItemText primary="Statistics" />
+    </ListItem>
+  </div>
+);
