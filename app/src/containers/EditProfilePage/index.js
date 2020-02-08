@@ -95,10 +95,10 @@ const useStyles = theme => ({
 
 });
 
-class EditProfilePage extends Component {
-  _isMounted = false;
-
-  constructor(props) {
+class EditProfilePage extends Component 
+{
+  constructor(props) 
+  {
     super(props);
     this.state = {
       profileImgURL: window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/api/v1/avatar/getAvatar',
@@ -116,9 +116,7 @@ class EditProfilePage extends Component {
       alertText: '',
       editingTeachLanguageIndex: 0,
       editingLearnLanguageIndex: 0,
-      isAlreadyregistered : false,
-      isAlreadyAuthenticated : false,
-      isLoadingPage:true,
+      isAuthenticated : true,
       portOption: ConstantsList.PORT_IN_USE //set to 3000 for local testing
     };
   }
@@ -156,40 +154,39 @@ class EditProfilePage extends Component {
 
   onSaveButtonClicked = () => 
   {
-    const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/users/update")
-
-    fetch(url, {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        cors: 'no-cors',
-        body: JSON.stringify({
-          languagesToTeach: this.state.languagesToTeach,
-          languagesToLearn: this.state.languagesToLearn,
-          firstName: this.state.firstName,
-          lastName: this.state.lastName,
-          email: this.state.email,
-          cities: this.state.cities,
-          descriptionText: this.state.descriptionText,
-          userIsActivie: true
-        })
-      })
-      .then((response) => response.json())
-      .then((responseJson) => 
+    fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/users/update", 
+    {
+      method: 'POST',
+      headers: 
       {
-        console.log(responseJson);
-        if (responseJson.update) 
-        {
-          this.toogleAlert(true, 'success', 'User informations updated succesfully!')
-          window.location.reload();
-        } else this.toogleAlert(true, 'error', 'Update failed. Please try again later')
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      cors: 'no-cors',
+      body: JSON.stringify({
+        languagesToTeach: this.state.languagesToTeach,
+        languagesToLearn: this.state.languagesToLearn,
+        firstName: this.state.firstName,
+        lastName: this.state.lastName,
+        email: this.state.email,
+        cities: this.state.cities,
+        descriptionText: this.state.descriptionText,
+        userIsActivie: true
       })
-      .catch((error) => {
-        console.error(error);
-      });
+    })
+    .then((response) => response.json())
+    .then((responseJson) => 
+    {
+      if (responseJson.update) 
+      {
+        this.toogleAlert(true, 'success', 'User informations updated succesfully!')
+        window.location.reload();
+      } else this.toogleAlert(true, 'error', 'Update failed. Please try again later')
+    })
+    .catch((error) => {
+      console.error(error);
+    });
   }
 
   onDeleteButtonClicked = () =>
@@ -228,19 +225,14 @@ class EditProfilePage extends Component {
     this.setState({languagesToLearn: value});
   };
 
-  handleChangeFirstName = event => {
-    this.setState( {firstNameError: false})
-
+  handleChangeFirstName = event => 
+  {
     var formFirstName= (event.target.value);
     const validNameRegex = RegExp(/^.*(?=.{1,})(?=.*[a-zA-Z\\u0080-\\uFFFF])(?=.*\d).*$/);
 
-    if(validNameRegex.test(formFirstName)===true) this.setState( {firstNameError: true, firstNameErrorMessage: 'Special characters are not accepted'} )
-    else if(formFirstName.length <= 2 || formFirstName.length >=20) this.setState( {firstNameError: true, firstNameErrorMessage: 'Number of characters not accepted'} )
-    else
-    {
-      this.setState( {firstNameError: false, firstNameErrorMessage: ''} )
-      this.setState( {firstName: formFirstName} )
-    }
+    if(validNameRegex.test(formFirstName)) this.setState({firstNameError: true, firstNameErrorMessage: 'Special characters are not accepted'});
+    else if(formFirstName.length <= 1 || formFirstName.length >=20) this.setState({firstNameError: true, firstNameErrorMessage: 'Number of characters not accepted'});
+    else this.setState({firstNameError: false, firstNameErrorMessage: '', firstName: formFirstName});
   };
 
   handleChangeLastName = event => {
@@ -278,12 +270,11 @@ class EditProfilePage extends Component {
     }
   };
 
-  handleChangeIntroduction = event => {
-    
+  handleChangeIntroduction = event => 
+  {
     var value= (event.target.value);
     this.setState({descriptionText: value});
 
-    
     if (value.length < 5 && value.length > 0) {
       this.setState( {introError: true, introErrorMessage: 'We recommend to write about you'} );
     }else if(value.length > 500){
@@ -292,65 +283,33 @@ class EditProfilePage extends Component {
       this.setState( {introError: false, introErrorMessage: ''} );
       this.setState({descriptionText: value});
     }
-  
-
   };
-
-  // Load page functions
-  checkIfUserIsRegistered(callback) {
-    const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/users/isRegistered")
-
-    fetch(url, {
-      method: 'GET',
-      credentials: 'include',
-      cors:'no-cors'
-    }).then((response) => response.json())
-    .then((responseJson) => {
-
-      if(responseJson.isRegistered){
-        //User is already registered. Redirect to dashboard in render
-        this.setState({ isAlreadyregistered: true });
-      }else{
-        // Continue render normaly to register user
-        this.setState({ isAlreadyregistered: false });
-      }
-
-      callback();
-
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-  }
 
   checkIfUserIsAuthenticaded (callback)
   {
-    fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/isAuthenticated", 
+    fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/isAuthenticated', 
     {
       method: 'GET',
       credentials: 'include',
       cors:'no-cors'
-    }).then((response) => response.json())
-    .then((responseData) => {
-      
-      if(responseData.isAuthenticated === false){
-        // Nothing to do, user will be redirect in render;
-      }else{
-        // User is already authenticated
-        // Set email automaticaly
-        this.setState({isAlreadyAuthenticated: true});
+    })
+    .then((response) => response.json())
+    .then((responseData) => 
+    {
+      if(responseData.isAuthenticated)
+      {
         this.setState({email: responseData.email});
+
+        callback();
       }
-
-      callback();
-
+      else this.setState({isAuthenticated: false});
     })
     .catch((error) => {
       console.error(error);
     });
   }
 
-  preLoadUserInformations = (callback) => 
+  preLoadUserInformations = () => 
   {
     console.log('[INFO]Loading user information...');
 
@@ -359,8 +318,11 @@ class EditProfilePage extends Component {
         method: 'GET',
         credentials: 'include',
         cors: 'no-cors'
-      }).then((response) => response.json())
-      .then((responseData) => {
+      })
+      .then((response) => response.json())
+      .then((responseData) => 
+      {
+        console.log('Load user info:', responseData.data.firstName);
 
         this.setState({
           firstName: responseData.data.firstName,
@@ -369,42 +331,25 @@ class EditProfilePage extends Component {
           languagesToLearn: responseData.data.languagesToLearn.filter(language => language.language != null),
           languagesToTeach: responseData.data.languagesToTeach.filter(language => language.language != null),
           descriptionText: responseData.data.descriptionText,
-          cities: responseData.data.cities
+          cities: responseData.data.cities,
         })
-
       })
-      .catch((error) => {
+      .catch((error) => 
+      {
         console.error(error);
       });
-
-      callback();
   }
 
-  componentDidMount() {
-    this._isMounted = true;
-
-    if(this._isMounted){
-          
-      this.checkIfUserIsAuthenticaded(() => {
-
-        this.checkIfUserIsRegistered( () => {
-
-          this.preLoadUserInformations( () => {
-            this.setState({isLoadingPage:false});
-          });
-
-        });
-
-      });
-    }
-
+  componentDidMount() 
+  {
+    this.checkIfUserIsAuthenticaded(() => 
+    {
+      this.preLoadUserInformations();
+    });
   }
 
-  componentWillUnmount() {
-    this._isMounted = false;
-  }
-
-  onShowInputTeachLanguage = (open, index, newValue) => {
+  onShowInputTeachLanguage = (open, index, newValue) => 
+  {
     if (open === true) {
       this.setState({
         editingTeachLanguageIndex: index
@@ -427,7 +372,8 @@ class EditProfilePage extends Component {
     })
   };
 
-  onShowInputLearnLanguage = (open, index, newValue) => {
+  onShowInputLearnLanguage = (open, index, newValue) => 
+  {
     if (open === true) {
       this.setState({
         editingLearnLanguageIndex: index
@@ -450,7 +396,8 @@ class EditProfilePage extends Component {
     })
   };
 
-  toExcludeLanguages = () => {
+  toExcludeLanguages = () => 
+  {
     var langs = [];
 
     this.state.languagesToTeach.forEach(item => {
@@ -460,7 +407,8 @@ class EditProfilePage extends Component {
     return langs
   }
 
-  toogleAlert(open, type, text){
+  toogleAlert(open, type, text)
+  {
     //type is 'error', 'info', 'success', 'warning'
     if (open === true) {
       this.setState({
@@ -476,25 +424,13 @@ class EditProfilePage extends Component {
     }
   }
 
-  render() {
+  render() 
+  {
     const { classes } = this.props;
     const excludedLanguages = this.toExcludeLanguages();
 
-    //Wait until all informations be render until continue
-    if(this.state.isLoadingPage) {
-      return null;
-    }
+    if(!this.state.isAuthenticated) return  <Redirect  to="/"/>
 
-    // In case user is not authenticated, redirect to initial page
-    if(!this.state.isAlreadyAuthenticated){  
-      return  <Redirect  to="/" />
-    }
-
-    // In case user is NOT registered yet, just redirect to initial system page.
-    if(!this.state.isAlreadyregistered){  
-      return  <Redirect  to="/" />
-    }
-    
     return  (
       <div>
         <ResponsiveDrawer title = 'Profile'>

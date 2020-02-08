@@ -1,5 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
+import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
@@ -15,11 +16,9 @@ import MessageIcon from '@material-ui/icons/Message';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import { mainListItems, secondaryListItems, thirdListItems, adminListItems } from './listItems';
 import { Link } from 'react-router-dom';
-
-import logo from '../../tandemlogo.png'
 import {withStyles} from '@material-ui/core/styles';
-
-import Constants from '../../config_constants';
+import logo from '../../tandemlogo.png'
+import ConstantsList from '../../config_constants';
 
 const drawerWidth = 240;
 
@@ -108,37 +107,31 @@ class Dashboard extends React.Component
   {
     super(props);
 
-    this.state = {
-      open: true,
-      setOpen: true,
-      adminPanel: false,
-      title: props.title,
-      children: props.children
-    };
+    this.state = {open:true, isAdmin:false};
   }
 
-  handleDrawerOpen = () =>
+  handleDrawerOpen = () => 
   {
-    this.setState({open: true});
+    this.setState({open:true});
   }
 
   handleDrawerClose = () => 
   {
-    this.setState({open: false});
+    this.setState({open:false});
   }
 
-  componentDidMount() 
+  componentDidMount()
   {
-    fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/users/isRegistered', 
+    fetch(window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/api/v1/users/isAdmin', 
     {
-      method: 'GET',
-      credentials: 'include',
-      cors:'no-cors'
+        method: 'GET',
+        credentials: 'include',
+        cors: 'no-cors'
     })
     .then((response) => response.json())
-    .then((responseJson) => 
+    .then((responseData) => 
     {
-      if(responseJson.isRegistered && responseJson.isAdmin) this.setState({adminPanel: true});
+      this.setState({isAdmin:responseData.isAdmin});
     })
     .catch((error) => 
     {
@@ -148,60 +141,60 @@ class Dashboard extends React.Component
 
   render()
   {
-    const {classes} = this.props;
+    const { classes } = this.props;
 
-    return (
-      <div className={classes.root}>
-        <CssBaseline />
-        <AppBar position="absolute" className={clsx(classes.appBar, this.state.open && classes.appBarShift)}>
-          <Toolbar className={classes.toolbar}>
-            <IconButton
-              edge="start"
-              color="inherit"
-              aria-label="open drawer"
-              onClick={this.state.handleDrawerOpen}
-              className={clsx(classes.menuButton, this.state.open && classes.menuButtonHidden)}>
-              <MenuIcon />
+    return(
+    <div className={classes.root}>
+      <CssBaseline />
+      <AppBar position="absolute" className={clsx(classes.appBar, this.state.open && classes.appBarShift)}>
+        <Toolbar className={classes.toolbar}>
+          <IconButton
+            edge="start"
+            color="inherit"
+            aria-label="open drawer"
+            onClick={this.handleDrawerOpen}
+            className={clsx(classes.menuButton, this.state.open && classes.menuButtonHidden)}>
+            <MenuIcon/>
+          </IconButton>
+          <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
+            {this.props.title}
+          </Typography>
+          <IconButton color="inherit" component={Link} to="/match-requests">
+              <PersonAddIcon />
+          </IconButton>
+          <IconButton color="inherit" component={Link} to="/chat-page">
+              <MessageIcon />
+          </IconButton>
+
+        </Toolbar>
+      </AppBar>
+      <Drawer
+        variant="permanent"
+        classes={{
+          paper: clsx(classes.drawerPaper, !this.state.open && classes.drawerPaperClose),
+        }}
+        open={this.state.open}> 
+          <div className={classes.toolbarIcon}>
+            <img alt="" src={logo} style={{ maxHeight: 100 , maxWidth: '70%', align:'center'}}/>
+            <IconButton onClick={this.handleDrawerClose}>
+              <ChevronLeftIcon/>
             </IconButton>
-            <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-              {this.state.title}
-            </Typography>
-            <IconButton color="inherit" component={Link} to="/match-requests">
-                <PersonAddIcon />
-            </IconButton>
-            <IconButton color="inherit" component={Link} to="/chat-page">
-                <MessageIcon />
-            </IconButton>
-  
-          </Toolbar>
-        </AppBar>
-        <Drawer
-          variant="permanent"
-          classes={{
-            paper: clsx(classes.drawerPaper, !this.state.open && classes.drawerPaperClose),
-          }}
-          open={this.state.open}> 
-            <div className={classes.toolbarIcon}>
-              <img alt="" src={logo} style={{ maxHeight: 100 , maxWidth: '70%', align:'center'}}/>
-              <IconButton onClick={this.state.handleDrawerClose}>
-                <ChevronLeftIcon />
-              </IconButton>
-            </div>
-            <Divider />
-            <List>{mainListItems}</List>
-            <Divider />
-            <List>{secondaryListItems}</List>
-            {this.state.adminPanel ? <div><Divider/><List>{adminListItems}</List></div> : <div/>}
-            <Divider />
-            <List>{thirdListItems}</List>
-        </Drawer>
-        <main className={classes.content}>
-          <div className={classes.appBarSpacer} />
-          <Container maxWidth="lg" className={classes.container}>
-              {this.state.children}
-          </Container>
-        </main>
-      </div>
+          </div>
+          <Divider />
+          <List>{mainListItems}</List>
+          <Divider />
+          <List>{secondaryListItems}</List>
+          {this.state.isAdmin ? <div><Divider /><List>{adminListItems}</List></div> : <div/>}
+          <Divider />
+          <List>{thirdListItems}</List>
+      </Drawer>
+      <main className={classes.content}>
+      <div className={classes.appBarSpacer} />
+      <Container maxWidth="lg" className={classes.container}>
+          {this.props.children}
+      </Container>
+      </main>
+    </div>
     );
   }
 }
