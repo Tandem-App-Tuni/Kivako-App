@@ -279,9 +279,6 @@ h1,h2,h3,h4,h5,h6{
 
 
 /* footer section starts here */
-#footer-section{
-
-}
 #footer-section .footer-left,
 #footer-section .footer-right{
     display: inline-block;
@@ -342,6 +339,37 @@ h1,h2,h3,h4,h5,h6{
     .title-image{       
         visibility: hidden;
     }
+
+
+#fourth-section .timeline:before{
+    content: none;
+   
+}
+
+#fourth-section .timeline ul li{
+  
+    width: 100%;
+    padding: 20px 10px;
+  
+}
+#fourth-section .timeline ul li:nth-child(odd){
+   float: none;
+   text-align: center;
+ 
+}
+#fourth-section .timeline ul li:nth-child(even){
+    float: none;
+    text-align: center;
+    
+ }
+ #fourth-section .timeline ul li:nth-child(odd):before{
+    content: none;
+  }
+
+ #fourth-section .timeline ul li:nth-child(even):before{
+    content: none;
+}
+
 
     #footer-section .footer-left,
 	#footer-section .footer-right{
