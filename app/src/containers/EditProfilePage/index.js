@@ -318,26 +318,26 @@ class EditProfilePage extends Component
         method: 'GET',
         credentials: 'include',
         cors: 'no-cors'
-      })
-      .then((response) => response.json())
-      .then((responseData) => 
-      {
-        console.log('Load user info:', responseData.data.firstName);
+    })
+    .then((response) => response.json())
+    .then((responseData) => 
+    {
+      console.log('Load user info:', responseData.data.firstName);
 
-        this.setState({
-          firstName: responseData.data.firstName,
-          lastName: responseData.data.lastName,
-          email: responseData.data.email,
-          languagesToLearn: responseData.data.languagesToLearn.filter(language => language.language != null),
-          languagesToTeach: responseData.data.languagesToTeach.filter(language => language.language != null),
-          descriptionText: responseData.data.descriptionText,
-          cities: responseData.data.cities,
-        })
+      this.setState({
+        firstName: responseData.data.firstName,
+        lastName: responseData.data.lastName,
+        email: responseData.data.email,
+        languagesToLearn: responseData.data.languagesToLearn.filter(language => language.language != null),
+        languagesToTeach: responseData.data.languagesToTeach.filter(language => language.language != null),
+        descriptionText: responseData.data.descriptionText,
+        cities: responseData.data.cities,
       })
-      .catch((error) => 
-      {
-        console.error(error);
-      });
+    })
+    .catch((error) => 
+    {
+      console.error(error);
+    });
   }
 
   componentDidMount() 

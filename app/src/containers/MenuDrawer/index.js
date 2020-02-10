@@ -107,7 +107,7 @@ class Dashboard extends React.Component
   {
     super(props);
 
-    this.state = {open:true, isAdmin:false};
+    this.state = {open:true, isAdmin:false, isAuthenticated: true};
   }
 
   handleDrawerOpen = () => 
@@ -122,7 +122,7 @@ class Dashboard extends React.Component
 
   componentDidMount()
   {
-    fetch(window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/api/v1/users/isAdmin', 
+    fetch(window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/isAuthenticated', 
     {
         method: 'GET',
         credentials: 'include',
@@ -131,7 +131,29 @@ class Dashboard extends React.Component
     .then((response) => response.json())
     .then((responseData) => 
     {
-      this.setState({isAdmin:responseData.isAdmin});
+      if (responseData.isAuthenticated)
+      {
+        fetch(window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/api/v1/users/isAdmin', 
+        {
+            method: 'GET',
+            credentials: 'include',
+            cors: 'no-cors'
+        })
+        .then((response) => response.json())
+        .then((responseData0) => 
+        {
+          this.setState({isAdmin:responseData0.isAdmin, isAuthenticated: true});
+          console.log('Response:',responseData0.isAdmin);
+        })
+        .catch((error) => 
+        {
+          console.error(error);
+        });
+      }
+      else
+      {
+
+      }
     })
     .catch((error) => 
     {
