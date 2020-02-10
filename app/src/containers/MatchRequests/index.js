@@ -21,8 +21,6 @@ import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
-import IconButton from '@material-ui/core/IconButton';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Icon from '@material-ui/core/Icon';
 
 import {Redirect} from 'react-router-dom';
@@ -79,6 +77,9 @@ const styles = ({
     gridListTileBar: {
         background: "#3f51b5",
     },
+    leftText:{
+        textAlign: 'left'
+    }
 });
 
 class MatchRequests extends React.Component {
@@ -105,15 +106,12 @@ class MatchRequests extends React.Component {
         this.setState({open: false});
     };
 
-    acceptMatchRequest(match) {
-        //console.log(user)
-        //console.log(language)
-        //alert("Match "+match._id);
-
-        const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/usersMatch/acceptMatchRequest/"+match._id);
-
-        if (window.confirm("Confirm the accept of match request?")) {
-            fetch(url, {
+    acceptMatchRequest(match) 
+    {
+        if (window.confirm("Accept match request?")) 
+        {
+            fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/usersMatch/acceptMatchRequest/' + match._id, 
+            {
                 method: 'POST',
                 headers: {
                 'Accept': 'application/json',
@@ -121,17 +119,22 @@ class MatchRequests extends React.Component {
                 },
                 credentials: 'include',
                 cors: 'no-cors',
-            }).then((response) => response.json())
-            .then((responseJson) => {
+                body: JSON.stringify({})
+            })
+            .then((response) => response.json())
+            .then((responseJson) => 
+            {
                 console.log(responseJson);
                 if (responseJson.requested) {
                     alert("Match request accepted!");
-                    //window.location.reload();
+                    window.location.reload();
                 } else {
                     alert("Request failed! Please, try again later")
                 }
             })
-            .catch((error) => {
+            .catch((error) => 
+            {
+                console.log('Error');
                 console.error(error);
             }); 
         }
@@ -145,7 +148,7 @@ class MatchRequests extends React.Component {
 
         const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/usersMatch/denyMatchRequest/"+match._id);
 
-        if (window.confirm("Confirm the deny of match request?")) {
+        if (window.confirm("Deny match request?")) {
             fetch(url, {
                 method: 'POST',
                 headers: {
@@ -159,7 +162,7 @@ class MatchRequests extends React.Component {
                 console.log(responseJson);
                 if (responseJson.requested) {
                     alert("Match request denied!");
-                    //window.location.reload();
+                    window.location.reload();
                 } else {
                     alert("Request failed! Please, try again later")
                 }
@@ -274,12 +277,12 @@ class MatchRequests extends React.Component {
         const {classes} = this.props;
         const cardStyle =makeStyles(theme => ({
             card: {
-              maxWidth: 345
+              maxWidth: 345,
             },
             media: {
               height: 0,
               paddingTop: '56.25%', // 16:9
-            },
+            }
           }));
         
         //Wait until all informations be render until continue
@@ -299,8 +302,8 @@ class MatchRequests extends React.Component {
 
         // Check if user has requests
         
-        if(this.state.userRequestMatches.length === 0){  
-
+        if(this.state.userRequestMatches.length === 0)
+        {  
             return  (
                 <div className={classes.root}>
                     <ResponsiveDrawer title = "Matches requests!">
@@ -341,33 +344,27 @@ class MatchRequests extends React.Component {
 
                 <div className={classes.root}>
                     <ResponsiveDrawer title = "Matches requests!">
-
-
-                        <GridList container cols={this.getGridListCols()} spacing={30} cellHeight={'auto'}>
+                        <GridList container='true' cols={1} spacing={30} cellHeight={'auto'}>
                             {
-
                                 this.state.userRequestMatches.map((match, key) =>
-                                
-                                    <Grid container spacing={3}>
+                            
+                                    <Grid container spacing={3} key={key}>
                                         <Grid item xs >
                                             <Card border={1} className={cardStyle.card} key={key}>
                                                     <CardHeader
+                                                    className = {classes.leftText}
                                                         avatar={
-                                                            <Avatar src={"https://pickaface.net/gallery/avatar/unr_test_161024_0535_9lih90.png"} 
+                                                            <Avatar src={window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/avatar/getAvatar/' + match.requesterUser.email} 
                                                                     aria-label="recipe" 
                                                                     className={classes.bigAvatar}>
                                                             </Avatar>
                                                         }
-                                                        action={
-                                                            <IconButton aria-label="settings">
-                                                            <MoreVertIcon />
-                                                            </IconButton>
-                                                        }
+                                                        
                                                         title={match.requesterUser.firstName + ' ' + match.requesterUser.lastName}
-                                                        subheader={ match._id}
+                                                        //subheader={ match._id}
                                                     />
                                                     
-                                                    <CardContent>
+                                                    <CardContent className = {classes.leftText}>
             
                                                         <Typography variant="body1" color="textSecondary" component="p">
                                                             
@@ -378,8 +375,8 @@ class MatchRequests extends React.Component {
                                                         <Divider variant="middle" />
                                                         <br></br>
                                                         <Typography variant="body2" color="textSecondary" component="p">
-                                                            <Icon fontSize="small">home</Icon>Cities: {match.cities}<br></br>
-                                                            <Icon fontSize="small">language</Icon>Languages want to learn:<br></br>
+                                                            <Icon fontSize="small">home</Icon> Cities: {match.requesterUser.cities.join(', ')}<br></br>
+                                                            <Icon fontSize="small">language</Icon> Languages want to learn: {(match.requesterUser.languagesToLearn && match.requesterUser.languagesToLearn.map(e => e.language).join(", "))}<br></br>
                                                         </Typography>                                                    
                                                     </CardContent>
                                                     <CardActions disableSpacing >

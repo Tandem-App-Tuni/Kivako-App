@@ -1,13 +1,7 @@
 
 import React, {Component} from 'react';
-
-import {
-  withStyles
-} from '@material-ui/core/styles';
-
-import {Redirect} from 'react-router-dom';
 import MaterialTable from "material-table";
-
+import Constants from '../../config_constants';
 
 export default class StatiticsTable extends Component {
     _isTableMounted=false;
@@ -33,20 +27,24 @@ export default class StatiticsTable extends Component {
     }
   
   
-    loadDataInTable(callback){
-      // http://localhost:3000/api/v1/admin/statiticsOpen
-      const url = new URL(window.location.protocol + '//' + window.location.hostname + ":3000/api/v1/admin/statiticsOpen")
-  
-      fetch(url, {
+    loadDataInTable(callback)
+    {
+      fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE +'/api/v1/admin/statiticsOpen', 
+      {
         method: 'GET',
-        credentials: 'include',
-        cors:'no-cors'
-      }).then((response) => response.json())
-      .then((responseJson) => {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        }
+      })
+      .then((response) => 
+      {
+        return response.json();
+      })
+      .then((responseJson) => 
+      {
         this.setState({ rows: responseJson.data });
-        //console.log(responseJson.data)
         callback();
-  
       })
       .catch((error) => {
         console.error(error);

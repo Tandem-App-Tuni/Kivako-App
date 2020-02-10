@@ -5,6 +5,8 @@ import Avatar from '@material-ui/core/Avatar';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
+import ConstantsList from '../../config_constants';
+
 /**
  * Author: Peter Mlakar
  * 
@@ -35,8 +37,9 @@ class Chat extends React.Component
                       conversationName: props.conversationName,
                       socket: props.socket,
                       roomId: props.roomId,
-                      user: props.user};
-
+                      user: props.user,
+                      partner: props.partner};
+        
         this.handleSend = this.handleSend.bind(this);
         this.sendMessageClick = this.sendMessageClick.bind(this);
         this.sendMessageEnter = this.sendMessageEnter.bind(this);
@@ -110,7 +113,7 @@ class Chat extends React.Component
 
         this.state.messages.forEach((element, index) => 
         {
-            bubbles.push(<ChatBubble key={index} user={this.state.user} message={element}></ChatBubble>);
+            bubbles.push(<ChatBubble key={index} partner={this.state.partner} user={this.state.user} message={element}></ChatBubble>);
         });
 
         return bubbles;
@@ -216,9 +219,7 @@ class Chat extends React.Component
                                 onChange={(e) => this.handleTextChange(e)}
                                 value={this.state.textFieldContent}>
                             </TextField>               
-                      
                         </Grid>
-
 
                         <Grid item xs={12} sm={1}> 
                             <Button
@@ -254,8 +255,10 @@ class ChatBubble extends React.Component
 
         this.state = 
         {
+            user: props.user,
             message: props.message,
             text: props.message.text,
+            partner: props.partner,
             side: props.message.id === props.user ? 'flex-start' : 'flex-end',
             color: props.message.id === props.user ? '#2073E8' : '#24B8FF',
             align: props.message.id === props.user ? 'left' : 'right'
@@ -269,8 +272,9 @@ class ChatBubble extends React.Component
             user: props.user,
             message: props.message,
             text: props.message.text,
+            partner: props.partner,
             side: props.message.id === props.user ? 'flex-start' : 'flex-end',
-            color: props.message.id === props.user ? '#EBFFBE' : '#EEEBEB',
+            color: props.message.id === props.user ? '#D5BDFF' : '#8A72B3',
             align: props.message.id === props.user ? 'left' : 'right'
         };
 
@@ -286,97 +290,35 @@ class ChatBubble extends React.Component
 
     render()
     {
-        // Message of the other user
-        if(this.state.align === 'right'){
-            console.log(this.state)
-            return(
-                <div>
-                    <Grid
-                        spacing={5}
-                        container
-                        direction='row'
-                        justify='space-around'
-                        alignItems={this.state.side}>
-                                
-                                <Grid item xs={12} sm={1} alignContent='center' alignItems="center"> 
-                                    <div align="right">
-                                        <Avatar src={"https://pickaface.net/gallery/avatar/unr_test_161024_0535_9lih90.png"} 
-                                                                    aria-label="recipe" 
-                                                                    >
-                                        </Avatar>      
+        const alignmentLeft = this.state.align === 'left';
+        const avatarUrl0 = window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/api/v1/avatar/getAvatar';
+        const avatarUrl1 = window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/api/v1/avatar/getAvatar/' + this.state.partner;
 
-                                    </div>        
-                                </Grid>
-                                <Grid item xs={12} sm={9}> 
-                                    <div align="left">
-                                        <Paper square={false} style={{backgroundColor: this.state.color}}>
-                                            <Typography variant="subtitle2">
-                                              
-                                            </Typography>
-                                            <Typography variant="body2" ml={2}>
-                                              {this.state.text}
-                                            </Typography>
-                                            <div align="right">
-                                                <Typography variant="caption" align="right" color='textSecondary'>
-                                                    {this.convertTimeStampToDate(this.state.message.timestamp)} 
-                                                </Typography>
-                                            </div>
-                                        </Paper> 
-                                    </div>      
-                                </Grid>
-                                <Grid item xs={12} sm={2}> 
-                                
-                                    
-                                </Grid>
-                    </Grid>
-                </div> 
-            )
-        }else{
-            return(
-                <div>
-                    <Grid
-                        spacing={5}
-                        container
-                        direction='row'
-                        justify='space-around'
-                        alignItems={this.state.side}>
-                            <Grid item xs={12} sm={2}> 
-                            
-                                
-                            </Grid>
-
-                            <Grid item xs={12} sm={9}> 
-                            
-                                <Paper square={false} style={{backgroundColor: this.state.color}}>
-                                    <Typography variant="subtitle2">
-                                    </Typography>
-                                    <Typography variant="body2">
-                                        {this.state.text}
-                                    </Typography>
-                                    <div align="right">
-                                        <Typography variant="caption" align="right" color='textSecondary'>
-                                            {this.convertTimeStampToDate(this.state.message.timestamp)} 
-                                        </Typography>
-                                    </div>
-                                </Paper>          
-                            </Grid>
-
-                            <Grid item xs={12} sm={1} alignContent='center' alignItems="center"> 
-                                <div align="center">
-                                    <Avatar src={"https://pickaface.net/gallery/avatar/unr_test_161024_0535_9lih90.png"} 
-                                                                aria-label="recipe" 
-                                                                >
-                                    </Avatar>      
-
-                                </div>        
-                            </Grid>
-
-                    </Grid>
-                </div> 
-            )
-            // Message of the current user(own message)
-        }
- 
+        return(
+            <div>
+                <Grid
+                container
+                direction='row'
+                justify={alignmentLeft ? 'flex-start' : 'flex-end'}>
+                    {alignmentLeft ? <Avatar src={avatarUrl0}></Avatar> : <div></div>}
+                    <Paper
+                    elevation={3}
+                    style={{backgroundColor: this.state.color}}>
+                        <Typography>
+                            {this.state.text}
+                        </Typography>
+                        <Typography
+                        variant='caption'
+                        align='left'
+                        color='textSecondary'>
+                            {this.convertTimeStampToDate(this.state.message.timestamp)}
+                        </Typography>
+                    </Paper>
+                    {!alignmentLeft ? <Avatar src={avatarUrl1}></Avatar> : <div></div>}
+                </Grid>
+            <br></br>    
+            </div>
+        );
     }
 }
 

@@ -8,7 +8,9 @@ import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import ListItem from '@material-ui/core/ListItem';
 import {withStyles} from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
+import List from '@material-ui/core/List';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	Styles
 
 import ResponsiveDrawer from '../MenuDrawer';
@@ -21,7 +23,6 @@ import Card from '@material-ui/core/Card';
 
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Icon from '@material-ui/core/Icon';
 
@@ -31,7 +32,7 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 
 import ConstantsList from '../../config_constants';
-
+import UserActionCard from '../../components/UserActionCard';
 
 const styles = ({
     root: {
@@ -69,28 +70,33 @@ const styles = ({
     gridListTile: {
         height:"100%",
         width:"100%",   
-        minHeight: "300px",
-        maxWidth: "150px",
-        minWidth: "400px",
+        minHeight: "310px",
+        maxHeight: "310px",
+        maxWidth: "310px",
+        minWidth: "310px",
         space:2,
         marginBottom: 5,
         marginLeft: 1
     },
     card:{
-        margin: '5px'
+        margin: '5px',
+        height:"300px",
+        width:"300px"
     },
     gridListTileBar: {
         background: "#3f51b5",
     },
+    leftText:{
+        textAlign: 'left'
+    }
 });
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	Class
-class BrowseMatch extends React.Component {
-
+class BrowseMatch extends React.Component 
+{
     _isMounted = false;
     
-
     constructor(props) {
 
       super(props);
@@ -100,7 +106,9 @@ class BrowseMatch extends React.Component {
         isAlreadyAuthenticated : false,
         isLoadingPage:true,
         portOption:ConstantsList.PORT_IN_USE,
-        open:false
+        open:false,
+        modalData: null,
+        modalLanguage: null
       };
     }
 
@@ -113,88 +121,89 @@ class BrowseMatch extends React.Component {
         this.setState({open: false});
     };
 
-    getMatchesTiles(item, classes) {
-        // eslint-disable-next-line
-        const cardStyle =makeStyles(theme => ({
-            card: {
-              maxWidth: 345
-            },
-            media: {
-              height: 0,
-              paddingTop: '56.25%', // 16:9
-            },
-          }));
-
+    getMatchesTiles(item, classes) 
+    {
         return (
             item.matches.length === 0 ? (
-                    <Typography variant="overline" gutterBottom>
-                        {"No matches found for "} {item.languageName} :( !
-                    </Typography>
-      
+                <Typography variant="overline" gutterBottom>
+                    {"No matches found for "} {item.languageName} :( !
+                </Typography>
             ) : (
-                <div >
+            <div >
                 <GridList className={classes.gridList} >
+                {
+                    item.matches.map((match, key) =>  
                     {
-                        item.matches.map((match, key) =>
-                            
-                            <GridListTile key={key} className={classes.gridListTile}>
-                                <Card className={classes.card}>
-                                        <CardHeader
-                                        avatar={
-                                            <Avatar src={"https://pickaface.net/gallery/avatar/unr_test_161024_0535_9lih90.png"} 
-                                                    aria-label="recipe" 
-                                                    className={classes.bigAvatar}>
-                                            </Avatar>
-                                        }
-                                        // action={
-                                        //     <IconButton aria-label="settings">
-                                        //     <MoreVertIcon />
-                                        //     </IconButton>
-                                        // }
-                                        title={match.firstName + match.lastName}
-                                        subheader={ match.cities}
-                                        />
-                                        
-                                        <CardContent>
+                        let r = 255*(1 - match.fitQuality) + 149*(match.fitQuality);
+                        let g = 255*(1 - match.fitQuality) + 117*(match.fitQuality);
+                        let b = 255*(1 - match.fitQuality) + 205*(match.fitQuality);
 
-                                        <Typography variant="body1" color="textSecondary" component="p">
-                                             
-                                            {match.descriptionText}
-
-                                        </Typography>
-                                        <br></br>
+                        return (<GridListTile 
+                            key={key} 
+                            className={classes.gridListTile}>
+                                <Card 
+                                onClick = {() => this.onShowActionCard(true, match, item.languageName)}
+                                className={classes.card}
+                                style={{backgroundColor: 'rgb('+r+','+g+','+b+')'}}>
+                                    <CardHeader
+                                    avatar=
+                                    {
+                                        <Avatar 
+                                        src={window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/avatar/getAvatar/' + match.email} 
+                                        aria-label="recipe" 
+                                        className={classes.bigAvatar}>
+                                        </Avatar>
+                                    }
+                                    className = {classes.leftText}
+                                    title={match.firstName + ' ' + match.lastName}
+                                    subheader={ match.cities}/>
+                                    <CardContent>  
                                         <Divider variant="middle" />
-                                        <br></br>
-                                        <Typography variant="body2" color="textSecondary" component="p">
-                                            <Icon fontSize="small">home</Icon>Cities: {match.cities}<br></br>
-                                            <Icon fontSize="small">language</Icon>Languages want to learn: 
-                                    {" " + match.languagesToLearn.map(e => e.language).join(", ")}
-                                            <br></br>
-
-                                         </Typography>
-                                        </CardContent>
-                                        <CardActions disableSpacing >
-       
-                                            <div align="center">
-                                                <Button variant="contained" 
-                                                        color="primary"
-                                                        onClick = {this.onInviteAction.bind(this, match,item.languageName)}
-                                                >
-                                                    Request Match
-                                                </Button>
-                                            </div>
-                                           
-                                        </CardActions>
+                                        <List>
+                                        <ListItem>
+                                        <ListItemIcon><Icon fontSize="small">home</Icon></ListItemIcon>
+                                        <ListItemText primary={"Cities: " + (match.cities && match.cities.join(", "))}/>
+                                        </ListItem>
+                                        <ListItem>
+                                        <ListItemIcon><Icon fontSize="small">language</Icon></ListItemIcon>
+                                        <ListItemText primary={"Wants to learn: " + (match.languagesToLearn && match.languagesToLearn.map(e => e.language).join(", "))}/>
+                                        </ListItem></List>
+                                    </CardContent>      
                                 </Card>
-                            </GridListTile>
-                        )
+                            </GridListTile>);
                     }
+                )}
                 </GridList>
-            </div>
-                
+                {this.state.modalData != null && 
+                    <UserActionCard 
+                    type = "invite"
+                    open = {this.state.open} 
+                    data = {this.state.modalData}
+                    onClose = {(data) =>this.onShowActionCard(false, null, data)}/>}
+            </div>   
             )
         )
     }
+
+    onShowActionCard= (open, data, action) =>  
+    {
+        if (open === true) 
+        {
+            this.setState({modalData: data});
+            this.setState({modalLanguage: action});
+        }
+        else
+        {
+            if (action === "invite") 
+            {
+                console.log(this.state.modalData, this.state.modalLanguage);
+
+                this.onInviteAction(this.state.modalData, this.state.modalLanguage);
+            }
+        }
+
+        this.setState({open: open});
+    };
 
     getAlreadyExistsDiv(item, classes) {
         return (
@@ -212,38 +221,35 @@ class BrowseMatch extends React.Component {
 
     getMatchesList(item, classes){
         return (
-                <div>
-                    <div key={item.languageName}>
-                        <ExpansionPanel>
-                            <ExpansionPanelSummary
-                                expandIcon={<ExpandMoreIcon />}
-                                aria-controls="panel1a-content"
-                                id="panel1a-header"
-                            >
-                            <Typography className={classes.heading}>Possible matches to learn {item.languageName}</Typography>
-                            </ExpansionPanelSummary>
-                            <ExpansionPanelDetails>
-                                {
-                                    this.getMatchesTiles(item, classes)
-                                }
-                                <br></br>
-                                <Divider variant="middle" />
-                            </ExpansionPanelDetails>
-                        </ExpansionPanel>
-                        <br></br>
-                    </div>
-                
-
+                <div key={item.languageName}>
+                    <ExpansionPanel>
+                        <ExpansionPanelSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="panel1a-content"
+                            id="panel1a-header"
+                        >
+                        <Typography className={classes.heading}>Possible matches to learn {item.languageName}</Typography>
+                        </ExpansionPanelSummary>
+                        <ExpansionPanelDetails>
+                            {
+                                this.getMatchesTiles(item, classes)
+                            }
+                            <br></br>
+                            <Divider variant="middle" />
+                        </ExpansionPanelDetails>
+                    </ExpansionPanel>
+                    <br></br>
                 </div>
             );
     }
 
-    onInviteAction(user,language) {
-
+    onInviteAction = (user,language) =>
+    {
         const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/usersMatch/sendRequest")
         //console.log(url)
         
-        fetch(url, {
+        fetch(url, 
+        {
             method: 'POST',
             headers: {
             'Accept': 'application/json',
@@ -258,9 +264,10 @@ class BrowseMatch extends React.Component {
         }).then((response) => response.json())
         .then((responseJson) => {
             console.log(responseJson);
-            if (responseJson.requested) {
+            if (responseJson.requested) 
+            {
                 alert("Match request sended to the user!");
-                //window.location.reload();
+                window.location.reload();
             } else {
                 alert("Match request failed! Please, try again later")
             }
@@ -271,21 +278,21 @@ class BrowseMatch extends React.Component {
 
     }
 
-    getUserPossibleMatchsListAPI = (callback) =>{
+    getUserPossibleMatchsListAPI = (callback) =>
+    {
         const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/usersMatch/possibleMatchs");
     
         fetch(url, {
             method: 'GET',
             credentials: 'include',
             cors:'no-cors'
-        }).then((response) => response.json())
-        .then((responseJson) => {
-            // Resposta
-            console.log(this.state.userMatches);
-            console.log(responseJson.userPossibleMatches)
-            this.setState({userMatches: responseJson.userPossibleMatches})
-           
-        }).catch((error) => {
+        })
+        .then((response) => response.json())
+        .then((responseJson) => 
+        {
+            if (responseJson.userPossibleMatches !== undefined) this.setState({userMatches: responseJson.userPossibleMatches})
+        })
+        .catch((error) => {
             console.error(error);
         });
 
@@ -401,25 +408,21 @@ class BrowseMatch extends React.Component {
             <div>
                 <div className={classes.root}>
                     <ResponsiveDrawer title = "Find a new language partner">
-                        
                         <div className={classesPanel.root}>
- 
+                            {
+                                this.state.userMatches.map(item => 
                                 {
-                                    this.state.userMatches.map(item => {
-                                        return item.alreadyExists ? (
-                                            this.getAlreadyExistsDiv(item, classes)
-                                        ) : (
-                                            this.getMatchesList(item, classes)
-                                        )
-                                    })
-                                }
+                                    return item.alreadyExists ? (
+                                        this.getAlreadyExistsDiv(item, classes)
+                                    ) : (
+                                        this.getMatchesList(item, classes)
+                                    )
+                                })
+                            }
                         </div>
                     </ResponsiveDrawer>
-
                 </div>
-
             </div>
-
         );
     }
 }

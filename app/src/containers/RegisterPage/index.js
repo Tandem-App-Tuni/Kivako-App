@@ -360,15 +360,17 @@ class SignUpPage extends Component {
         userIsActivie: true,
         password:this.state.password
     })
-    }).then((response) => response.json())
-    .then((responseJson) => {
+    })
+    .then((response) => response.json())
+    .then((responseJson) => 
+    {
       console.log(responseJson.userAdded);
-      if (responseJson.userAdded) {
-        alert("User registered succesfully!");
+      if (responseJson.userAdded) 
+      {
+        alert("User registered succesfully. Please check your email for an activation link.");
         this.setState({ isAlreadyregistered: true });
-      } else {
-        alert("Register failed. Please try again later");
-      }
+      } 
+      else alert(responseJson.description);
 
     })
     .catch((error) => {
@@ -377,50 +379,24 @@ class SignUpPage extends Component {
 
   }
 
-  // Load page functions
-  checkIfUserIsRegistered(callback) {
-    const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/users/isRegistered")
+  checkIfUserIsAuthenticaded (callback)
+  {
+    console.log('Checking authentication...');
 
-    fetch(url, {
+    fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/isAuthenticated', 
+    {
       method: 'GET',
-      credentials: 'include',
-      cors:'no-cors'
-    }).then((response) => response.json())
-    .then((responseJson) => {
-      //console.log(responseJson.isRegistered);
-
-      if(responseJson.isRegistered){
-        //User is already registered. Redirect to dashboard
-        this.setState({ isAlreadyregistered: true });
-      }else{
-        // Continue render to register user
-        this.setState({ isAlreadyregistered: false });
-      }
-
-      callback();
+      credentials: 'include'
     })
-    .catch((error) => {
-      console.error(error);
-    });
-
-   
-
-  }
-
-  checkIfUserIsAuthenticaded (callback){
-
-    const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/isAuthenticated");
-
-    fetch(url, {
-      method: 'GET',
-      credentials: 'include',
-      cors:'no-cors'
-    }).then((response) => response.json())
-    .then((responseData) => {
-      
-      if(responseData.isAuthenticated === false){
+    .then((response) => response.json())
+    .then((responseData) => 
+    {
+      if(responseData.isAuthenticated === false)
+      {
         // Nothing to do, user will be redirect in render;
-      }else{
+      }
+      else
+      {
         // User is already authenticated
         // Set email automaticaly
         this.setState({email: responseData.email});
@@ -435,44 +411,44 @@ class SignUpPage extends Component {
     });
   }
 
-  componentDidMount(){
+  componentDidMount()
+  {
     this._isMounted = true;
-    if(this._isMounted){   
-      this.checkIfUserIsAuthenticaded(() => {
-        //console.log("Authentication control finished");
 
-        this.checkIfUserIsRegistered( () => {
-          //console.log("Register control finished");
-          this.setState({isLoadingPage:false});
-        });
-
+    if(this._isMounted)
+    {   
+      this.checkIfUserIsAuthenticaded(() => 
+      {
+        this.setState({isLoadingPage:false});
       });
 
     }
-
   }
 
   componentWillUnmount() {
     this._isMounted = false;
   }
 
-  render() {
+  render() 
+  {
     const { classes } = this.props;
     const excludedLanguages = this.toExcludeLanguages();
 
     //Wait until all informations be render until continue
-    if(this.state.isLoadingPage) {
+    if(this.state.isLoadingPage) 
+    {
       return null;
     }
 
     // In case user is not authenticated, redirect to initial page.
-    if(!this.state.isAlreadyAuthenticated){  
-      return  <Redirect  to="/" />
+    if(this.state.isAlreadyAuthenticated)
+    {  
+      return  <Redirect to="/browse-match"/>
     }
 
-    // In case user is ALREADY registered, just redirect to other system page.
-    if(this.state.isAlreadyregistered){  
-      return  <Redirect  to="/browse-match" />
+    if(this.state.isAlreadyregistered)
+    {
+      return <Redirect to='/local-login'/>
     }
 
     return  (

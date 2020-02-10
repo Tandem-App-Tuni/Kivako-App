@@ -14,30 +14,15 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import MessageIcon from '@material-ui/icons/Message';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
-import { mainListItems, secondaryListItems, thirdListItems } from './listItems';
+import { mainListItems, secondaryListItems, thirdListItems, adminListItems } from './listItems';
 import { Link } from 'react-router-dom';
-
+import {withStyles} from '@material-ui/core/styles';
 import logo from '../../tandemlogo.png'
-
-//import ConstantsList from '../../config_constants';
-
-/*
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="">
-       {ConstantsList.APPLICATION_NAME}
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}*/
+import ConstantsList from '../../config_constants';
 
 const drawerWidth = 240;
 
-const useStyles = makeStyles(theme => ({
+const useStyles = theme => ({
   root: {
     display: 'flex',
   },
@@ -114,37 +99,87 @@ const useStyles = makeStyles(theme => ({
   fixedHeight: {
     height: 240,
   },
-}));
+});
 
-export default function Dashboard(props) {
-  //const { container } = props;
-  const classes = useStyles();
-  const [open, setOpen] = React.useState(true);
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
-  //const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-  
+class Dashboard extends React.Component
+{
+  constructor(props)
+  {
+    super(props);
 
-  return (
+    this.state = {open:true, isAdmin:false, isAuthenticated: true};
+  }
+
+  handleDrawerOpen = () => 
+  {
+    this.setState({open:true});
+  }
+
+  handleDrawerClose = () => 
+  {
+    this.setState({open:false});
+  }
+
+  componentDidMount()
+  {
+    fetch(window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/isAuthenticated', 
+    {
+        method: 'GET',
+        credentials: 'include',
+        cors: 'no-cors'
+    })
+    .then((response) => response.json())
+    .then((responseData) => 
+    {
+      if (responseData.isAuthenticated)
+      {
+        fetch(window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/api/v1/users/isAdmin', 
+        {
+            method: 'GET',
+            credentials: 'include',
+            cors: 'no-cors'
+        })
+        .then((response) => response.json())
+        .then((responseData0) => 
+        {
+          this.setState({isAdmin:responseData0.isAdmin, isAuthenticated: true});
+          console.log('Response:',responseData0.isAdmin);
+        })
+        .catch((error) => 
+        {
+          console.error(error);
+        });
+      }
+      else
+      {
+
+      }
+    })
+    .catch((error) => 
+    {
+      console.error(error);
+    });
+  }
+
+  render()
+  {
+    const { classes } = this.props;
+
+    return(
     <div className={classes.root}>
       <CssBaseline />
-      <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
+      <AppBar position="absolute" className={clsx(classes.appBar, this.state.open && classes.appBarShift)}>
         <Toolbar className={classes.toolbar}>
           <IconButton
             edge="start"
             color="inherit"
             aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
-          >
-            <MenuIcon />
+            onClick={this.handleDrawerOpen}
+            className={clsx(classes.menuButton, this.state.open && classes.menuButtonHidden)}>
+            <MenuIcon/>
           </IconButton>
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            {props.title}
+            {this.props.title}
           </Typography>
           <IconButton color="inherit" component={Link} to="/match-requests">
               <PersonAddIcon />
@@ -158,29 +193,32 @@ export default function Dashboard(props) {
       <Drawer
         variant="permanent"
         classes={{
-          paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
+          paper: clsx(classes.drawerPaper, !this.state.open && classes.drawerPaperClose),
         }}
-        open={open}
-      > 
-            <div className={classes.toolbarIcon}>
-              <img alt="" src={logo} style={{ maxHeight: 100 , maxWidth: '70%', align:'center'}}/>
-              <IconButton onClick={handleDrawerClose}>
-                <ChevronLeftIcon />
-              </IconButton>
-            </div>
-            <Divider />
-            <List>{mainListItems}</List>
-            <Divider />
-            <List>{secondaryListItems}</List>
-            <Divider />
-            <List>{thirdListItems}</List>
+        open={this.state.open}> 
+          <div className={classes.toolbarIcon}>
+            <img alt="" src={logo} style={{ maxHeight: 100 , maxWidth: '70%', align:'center'}}/>
+            <IconButton onClick={this.handleDrawerClose}>
+              <ChevronLeftIcon/>
+            </IconButton>
+          </div>
+          <Divider />
+          <List>{mainListItems}</List>
+          <Divider />
+          <List>{secondaryListItems}</List>
+          {this.state.isAdmin ? <div><Divider /><List>{adminListItems}</List></div> : <div/>}
+          <Divider />
+          <List>{thirdListItems}</List>
       </Drawer>
       <main className={classes.content}>
-        <div className={classes.appBarSpacer} />
-        <Container maxWidth="lg" className={classes.container}>
-            {props.children}
-        </Container>
+      <div className={classes.appBarSpacer} />
+      <Container maxWidth="lg" className={classes.container}>
+          {this.props.children}
+      </Container>
       </main>
     </div>
-  );
+    );
+  }
 }
+
+export default withStyles(useStyles)(Dashboard);

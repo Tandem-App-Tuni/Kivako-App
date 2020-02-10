@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import ResponsiveDrawer from '../MenuDrawer';
-
 import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -8,21 +7,18 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
-import {
-  withStyles
-} from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
 import IconButton from '@material-ui/core/IconButton';
-
 import EditIcon from '@material-ui/icons/Edit';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
-
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-
+import {ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails} from '@material-ui/core';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {Redirect} from 'react-router-dom';
 
 //Components
@@ -31,7 +27,6 @@ import LanguagePicker from '../../components/LanguagePicker'
 import {AlertView} from '../../components/AlertView'
 
 import ConstantsList from '../../config_constants';
-
 
 const useStyles = theme => ({
   '@global': {
@@ -100,13 +95,13 @@ const useStyles = theme => ({
 
 });
 
-class EditProfilePage extends Component {
-  _isMounted = false;
-
-  constructor(props) {
+class EditProfilePage extends Component 
+{
+  constructor(props) 
+  {
     super(props);
     this.state = {
-      profileImg: null,
+      profileImgURL: window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/api/v1/avatar/getAvatar',
       languagesToTeach: [],
       languagesToLearn: [],
       firstName: '',
@@ -121,85 +116,103 @@ class EditProfilePage extends Component {
       alertText: '',
       editingTeachLanguageIndex: 0,
       editingLearnLanguageIndex: 0,
-      isAlreadyregistered : false,
-      isAlreadyAuthenticated : false,
-      isLoadingPage:true,
+      isAuthenticated : true,
       portOption: ConstantsList.PORT_IN_USE //set to 3000 for local testing
     };
   }
 
-  onImageChange = (event) => {
-    if (event.target.files.length > 0) {
-      const url = URL.createObjectURL(event.target.files[0]);
-      this.setState({
-        profileImg: event.target.files[0],
-        profileImgURL: url
-      });
+  onImageChange = (event) => 
+  {
+    if (event.target.files.length > 0)
+    {
+      if (!event.target.files[0].name.match(/.(jpg|jpeg|png|gif)$/)) alert('Selected file is not an image.');
+      else
+      {
+        let form = new FormData()
+        form.append('avatar', event.target.files[0]);
+
+        fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/avatar/uploadAvatar',
+        {
+          method: 'POST',
+          credentials: 'include',
+          body: form
+        })
+        .then(response => response.json())
+        .then(responseJson => 
+          {
+            if (responseJson.message === 'Avatar saved!')
+            {
+              console.log('Fetching image...');
+
+              this.setState({profileImgURL:window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/avatar/getAvatar'});
+              window.location.reload();
+            }
+          });
+      }
     }
   }
 
-  // API Call to insert user
-  //TODO -> MAKE A CHECK, IF ALL FIELDS ARE NOT VALID, DON'T SEND API CALL
-  onSaveButtonClicked = () => {
-    const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/users/update")
-    //console.log(url)
-    fetch(url, {
-        method: 'POST',
-        headers: {
+  onSaveButtonClicked = () => 
+  {
+    fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/users/update", 
+    {
+      method: 'POST',
+      headers: 
+      {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      cors: 'no-cors',
+      body: JSON.stringify({
+        languagesToTeach: this.state.languagesToTeach,
+        languagesToLearn: this.state.languagesToLearn,
+        firstName: this.state.firstName,
+        lastName: this.state.lastName,
+        email: this.state.email,
+        cities: this.state.cities,
+        descriptionText: this.state.descriptionText,
+        userIsActivie: true
+      })
+    })
+    .then((response) => response.json())
+    .then((responseJson) => 
+    {
+      if (responseJson.update) 
+      {
+        this.toogleAlert(true, 'success', 'User informations updated succesfully!')
+        window.location.reload();
+      } else this.toogleAlert(true, 'error', 'Update failed. Please try again later')
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  }
+
+  onDeleteButtonClicked = () =>
+  {
+    if (window.confirm('Are you sure you want to delete your profile?'))
+    {
+      fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/users/delete',
+      {
+        method: 'DELETE',
+        headers:
+        {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
-        credentials: 'include',
-        cors: 'no-cors',
-        body: JSON.stringify({
-          languagesToTeach: this.state.languagesToTeach,
-          languagesToLearn: this.state.languagesToLearn,
-          firstName: this.state.firstName,
-          lastName: this.state.lastName,
-          email: this.state.email,
-          cities: this.state.cities,
-          descriptionText: this.state.descriptionText,
-          userIsActivie: true
-        })
-      }).then((response) => response.json())
-      .then((responseJson) => {
-        console.log(responseJson);
-        if (responseJson.update) {
-          this.toogleAlert(true, 'success', 'User informations updated succesfully!')
-          // alert("User informations updated succesfully!");
+        credentials: 'include'
+      })
+      .then((response) => 
+      {
+        if (response.status === 200)
+        {
+          alert('You can always create a new account at the Sing Up page. Goodbye!');
           window.location.reload();
-        } else {
-          this.toogleAlert(true, 'error', 'Update failed. Please try again later')
-          // alert("Update failed. Please try again later");
         }
-        //this.uploadPhoto(responseJson.userCreated._id)
-      })
-      .catch((error) => {
-        console.error(error);
+        else alert('Something went wrong. Try again later.');
       });
-
-
-  }
-
-  uploadPhoto = (userId) => {
-    const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/users/updatePicture/" + userId)
-    console.log(url)
-    var formData = new FormData()
-    formData.append('profileImg', this.state.profileImg);
-    console.log(formData)
-    fetch(url, {
-        method: 'POST',
-        // headers: {
-        //       'Content-Type': 'multipart/form-data',
-        //     },
-        body: formData
-      }).then((response) => response.json())
-      .then((responseJson) => {
-        console.log(responseJson);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    }
   }
 
   handleChangeTeach = event => {
@@ -212,22 +225,14 @@ class EditProfilePage extends Component {
     this.setState({languagesToLearn: value});
   };
 
-  handleChangeFirstName = event => {
-    this.setState( {firstNameError: false})
-
+  handleChangeFirstName = event => 
+  {
     var formFirstName= (event.target.value);
     const validNameRegex = RegExp(/^.*(?=.{1,})(?=.*[a-zA-Z\\u0080-\\uFFFF])(?=.*\d).*$/);
 
-    if(validNameRegex.test(formFirstName)===true){
-      this.setState( {firstNameError: true, firstNameErrorMessage: 'Special characters are not accepted'} )
-    }else if(formFirstName.length <= 2 || formFirstName.length >=20){
-      this.setState( {firstNameError: true, firstNameErrorMessage: 'Number of characters not accepted'} )
-    }else{
-      this.setState( {firstNameError: false, firstNameErrorMessage: ''} )
-      this.setState( {firstName: formFirstName} )
-    }
-      
-    
+    if(validNameRegex.test(formFirstName)) this.setState({firstNameError: true, firstNameErrorMessage: 'Special characters are not accepted'});
+    else if(formFirstName.length <= 1 || formFirstName.length >=20) this.setState({firstNameError: true, firstNameErrorMessage: 'Number of characters not accepted'});
+    else this.setState({firstNameError: false, firstNameErrorMessage: '', firstName: formFirstName});
   };
 
   handleChangeLastName = event => {
@@ -265,12 +270,11 @@ class EditProfilePage extends Component {
     }
   };
 
-  handleChangeIntroduction = event => {
-    
+  handleChangeIntroduction = event => 
+  {
     var value= (event.target.value);
     this.setState({descriptionText: value});
 
-    
     if (value.length < 5 && value.length > 0) {
       this.setState( {introError: true, introErrorMessage: 'We recommend to write about you'} );
     }else if(value.length > 500){
@@ -279,122 +283,73 @@ class EditProfilePage extends Component {
       this.setState( {introError: false, introErrorMessage: ''} );
       this.setState({descriptionText: value});
     }
-  
-
   };
 
-  // Load page functions
-  checkIfUserIsRegistered(callback) {
-    const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/users/isRegistered")
-
-    fetch(url, {
+  checkIfUserIsAuthenticaded (callback)
+  {
+    fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/isAuthenticated', 
+    {
       method: 'GET',
       credentials: 'include',
       cors:'no-cors'
-    }).then((response) => response.json())
-    .then((responseJson) => {
-
-      if(responseJson.isRegistered){
-        //User is already registered. Redirect to dashboard in render
-        this.setState({ isAlreadyregistered: true });
-      }else{
-        // Continue render normaly to register user
-        this.setState({ isAlreadyregistered: false });
-      }
-
-      callback();
-
     })
-    .catch((error) => {
-      console.error(error);
-    });
-  }
-
-  checkIfUserIsAuthenticaded (callback){
-
-    const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/isAuthenticated");
-
-    fetch(url, {
-      method: 'GET',
-      credentials: 'include',
-      cors:'no-cors'
-    }).then((response) => response.json())
-    .then((responseData) => {
-      
-      if(responseData.isAuthenticated === false){
-        // Nothing to do, user will be redirect in render;
-      }else{
-        // User is already authenticated
-        // Set email automaticaly
-        this.setState({isAlreadyAuthenticated: true});
+    .then((response) => response.json())
+    .then((responseData) => 
+    {
+      if(responseData.isAuthenticated)
+      {
         this.setState({email: responseData.email});
+
+        callback();
       }
-
-      callback();
-
+      else this.setState({isAuthenticated: false});
     })
     .catch((error) => {
       console.error(error);
     });
   }
 
-  preLoadUserInformations = (callback) => {
-
-    //http://localhost/api/v1/users/userInfo
-    const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/users/userInfo")
+  preLoadUserInformations = () => 
+  {
     console.log('[INFO]Loading user information...');
-    //console.log(url);
 
-    fetch(url, {
+    fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/users/userInfo", 
+    {
         method: 'GET',
         credentials: 'include',
         cors: 'no-cors'
-      }).then((response) => response.json())
-      .then((responseData) => {
+    })
+    .then((response) => response.json())
+    .then((responseData) => 
+    {
+      console.log('Load user info:', responseData.data.firstName);
 
-        this.setState({
-          firstName: responseData.data.firstName,
-          lastName: responseData.data.lastName,
-          email: responseData.data.email,
-          languagesToLearn: responseData.data.languagesToLearn.filter(language => language.language != null),
-          languagesToTeach: responseData.data.languagesToTeach.filter(language => language.language != null),
-          descriptionText: responseData.data.descriptionText,
-          cities: responseData.data.cities
-        })
-
+      this.setState({
+        firstName: responseData.data.firstName,
+        lastName: responseData.data.lastName,
+        email: responseData.data.email,
+        languagesToLearn: responseData.data.languagesToLearn.filter(language => language.language != null),
+        languagesToTeach: responseData.data.languagesToTeach.filter(language => language.language != null),
+        descriptionText: responseData.data.descriptionText,
+        cities: responseData.data.cities,
       })
-      .catch((error) => {
-        console.error(error);
-      });
-
-      callback();
+    })
+    .catch((error) => 
+    {
+      console.error(error);
+    });
   }
 
-  componentDidMount() {
-    this._isMounted = true;
-
-    if(this._isMounted){
-          
-      this.checkIfUserIsAuthenticaded(() => {
-
-        this.checkIfUserIsRegistered( () => {
-
-          this.preLoadUserInformations( () => {
-            this.setState({isLoadingPage:false});
-          });
-
-        });
-
-      });
-    }
-
+  componentDidMount() 
+  {
+    this.checkIfUserIsAuthenticaded(() => 
+    {
+      this.preLoadUserInformations();
+    });
   }
 
-  componentWillUnmount() {
-    this._isMounted = false;
-  }
-
-  onShowInputTeachLanguage = (open, index, newValue) => {
+  onShowInputTeachLanguage = (open, index, newValue) => 
+  {
     if (open === true) {
       this.setState({
         editingTeachLanguageIndex: index
@@ -417,7 +372,8 @@ class EditProfilePage extends Component {
     })
   };
 
-  onShowInputLearnLanguage = (open, index, newValue) => {
+  onShowInputLearnLanguage = (open, index, newValue) => 
+  {
     if (open === true) {
       this.setState({
         editingLearnLanguageIndex: index
@@ -440,7 +396,8 @@ class EditProfilePage extends Component {
     })
   };
 
-  toExcludeLanguages = () => {
+  toExcludeLanguages = () => 
+  {
     var langs = [];
 
     this.state.languagesToTeach.forEach(item => {
@@ -450,7 +407,8 @@ class EditProfilePage extends Component {
     return langs
   }
 
-  toogleAlert(open, type, text){
+  toogleAlert(open, type, text)
+  {
     //type is 'error', 'info', 'success', 'warning'
     if (open === true) {
       this.setState({
@@ -466,25 +424,13 @@ class EditProfilePage extends Component {
     }
   }
 
-  render() {
+  render() 
+  {
     const { classes } = this.props;
     const excludedLanguages = this.toExcludeLanguages();
 
-    //Wait until all informations be render until continue
-    if(this.state.isLoadingPage) {
-      return null;
-    }
+    if(!this.state.isAuthenticated) return  <Redirect  to="/"/>
 
-    // In case user is not authenticated, redirect to initial page
-    if(!this.state.isAlreadyAuthenticated){  
-      return  <Redirect  to="/" />
-    }
-
-    // In case user is NOT registered yet, just redirect to initial system page.
-    if(!this.state.isAlreadyregistered){  
-      return  <Redirect  to="/" />
-    }
-    
     return  (
       <div>
         <ResponsiveDrawer title = 'Profile'>
@@ -669,8 +615,28 @@ class EditProfilePage extends Component {
                   className={classes.submit}
                   onClick={this.onSaveButtonClicked}
                   >
-                  Save
+                  Save changes
                 </Button>
+
+                <ExpansionPanel 
+                  defaultExpanded={false}> 
+                  <ExpansionPanelSummary
+                    expandIcon={<ExpandMoreIcon/>}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header">
+                    <Typography>Delete your profile</Typography>
+                  </ExpansionPanelSummary>
+                  <ExpansionPanelDetails>
+                    <Button
+                      fullWidth
+                      variant='contained'
+                      color='primary'
+                      className={classes.submit}
+                      onClick={this.onDeleteButtonClicked}>
+                      Delete profile
+                    </Button>
+                </ExpansionPanelDetails>
+                </ExpansionPanel>
               
             </form>
 

@@ -16,10 +16,6 @@ import Grid from '@material-ui/core/Grid';
 /**
  * The login page is based on a template available on: https://github.com/mui-org/material-ui/tree/master/docs/src/pages/getting-started/templates/sign-in
  * For conveniance it is converted to a non-funcitonal, standard component. The login functionality is authored by Peter Mlakar.
- * The purpose of the page is to collect the users login credentials and create a new user in the database.
- * 
- * 
- * @param {*} theme The default application theme.
  */
 
 const styles = theme => ({
@@ -51,42 +47,23 @@ class LocalLoginPage extends Component
   constructor(props)
   {
     super(props);
-    var localTest = ConstantsList.IS_LOCAL_TEST_ENV;
 
-    if (localTest){
-      this.state =({
-        email:'', 
-        password: '', 
-        signUp: 'Login',
-        api: 'http://localhost:3000',
-        signUpServer: 'http://localhost:3000/login', 
-        logOut: 'http://localhost:3000/logout-user',
-        signInCheck: 'http://localhost:3000/login/check',
-        redirectURL: '',
-        initialPage:'http://localhost:3001'
-      });
-    }else{
-      this.state =({
-        email:'', 
-        password: '', 
-        signUp: 'Login',
-        api: 'https://www.unitandem.fi',
-        signUpServer: 'https://www.unitandem.fi/login', 
-        logOut: 'https://www.unitandem.fi/logout-user',
-        signInCheck: 'https://www.unitandem.fi/login/check',
-        redirectURL: '',
-        initialPage:'https://www.unitandem.fi'
-      });
-    }
+    this.state = ({
+      email: '',
+      password: '',
+      signUp: 'Login',
+      api: ConstantsList.APPLICATION_URL,
+      signUpServer: ConstantsList.APPLICATION_URL + '/login',
+      logOut: ConstantsList.APPLICATION_URL + '/logout-user',
+      signInCheck: ConstantsList.APPLICATION_URL + '/login/check',
+      redirectURL: '',
+      initialPage: ConstantsList.IS_LOCAL_TEST_ENV ? 'http://localhost:3001' : ConstantsList.APPLICATION_URL
+    });
 
     fetch(this.state.signInCheck, 
     {
       method: 'GET',
-      credentials: 'include',
-      headers: 
-      {
-        'Access-Control-Allow-Origin': '*'
-      }
+      credentials: 'include'
     }).then(response => response.text())
       .then(regUrl => 
         {
@@ -100,31 +77,13 @@ class LocalLoginPage extends Component
   handleEmailFormChange = (e) =>
   {
     this.setState({email: e.target.value});
-  };
+  }
 
   handlePasswordFormChange = (e) =>
   {
     this.setState({password: e.target.value});
-  };
+  }
 
-  logOutUser = () =>
-  {
-    fetch(this.state.logOut, 
-    {
-      method: 'GET',
-      headers:
-      {
-        'Content-Type': 'application/json'
-      },
-      credentials: 'include'
-    });
-  };
-
-  /**
-   * The function processes the request to sign up by the user.
-   * It checks basic validity of the password and email.
-   * Then the appropriate request is sent to the server.
-   */
   handleSignUpButtonClick = (e) =>
   {
     e.preventDefault();
@@ -167,7 +126,19 @@ class LocalLoginPage extends Component
                 this.setState({redirectURL: regUrl});
               });
         });
-  };
+  }
+
+  onForgotPassword = (e) =>
+  {
+    e.preventDefault();
+    this.setState({redirectURL: '/'});
+  }
+
+  onReactivate = (e) => 
+  {
+    e.preventDefault();
+    this.setState({redirectURL: '/activate-account'});
+  }
 
   render()
   {
@@ -238,17 +209,32 @@ class LocalLoginPage extends Component
           </Button>
         </form>
       </Paper>
-      <Box mt={8}>
+      <Box mt={3}>
         <Typography 
           variant="body2" 
           color="textSecondary" 
           align="center">
-          {'Copyright © '}
-        <Link 
-          color="inherit" 
-          href="https://material-ui.com/">
-          Unitandem
-        </Link>{' '}
+          <Link 
+            color="inherit" 
+            href="#"
+            onClick={e => this.onForgotPassword(e)}>
+            Forgot password?
+          </Link>
+          <br/>
+          <Link 
+            color="inherit" 
+            href="#"
+            onClick={e => this.onReactivate(e)}>
+            Did not receive activation link?
+          </Link>
+        </Typography>
+      </Box>
+      <Box mt={5}>
+        <Typography 
+          variant="body2" 
+          color="textSecondary" 
+          align="center">
+          {'Copyright © Unitandem '}
           {new Date().getFullYear()}
           {'.'}
         </Typography>

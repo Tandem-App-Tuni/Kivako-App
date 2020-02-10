@@ -11,14 +11,17 @@ import {Colors} from './components/constant/index'
 import './App.css';
 import LoginPage from './containers/LoginPage'
 import EditProfilePage from './containers/EditProfilePage'
-//import PreferencePage from './containers/PreferencePage'
 import PartnerListPage from './containers/PartnerListPage'
 import BrowseMatch from './containers/BrowseMatch'
 import ChatPage from './containers/ChatPage'
 import RegisterPage from './containers/RegisterPage'
 import MatchRequests from './containers/MatchRequests'
 import LocalLoginPage from './containers/LocalLoginPage'
-import LocalSignUpPage from './containers/LocalSignUpPage'
+import ActivationPage from './containers/ActivationPage'
+
+import ListOfAdmins from './containers/ListOfAdmins'
+import ListOfStudents from './containers/ListOfStudents'
+import Statitics from './containers/Statitics'
 
 const theme = createMuiTheme({
   palette: {
@@ -58,8 +61,18 @@ function App() {
         <Route exact path="/local-login">
             <LocalLoginPage />
         </Route>
-        <Route exact path="/local-sign-up">
-            <LocalSignUpPage/>
+        <Route exact path="/activate-account">
+          <ActivationPage/>
+        </Route>
+
+        <Route exact path="/list-admins">
+            <ListOfAdmins />
+        </Route>
+        <Route exact path="/list-students">
+            <ListOfStudents />
+        </Route>
+        <Route exact path="/statistics">
+            <Statitics />
         </Route>
       </Switch>
     </Router>

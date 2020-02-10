@@ -19,30 +19,12 @@ import ConstantsList from '../../config_constants';
  * There are two arrays that need to be recieved from the
  * api called on the url /user/request&partner, the request array and the partners array.
  * There are is one parrameter that can be set: peekWordCount which controlls how many words of the last message of the conversation are shown in the preview.
- * The request array has the following structure:
- * 
- * requests = [{
- *   name: 'Remy Sharp',
- *   teach: 'English',
- *   learn: 'Finnish',
- *   city0: 'Helsinki',
- *   city1: 'Tampere'
- *  },...];
  * 
  * The name property holds the name of the user requesting the connection.
  * The teach, learn properties are self evident. The city0 is the city where the user lives, city1 is the
  * city in which the user studies.
  * 
  * The second array holds all the partners with which the user is conversing.
- * It has the following structure:
- * 
- * this.partners = [
- *  {
- *    name: 'Ali Connors',
- *    conversationName: 'Brunch this weekend?',
- *    conversationId: 0,
- *    messages: [...]
- *  },...];
  * 
  * The name property holds the name of the user with which we are conversing. The conversationName describes the
  * topic of conversation. ConversationId property is the index in the array of this.parent where this conversation is located.
@@ -57,8 +39,8 @@ import ConstantsList from '../../config_constants';
  * loadedServerInformation -> a flag set to true when the conversation data has been recieved from the server
  */
 
-//var chatUrlLocal = ConstantsList.APPLICATION_LOCAL_URL;//"http://localhost:3000"; 
-var chatUrl = ConstantsList.APPLICATION_SERVER_URL;//"https://www.unitandem.fi";
+
+var chatUrl = ConstantsList.APPLICATION_URL;
 
 class ChatPage extends React.Component
 {
@@ -74,7 +56,8 @@ class ChatPage extends React.Component
       user: undefined,
       chatWindow: undefined,
       socket: openSocket(chatUrl),
-      loadedServerInformation: false
+      loadedServerInformation: false,
+      isAuthenticated: true
     }; 
 
     /**
@@ -83,7 +66,7 @@ class ChatPage extends React.Component
      * data recieved from the server via the socket io
      * connection.
      */
-    this.state.socket.on('initialization', (data) => 
+    this.state.socket.on('initialization', (data) =>  
     {
       let roomInformation = data.roomInformation;
 
@@ -92,7 +75,8 @@ class ChatPage extends React.Component
         roomId: roomInformation.roomId,
         conversationName: 'Conversation with ' + data.name,
         conversationId: this.state.chatRooms,
-        messages: roomInformation.messages
+        messages: roomInformation.messages,
+        email: data.email
       });
 
       this.setState({loadedServerInformation: true, user: data.user, chatRooms: this.state.chatRooms + 1});
@@ -121,8 +105,21 @@ class ChatPage extends React.Component
     this.renderChatWindow = this.renderChatWindow.bind(this);
     this.getMessagePeek = this.getMessagePeek.bind(this);
     this.handleClick = this.handleClick.bind(this);
+  }
 
-    this.isAuthenticated = this.isAuthenticated.bind(this);
+  componentDidMount()
+  {
+    fetch(window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/isAuthenticated', 
+    {
+      method: 'GET',
+      credentials: 'include'
+    })
+    .then(response => response.json())
+    .then(responseData => 
+    {
+      console.log('Is authenticated check:', responseData.isAuthenticated);
+      this.setState({isAuthenticated: responseData.isAuthenticated});
+    });
   }
 
   /**
@@ -161,7 +158,7 @@ class ChatPage extends React.Component
                 <ListItemAvatar>
                   <Avatar 
                     alt={element.name} 
-                    src='https://www.stickees.com/files/avatars/male-avatars/1697-andrew-sticker.png'/>
+                    src={window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/api/v1/avatar/getAvatar/' + element.email}/>
                 </ListItemAvatar>
                 <ListItemText
                   primary={element.conversationName}
@@ -243,22 +240,13 @@ class ChatPage extends React.Component
   }
 
   /**
-   * The authentication check to the backend server checking if the
-   * user is logged in. Currently always returns true. TODO
-   */
-  isAuthenticated()
-  {
-    return true;
-  }
-
-  /**
    * Renders the apropriate chat window
    * if one is open.
    */
   renderChatWindow()
   {
     if (typeof this.state.currentOpenConversation == 'undefined') return(<div></div>);
-    else return(<Chat user={this.state.user} roomId={this.state.currentOpenConversation.roomId} socket={this.state.socket} messages={this.state.currentOpenConversation.messages} conversationName={this.state.currentOpenConversation.conversationName}/>);
+    else return(<Chat partner={this.state.currentOpenConversation.email} user={this.state.user} roomId={this.state.currentOpenConversation.roomId} socket={this.state.socket} messages={this.state.currentOpenConversation.messages} conversationName={this.state.currentOpenConversation.conversationName}/>);
   }
 
   /**
@@ -279,10 +267,7 @@ class ChatPage extends React.Component
         },
       }));
 
-    if (!this.isAuthenticated()) 
-      return (
-        <Redirect  to="/"/>
-      )
+    if (!this.state.isAuthenticated) return (<Redirect  to="/"/>);
 
     return(
       <ResponsiveDrawer title = 'Conversations'>
@@ -290,7 +275,7 @@ class ChatPage extends React.Component
                 Partners
         </Typography> 
         <div>
-          <ExpansionPanel defaultExpanded="true">
+          <ExpansionPanel defaultExpanded={true}>
             <ExpansionPanelSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel1a-content"
@@ -304,21 +289,20 @@ class ChatPage extends React.Component
                     direction='row'
                     justify='space-around'
                     alignItems={this.state.side}>
+                    <Grid item xs={12} sm={2}>
+                      <Box borderRadius={10}>
 
-                            <Grid item xs={12} sm={2}>
-                              <Box borderRadius={10}>
+                        <List 
+                          width='100%'
+                          color='paper'>
+                          {this.renderPartnerArray()}
+                        </List>
+                      </Box>
+                    </Grid>
 
-                                <List 
-                                  width='100%'
-                                  color='paper'>
-                                  {this.renderPartnerArray()}
-                                </List>
-                              </Box>
-                            </Grid>
-
-                            <Grid item xs={12} sm={9}> 
-                              {this.renderChatWindow()}
-                            </Grid>
+                    <Grid item xs={12} sm={9}> 
+                      {this.renderChatWindow()}
+                    </Grid>
                 </Grid>
             </ExpansionPanelDetails>
           </ExpansionPanel>
