@@ -82,16 +82,13 @@ const styles = ({
     }
 });
 
-class MatchRequests extends React.Component {
-
-    _isMounted = false;
-    
-    constructor(props) {
+class MatchRequests extends React.Component 
+{
+    constructor(props) 
+    {
       super(props);
       this.state = {
         userRequestMatches:[],
-        isAlreadyregistered : false,
-        isAlreadyAuthenticated : false,
         isLoadingPage:true,
         open:false,
         portOption:ConstantsList.PORT_IN_USE
@@ -194,84 +191,38 @@ class MatchRequests extends React.Component {
 
         callback();
     };
+    
+    checkIfUserIsAuthenticaded (callback)
+    {
+        const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/isAuthenticated");
 
-    checkIfUserIsRegistered(callback) {
-        const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/users/isRegistered")
-    
         fetch(url, {
-          method: 'GET',
-          credentials: 'include',
-          cors:'no-cors'
-        }).then((response) => response.json())
-        .then((responseJson) => {
-    
-          if(responseJson.isRegistered){
-            //User is already registered. Redirect to dashboard in render
-            this.setState({ isAlreadyregistered: true });
-          }else{
-            // Continue render normaly to register user
-            this.setState({ isAlreadyregistered: false });
-          }
-    
-          callback();
-    
+            method: 'GET',
+            credentials: 'include',
+            cors:'no-cors'
+        })
+        .then((response) => response.json())
+        .then((responseData) => 
+        {
+            if(responseData.isAuthenticated === true) this.setState({email: responseData.email});
+            
+            callback();
         })
         .catch((error) => {
-          console.error(error);
+            console.error(error);
         });
     }
-    
-    checkIfUserIsAuthenticaded (callback){
 
-    const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/isAuthenticated");
-
-    fetch(url, {
-        method: 'GET',
-        credentials: 'include',
-        cors:'no-cors'
-    }).then((response) => response.json())
-    .then((responseData) => {
-        
-        if(responseData.isAuthenticated === false){
-        // Nothing to do, user will be redirect in render;
-        }else{
-        // User is already authenticated
-        // Set email automaticaly
-        this.setState({isAlreadyAuthenticated: true});
-        this.setState({email: responseData.email});
-        }
-
-        callback();
-
-    })
-    .catch((error) => {
-        console.error(error);
-    });
-    }
-
-    componentDidMount(){
-        this._isMounted = true;
-
-        if(this._isMounted){
-          
-            this.checkIfUserIsAuthenticaded(() => {
-      
-              this.checkIfUserIsRegistered( () => {
-      
-                this.getUserMatchsRequestListAPI( () => {
-                  this.setState({isLoadingPage:false});
-                });
-      
-              });
-      
+    componentDidMount()
+    {      
+        this.checkIfUserIsAuthenticaded(() => 
+        {
+            this.getUserMatchsRequestListAPI( () => 
+            {
+                this.setState({isLoadingPage:false});
             });
-        }
+        });
     }
-
-    componentWillUnmount() {
-        this._isMounted = false;
-      }
-
 
     render() {
         const {classes} = this.props;
@@ -286,21 +237,7 @@ class MatchRequests extends React.Component {
           }));
         
         //Wait until all informations be render until continue
-        if(this.state.isLoadingPage) {
-            return null;
-        }
-    
-        // In case user is not authenticated, redirect to initial page
-        if(!this.state.isAlreadyAuthenticated){  
-            return  <Redirect  to="/" />
-        }
-    
-        // In case user is NOT registered yet, just redirect to initial system page.
-        if(!this.state.isAlreadyregistered){  
-            return  <Redirect  to="/" />
-        }
-
-        // Check if user has requests
+        if(this.state.isLoadingPage) return null;
         
         if(this.state.userRequestMatches.length === 0)
         {  
@@ -333,89 +270,80 @@ class MatchRequests extends React.Component {
                         </div>
 
                     </ResponsiveDrawer>
-                
-
                 </div>
                 )
         }
 
         return (
-            <div>
-
-                <div className={classes.root}>
-                    <ResponsiveDrawer title = "Matches requests!">
-                        <GridList container='true' cols={1} spacing={30} cellHeight={'auto'}>
-                            {
-                                this.state.userRequestMatches.map((match, key) =>
-                            
-                                    <Grid container spacing={3} key={key}>
-                                        <Grid item xs >
-                                            <Card border={1} className={cardStyle.card} key={key}>
-                                                    <CardHeader
-                                                    className = {classes.leftText}
-                                                        avatar={
-                                                            <Avatar src={window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/avatar/getAvatar/' + match.requesterUser.email} 
-                                                                    aria-label="recipe" 
-                                                                    className={classes.bigAvatar}>
-                                                            </Avatar>
-                                                        }
-                                                        
-                                                        title={match.requesterUser.firstName + ' ' + match.requesterUser.lastName}
-                                                        //subheader={ match._id}
-                                                    />
+            <div className={classes.root}>
+                <ResponsiveDrawer title = "Matches requests!">
+                    <GridList container='true' cols={1} spacing={30} cellHeight={'auto'}>
+                        {
+                            this.state.userRequestMatches.map((match, key) =>
+                        
+                                <Grid container spacing={3} key={key}>
+                                    <Grid item xs >
+                                        <Card border={1} className={cardStyle.card} key={key}>
+                                                <CardHeader
+                                                className = {classes.leftText}
+                                                    avatar={
+                                                        <Avatar src={window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/avatar/getAvatar/' + match.requesterUser.email} 
+                                                                aria-label="recipe" 
+                                                                className={classes.bigAvatar}>
+                                                        </Avatar>
+                                                    }
                                                     
-                                                    <CardContent className = {classes.leftText}>
+                                                    title={match.requesterUser.firstName + ' ' + match.requesterUser.lastName}
+                                                    //subheader={ match._id}
+                                                />
+                                                
+                                                <CardContent className = {classes.leftText}>
+        
+                                                    <Typography variant="body1" color="textSecondary" component="p">
+                                                        
+                                                        {match.requesterUser.descriptionText}
+        
+                                                    </Typography>
+                                                    <br></br>
+                                                    <Divider variant="middle" />
+                                                    <br></br>
+                                                    <Typography variant="body2" color="textSecondary" component="p">
+                                                        <Icon fontSize="small">home</Icon> Cities: {match.requesterUser.cities.join(', ')}<br></br>
+                                                        <Icon fontSize="small">language</Icon> Languages want to learn: {(match.requesterUser.languagesToLearn && match.requesterUser.languagesToLearn.map(e => e.language).join(", "))}<br></br>
+                                                    </Typography>                                                    
+                                                </CardContent>
+                                                <CardActions disableSpacing >
+                                                    <Grid container>
+                                                    <Grid item xs={12} sm={4}>
+                                                        <Button variant="contained" 
+                                                                color="primary"
+                                                                onClick = {this.acceptMatchRequest.bind(this,match)}
+                                                        >
+                                                            Accept
+                                                        </Button>
+                                                    </Grid>
+                                                    <Grid item xs>
             
-                                                        <Typography variant="body1" color="textSecondary" component="p">
-                                                            
-                                                            {match.requesterUser.descriptionText}
-            
-                                                        </Typography>
-                                                        <br></br>
-                                                        <Divider variant="middle" />
-                                                        <br></br>
-                                                        <Typography variant="body2" color="textSecondary" component="p">
-                                                            <Icon fontSize="small">home</Icon> Cities: {match.requesterUser.cities.join(', ')}<br></br>
-                                                            <Icon fontSize="small">language</Icon> Languages want to learn: {(match.requesterUser.languagesToLearn && match.requesterUser.languagesToLearn.map(e => e.language).join(", "))}<br></br>
-                                                        </Typography>                                                    
-                                                    </CardContent>
-                                                    <CardActions disableSpacing >
-                                                        <Grid container>
-                                                        <Grid item xs={12} sm={4}>
-                                                            <Button variant="contained" 
-                                                                    color="primary"
-                                                                    onClick = {this.acceptMatchRequest.bind(this,match)}
+                                                    </Grid>
+                                                    <Grid item xs={12} sm={4}>
+                                                        <Button variant="outlined" 
+                                                                color="secondary"
+                                                                onClick = {this.denyMatchRequest.bind(this,match)}
                                                             >
-                                                                Accept
-                                                            </Button>
-                                                        </Grid>
-                                                        <Grid item xs>
-               
-                                                        </Grid>
-                                                        <Grid item xs={12} sm={4}>
-                                                            <Button variant="outlined" 
-                                                                    color="secondary"
-                                                                    onClick = {this.denyMatchRequest.bind(this,match)}
-                                                                >
-                                                                Deny
-                                                            </Button>
-                                                        </Grid>
-                                                        </Grid>
-                                                    </CardActions>
-                                            </Card>
-                                        </Grid>
+                                                            Deny
+                                                        </Button>
+                                                    </Grid>
+                                                    </Grid>
+                                                </CardActions>
+                                        </Card>
                                     </Grid>
-                                )
-                            }
-                        </GridList>
-                    </ResponsiveDrawer>
-
-                </div>
-
+                                </Grid>
+                            )
+                        }
+                    </GridList>
+                </ResponsiveDrawer>
             </div>
-
         );
-
     }
 }
 

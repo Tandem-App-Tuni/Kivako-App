@@ -11,6 +11,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
+import Button from '@material-ui/core/Button';
 
 import {Redirect} from 'react-router-dom';
 import Paper from '@material-ui/core/Paper';
@@ -30,7 +31,6 @@ const useStyles = theme => ({
   chip: {
     margin: 2,
   },
-
   flexContainer: {
     display: 'flex',
     flexDirection: 'row',
@@ -63,10 +63,7 @@ class ListOfStudents extends Component
       showInputLearnLanguage: false,
       editingTeachLanguageIndex: 0,
       editingLearnLanguageIndex: 0,
-      isAlreadyregistered : false,
-      isAlreadyAuthenticated : false,
       isLoadingPage:true,
-      userIsAdmin:false,
       openSnackBar:false,
       snackBarMessageError:""
     };
@@ -84,92 +81,20 @@ class ListOfStudents extends Component
     }
   }
 
-
-
-
-  // Load page functions
-  checkIfUserIsAdmin(callback) 
-  {
-    fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/users/isRegistered', 
-    {
-      method: 'GET',
-      credentials: 'include',
-      cors:'no-cors'
-    })
-    .then((response) => response.json())
-    .then((responseJson) => 
-    {
-      this.setState({ isAlreadyregistered: responseJson.isRegistered ? true : false});
-      this.setState({ userIsAdmin: responseJson.isAdmin ? true: false});
-
-      callback();
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-  }
-
-  checkIfUserIsAuthenticaded (callback)
-  {
-    fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/isAuthenticated', 
-    {
-      method: 'GET',
-      credentials: 'include',
-      cors:'no-cors'
-    })
-    .then((response) => response.json())
-    .then((responseData) => 
-    {
-      if(responseData.isAuthenticated === true) this.setState({isAlreadyAuthenticated: true});
-
-      callback();
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-  }
-
-  componentDidMount() 
-  {
-    this.checkIfUserIsAuthenticaded(() => 
-    {
-      this.checkIfUserIsAdmin( () => 
-      {
-        this.setState({isLoadingPage:false});
-      });
-    });
-  }
-
   handleCloseSnackBar() 
   {
     this.openSnackBar = false;
   }
 
-
   render() 
   {    
-    //Wait until all informations be render until continue
-    if(this.state.isLoadingPage) return null;
-
-    // In case user is not authenticated, redirect to initial page
-    if(!this.state.isAlreadyAuthenticated) return  <Redirect  to="/local-login" />
-
-    // In case user is NOT an registered admin, just redirect to initial system page.
-    if(!this.state.userIsAdmin) return  <Redirect  to="/local-login" />
-    
     return  (
-      <div>
         <ResponsiveDrawer title = 'List of students'>
-        <StudentsTable></StudentsTable>
- 
-          
+          <StudentsTable></StudentsTable>
         </ResponsiveDrawer>
-      </div> 
     );
   }
-
 }
-
 
 class StudentsTable extends Component {
   _isTableMounted=false;
@@ -191,6 +116,12 @@ class StudentsTable extends Component {
       align: 'center',
       format: value => value.toString()
     },
+    {
+      id: 'removeUserButton',
+      label: 'Remove user',
+      minWidth: 170,
+      align: 'center'
+    }
   ]
 
   
@@ -269,6 +200,13 @@ class StudentsTable extends Component {
                       return (
                         <TableCell key={column.id} align={column.align}>
                           {column.format && typeof value === ('number' || 'bool') ? column.format(value) : value}
+                          {column.id === 'removeUserButton' ? <Button
+                            fullWidth
+                            variant='contained'
+                            color='primary'
+                            className={classes.chip}>
+                            Remove
+                          </Button> : <div/>}
                         </TableCell>
                       );
                     })}

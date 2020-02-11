@@ -46,10 +46,6 @@ class Statitics extends Component {
     super(props);
     this.state = {
       profileImg: null,
-      isAlreadyregistered : false,
-      isAlreadyAuthenticated : false,
-      isLoadingPage:true,
-      userIsAdmin:false,
       openSnackBar:false,
       snackBarMessageError:""
     };
@@ -65,94 +61,12 @@ class Statitics extends Component {
     }
   }
 
-
-  // Load page functions
-  checkIfUserIsAdmin(callback)
-  {  
-    fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/users/isRegistered', 
-    {
-      method: 'GET',
-      credentials: 'include',
-      cors:'no-cors'
-    })
-    .then((response) => response.json())
-    .then((responseJson) => 
-    {
-      //console.log(responseJson)
-      if(responseJson.isRegistered && responseJson.isAdmin ){
-        //User is already registered. Redirect to dashboard in render
-        this.setState({ isAlreadyregistered: true });
-        this.setState({ userIsAdmin: true });
-      }else{
-        // Continue render normaly to register user
-        this.setState({ isAlreadyregistered: false });
-        this.setState({ userIsAdmin: responseJson.isAdmin });
-      }
-
-      callback();
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-  }
-
-  checkIfUserIsAuthenticaded (callback)
-  {
-    fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/isAuthenticated', 
-    {
-      method: 'GET',
-      credentials: 'include',
-      cors:'no-cors'
-    })
-    .then((response) => response.json())
-    .then((responseData) => {
-      
-      if(responseData.isAuthenticated === true) this.setState({isAlreadyAuthenticated: true});
-
-      callback();
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-  }
-
-
-  componentDidMount() 
-  {  
-    this.checkIfUserIsAuthenticaded(() => 
-    {
-      this.checkIfUserIsAdmin(() => 
-      {
-        this.setState({isLoadingPage:false});
-      });
-    });
-  }
-
-  componentWillUnmount() {
-    this._isMounted = false;
-  }
-
   handleCloseSnackBar() {
     this.openSnackBar = false;
   }
 
   render() 
   {
-    //Wait until all informations be render until continue
-    if(this.state.isLoadingPage) {
-      return null;
-    }
-
-    // In case user is not authenticated, redirect to initial page
-    if(!this.state.isAlreadyAuthenticated){  
-      return  <Redirect  to="/local-login" />
-    }
-
-    // In case user is NOT an registered admin, just redirect to initial system page.
-    if(!this.state.userIsAdmin){  
-      return  <Redirect  to="/local-login" />
-    }
-    
     return  (
       <div>
         <ResponsiveDrawer title = 'Statistics'>

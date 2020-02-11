@@ -56,8 +56,7 @@ class ChatPage extends React.Component
       user: undefined,
       chatWindow: undefined,
       socket: openSocket(chatUrl),
-      loadedServerInformation: false,
-      isAuthenticated: true
+      loadedServerInformation: false
     }; 
 
     /**
@@ -105,21 +104,6 @@ class ChatPage extends React.Component
     this.renderChatWindow = this.renderChatWindow.bind(this);
     this.getMessagePeek = this.getMessagePeek.bind(this);
     this.handleClick = this.handleClick.bind(this);
-  }
-
-  componentDidMount()
-  {
-    fetch(window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/isAuthenticated', 
-    {
-      method: 'GET',
-      credentials: 'include'
-    })
-    .then(response => response.json())
-    .then(responseData => 
-    {
-      console.log('Is authenticated check:', responseData.isAuthenticated);
-      this.setState({isAuthenticated: responseData.isAuthenticated});
-    });
   }
 
   /**
@@ -266,8 +250,6 @@ class ChatPage extends React.Component
           fontWeight: theme.typography.fontWeightRegular,
         },
       }));
-
-    if (!this.state.isAuthenticated) return (<Redirect  to="/"/>);
 
     return(
       <ResponsiveDrawer title = 'Conversations'>
