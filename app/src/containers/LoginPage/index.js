@@ -19,6 +19,8 @@ import eyeglass from "./images/eyeglass.jfif"
 import friendship from "./images/friendship.png"
 import logo from "./images/logo.png"
 import smartphone from "./images/smartphone.png"
+import kivako_logo from "./images/kivako_logo.png"
+import cc_image from "./images/cc.png"
 
 const useStyles = theme =>
   ({
@@ -232,7 +234,7 @@ class LandingPage extends Component {
                 <li>
                   <div className="content">
                     <h3>Step 2</h3>
-                    <p><a href="#" onClick={() => { this.onSignUpButtonClicked() }}> Sign up to UniTandem</a> using your university or university of
+                    <p><button type="button" className="link-button" onClick={() => { this.onSignUpButtonClicked() }}> Sign up to UniTandem</button> using your university or university of
                               applied sciences email address.</p>
                   </div>
 
@@ -316,13 +318,13 @@ class LandingPage extends Component {
 
           <div className="container-fluid" >
             <div className="footer-left">
-              <img className="website-logo" src={logo} alt="website-logo" />
+              <img className="kivako-logo" src={kivako_logo} alt="kivako-logo" />
               <p className="footer-left-links">
                 <a href="#first-section" className="first-link">Home</a>
                 <a href="#second-section">About</a>
                 <a href="#third-section">Features</a>
               </p>
-              <p>Unitandem © 2019</p>
+              <p><img className="cc-logo" src={cc_image} alt="cc logo" /></p>
             </div>
 
             <div className="footer-right">
