@@ -12,8 +12,6 @@ import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import Button from '@material-ui/core/Button';
-
-import {Redirect} from 'react-router-dom';
 import Paper from '@material-ui/core/Paper';
 
 import Constants from '../../config_constants';
@@ -168,6 +166,28 @@ class StudentsTable extends Component {
     });
   }
 
+  onRemoveClick(data)
+  {
+    console.log('Remove user:',data.email);
+
+    if (window.confirm('Are you sure you want to delete the user?'))
+      fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v11/users/deleteAdmin/' + data.email,
+      {
+        method: 'GET',
+        credentials: 'include',
+        cors:'no-cors'
+      })
+      .then((response) => response.json())
+      .then((responseJson) => 
+      {
+        console.log('Deletion result');
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    else console.log('Not removed!');
+  }
+
   render()
   {
     const classes  = useStyles();
@@ -204,7 +224,8 @@ class StudentsTable extends Component {
                             fullWidth
                             variant='contained'
                             color='primary'
-                            className={classes.chip}>
+                            className={classes.chip}
+                            onClick={() => this.onRemoveClick(row)}>
                             Remove
                           </Button> : <div/>}
                         </TableCell>

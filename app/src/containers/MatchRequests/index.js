@@ -23,8 +23,6 @@ import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Icon from '@material-ui/core/Icon';
 
-import {Redirect} from 'react-router-dom';
-
 import logo from '../../tandemlogo.png'
 import Grid from '@material-ui/core/Grid'
 
