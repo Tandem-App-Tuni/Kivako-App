@@ -171,16 +171,16 @@ class StudentsTable extends Component {
     console.log('Remove user:',data.email);
 
     if (window.confirm('Are you sure you want to delete the user?'))
-      fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v11/users/deleteAdmin/' + data.email,
+      fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/users/deleteAdmin/' + data.email,
       {
         method: 'GET',
         credentials: 'include',
         cors:'no-cors'
       })
-      .then((response) => response.json())
-      .then((responseJson) => 
+      .then((response) => 
       {
-        console.log('Deletion result');
+        if (response.status === 200) window.location.reload();
+        else alert('Something went wrong.');
       })
       .catch((error) => {
         console.error(error);
