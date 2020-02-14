@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import ResponsiveDrawer from '../MenuDrawer';
 
 
@@ -47,7 +47,7 @@ const useStyles = theme => ({
 
 });
 
-class ListOfAdmins extends Component 
+class ListOfAdmins extends React.Component 
 {
   constructor(props) 
   {
@@ -146,7 +146,7 @@ class ListOfAdmins extends Component
 }
 
 
-class AdminTable extends Component 
+class AdminTable extends React.Component 
 {
   _isTableMounted=false;
   columns = [
