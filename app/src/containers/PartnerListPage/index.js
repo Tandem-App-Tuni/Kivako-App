@@ -11,9 +11,8 @@ import ResponsiveDrawer from '../MenuDrawer';
 import UserActionCard from '../../components/UserActionCard';
 
 import Constants from '../../config_constants';
-import {Redirect} from 'react-router-dom';
-
 import Divider from '@material-ui/core/Divider';
+
 const useStyles =  theme => 
 ({
   root: 
