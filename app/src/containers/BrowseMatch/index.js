@@ -8,6 +8,7 @@ import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import ListItem from '@material-ui/core/ListItem';
 import {withStyles} from '@material-ui/core/styles';
+import {CircularProgress} from '@material-ui/core'
 import List from '@material-ui/core/List';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -26,7 +27,6 @@ import CardContent from '@material-ui/core/CardContent';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Icon from '@material-ui/core/Icon';
 
-import {Redirect} from 'react-router-dom';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
@@ -94,11 +94,9 @@ const styles = ({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	Class
 class BrowseMatch extends React.Component 
-{
-    _isMounted = false;
-    
-    constructor(props) {
-
+{ 
+    constructor(props) 
+    {
       super(props);
       this.state = {
         userMatches:[],
@@ -353,31 +351,17 @@ class BrowseMatch extends React.Component
     });
     }
 
-    componentDidMount(){
-        this._isMounted = true;
-
-        if(this._isMounted){
-          
-            this.checkIfUserIsAuthenticaded(() => {
-      
-              this.checkIfUserIsRegistered( () => {
-      
-                this.getUserPossibleMatchsListAPI( () => {
-                  this.setState({isLoadingPage:false});
-                });
-      
-              });
-      
-            });
-        }
+    componentDidMount()
+    {
+        this.getUserPossibleMatchsListAPI(() => 
+        {
+            this.setState({isLoadingPage:false});
+        });
     }
 
-    componentWillUnmount() {
-        this._isMounted = false;
-      }
 
-
-    render() {
+    render() 
+    {
         const {classes} = this.props;
         const classesPanel = makeStyles(theme => ({
             root: {
@@ -389,21 +373,8 @@ class BrowseMatch extends React.Component
             },
           }));
         
-        //Wait until all informations be render until continue
-        if(this.state.isLoadingPage) {
-            return null;
-        }
-    
-        // In case user is not authenticated, redirect to initial page
-        if(!this.state.isAlreadyAuthenticated){  
-            return  <Redirect  to="/" />
-        }
-    
-        // In case user is NOT registered yet, just redirect to initial system page.
-        if(!this.state.isAlreadyregistered){  
-            return  <Redirect  to="/" />
-        }
-
+        if(this.state.isLoadingPage) return(<CircularProgress/>);
+            
         return (
             <div>
                 <div className={classes.root}>

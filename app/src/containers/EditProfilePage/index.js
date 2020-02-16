@@ -19,7 +19,6 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import {ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails} from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import {Redirect} from 'react-router-dom';
 
 //Components
 import {CityPicker} from '../../components/CityPicker';
@@ -116,7 +115,6 @@ class EditProfilePage extends Component
       alertText: '',
       editingTeachLanguageIndex: 0,
       editingLearnLanguageIndex: 0,
-      isAuthenticated : true,
       portOption: ConstantsList.PORT_IN_USE //set to 3000 for local testing
     };
   }
@@ -302,7 +300,6 @@ class EditProfilePage extends Component
 
         callback();
       }
-      else this.setState({isAuthenticated: false});
     })
     .catch((error) => {
       console.error(error);
@@ -428,8 +425,6 @@ class EditProfilePage extends Component
   {
     const { classes } = this.props;
     const excludedLanguages = this.toExcludeLanguages();
-
-    if(!this.state.isAuthenticated) return  <Redirect  to="/"/>
 
     return  (
       <div>

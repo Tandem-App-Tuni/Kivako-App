@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import ResponsiveDrawer from '../MenuDrawer';
 
 
@@ -47,9 +47,8 @@ const useStyles = theme => ({
 
 });
 
-class ListOfAdmins extends Component {
-  _isMounted = false;
-
+class ListOfAdmins extends React.Component 
+{
   constructor(props) 
   {
     super(props);
@@ -66,8 +65,6 @@ class ListOfAdmins extends Component {
       showInputLearnLanguage: false,
       editingTeachLanguageIndex: 0,
       editingLearnLanguageIndex: 0,
-      isAlreadyregistered : false,
-      isAlreadyAuthenticated : false,
       isLoadingPage:true,
       userIsAdmin:false,
       openSnackBar:false,
@@ -102,11 +99,9 @@ class ListOfAdmins extends Component {
       //console.log(responseJson)
       if(responseJson.isRegistered && responseJson.isAdmin ){
         //User is already registered. Redirect to dashboard in render
-        this.setState({ isAlreadyregistered: true });
         this.setState({ userIsAdmin: true });
       }else{
         // Continue render normaly to register user
-        this.setState({ isAlreadyregistered: false });
         this.setState({ userIsAdmin: responseJson.isAdmin });
       }
 
@@ -118,46 +113,13 @@ class ListOfAdmins extends Component {
     });
   }
 
-  checkIfUserIsAuthenticaded (callback)
-  {
-    fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/isAuthenticated', 
-    {
-      method: 'GET',
-      credentials: 'include',
-      cors:'no-cors'
-    })
-    .then((response) => response.json())
-    .then((responseData) => 
-    {
-      if(responseData.isAuthenticated === true) this.setState({isAlreadyAuthenticated: true});
-
-      callback();
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-  }
-
-
   componentDidMount() 
   {
-    this._isMounted = true;
+    this.checkIfUserIsAdmin( () => 
+    {
+      this.setState({isLoadingPage:false});
 
-    if(this._isMounted)
-    {   
-      this.checkIfUserIsAuthenticaded(() => 
-      {
-        this.checkIfUserIsAdmin( () => 
-        {
-          this.setState({isLoadingPage:false});
-
-        });
-      });
-    }
-  }
-
-  componentWillUnmount() {
-    this._isMounted = false;
+    });
   }
 
   handleCloseSnackBar() {
@@ -168,8 +130,6 @@ class ListOfAdmins extends Component {
   render() 
   {    
     if(this.state.isLoadingPage) return null;
-
-    if(!this.state.isAlreadyAuthenticated) return  <Redirect  to="/local-login" />
 
     if(!this.state.userIsAdmin) return  <Redirect  to="/local-login" />
     
@@ -186,7 +146,7 @@ class ListOfAdmins extends Component {
 }
 
 
-class AdminTable extends Component 
+class AdminTable extends React.Component 
 {
   _isTableMounted=false;
   columns = [

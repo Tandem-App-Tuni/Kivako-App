@@ -11,9 +11,8 @@ import ResponsiveDrawer from '../MenuDrawer';
 import UserActionCard from '../../components/UserActionCard';
 
 import Constants from '../../config_constants';
-import {Redirect} from 'react-router-dom';
-
 import Divider from '@material-ui/core/Divider';
+
 const useStyles =  theme => 
 ({
   root: 
@@ -43,82 +42,63 @@ class PartnerListPage extends Component
   {
     openAction: false,
     actionIndex: 0,
-    partnerList: [],
-    isAuthenticated: true
+    partnerList: []
   }
 
   componentDidMount()
   {
-    fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/isAuthenticated', 
+    fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/usersMatch/getUserActiveMatches',
     {
       method: 'GET',
+      headers: 
+      {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
       credentials: 'include'
     })
-    .then(response => response.json())
-    .then(responseData => 
-    {
-      console.log('Is authenticated check:', responseData);
-
-      if(responseData.isAuthenticated === true)
+    .then(responseSecond => responseSecond.json())
+    .then(jsonResponse => 
       {
-        fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/usersMatch/getUserActiveMatches',
+        const userId = jsonResponse.userId;
+        let partners = [];
+
+        /**
+         * Loop through all the matches and
+         * and extract important data to be displayed.
+         */
+        for (let i = 0; i < jsonResponse.data.length; i++)
         {
-          method: 'GET',
-          headers: 
+          let match = jsonResponse.data[i];
+          const user = match.requesterUser._id === userId ? match.recipientUser : match.requesterUser;
+
+          let ltt = [];
+          let ltl = [];
+
+          user.languagesToTeach.forEach(item => 
           {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include'
-        })
-        .then(responseSecond => responseSecond.json())
-        .then(jsonResponse => 
-          {
-            const userId = jsonResponse.userId;
-            let partners = [];
-
-            /**
-             * Loop through all the matches and
-             * and extract important data to be displayed.
-             */
-            for (let i = 0; i < jsonResponse.data.length; i++)
-            {
-              let match = jsonResponse.data[i];
-              const user = match.requesterUser._id === userId ? match.recipientUser : match.requesterUser;
-
-              let ltt = [];
-              let ltl = [];
-
-              user.languagesToTeach.forEach(item => 
-              {
-                ltt.push(item.language);
-              });
-
-              user.languagesToLearn.forEach(item => 
-              {
-                ltl.push(item.language);
-              });
-
-              partners.push(
-              {
-                  name: user.firstName + ' ' + user.lastName,
-                  _id: i,
-                  matchId: match._id,
-                  city: user.cities,
-                  teachLanguages: ltt,
-                  studyLanguages: ltl,
-                  photo_url:window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/avatar/getAvatar/' + user.email,
-              });
-            }
-
-            this.setState({partnerList: partners});
+            ltt.push(item.language);
           });
-      }
-      else this.setState({isAuthenticated: false});
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+
+          user.languagesToLearn.forEach(item => 
+          {
+            ltl.push(item.language);
+          });
+
+          partners.push(
+          {
+              name: user.firstName + ' ' + user.lastName,
+              _id: i,
+              matchId: match._id,
+              city: user.cities,
+              teachLanguages: ltt,
+              studyLanguages: ltl,
+              photo_url:window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/avatar/getAvatar/' + user.email,
+          });
+        }
+
+        this.setState({partnerList: partners});
+      });
   }
 
   onShowActionCard= (open, index, action) =>  
@@ -138,7 +118,6 @@ class PartnerListPage extends Component
 
   getPartnerDiv(list, classes) 
   {
-    if (!this.state.isAuthenticated) return <Redirect to='/'/>;
     if (this.state.partnerList.length === 0) return <div/>;
     else
     {

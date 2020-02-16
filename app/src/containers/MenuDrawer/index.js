@@ -1,6 +1,5 @@
 import React from 'react';
 import clsx from 'clsx';
-import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
@@ -107,7 +106,7 @@ class Dashboard extends React.Component
   {
     super(props);
 
-    this.state = {open:true, isAdmin:false, isAuthenticated: true};
+    this.state = {open:true, isAdmin:false};
   }
 
   handleDrawerOpen = () => 
@@ -122,7 +121,7 @@ class Dashboard extends React.Component
 
   componentDidMount()
   {
-    fetch(window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/isAuthenticated', 
+    fetch(window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/api/v1/users/isAdmin', 
     {
         method: 'GET',
         credentials: 'include',
@@ -131,29 +130,7 @@ class Dashboard extends React.Component
     .then((response) => response.json())
     .then((responseData) => 
     {
-      if (responseData.isAuthenticated)
-      {
-        fetch(window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/api/v1/users/isAdmin', 
-        {
-            method: 'GET',
-            credentials: 'include',
-            cors: 'no-cors'
-        })
-        .then((response) => response.json())
-        .then((responseData0) => 
-        {
-          this.setState({isAdmin:responseData0.isAdmin, isAuthenticated: true});
-          console.log('Response:',responseData0.isAdmin);
-        })
-        .catch((error) => 
-        {
-          console.error(error);
-        });
-      }
-      else
-      {
-
-      }
+      this.setState({isAdmin:responseData.isAdmin});
     })
     .catch((error) => 
     {
