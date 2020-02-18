@@ -1,5 +1,5 @@
 body{
-    font-family: 'Montserrat-Black', sans-serif;
+    font-family:'Arial','Montserrat-Black', sans-serif;
     text-align: center;
 }
 h1,h2,h3,h4,h5,h6{
@@ -217,7 +217,7 @@ h1,h2,h3,h4,h5,h6{
     list-style: none;
     position: relative;
     width: 50%;
-    padding: 20px 40px;
+    padding: 10px 20px;
     box-sizing: border-box;
 }
 #fourth-section .timeline ul li:nth-child(odd){
@@ -242,7 +242,7 @@ h1,h2,h3,h4,h5,h6{
     right: -6px;
     width: 10px;
     height: 10px;
-    background: tomato;
+    background: #4E008E;
     border-radius: 50%;
     box-shadow: 0 0 0 3px rgba(233,33,99,0.2);
  }
@@ -255,14 +255,14 @@ h1,h2,h3,h4,h5,h6{
     left: -4px;
     width: 10px;
     height: 10px;
-    background:tomato;
+    background:#4E008E;
     border-radius: 50%;
     box-shadow: 0 0 0 3px rgba(233,33,99,0.2);
  }
 
  #fourth-section .timeline ul li h3{
      font-weight: 600;
-     background:tomato; 
+     background:#4E008E; 
      color: #fff;
      border-radius: 18px;
      display: inline;
@@ -274,6 +274,23 @@ h1,h2,h3,h4,h5,h6{
     margin: 10px 0 0;
     
 }
+
+.link-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    display: inline;
+    margin: 0;
+    padding: 0;
+    color: #0056B3;
+    
+  }
+  
+  .link-button:hover,
+  .link-button:focus {
+  text-decoration: underline;
+  color: #0056B3;
+  }
 
 /* fourth section ends here */
 
@@ -287,10 +304,18 @@ h1,h2,h3,h4,h5,h6{
 #footer-section .footer-left{
 	width: 50%;
 }
+.kivako-logo{
+    width: 25%;
+    
+}
+
+.cc-logo{
+    width: 25%;
+}
 
 #footer-section .footer-left-links{
 	color:  red;
-	margin: 20px 0;	
+	margin: 5px 10px;	
 }
 #footer-section .footer-left-links a{
 	display:inline-block;
