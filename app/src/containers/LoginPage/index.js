@@ -108,7 +108,7 @@ class LandingPage extends Component {
                   Sign Up</button>
                 <button id="signInButton" className="btn btn-outline-success btn-lg title-btn" type="button" onClick={() => { this.onLoginButtonClicked() }}>
                   Sign In</button>
-                <a id="moodle-button" href="https://moodle.tuni.fi/"
+                <a id="moodle-button" href="https://digicampus.fi/login/index.php"
                   className="btn btn-outline-success btn-lg title-btn">Go to
                       Moodle</a>
               </div>
