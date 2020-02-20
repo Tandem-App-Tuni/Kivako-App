@@ -131,7 +131,7 @@ class LocalLoginPage extends Component
   onForgotPassword = (e) =>
   {
     e.preventDefault();
-    this.setState({redirectURL: '/'});
+    this.setState({redirectURL: '/forgot-pass'});
   }
 
   onReactivate = (e) => 

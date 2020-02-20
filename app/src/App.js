@@ -20,6 +20,7 @@ import LocalLoginPage from './containers/LocalLoginPage'
 import ActivationPage from './containers/ActivationPage'
 import Checker from './containers/Checker'
 import CheckerAdmin from './containers/CheckerAdmin'
+import ForgotPasswordPage from './containers/ForgotPasswordPage'
 
 import ListOfAdmins from './containers/ListOfAdmins'
 import ListOfStudents from './containers/ListOfStudents'
@@ -103,6 +104,9 @@ function App() {
           </CheckerAdmin>
         </Route>
 
+        <Route exact path="/forgot-pass">
+          <ForgotPasswordPage/>
+        </Route>
       </Switch>
     </Router>
     </MuiThemeProvider>
