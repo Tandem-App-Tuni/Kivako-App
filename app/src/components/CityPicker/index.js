@@ -4,7 +4,6 @@ import {municipality} from '../../components/constant/municipality'
 //Library
 import React from 'react';
 import PropTypes from 'prop-types';
-import deburr from 'lodash/deburr';
 import Downshift from 'downshift';
 import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
@@ -69,7 +68,7 @@ renderSuggestion.propTypes = {
 };
 
 function getSuggestions(value, { showEmpty = false } = {}) {
-  const inputValue = deburr(value.trim()).toLowerCase();
+  const inputValue = value.trim().toLowerCase();
   const inputLength = inputValue.length;
   let count = 0;
 
