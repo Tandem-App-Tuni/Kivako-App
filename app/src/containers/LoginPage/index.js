@@ -108,7 +108,7 @@ class LandingPage extends Component {
                   Sign Up</button>
                 <button id="signInButton" className="btn btn-outline-success btn-lg title-btn" type="button" onClick={() => { this.onLoginButtonClicked() }}>
                   Sign In</button>
-                <a id="moodle-button" href="https://digicampus.fi/login/index.php"
+                <a id="moodle-button" href=" https://digicampus.fi/course/view.php?id=272"
                   className="btn btn-outline-success btn-lg title-btn">Go to
                       Moodle</a>
               </div>
@@ -129,7 +129,7 @@ class LandingPage extends Component {
               <div className="col-md-12">
                 <div className="card">
                   <div className="card-body">
-                    <h3 className="card-title">What is UniTandem Learning? </h3>
+                    <h3 className="card-title">What is tandem learning? </h3>
                     <p className="card-text text-muted">Tandem (also known as Each One Teach One) is a method where
                         two
                         students teach each other their native (or native-like) languages in informal meetings,
