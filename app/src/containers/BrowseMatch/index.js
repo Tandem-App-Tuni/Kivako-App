@@ -264,7 +264,7 @@ class BrowseMatch extends React.Component
             console.log(responseJson);
             if (responseJson.requested) 
             {
-                alert("Match request sended to the user!");
+                alert("Match request sent to the user!");
                 window.location.reload();
             } else {
                 alert("Match request failed! Please, try again later")

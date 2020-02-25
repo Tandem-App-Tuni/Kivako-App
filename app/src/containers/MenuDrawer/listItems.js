@@ -10,6 +10,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import TimerIcon from '@material-ui/icons/Timer';
 import PersonIcon from '@material-ui/icons/Person';
 import PersonPinIcon from '@material-ui/icons/PersonPin';
+import Badge from '@material-ui/core/Badge';
 
 
 import { Link } from "react-router-dom";
@@ -52,7 +53,7 @@ export const mainListItems = (
   </div>
 );
 
-export const secondaryListItems = (
+export const secondaryListItems = requestAmount => (
   <div>
     <ListItem button component={Link} 
       to={"/browse-match"}>
@@ -64,7 +65,9 @@ export const secondaryListItems = (
 
     <ListItem button component={Link} to={"/match-requests"}>
       <ListItemIcon>
+      <Badge badgeContent={requestAmount} color="secondary">
         <TimerIcon />
+      </Badge>
       </ListItemIcon>
       <ListItemText primary="Pending Requests" />
     </ListItem>

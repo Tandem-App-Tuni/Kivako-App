@@ -106,7 +106,7 @@ class Dashboard extends React.Component
   {
     super(props);
 
-    this.state = {open:true, isAdmin:false};
+    this.state = {open:true, isAdmin:false, requestAmount:0 };
   }
 
   handleDrawerOpen = () => 
@@ -119,23 +119,40 @@ class Dashboard extends React.Component
     this.setState({open:false});
   }
 
-  componentDidMount()
+  async componentDidMount()
   {
-    fetch(window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/api/v1/users/isAdmin', 
-    {
-        method: 'GET',
-        credentials: 'include',
-        cors: 'no-cors'
-    })
-    .then((response) => response.json())
-    .then((responseData) => 
-    {
-      this.setState({isAdmin:responseData.isAdmin});
-    })
-    .catch((error) => 
-    {
-      console.error(error);
-    });
+    try {
+      fetch(window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/api/v1/users/isAdmin', 
+      {
+          method: 'GET',
+          credentials: 'include',
+          cors: 'no-cors'
+      })
+      .then((response) => response.json())
+      .then((responseData) => 
+      {
+        this.setState({isAdmin:responseData.isAdmin});
+      })
+      .catch((error) => 
+      {
+        console.error(error);
+      });
+      
+      const getRequestsURL = 
+        new URL(window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + "/api/v1/usersMatch/receiptMatchsRequests");
+    
+      const requestsResponse = await fetch(getRequestsURL, 
+        {
+          method: 'GET',
+          credentials: 'include',
+          cors:'no-cors'
+        });
+      const mathRequests = await requestsResponse.json();
+      this.setState({requestAmount: mathRequests.userReceiptMatches.length});
+    }
+    catch(e) {
+      console.log("Error when menu mounted:", e)
+    }
   }
 
   render()
@@ -182,7 +199,7 @@ class Dashboard extends React.Component
           <Divider />
           <List>{mainListItems}</List>
           <Divider />
-          <List>{secondaryListItems}</List>
+          <List>{secondaryListItems(this.state.requestAmount)}</List>
           {this.state.isAdmin ? <div><Divider /><List>{adminListItems}</List></div> : <div/>}
           <Divider />
           <List>{thirdListItems}</List>
