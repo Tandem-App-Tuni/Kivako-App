@@ -63,7 +63,7 @@ export default function TermsFinnishDialog() {
     <div>
         <div>
             <Button variant="outlined"  onClick={handleClickOpen} fullWidth={true}>
-              Avoimet ehdot
+              Avaa ehdot
             </Button>
         </div>
 
