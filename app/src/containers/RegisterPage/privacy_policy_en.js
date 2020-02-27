@@ -83,7 +83,7 @@ export default function TermsEnglishDialog() {
             <Typography variant='body' gutterBottom> 
               Tampere universities<br></br>
               Henri Annala, Emmanuel Abruquah<br></br>
-              unitandemfinland@gmail.com<br></br>
+              info (at) unitandem.fi<br></br>
               http://www.tuni.fi/en <br></br>
               Tampere University,Kalevantie 4, 33014 Tampere,  tel. +358 (0) 294 5211 
             </Typography>
@@ -96,7 +96,7 @@ export default function TermsEnglishDialog() {
             <Typography variant='body' gutterBottom align='justify'>
               Data in the log files of the server is used for technical maintenance, service security and collecting general statistics. 
               <br></br>
-              The website stores and processes the following personal data gained through HAKA login: name, username, role (e.g. student/staff), email address, university, photo of user (if available) 
+              The website stores and processes the following personal data: name, municipality of residence and study, email address, university, photo of user
             </Typography>
             <br></br>
             <Typography variant='subtitle1' align='left' gutterBottom> <b>Third parties to whom personal data is disclosed </b> </Typography>
