@@ -100,8 +100,6 @@ class BrowseMatch extends React.Component
       super(props);
       this.state = {
         userMatches:[],
-        isAlreadyregistered : false,
-        isAlreadyAuthenticated : false,
         isLoadingPage:true,
         portOption:ConstantsList.PORT_IN_USE,
         open:false,
@@ -243,9 +241,8 @@ class BrowseMatch extends React.Component
 
     onInviteAction = (user,language) =>
     {
-        const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/usersMatch/sendRequest")
-        //console.log(url)
-        
+        const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/usersMatch/sendRequest");
+
         fetch(url, 
         {
             method: 'POST',
@@ -259,16 +256,15 @@ class BrowseMatch extends React.Component
                 recipientID: user._id,
                 matchLanguage: language
             })
-        }).then((response) => response.json())
-        .then((responseJson) => {
-            console.log(responseJson);
-            if (responseJson.requested) 
+        })
+        .then((response) => 
+        {
+            if (response.status === 200)
             {
-                alert("Match request sent to the user!");
+                alert('Match request sent.');
                 window.location.reload();
-            } else {
-                alert("Match request failed! Please, try again later")
             }
+            else alert('Something went wrong.');
         })
         .catch((error) => {
             console.error(error);
@@ -297,60 +293,6 @@ class BrowseMatch extends React.Component
         callback();
     };
 
-    checkIfUserIsRegistered(callback) {
-        const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/users/isRegistered")
-    
-        fetch(url, {
-          method: 'GET',
-          credentials: 'include',
-          cors:'no-cors'
-        }).then((response) => response.json())
-        .then((responseJson) => {
-    
-          if(responseJson.isRegistered){
-            //User is already registered. Redirect to dashboard in render
-            this.setState({ isAlreadyregistered: true });
-          }else{
-            // Continue render normaly to register user
-            this.setState({ isAlreadyregistered: false });
-          }
-    
-          callback();
-    
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-      }
-    
-    checkIfUserIsAuthenticaded (callback){
-
-    const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/isAuthenticated");
-
-    fetch(url, {
-        method: 'GET',
-        credentials: 'include',
-        cors:'no-cors'
-    }).then((response) => response.json())
-    .then((responseData) => {
-        
-        if(responseData.isAuthenticated === false){
-        // Nothing to do, user will be redirect in render;
-        }else{
-        // User is already authenticated
-        // Set email automaticaly
-        this.setState({isAlreadyAuthenticated: true});
-        this.setState({email: responseData.email});
-        }
-
-        callback();
-
-    })
-    .catch((error) => {
-        console.error(error);
-    });
-    }
-
     componentDidMount()
     {
         this.getUserPossibleMatchsListAPI(() => 
@@ -358,7 +300,6 @@ class BrowseMatch extends React.Component
             this.setState({isLoadingPage:false});
         });
     }
-
 
     render() 
     {
