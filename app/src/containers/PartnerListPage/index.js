@@ -109,8 +109,6 @@ class PartnerListPage extends Component
 
   onShowActionCard= (open, index, action) =>  
   {
-    console.log('Hello there:', open, index, action);
-
     if (open === true) this.setState({actionIndex: index});
     else
     {
@@ -186,7 +184,11 @@ class PartnerListPage extends Component
       credentials: 'include',
       body: JSON.stringify({matchId: data.matchId})
     })
-    .then(response => window.location.reload());
+    .then((response) => 
+    {
+      console.log('Removed!');
+      window.location.reload();
+    });
   }
 
   render()

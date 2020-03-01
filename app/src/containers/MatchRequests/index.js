@@ -116,7 +116,7 @@ class MatchRequests extends React.Component
                 cors: 'no-cors',
                 body: JSON.stringify({})
             })
-            .then(response => 
+            .then((response) => 
             {
                 if (response.status === 200)
                 {
@@ -151,7 +151,7 @@ class MatchRequests extends React.Component
                 credentials: 'include',
                 cors: 'no-cors',
             })
-            .then(response => 
+            .then((response) => 
             {
                 if (response.status === 200) 
                 {
