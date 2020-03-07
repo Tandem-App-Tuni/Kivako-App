@@ -7,7 +7,6 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 
-import ResponsiveDrawer from '../MenuDrawer';
 import UserActionCard from '../../components/UserActionCard';
 
 import Constants from '../../config_constants';
@@ -196,9 +195,7 @@ class PartnerListPage extends Component
     const { classes } = this.props;
     return (
       <div className={classes.root}>
-      <ResponsiveDrawer title = "Current Partners">
        {this.getPartnerDiv(this.state.partnerList, classes)}
-      </ResponsiveDrawer>
       </div>
     );
   }

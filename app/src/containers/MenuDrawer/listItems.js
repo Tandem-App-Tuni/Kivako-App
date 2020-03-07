@@ -17,7 +17,7 @@ import { Link } from "react-router-dom";
 
 import ConstantsList from '../../config_constants';
 
-export const mainListItems = (
+export const mainListItems = chatNotification => (
   <div>
     <ListItem button component="a" href="https://digicampus.fi/course/view.php?id=272">
       <ListItemIcon>
@@ -45,7 +45,7 @@ export const mainListItems = (
     <ListItem button component={Link} 
       to={"/chat-page"}>
       <ListItemIcon>
-        <ForumIcon/>
+        {chatNotification ? <Badge color='secondary' variant='dot'><ForumIcon/></Badge> : <ForumIcon/>}
       </ListItemIcon>
       <ListItemText primary="Chat" />
     </ListItem>

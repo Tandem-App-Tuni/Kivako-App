@@ -1,6 +1,4 @@
 import React, {Component} from 'react';
-import ResponsiveDrawer from '../MenuDrawer';
-
 import {
   withStyles
 } from '@material-ui/core/styles';
@@ -86,10 +84,8 @@ class ListOfStudents extends Component
 
   render() 
   {    
-    return  (
-        <ResponsiveDrawer title = 'List of students'>
-          <StudentsTable></StudentsTable>
-        </ResponsiveDrawer>
+    return  ( 
+      <StudentsTable></StudentsTable>
     );
   }
 }

@@ -9,9 +9,7 @@ class Checker extends React.Component
     {
         super(props);
 
-        this.state = {isAuthenticated: false, retrievedData: false};
-
-        console.log('Checker initialized...');
+        this.state = {isAuthenticated: false, retrievedData: false, activeSocket: props.activeSocket, setSocket: props.setSocket};
     }
 
     componentDidMount()
@@ -25,7 +23,10 @@ class Checker extends React.Component
         .then((response) => response.json())
         .then((responseData) => 
         {
-            if (responseData.isAuthenticated) this.setState({isAuthenticated: true, retrievedData: true});
+            if (responseData.isAuthenticated) 
+            {
+                this.setState({isAuthenticated: true, retrievedData: true}, this.state.setSocket());
+            }
             else this.setState({retrievedData: true});
         })
         .catch((error) => 
@@ -40,7 +41,7 @@ class Checker extends React.Component
 
         if (!this.state.isAuthenticated) return(<Redirect to='/'/>)
 
-        console.log('Check passed!');
+        console.log('State socket', this.state.activeSocket());
 
         return(
             <div>

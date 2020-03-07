@@ -1,7 +1,4 @@
 import React from 'react';
-import ResponsiveDrawer from '../MenuDrawer';
-
-
 import {
   withStyles
 } from '@material-ui/core/styles';
@@ -134,12 +131,7 @@ class ListOfAdmins extends React.Component
     if(!this.state.userIsAdmin) return  <Redirect  to="/local-login" />
     
     return  (
-      <div>
-        <ResponsiveDrawer 
-        title = 'List of admins'>
-          <AdminTable></AdminTable>
-        </ResponsiveDrawer>
-      </div> 
+      <AdminTable></AdminTable>
     );
   }
 

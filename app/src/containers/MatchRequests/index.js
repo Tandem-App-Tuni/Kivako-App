@@ -10,8 +10,6 @@ import {withStyles} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 
-import ResponsiveDrawer from '../MenuDrawer';
-
 import Divider from '@material-ui/core/Divider';
 import Avatar from '@material-ui/core/Avatar';
 
@@ -216,41 +214,34 @@ class MatchRequests extends React.Component
         if(this.state.userRequestMatches.length === 0)
         {  
             return  (
-                <div className={classes.root}>
-                    <ResponsiveDrawer title = "Matches requests!">
-                        <div align = "center">
-                            <Paper>
-                                <img alt="" src={logo} style={{ maxHeight: 100 , maxWidth: '80%', marginTop: 30,marginLeft: 20,marginRight: 20}}/>
-      
-                                <br></br>
-                                <br></br>
-                                <br></br>
-                                <br></br>
-                                <Typography variant="h5" gutterBottom>
-                                    At the moment any matches requests were found in the system!
-                                </Typography>
-                                <br></br>
-                                <Typography variant="h6" gutterBottom>
-                                    Click in the button to search some partners!
-                                </Typography>
-                                <br></br>
-                                <Button component={Link} to="/browse-match" variant="contained" color="primary">Search!</Button>
-                                <br></br>
-                                <br></br>
-                            </Paper>
-                            <br></br>
-                            <br></br>
-                            <br></br>
-                        </div>
+                <div align = "center" className={classes.root}>
+                    <Paper>
+                        <img alt="" src={logo} style={{ maxHeight: 100 , maxWidth: '80%', marginTop: 30,marginLeft: 20,marginRight: 20}}/>
 
-                    </ResponsiveDrawer>
+                        <br></br>
+                        <br></br>
+                        <br></br>
+                        <br></br>
+                        <Typography variant="h5" gutterBottom>
+                            At the moment any matches requests were found in the system!
+                        </Typography>
+                        <br></br>
+                        <Typography variant="h6" gutterBottom>
+                            Click in the button to search some partners!
+                        </Typography>
+                        <br></br>
+                        <Button component={Link} to="/browse-match" variant="contained" color="primary">Search!</Button>
+                        <br></br>
+                        <br></br>
+                    </Paper>
+                    <br></br>
+                    <br></br>
+                    <br></br>
                 </div>
-                )
+            )
         }
-
         return (
             <div className={classes.root}>
-                <ResponsiveDrawer title = "Matches requests!">
                     <GridList container='true' cols={1} spacing={30} cellHeight={'auto'}>
                         {
                             this.state.userRequestMatches.map((match, key) =>
@@ -315,7 +306,6 @@ class MatchRequests extends React.Component
                             )
                         }
                     </GridList>
-                </ResponsiveDrawer>
             </div>
         );
     }

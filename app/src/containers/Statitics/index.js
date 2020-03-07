@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import ResponsiveDrawer from '../MenuDrawer';
 
 import {
   withStyles
@@ -67,13 +66,7 @@ class Statitics extends Component {
   render() 
   {
     return  (
-      <div>
-        <ResponsiveDrawer title = 'Statistics'>
-        <StatiticsTable></StatiticsTable>
- 
-          
-        </ResponsiveDrawer>
-      </div> 
+      <StatiticsTable></StatiticsTable>
     );
   }
 

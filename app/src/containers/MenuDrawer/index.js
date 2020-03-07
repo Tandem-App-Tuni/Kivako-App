@@ -106,7 +106,7 @@ class Dashboard extends React.Component
   {
     super(props);
 
-    this.state = {open:true, isAdmin:false, requestAmount:0 };
+    this.state = {open:true, isAdmin:false, requestAmount:0 , socket: props.chatBundle.socket, getChatN: props.chatBundle.getChatNotification, setChatN: props.chatBundle.setChatNotification};
   }
 
   handleDrawerOpen = () => 
@@ -121,7 +121,15 @@ class Dashboard extends React.Component
 
   async componentDidMount()
   {
-    try {
+    try 
+    {
+      this.state.socket.on('notification', () => 
+      {
+        this.state.setChatN(true);
+      });
+
+      this.state.socket.emit('checkNotifications', {});
+
       fetch(window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/api/v1/users/isAdmin', 
       {
           method: 'GET',
@@ -142,12 +150,13 @@ class Dashboard extends React.Component
         new URL(window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + "/api/v1/usersMatch/receiptMatchsRequests");
     
       const requestsResponse = await fetch(getRequestsURL, 
-        {
-          method: 'GET',
-          credentials: 'include',
-          cors:'no-cors'
-        });
+      {
+        method: 'GET',
+        credentials: 'include',
+        cors:'no-cors'
+      });
       const mathRequests = await requestsResponse.json();
+
       this.setState({requestAmount: mathRequests.userReceiptMatches.length});
     }
     catch(e) {
@@ -197,7 +206,7 @@ class Dashboard extends React.Component
             </IconButton>
           </div>
           <Divider />
-          <List>{mainListItems}</List>
+          <List>{mainListItems(this.state.getChatN())}</List>
           <Divider />
           <List>{secondaryListItems(this.state.requestAmount)}</List>
           {this.state.isAdmin ? <div><Divider /><List>{adminListItems}</List></div> : <div/>}

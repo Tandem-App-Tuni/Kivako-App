@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import ResponsiveDrawer from '../MenuDrawer';
 import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -428,8 +427,6 @@ class EditProfilePage extends Component
 
     return  (
       <div>
-        <ResponsiveDrawer title = 'Profile'>
-        
         <Container component="main" maxWidth="xs">
           <CssBaseline />
   
@@ -650,7 +647,6 @@ class EditProfilePage extends Component
         variant={this.state.alertType}
         message={this.state.alertText}
       />
-        </ResponsiveDrawer>
       </div> 
     );
   }

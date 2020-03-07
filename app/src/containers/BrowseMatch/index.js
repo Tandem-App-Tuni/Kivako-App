@@ -14,8 +14,6 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	Styles
 
-import ResponsiveDrawer from '../MenuDrawer';
-
 import Divider from '@material-ui/core/Divider';
 import Avatar from '@material-ui/core/Avatar';
 
@@ -317,24 +315,20 @@ class BrowseMatch extends React.Component
         if(this.state.isLoadingPage) return(<CircularProgress/>);
             
         return (
-            <div>
-                <div className={classes.root}>
-                    <ResponsiveDrawer title = "Find a new language partner">
-                        <div className={classesPanel.root}>
-                            {
-                                this.state.userMatches.map(item => 
-                                {
-                                    return item.alreadyExists ? (
-                                        this.getAlreadyExistsDiv(item, classes)
-                                    ) : (
-                                        this.getMatchesList(item, classes)
-                                    )
-                                })
-                            }
-                        </div>
-                    </ResponsiveDrawer>
-                </div>
+        <div className={classes.root}>
+            <div className={classesPanel.root}>
+                {
+                    this.state.userMatches.map(item => 
+                    {
+                        return item.alreadyExists ? (
+                            this.getAlreadyExistsDiv(item, classes)
+                        ) : (
+                            this.getMatchesList(item, classes)
+                        )
+                    })
+                }
             </div>
+        </div>
         );
     }
 }

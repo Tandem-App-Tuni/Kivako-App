@@ -1,8 +1,6 @@
 import React from 'react';
 import {Box,Grid, List, ListItem, ListItemText, ListItemAvatar, Avatar, Typography, Tooltip, CircularProgress, Zoom} from '@material-ui/core'
 import Chat from '../ChatBox'
-import openSocket from 'socket.io-client';
-import ResponsiveDrawer from '../MenuDrawer';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
@@ -38,11 +36,9 @@ import ConstantsList from '../../config_constants';
  * loadedServerInformation -> a flag set to true when the conversation data has been recieved from the server
  */
 
-
-var chatUrl = ConstantsList.APPLICATION_URL;
-
 class ChatPage extends React.Component
 {
+  _isMounted = false;
   
   constructor(props)
   {
@@ -54,17 +50,27 @@ class ChatPage extends React.Component
       chatRooms: 0,
       user: undefined,
       chatWindow: undefined,
-      socket: openSocket(chatUrl),
-      loadedServerInformation: false
+      socket: props.socket,
+      loadedServerInformation: false,
+      setChatNotification: props.setChatNotification
     }; 
 
+    this.partners = [];
+  }
+
+  componentDidMount()
+  {
+    this._isMounted = true;
     /**
      * Function listens for initialization events
      * and creates the list of partners based on the
      * data recieved from the server via the socket io
      * connection.
      */
-    this.state.socket.on('initialization', (data) =>  
+
+    this.state.setChatNotification(false);
+
+    this.state.socket.on('chatData', (data) =>  
     {
       let roomInformation = data.roomInformation;
 
@@ -77,7 +83,7 @@ class ChatPage extends React.Component
         email: data.email
       });
 
-      this.setState({loadedServerInformation: true, user: data.user, chatRooms: this.state.chatRooms + 1});
+      if (this._isMounted) this.setState({loadedServerInformation: true, user: data.user, chatRooms: this.state.chatRooms + 1});
     });
 
     /**
@@ -94,24 +100,17 @@ class ChatPage extends React.Component
         }
       });
       
-      this.setState({peekWordCount: 5});
+      if (this._isMounted) this.setState({peekWordCount: 5});
     });
 
-    this.partners = [];
-
-    this.renderPartnerArray = this.renderPartnerArray.bind(this);
-    this.renderChatWindow = this.renderChatWindow.bind(this);
-    this.getMessagePeek = this.getMessagePeek.bind(this);
-    this.handleClick = this.handleClick.bind(this);
+    this.state.socket.emit('chatInitialization', {});
   }
 
-  /**
-   * Handle socket disconnection events that are triggered uppon
-   * component unmounting events (switching pages).
-   */
   componentWillUnmount()
   {
-    this.state.socket.disconnect();
+    this._isMounted = false;
+
+    this.state.socket.emit('chatLeave', {});
   }
 
   /**
@@ -119,7 +118,7 @@ class ChatPage extends React.Component
    * These elements also contain a handleClick function, which if clicked, opens the chat window with the
    * specific conversation.
    */
-  renderPartnerArray()
+  renderPartnerArray = () =>
   {
     let parnerArray = [];
 
@@ -147,7 +146,6 @@ class ChatPage extends React.Component
                   primary={element.conversationName}
                   secondary={
                     <React.Fragment>
-
                       {"  " + this.getMessagePeek(element.messages)}
                     </React.Fragment>
                   }
@@ -170,7 +168,7 @@ class ChatPage extends React.Component
    * 
    * @param {*} messages Messages of the specific conversation for which the peek should be retrieved.
    */
-  getMessagePeek(messages)
+  getMessagePeek = (messages) =>
   {
     if (messages.length === 0) return '...';
 
@@ -198,7 +196,7 @@ class ChatPage extends React.Component
    * 
    * @param {*} id id of the clicked conversation.
    */
-  handleClick(id)
+  handleClick = (id) =>
   {
     var currentId;
 
@@ -226,7 +224,7 @@ class ChatPage extends React.Component
    * Renders the apropriate chat window
    * if one is open.
    */
-  renderChatWindow()
+  renderChatWindow = () =>
   {
     if (typeof this.state.currentOpenConversation == 'undefined') return(<div></div>);
     else return(<Chat partner={this.state.currentOpenConversation.email} user={this.state.user} roomId={this.state.currentOpenConversation.roomId} socket={this.state.socket} messages={this.state.currentOpenConversation.messages} conversationName={this.state.currentOpenConversation.conversationName}/>);
@@ -251,7 +249,7 @@ class ChatPage extends React.Component
       }));
 
     return(
-      <ResponsiveDrawer title = 'Conversations'>
+      <div>
         <Typography variant="h6" gutterBottom>
                 Partners
         </Typography> 
@@ -288,7 +286,7 @@ class ChatPage extends React.Component
             </ExpansionPanelDetails>
           </ExpansionPanel>
         </div>
-      </ResponsiveDrawer>
+      </div>
     )}
 }
 
