@@ -18,7 +18,9 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import {ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails} from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardMedia from '@material-ui/core/CardMedia';
 //Components
 import {CityPicker} from '../../components/CityPicker';
 import LanguagePicker from '../../components/LanguagePicker'
@@ -89,8 +91,10 @@ const useStyles = theme => ({
     display: 'flex',
     flexDirection: 'row',
     padding: 0,
+  },
+  cardMedia:  {
+    minHeight: '300px'
   }
-
 });
 
 class EditProfilePage extends Component 
@@ -107,6 +111,7 @@ class EditProfilePage extends Component
       email: '',
       cities: [],
       descriptionText: '',
+      profileVideoURL: '',
       showInputTeachLanguage: false,
       showInputLearnLanguage: false,
       showAlert: false,
@@ -169,7 +174,8 @@ class EditProfilePage extends Component
         email: this.state.email,
         cities: this.state.cities,
         descriptionText: this.state.descriptionText,
-        userIsActivie: true
+        userIsActivie: true,
+        profileVideoURL: this.state.profileVideoURL
       })
     })
     .then((response) => response.json())
@@ -256,6 +262,14 @@ class EditProfilePage extends Component
     })
   };
 
+  handleChangeProfileVideo = event => {
+    var value = (event.target.value);
+
+    this.setState({
+      profileVideoURL: value
+    })
+  };
+
   handleChangeCities = value => {
     if (value.length > 2) {
       this.setState( {citiesError: true, citiesErrorMessage: 'Maximum number of cities is 2'} );
@@ -328,6 +342,7 @@ class EditProfilePage extends Component
         languagesToTeach: responseData.data.languagesToTeach.filter(language => language.language != null),
         descriptionText: responseData.data.descriptionText,
         cities: responseData.data.cities,
+        profileVideoURL: responseData.data.profileVideoURL
       })
     })
     .catch((error) => 
@@ -419,11 +434,21 @@ class EditProfilePage extends Component
       })
     }
   }
+  
 
   render() 
   {
     const { classes } = this.props;
     const excludedLanguages = this.toExcludeLanguages();
+    const mediaCard =  this.state.profileVideoURL 
+                          ? <Grid item xs={12} >
+                              <Card>
+                              <CardHeader title="Profile video preview"  subheader="Note: Remember to click save changes button if you updated your profile video">
+                              </CardHeader>
+                              <CardMedia className={classes.cardMedia} component="iframe" src={this.state.profileVideoURL}></CardMedia>
+                              </Card>
+                            </Grid> 
+                          : <></>
 
     return  (
       <div>
@@ -502,7 +527,22 @@ class EditProfilePage extends Component
                     }}
                   />
                 </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    variant="outlined"
+                    fullWidth
+                    id="email"
+                    label="Video profile URL"
+                    value = {this.state.profileVideoURL}
+                    name="email"
+                    autoComplete="email"
+                    onChange =  {this.handleChangeProfileVideo}
+                    helperText="Make sure the video is accessible publicly. Youtube link is recommended."
+                  />
+                </Grid>
 
+                {mediaCard}
+              
                 <Grid item xs={12}>
                   <CityPicker
                     classes = {classes}
