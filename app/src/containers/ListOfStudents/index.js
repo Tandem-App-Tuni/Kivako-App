@@ -82,6 +82,8 @@ class ListOfStudents extends Component
       rowsPerPage: 10,
       setRowsPerPage : 10,
       rows: [],
+      message: '',
+      socket:props.socket
     };
 
     console.log('[ListOfStudents] Constructor');
@@ -91,16 +93,21 @@ class ListOfStudents extends Component
   {
     this.setState({page:this.page+1});
   };
+  
+  handleChangeMessage = (e) =>
+  {
+    this.setState({message: e.target.value});
+  };
 
-  handleChangeRowsPerPage = event => {
-
+  handleChangeRowsPerPage = event => 
+  {
     this.setState({rowsPerPage:+event.target.value});
     this.setState({page:0});
   };
 
   componentDidMount() 
   {
-    console.log('[ListOfStudents] Mounting');
+    console.log('[ListOfStudents] Mounting',window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/admin/studentUsers');
 
     fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/admin/studentUsers', 
     {
@@ -116,6 +123,12 @@ class ListOfStudents extends Component
     .catch((error) => {
       console.error(error);
     });
+  }
+
+  onSendMessage = () =>
+  {
+    console.log('[ListOfMatches] Message sent to students!');
+    this.state.socket.emit('adminGlobal', {message: this.state.message});
   }
 
   onRemoveClick(data)
@@ -165,7 +178,7 @@ class ListOfStudents extends Component
                 label='Message for students'
                 name='message'
                 autoComplete='message'
-                onChange={(e)=>{this.handleChangePage(e)}}
+                onChange={(e)=>{this.handleChangeMessage(e)}}
                 autoFocus/>
           </Grid>
           <Grid item xs={3}>
@@ -175,7 +188,7 @@ class ListOfStudents extends Component
               color='primary'
               fullWidth
               className={classes.chip}
-              onClick={() => this.onRemoveClick()}>
+              onClick={this.onSendMessage}>
               Send
             </Button>
           </Grid>

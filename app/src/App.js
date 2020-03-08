@@ -47,7 +47,12 @@ class App extends React.Component
 
   setSocket = () =>
   {
-    if (this.state.socket === undefined) this.setState({socket: openSocket(ConstantsList.APPLICATION_URL)});
+    if (this.state.socket === undefined) 
+    {
+      let socket = openSocket(ConstantsList.APPLICATION_URL);
+      socket.on('broadcast', (e) => alert(e.message));
+      this.setState({socket: socket});
+    }
   }
 
   getChatNotification = () =>
@@ -139,7 +144,7 @@ class App extends React.Component
         <Route exact path='/list-students'>
           <CheckerAdmin activeSocket={this.activeSocket} setSocket={this.setSocket}>
             <ResponsiveDrawer title='List of students' chatBundle={chatBundle}>
-              <ListOfStudents />
+              <ListOfStudents socket={this.state.socket}/>
             </ResponsiveDrawer>
           </CheckerAdmin>
         </Route>

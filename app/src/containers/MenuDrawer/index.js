@@ -102,6 +102,8 @@ const useStyles = theme => ({
 
 class Dashboard extends React.Component
 {
+  _isMounted = false;
+
   constructor(props)
   {
     super(props);
@@ -123,14 +125,12 @@ class Dashboard extends React.Component
   {
     try 
     {
-      this.state.socket.on('notification', () => 
-      {
-        this.state.setChatN(true);
-      });
+      this._isMounted = true;
 
+      this.state.socket.on('notification', () => this.state.setChatN(true));
+      
       this.state.socket.emit('checkNotifications', {});
 
-      
       const p0 = fetch(window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/api/v1/users/isAdmin', 
       {
           method: 'GET',
