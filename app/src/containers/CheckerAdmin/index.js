@@ -9,13 +9,15 @@ class CheckerAdmin extends React.Component
     {
         super(props);
 
-        this.state = {isAuthenticated: false, isAdmin: false, retrievedData: false};
+        this.state = {isAuthenticated: false, isAdmin: false, retrievedData: false, activeSocket: props.activeSocket, setSocket: props.setSocket};
 
-        console.log('Checker initialized...');
+        console.log('[CheckerAdmin] Constructor');
     }
 
     componentDidMount()
     {
+        console.log('[CheckerAdmin] Mounting');
+
         fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/isAuthenticated', 
         {
             method: 'GET',
@@ -36,7 +38,8 @@ class CheckerAdmin extends React.Component
                 .then((response) => response.json())
                 .then((responseData) => 
                 {
-                   this.setState({isAdmin:responseData.isAdmin, isAuthenticated: true, retrievedData: true});
+                    if (responseData.isAdmin) this.setState({isAdmin:responseData.isAdmin, isAuthenticated: true, retrievedData: true}, this.state.setSocket());
+                    else this.setState({retrievedData: true});
                 })
                 .catch((error) => 
                 {
@@ -53,13 +56,15 @@ class CheckerAdmin extends React.Component
     
     render()
     {
+        console.log('[CheckerAdmin] Render');
+
         if (!this.state.retrievedData) return(<CircularProgress/>)
 
         if (!this.state.isAuthenticated) return(<Redirect to='/'/>)
 
         if (!this.state.isAdmin) return(<Redirect to='/local-login'/>);
 
-        console.log('Admin check passed!');
+        console.log('[CheckerAdmin] Render done');
 
         return(
             <div>

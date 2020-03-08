@@ -39,9 +39,7 @@ class Checker extends React.Component
     {
         if (!this.state.retrievedData) return(<CircularProgress/>)
 
-        if (!this.state.isAuthenticated) return(<Redirect to='/'/>)
-
-        console.log('State socket', this.state.activeSocket());
+        if (!this.state.isAuthenticated) return(<Redirect path='/'/>)
 
         return(
             <div>

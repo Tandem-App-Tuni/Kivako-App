@@ -12,9 +12,7 @@ import PersonIcon from '@material-ui/icons/Person';
 import PersonPinIcon from '@material-ui/icons/PersonPin';
 import Badge from '@material-ui/core/Badge';
 
-
-import { Link } from "react-router-dom";
-
+import { Link } from 'react-router-dom';
 import ConstantsList from '../../config_constants';
 
 export const mainListItems = chatNotification => (
@@ -105,6 +103,14 @@ export const adminListItems = (
       <ListItemText primary="List of students" />
     </ListItem>
     
+    <ListItem button component={Link} 
+      to={'/list-matches'}>
+      <ListItemIcon>
+        <SearchIcon />
+      </ListItemIcon>
+      <ListItemText primary="List of matches" />
+    </ListItem>
+
     <ListItem button component={Link} 
       to={'/statistics'}>
       <ListItemIcon>

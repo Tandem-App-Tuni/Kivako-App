@@ -1,7 +1,5 @@
 import React, {Component} from 'react';
-import {
-  withStyles
-} from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -11,6 +9,8 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
+import TextField from '@material-ui/core/TextField';
 
 import Constants from '../../config_constants';
 
@@ -44,53 +44,6 @@ const useStyles = theme => ({
 
 class ListOfStudents extends Component 
 {
-  constructor(props) {
-    super(props);
-    this.state = {
-      profileImg: null,
-      languagesToTeach: [],
-      languagesToLearn: [],
-      firstName: '',
-      lastName: '',
-      email: '',
-      cities: [],
-      descriptionText: '',
-      showInputTeachLanguage: false,
-      showInputLearnLanguage: false,
-      editingTeachLanguageIndex: 0,
-      editingLearnLanguageIndex: 0,
-      isLoadingPage:true,
-      openSnackBar:false,
-      snackBarMessageError:""
-    };
-  }
-
-  onImageChange = (event) => 
-  {
-    if (event.target.files.length > 0) 
-    {
-      const url = URL.createObjectURL(event.target.files[0]);
-      this.setState({
-        profileImg: event.target.files[0],
-        profileImgURL: url
-      });
-    }
-  }
-
-  handleCloseSnackBar() 
-  {
-    this.openSnackBar = false;
-  }
-
-  render() 
-  {    
-    return  ( 
-      <StudentsTable></StudentsTable>
-    );
-  }
-}
-
-class StudentsTable extends Component {
   _isTableMounted=false;
   columns = [
     { id: 'firstName', label: 'First Name', minWidth: 100 },
@@ -119,7 +72,8 @@ class StudentsTable extends Component {
   ]
 
   
-  constructor(props) {
+  constructor(props) 
+  {
     super(props);
     this.state = {
       isLoadingTable:true,
@@ -127,14 +81,14 @@ class StudentsTable extends Component {
       setPage: 0,
       rowsPerPage: 10,
       setRowsPerPage : 10,
-      rows: [ 
-        
-      ],
-     
+      rows: [],
     };
+
+    console.log('[ListOfStudents] Constructor');
   }
 
-  handleChangePag = event =>  {
+  handleChangePage = event =>  
+  {
     this.setState({page:this.page+1});
   };
 
@@ -146,6 +100,8 @@ class StudentsTable extends Component {
 
   componentDidMount() 
   {
+    console.log('[ListOfStudents] Mounting');
+
     fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/admin/studentUsers', 
     {
       method: 'GET',
@@ -186,12 +142,44 @@ class StudentsTable extends Component {
 
   render()
   {
-    const classes  = useStyles();
+    console.log('[ListOfStudents] Render');
 
-    if(this.isLoadingTable) return null;
+    const { classes } = this.props;
+
+    if(this.state.isLoadingTable) return null;
 
     return (
       <Paper className={classes.tableRoot}>
+        <Grid 
+          container 
+          direction='row'
+          justify='center'
+          alignItems='center'>
+          <Grid item xs={9}>
+            <TextField
+                variant='outlined'
+                margin='normal'
+                required
+                fullWidth
+                id='message'
+                label='Message for students'
+                name='message'
+                autoComplete='message'
+                onChange={(e)=>{this.handleChangePage(e)}}
+                autoFocus/>
+          </Grid>
+          <Grid item xs={3}>
+            <Button
+              variant='contained'
+              margin='normal'
+              color='primary'
+              fullWidth
+              className={classes.chip}
+              onClick={() => this.onRemoveClick()}>
+              Send
+            </Button>
+          </Grid>
+        </Grid>
         <div>
           <Table stickyHeader aria-label="sticky table" className={classes.tableWrapper}>
             <TableHead>
@@ -200,30 +188,32 @@ class StudentsTable extends Component {
                   <TableCell
                     key={column.id}
                     align={column.align}
-                    style={{ minWidth: column.minWidth }}
-                  >
+                    style={{ minWidth: column.minWidth }}>
                     {column.label}
                   </TableCell>
                 ))}
               </TableRow>
             </TableHead>
             <TableBody>
-              {this.state.rows.slice(this.state.page * this.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map(row => {
+              {this.state.rows.slice(this.state.page * this.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((row, index) => {
                 return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
+                  <TableRow hover role="checkbox" tabIndex={-1} key={index}>
                     {this.columns.map(column => {
                       const value = row[column.id];
                       return (
                         <TableCell key={column.id} align={column.align}>
-                          {column.format && typeof value === ('number' || 'bool') ? column.format(value) : value}
-                          {column.id === 'removeUserButton' ? <Button
-                            fullWidth
-                            variant='contained'
-                            color='primary'
-                            className={classes.chip}
-                            onClick={() => this.onRemoveClick(row)}>
-                            Remove
-                          </Button> : <div/>}
+                          <div>
+                            {column.format && typeof value === ('number' || 'bool') ? column.format(value) : value}
+                            {column.id === 'removeUserButton' ? 
+                              <Button
+                                fullWidth
+                                variant='contained'
+                                color='primary'
+                                className={classes.chip}
+                                onClick={() => this.onRemoveClick(row)}>
+                                Remove
+                              </Button> : <div/>}
+                          </div>
                         </TableCell>
                       );
                     })}

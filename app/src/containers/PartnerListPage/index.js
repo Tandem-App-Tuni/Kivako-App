@@ -46,7 +46,7 @@ class PartnerListPage extends Component
 
   componentDidMount()
   {
-    fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/usersMatch/getUserActiveMatches',
+  fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/usersMatch/getUserActiveMatches',
     {
       method: 'GET',
       headers: 

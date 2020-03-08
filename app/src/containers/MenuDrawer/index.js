@@ -130,36 +130,28 @@ class Dashboard extends React.Component
 
       this.state.socket.emit('checkNotifications', {});
 
-      fetch(window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/api/v1/users/isAdmin', 
+      
+      const p0 = fetch(window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/api/v1/users/isAdmin', 
       {
           method: 'GET',
           credentials: 'include',
           cors: 'no-cors'
-      })
-      .then((response) => response.json())
-      .then((responseData) => 
-      {
-        this.setState({isAdmin:responseData.isAdmin});
-      })
-      .catch((error) => 
-      {
-        console.error(error);
       });
-      
-      const getRequestsURL = 
-        new URL(window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + "/api/v1/usersMatch/receiptMatchsRequests");
-    
-      const requestsResponse = await fetch(getRequestsURL, 
+
+      const p1 = fetch(window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + "/api/v1/usersMatch/receiptMatchsRequests", 
       {
         method: 'GET',
         credentials: 'include',
         cors:'no-cors'
       });
-      const mathRequests = await requestsResponse.json();
 
-      this.setState({requestAmount: mathRequests.userReceiptMatches.length});
+      const results = await Promise.all([p0, p1]);
+      const responseResults = await Promise.all([results[0].json(), results[1].json()]);
+
+      this.setState({isAdmin: responseResults[0].isAdmin, requestAmount: responseResults[1].userReceiptMatches.length});
     }
-    catch(e) {
+    catch(e) 
+    {
       console.log("Error when menu mounted:", e)
     }
   }
@@ -190,7 +182,6 @@ class Dashboard extends React.Component
           <IconButton color="inherit" component={Link} to="/chat-page">
               <MessageIcon />
           </IconButton>
-
         </Toolbar>
       </AppBar>
       <Drawer
@@ -205,7 +196,7 @@ class Dashboard extends React.Component
               <ChevronLeftIcon/>
             </IconButton>
           </div>
-          <Divider />
+          <Divider/>
           <List>{mainListItems(this.state.getChatN())}</List>
           <Divider />
           <List>{secondaryListItems(this.state.requestAmount)}</List>

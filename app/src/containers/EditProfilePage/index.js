@@ -254,7 +254,8 @@ class EditProfilePage extends Component
 
   };
 
-  handleChangeEmail = event => {
+  handleChangeEmail = event => 
+  {
     var value = (event.target.value);
 
     this.setState({
@@ -262,7 +263,8 @@ class EditProfilePage extends Component
     })
   };
 
-  handleChangeProfileVideo = event => {
+  handleChangeProfileVideo = event => 
+  {
     var value = (event.target.value);
 
     this.setState({
@@ -342,7 +344,7 @@ class EditProfilePage extends Component
         languagesToTeach: responseData.data.languagesToTeach.filter(language => language.language != null),
         descriptionText: responseData.data.descriptionText,
         cities: responseData.data.cities,
-        profileVideoURL: responseData.data.profileVideoURL
+        profileVideoURL: responseData.data.profileVideoURL ? responseData.data.profileVideoURL : ''
       })
     })
     .catch((error) => 
@@ -524,21 +526,20 @@ class EditProfilePage extends Component
                     onChange =  {this.handleChangeEmail}
                     InputProps={{
                       readOnly: true,
-                    }}
-                  />
+                    }}/>
                 </Grid>
+
                 <Grid item xs={12}>
                   <TextField
                     variant="outlined"
                     fullWidth
-                    id="email"
+                    id="video"
                     label="Video profile URL"
                     value = {this.state.profileVideoURL}
-                    name="email"
-                    autoComplete="email"
+                    name="video"
+                    autoComplete="video"
                     onChange =  {this.handleChangeProfileVideo}
-                    helperText="Make sure the video is accessible publicly. Youtube link is recommended."
-                  />
+                    helperText="Make sure the video is accessible publicly. Youtube link is recommended."/>
                 </Grid>
 
                 {mediaCard}
