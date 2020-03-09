@@ -445,7 +445,7 @@ class EditProfilePage extends Component
     const mediaCard =  this.state.profileVideoURL 
                           ? <Grid item xs={12} >
                               <Card>
-                              <CardHeader title="Profile video preview"  subheader="Note: Remember to click save changes button if you updated your profile video">
+                              <CardHeader title="Profile video URL"  subheader="Note: Remember to click save changes button if you updated your profile video">
                               </CardHeader>
                               <CardMedia className={classes.cardMedia} component="iframe" src={this.state.profileVideoURL}></CardMedia>
                               </Card>
@@ -539,7 +539,7 @@ class EditProfilePage extends Component
                     name="video"
                     autoComplete="video"
                     onChange =  {this.handleChangeProfileVideo}
-                    helperText="Make sure the video is accessible publicly. Youtube link is recommended."/>
+                    helperText="Please make sure the video is publicly accessible. A YouTube link is recommended."/>
                 </Grid>
 
                 {mediaCard}
