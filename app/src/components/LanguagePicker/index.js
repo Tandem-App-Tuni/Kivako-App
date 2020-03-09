@@ -141,7 +141,7 @@ class LanguagePicker extends Component {
 
     return (<div>
       <Dialog disableBackdropClick disableEscapeKeyDown open={this.props.open}>
-        <DialogTitle>Input Language
+        <DialogTitle>Input a language
         <IconButton  size="small" className={classes.buttonInfo} color="primary" >
             <InfoIcon fontSize="inherit"  onClick={this.handleShowInfo}/>
             </IconButton>

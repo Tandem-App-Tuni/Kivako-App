@@ -241,21 +241,20 @@ class MatchRequests extends React.Component
         {  
             return  (
                 <div className={classes.root}>
-                    <ResponsiveDrawer title = "Matches requests!">
+                    <ResponsiveDrawer title = "Pending requests">
                         <div align = "center">
                             <Paper>
-                                <img alt="" src={logo} style={{ maxHeight: 100 , maxWidth: '80%', marginTop: 30,marginLeft: 20,marginRight: 20}}/>
       
                                 <br></br>
                                 <br></br>
                                 <br></br>
                                 <br></br>
                                 <Typography variant="h5" gutterBottom>
-                                    At the moment any matches requests were found in the system!
+                                    No pending requests
                                 </Typography>
                                 <br></br>
                                 <Typography variant="h6" gutterBottom>
-                                    Click in the button to search some partners!
+                                    Click the button below to search for language partners
                                 </Typography>
                                 <br></br>
                                 <Button component={Link} to="/browse-match" variant="contained" color="primary">Search!</Button>

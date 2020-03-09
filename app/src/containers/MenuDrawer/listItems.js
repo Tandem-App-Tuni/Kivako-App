@@ -60,7 +60,7 @@ export const secondaryListItems = requestAmount => (
       <ListItemIcon>
         <SearchIcon />
       </ListItemIcon>
-      <ListItemText primary="Find a Partner!" />
+      <ListItemText primary="Find a partner" />
     </ListItem>
 
     <ListItem button component={Link} to={"/match-requests"}>
@@ -69,7 +69,7 @@ export const secondaryListItems = requestAmount => (
         <TimerIcon />
       </Badge>
       </ListItemIcon>
-      <ListItemText primary="Pending Requests" />
+      <ListItemText primary="Pending requests" />
     </ListItem>
   </div>
 );
