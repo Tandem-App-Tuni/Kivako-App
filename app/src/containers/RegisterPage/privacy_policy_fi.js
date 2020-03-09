@@ -63,7 +63,7 @@ export default function TermsFinnishDialog() {
     <div>
         <div>
             <Button variant="outlined"  onClick={handleClickOpen} fullWidth={true}>
-              Avoimet ehdot
+              Avaa ehdot
             </Button>
         </div>
 
@@ -83,7 +83,7 @@ export default function TermsFinnishDialog() {
             <Typography variant='body' gutterBottom> 
               Tampereen korkeakouluyhteisö <br></br>
               Henri Annala, Emmanuel Abruquah<br></br>
-              unitandemfinland@gmail.com<br></br>
+              info (at) unitandem.fi<br></br>
               http://www.tuni.fi/en <br></br>
               Tampereen yliopisto,Kalevantie 4, 33100 Tampereen yliopisto , puh. 0294 5211 
             </Typography>

@@ -7,7 +7,6 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 
-import ResponsiveDrawer from '../MenuDrawer';
 import UserActionCard from '../../components/UserActionCard';
 
 import Constants from '../../config_constants';
@@ -47,7 +46,7 @@ class PartnerListPage extends Component
 
   componentDidMount()
   {
-    fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/usersMatch/getUserActiveMatches',
+  fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/usersMatch/getUserActiveMatches',
     {
       method: 'GET',
       headers: 
@@ -59,52 +58,56 @@ class PartnerListPage extends Component
     })
     .then(responseSecond => responseSecond.json())
     .then(jsonResponse => 
+    {
+      if (jsonResponse.data === undefined) 
       {
-        const userId = jsonResponse.userId;
-        let partners = [];
+        this.setState({partnerList: []});
+        return;
+      }
 
-        /**
-         * Loop through all the matches and
-         * and extract important data to be displayed.
-         */
-        for (let i = 0; i < jsonResponse.data.length; i++)
+      const userId = jsonResponse.userId;
+      let partners = [];
+
+      /**
+       * Loop through all the matches and
+       * and extract important data to be displayed.
+       */
+      for (let i = 0; i < jsonResponse.data.length; i++)
+      {
+        let match = jsonResponse.data[i];
+        const user = match.requesterUser._id === userId ? match.recipientUser : match.requesterUser;
+
+        let ltt = [];
+        let ltl = [];
+
+        user.languagesToTeach.forEach(item => 
         {
-          let match = jsonResponse.data[i];
-          const user = match.requesterUser._id === userId ? match.recipientUser : match.requesterUser;
+          ltt.push(item.language);
+        });
 
-          let ltt = [];
-          let ltl = [];
+        user.languagesToLearn.forEach(item => 
+        {
+          ltl.push(item.language);
+        });
 
-          user.languagesToTeach.forEach(item => 
-          {
-            ltt.push(item.language);
-          });
+        partners.push(
+        {
+            name: user.firstName + ' ' + user.lastName,
+            _id: i,
+            matchId: match._id,
+            city: user.cities,
+            teachLanguages: ltt,
+            studyLanguages: ltl,
+            photo_url:window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/avatar/getAvatar/' + user.email,
+        });
+      }
 
-          user.languagesToLearn.forEach(item => 
-          {
-            ltl.push(item.language);
-          });
-
-          partners.push(
-          {
-              name: user.firstName + ' ' + user.lastName,
-              _id: i,
-              matchId: match._id,
-              city: user.cities,
-              teachLanguages: ltt,
-              studyLanguages: ltl,
-              photo_url:window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/avatar/getAvatar/' + user.email,
-          });
-        }
-
-        this.setState({partnerList: partners});
-      });
+      this.setState({partnerList: partners});
+    });
   }
 
   onShowActionCard= (open, index, action) =>  
   {
-    console.log('Hello there:', open, index, action);
-
     if (open === true) this.setState({actionIndex: index});
     else
     {
@@ -180,12 +183,11 @@ class PartnerListPage extends Component
       credentials: 'include',
       body: JSON.stringify({matchId: data.matchId})
     })
-    .then(response => response.json())
-    .then(responseJson => 
-      {
-        console.log(responseJson);
-        window.location.reload();
-      });
+    .then((response) => 
+    {
+      console.log('Removed!');
+      window.location.reload();
+    });
   }
 
   render()
@@ -193,9 +195,7 @@ class PartnerListPage extends Component
     const { classes } = this.props;
     return (
       <div className={classes.root}>
-      <ResponsiveDrawer title = "Current Partners">
        {this.getPartnerDiv(this.state.partnerList, classes)}
-      </ResponsiveDrawer>
       </div>
     );
   }

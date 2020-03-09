@@ -10,8 +10,6 @@ import {withStyles} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 
-import ResponsiveDrawer from '../MenuDrawer';
-
 import Divider from '@material-ui/core/Divider';
 import Avatar from '@material-ui/core/Avatar';
 
@@ -116,16 +114,14 @@ class MatchRequests extends React.Component
                 cors: 'no-cors',
                 body: JSON.stringify({})
             })
-            .then((response) => response.json())
-            .then((responseJson) => 
+            .then((response) => 
             {
-                console.log(responseJson);
-                if (responseJson.requested) {
-                    alert("Match request accepted!");
+                if (response.status === 200)
+                {
+                    alert('Match request accepted.');
                     window.location.reload();
-                } else {
-                    alert("Request failed! Please, try again later")
                 }
+                else alert('Something went wrong.')
             })
             .catch((error) => 
             {
@@ -133,10 +129,10 @@ class MatchRequests extends React.Component
                 console.error(error);
             }); 
         }
-        //console.log(url)
     }
 
-    denyMatchRequest(match) {
+    denyMatchRequest(match) 
+    {
         //console.log(user)
         //console.log(language)
         //alert("Match "+ match._id);
@@ -152,15 +148,15 @@ class MatchRequests extends React.Component
                 },
                 credentials: 'include',
                 cors: 'no-cors',
-            }).then((response) => response.json())
-            .then((responseJson) => {
-                console.log(responseJson);
-                if (responseJson.requested) {
-                    alert("Match request denied!");
+            })
+            .then((response) => 
+            {
+                if (response.status === 200) 
+                {
+                    alert('Match request denied.');
                     window.location.reload();
-                } else {
-                    alert("Request failed! Please, try again later")
-                }
+                } 
+                else alert('Something went wrong.')
             })
             .catch((error) => {
                 console.error(error);
@@ -169,7 +165,8 @@ class MatchRequests extends React.Component
         //console.log(url)
     }
 
-    getUserMatchsRequestListAPI = (callback) =>{
+    getUserMatchsRequestListAPI = (callback) =>
+    {
         const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/usersMatch/receiptMatchsRequests");
     
         fetch(url, {
@@ -190,35 +187,12 @@ class MatchRequests extends React.Component
         callback();
     };
     
-    checkIfUserIsAuthenticaded (callback)
-    {
-        const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/isAuthenticated");
-
-        fetch(url, {
-            method: 'GET',
-            credentials: 'include',
-            cors:'no-cors'
-        })
-        .then((response) => response.json())
-        .then((responseData) => 
-        {
-            if(responseData.isAuthenticated === true) this.setState({email: responseData.email});
-            
-            callback();
-        })
-        .catch((error) => {
-            console.error(error);
-        });
-    }
 
     componentDidMount()
     {      
-        this.checkIfUserIsAuthenticaded(() => 
+        this.getUserMatchsRequestListAPI( () => 
         {
-            this.getUserMatchsRequestListAPI( () => 
-            {
-                this.setState({isLoadingPage:false});
-            });
+            this.setState({isLoadingPage:false});
         });
     }
 
@@ -265,15 +239,13 @@ class MatchRequests extends React.Component
                             <br></br>
                             <br></br>
                         </div>
-
                     </ResponsiveDrawer>
                 </div>
-                )
-        }
 
+            )
+        }
         return (
             <div className={classes.root}>
-                <ResponsiveDrawer title = "Matches requests!">
                     <GridList container='true' cols={1} spacing={30} cellHeight={'auto'}>
                         {
                             this.state.userRequestMatches.map((match, key) =>
@@ -338,7 +310,6 @@ class MatchRequests extends React.Component
                             )
                         }
                     </GridList>
-                </ResponsiveDrawer>
             </div>
         );
     }

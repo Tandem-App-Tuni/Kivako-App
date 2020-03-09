@@ -1,9 +1,8 @@
 import React from 'react';
 import {
   BrowserRouter as Router,
-  Switch,
   Route
-} from "react-router-dom";
+} from 'react-router-dom';
 
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import {Colors} from './components/constant/index'
@@ -25,92 +24,151 @@ import ForgotPasswordPage from './containers/ForgotPasswordPage'
 import ListOfAdmins from './containers/ListOfAdmins'
 import ListOfStudents from './containers/ListOfStudents'
 import Statitics from './containers/Statitics'
+import ListOfMatches from './containers/ListOfMatches'
 
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-        main: Colors.mainColor
-      }
+import openSocket from 'socket.io-client';
+import ConstantsList from './config_constants';
+
+import ResponsiveDrawer from './containers/MenuDrawer';
+
+class App extends React.Component 
+{
+  constructor(props)
+  {
+    super(props);
+
+    this.state = {theme: createMuiTheme({palette: {primary: {main: Colors.mainColor}}}), socket: undefined, chatNotification: false};
+  }
+
+  activeSocket = () =>
+  {
+    return this.state.socket !== undefined;
+  }
+
+  setSocket = () =>
+  {
+    if (this.state.socket === undefined) 
+    {
+      let socket = openSocket(ConstantsList.APPLICATION_URL);
+      socket.on('broadcast', (e) => alert(e.message));
+      this.setState({socket: socket});
     }
-  },
-)
+  }
 
-function App() {
-  return (
-    <MuiThemeProvider theme={theme}>
-    <Router>
-      <Switch>
-        <Route exact path="/">
+  getChatNotification = () =>
+  {
+    return this.state.chatNotification;
+  }
+
+  setChatNotification = (v) => 
+  {
+    this.setState({chatNotification: v});
+  }
+
+  render()
+  {
+    const chatBundle = {socket: this.state.socket, getChatNotification: this.getChatNotification, setChatNotification: this.setChatNotification};
+
+    return (
+      <MuiThemeProvider theme={this.state.theme}>
+      <Router>
+        
+        <Route exact path='/'>
             <LoginPage />
         </Route>
-
-        <Route exact path="/edit-profile">
-          <Checker>
-            <EditProfilePage />
-          </Checker>
-        </Route>
-      
-        <Route exact path="/partner-list">
-          <Checker>
-            <PartnerListPage />
-          </Checker>
-        </Route>
-      
-        <Route exact path="/browse-match">
-          <Checker>
-            <BrowseMatch />
-          </Checker>
-        </Route>
-      
-        <Route exact path="/chat-page">
-          <Checker>
-            <ChatPage/>
-          </Checker>
-        </Route>
-      
-        <Route exact path="/register">
+        
+        <Route exact path='/register'>
             <RegisterPage />
         </Route>
 
-        <Route exact path="/match-requests">
-          <Checker>
-            <MatchRequests/>
-          </Checker>
-        </Route>
-      
-        <Route exact path="/local-login">
+        <Route exact path='/local-login'>
             <LocalLoginPage />
         </Route>
 
-        <Route exact path="/activate-account">
+        <Route exact path='/activate-account'>
           <ActivationPage/>
         </Route>
 
-        <Route exact path="/list-admins">
-          <CheckerAdmin>
-            <ListOfAdmins />
+        <Route exact path='/forgot-pass'>
+          <ForgotPasswordPage/>
+        </Route>
+
+        <Route exact path='/edit-profile'>
+          <Checker activeSocket={this.activeSocket} setSocket={this.setSocket}>
+            <ResponsiveDrawer title = 'Profile' chatBundle={chatBundle}>
+              <EditProfilePage />
+            </ResponsiveDrawer>
+          </Checker>
+        </Route>
+      
+        <Route exact path='/partner-list'>
+          <Checker activeSocket={this.activeSocket} setSocket={this.setSocket}>
+            <ResponsiveDrawer title='Current Partners' chatBundle={chatBundle}>
+              <PartnerListPage />
+            </ResponsiveDrawer>
+          </Checker>
+        </Route>
+      
+        <Route exact path='/browse-match'>
+          <Checker activeSocket={this.activeSocket} setSocket={this.setSocket}>
+            <ResponsiveDrawer title='Find a new language partner' chatBundle={chatBundle}>
+              <BrowseMatch />
+            </ResponsiveDrawer>
+          </Checker>
+        </Route>
+      
+        <Route exact path='/chat-page'>
+          <Checker activeSocket={this.activeSocket} setSocket={this.setSocket}>
+            <ResponsiveDrawer title='Conversations' chatBundle={chatBundle}>
+              <ChatPage socket={this.state.socket} setChatNotification={this.setChatNotification}/>
+            </ResponsiveDrawer>
+          </Checker>
+        </Route>
+
+        <Route exact path='/match-requests'>
+          <Checker activeSocket={this.activeSocket} setSocket={this.setSocket}>
+            <ResponsiveDrawer title ='Matches requests!' chatBundle={chatBundle}>
+              <MatchRequests/>
+            </ResponsiveDrawer>
+          </Checker>
+        </Route>
+
+        <Route exact path='/list-admins'>
+          <CheckerAdmin activeSocket={this.activeSocket} setSocket={this.setSocket}>
+            <ResponsiveDrawer title='List of admins' chatBundle={chatBundle}>
+              <ListOfAdmins />
+            </ResponsiveDrawer>
           </CheckerAdmin>
         </Route>
       
-        <Route exact path="/list-students">
-          <CheckerAdmin>
-            <ListOfStudents />
+        <Route exact path='/list-students'>
+          <CheckerAdmin activeSocket={this.activeSocket} setSocket={this.setSocket}>
+            <ResponsiveDrawer title='List of students' chatBundle={chatBundle}>
+              <ListOfStudents socket={this.state.socket}/>
+            </ResponsiveDrawer>
           </CheckerAdmin>
         </Route>
 
-        <Route exact path="/statistics">
-          <CheckerAdmin>
-            <Statitics />
+        <Route exact path='/list-matches'>
+          <CheckerAdmin activeSocket={this.activeSocket} setSocket={this.setSocket}>
+            <ResponsiveDrawer title='List of matches' chatBundle={chatBundle}>
+              <ListOfMatches />
+            </ResponsiveDrawer>
           </CheckerAdmin>
         </Route>
 
-        <Route exact path="/forgot-pass">
-          <ForgotPasswordPage/>
+        <Route exact path='/statistics'>
+          <CheckerAdmin activeSocket={this.activeSocket} setSocket={this.setSocket}>
+            <ResponsiveDrawer title='Statistics' chatBundle={chatBundle}>
+              <Statitics />
+            </ResponsiveDrawer>
+          </CheckerAdmin>
         </Route>
-      </Switch>
-    </Router>
-    </MuiThemeProvider>
-  );
+
+      </Router>
+      </MuiThemeProvider>
+    );
+  }
 }
 
 export default App;

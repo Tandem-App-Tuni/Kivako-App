@@ -340,7 +340,8 @@ class SignUpPage extends Component {
   }
 
   // API Call to insert user
-  onSaveButtonClicked = () =>{
+  onSaveButtonClicked = () =>
+  {
     const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/users/add")
     
     fetch(url, {
@@ -376,7 +377,6 @@ class SignUpPage extends Component {
     .catch((error) => {
       console.error(error);
     });
-
   }
 
   checkIfUserIsAuthenticaded (callback)

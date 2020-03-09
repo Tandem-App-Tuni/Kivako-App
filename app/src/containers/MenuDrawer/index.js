@@ -102,11 +102,13 @@ const useStyles = theme => ({
 
 class Dashboard extends React.Component
 {
+  _isMounted = false;
+
   constructor(props)
   {
     super(props);
 
-    this.state = {open:true, isAdmin:false, requestAmount:0 };
+    this.state = {open:true, isAdmin:false, requestAmount:0 , socket: props.chatBundle.socket, getChatN: props.chatBundle.getChatNotification, setChatN: props.chatBundle.setChatNotification};
   }
 
   handleDrawerOpen = () => 
@@ -121,36 +123,35 @@ class Dashboard extends React.Component
 
   async componentDidMount()
   {
-    try {
-      fetch(window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/api/v1/users/isAdmin', 
+    try 
+    {
+      this._isMounted = true;
+
+      this.state.socket.on('notification', () => this.state.setChatN(true));
+      
+      this.state.socket.emit('checkNotifications', {});
+
+      const p0 = fetch(window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/api/v1/users/isAdmin', 
       {
           method: 'GET',
           credentials: 'include',
           cors: 'no-cors'
-      })
-      .then((response) => response.json())
-      .then((responseData) => 
-      {
-        this.setState({isAdmin:responseData.isAdmin});
-      })
-      .catch((error) => 
-      {
-        console.error(error);
       });
-      
-      const getRequestsURL = 
-        new URL(window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + "/api/v1/usersMatch/receiptMatchsRequests");
-    
-      const requestsResponse = await fetch(getRequestsURL, 
-        {
-          method: 'GET',
-          credentials: 'include',
-          cors:'no-cors'
-        });
-      const mathRequests = await requestsResponse.json();
-      this.setState({requestAmount: mathRequests.userReceiptMatches.length});
+
+      const p1 = fetch(window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + "/api/v1/usersMatch/receiptMatchsRequests", 
+      {
+        method: 'GET',
+        credentials: 'include',
+        cors:'no-cors'
+      });
+
+      const results = await Promise.all([p0, p1]);
+      const responseResults = await Promise.all([results[0].json(), results[1].json()]);
+
+      this.setState({isAdmin: responseResults[0].isAdmin, requestAmount: responseResults[1].userReceiptMatches.length});
     }
-    catch(e) {
+    catch(e) 
+    {
       console.log("Error when menu mounted:", e)
     }
   }
@@ -181,7 +182,6 @@ class Dashboard extends React.Component
           <IconButton color="inherit" component={Link} to="/chat-page">
               <MessageIcon />
           </IconButton>
-
         </Toolbar>
       </AppBar>
       <Drawer
@@ -196,8 +196,8 @@ class Dashboard extends React.Component
               <ChevronLeftIcon/>
             </IconButton>
           </div>
-          <Divider />
-          <List>{mainListItems}</List>
+          <Divider/>
+          <List>{mainListItems(this.state.getChatN())}</List>
           <Divider />
           <List>{secondaryListItems(this.state.requestAmount)}</List>
           {this.state.isAdmin ? <div><Divider /><List>{adminListItems}</List></div> : <div/>}

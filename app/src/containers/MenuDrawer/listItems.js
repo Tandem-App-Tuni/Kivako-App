@@ -12,12 +12,10 @@ import PersonIcon from '@material-ui/icons/Person';
 import PersonPinIcon from '@material-ui/icons/PersonPin';
 import Badge from '@material-ui/core/Badge';
 
-
-import { Link } from "react-router-dom";
-
+import { Link } from 'react-router-dom';
 import ConstantsList from '../../config_constants';
 
-export const mainListItems = (
+export const mainListItems = chatNotification => (
   <div>
     <ListItem button component="a" href="https://digicampus.fi/course/view.php?id=272">
       <ListItemIcon>
@@ -45,7 +43,7 @@ export const mainListItems = (
     <ListItem button component={Link} 
       to={"/chat-page"}>
       <ListItemIcon>
-        <ForumIcon/>
+        {chatNotification ? <Badge color='secondary' variant='dot'><ForumIcon/></Badge> : <ForumIcon/>}
       </ListItemIcon>
       <ListItemText primary="Chat" />
     </ListItem>
@@ -105,6 +103,14 @@ export const adminListItems = (
       <ListItemText primary="List of students" />
     </ListItem>
     
+    <ListItem button component={Link} 
+      to={'/list-matches'}>
+      <ListItemIcon>
+        <SearchIcon />
+      </ListItemIcon>
+      <ListItemText primary="List of matches" />
+    </ListItem>
+
     <ListItem button component={Link} 
       to={'/statistics'}>
       <ListItemIcon>

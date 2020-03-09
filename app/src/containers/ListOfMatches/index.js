@@ -9,7 +9,6 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 
 import Paper from '@material-ui/core/Paper';
-
 import Constants from '../../config_constants';
 
 const useStyles = theme => ({
@@ -39,28 +38,13 @@ const useStyles = theme => ({
   }
 });
 
-class ListOfAdmins extends React.Component 
+class ListOfMatches extends React.Component 
 {
   _isTableMounted=false;
 
   columns = [
-    { id: 'firstName', label: 'First Name', minWidth: 100 },
-    { id: 'lastName', label: 'Last  Name', minWidth: 100 },
-    { id: 'email', label: 'Email', minWidth: 200 },
-    {
-      id: 'lastUserAccess',
-      label: 'Last Access',
-      minWidth: 170,
-      align: 'center',
-      format: value => value.toLocaleString('fi-FI', { timeZone: 'UTC' })
-    },
-    {
-      id: 'userIsActivie',
-      label: 'Active',
-      minWidth: 170,
-      align: 'center',
-      format: value => value.toString()
-    }]
+    { id: 's0', label: 'Request sender', minWidth: 100 },
+    { id: 's1', label: 'Recipient', minWidth: 100 }]
 
   constructor(props) 
   {
@@ -75,7 +59,7 @@ class ListOfAdmins extends React.Component
       rows: [],
     };
 
-    console.log('[ListOfAdmins] Constructor');
+    console.log('[ListOfMatches] Constructor');
   }
 
   handleChangePage = event =>  
@@ -93,9 +77,9 @@ class ListOfAdmins extends React.Component
   {
     this._isTableMounted = true;
 
-    console.log('[ListOfAdmins] Mounting');
+    console.log('[ListOfMatches] Mounting');
 
-    fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/admin/adminUsers', 
+    fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/admin/matches', 
     {
       method: 'GET',
       credentials: 'include',
@@ -104,7 +88,7 @@ class ListOfAdmins extends React.Component
     .then((response) => response.json())
     .then((responseJson) => 
     {
-      if(this._isTableMounted) this.setState({ rows: responseJson.data, isLoadingTable:false});
+      if(this._isTableMounted) this.setState({rows: responseJson.data, isLoadingTable:false});
     })
     .catch((error) => {
       console.error(error);
@@ -113,7 +97,7 @@ class ListOfAdmins extends React.Component
 
   render()
   {
-    console.log('[ListOfAdmins] Render');
+    console.log('[ListOfMatches] Render');
 
     if(this.state.isLoadingTable) return null;
 
@@ -137,17 +121,12 @@ class ListOfAdmins extends React.Component
           <TableBody>
             {this.state.rows.slice(this.state.page * this.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((row, index) => 
             {
+              console.log(row);
+
               return (
                 <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                  {this.columns.map(column => 
-                  {
-                    const value = row[column.id];
-                    return (
-                      <TableCell key={column.id} align={column.align}>
-                        <div>{value}</div>
-                      </TableCell>
-                    );
-                  })}
+                  <TableCell key='s0'><div>{row.requesterUser.firstName + ' ' + row.requesterUser.lastName}</div></TableCell>
+                  <TableCell key='s1'><div>{row.recipientUser.firstName + ' ' + row.recipientUser.lastName}</div></TableCell>
                 </TableRow>
               );
             })}
@@ -167,5 +146,4 @@ class ListOfAdmins extends React.Component
   }
 
 }
-
-export default withStyles(useStyles)(ListOfAdmins);
+export default withStyles(useStyles)(ListOfMatches);
