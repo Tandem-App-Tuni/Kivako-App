@@ -15,7 +15,7 @@ function renderInput(inputProps) {
   const { InputProps, classes, ref, ...other } = inputProps;
   return (
     <TextField
-      helperText = "Maximum number of cities is 2."
+      helperText = "Maximum number of municipilities is 2."
       InputProps={{
         inputRef: ref,
         classes: {
@@ -138,7 +138,7 @@ export function CityPicker(props) {
       }) => {
         const { onBlur, onChange, onFocus, ...inputProps } = getInputProps({
           onKeyDown: handleKeyDown,
-          placeholder: 'Cities of your home and school',
+          placeholder: 'Your minicipilities of residence and study',
         });
 
         return (
