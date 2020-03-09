@@ -1,11 +1,6 @@
 import React, {Component} from 'react';
-
-import {
-  withStyles
-} from '@material-ui/core/styles';
-
+import {withStyles} from '@material-ui/core/styles';
 import MaterialTable from "material-table";
-
 import Constants from '../../config_constants';
 
 const useStyles = theme => ({
@@ -37,43 +32,7 @@ const useStyles = theme => ({
 
 });
 
-class Statitics extends Component {
-  _isMounted = false;
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      profileImg: null,
-      openSnackBar:false,
-      snackBarMessageError:""
-    };
-  }
-
-  onImageChange = (event) => {
-    if (event.target.files.length > 0) {
-      const url = URL.createObjectURL(event.target.files[0]);
-      this.setState({
-        profileImg: event.target.files[0],
-        profileImgURL: url
-      });
-    }
-  }
-
-  handleCloseSnackBar() {
-    this.openSnackBar = false;
-  }
-
-  render() 
-  {
-    return  (
-      <StatiticsTable></StatiticsTable>
-    );
-  }
-
-}
-
-
-class StatiticsTable extends Component 
+class Statitics extends Component 
 {
   columns = [
     { field: 'language', title: 'Language',  align: 'center'},
@@ -85,7 +44,8 @@ class StatiticsTable extends Component
     }
   ]
   
-  constructor(props) {
+  constructor(props) 
+  {
     super(props);
     this.state = {
       isLoadingTable:true,
@@ -93,10 +53,7 @@ class StatiticsTable extends Component
       setPage: 0,
       rowsPerPage: 30,
       setRowsPerPage : 10,
-      rows: [ 
-        
-      ],
-     
+      rows: []
     };
   }
 

@@ -12,6 +12,9 @@ import {CircularProgress} from '@material-ui/core'
 import List from '@material-ui/core/List';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import Box from '@material-ui/core/Box'
+import Tooltip from '@material-ui/core/Tooltip';
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	Styles
 
 import Divider from '@material-ui/core/Divider';
@@ -154,14 +157,19 @@ class BrowseMatch extends React.Component
                                     <CardContent>  
                                         <Divider variant="middle" />
                                         <List>
-                                        <ListItem>
-                                        <ListItemIcon><Icon fontSize="small">home</Icon></ListItemIcon>
-                                        <ListItemText primary={"Cities: " + (match.cities && match.cities.join(", "))}/>
-                                        </ListItem>
-                                        <ListItem>
-                                        <ListItemIcon><Icon fontSize="small">language</Icon></ListItemIcon>
-                                        <ListItemText primary={"Wants to learn: " + (match.languagesToLearn && match.languagesToLearn.map(e => e.language).join(", "))}/>
-                                        </ListItem></List>
+                                            <ListItem>
+                                                <ListItemIcon><Icon fontSize="small">home</Icon></ListItemIcon>
+                                                <ListItemText primary={"Cities: " + (match.cities && match.cities.join(", "))}/>
+                                            </ListItem>
+                                            <ListItem>
+                                                <ListItemIcon><Icon fontSize="small">language</Icon></ListItemIcon>
+                                                <ListItemText primary={"Wants to learn: " + (match.languagesToLearn && match.languagesToLearn.map(e => e.language).join(", "))}/>
+                                            </ListItem>
+                                            <ListItem>
+                                                <ListItemIcon><Icon fontSize="small">check</Icon></ListItemIcon>
+                                                <ListItemText primary={"Credits and level: " + (match.languagesToLearn && match.languagesToLearn.map(e => e.credits + ' ' + e.level).join(", "))}/>
+                                            </ListItem>
+                                        </List>
                                     </CardContent>      
                                 </Card>
                             </GridListTile>);
@@ -213,7 +221,11 @@ class BrowseMatch extends React.Component
         </ListItem>)
     }
 
-    getMatchesList(item, classes){
+    getMatchesList(item, classes)
+    {
+        const languageTooltip = 'Matches are sorted by compatibility relative to your language preferences. ' +
+                                'Matches on the left with the most purple hue are rated higher with a descending compatibility going right.';
+
         return (
                 <div key={item.languageName}>
                     <ExpansionPanel>
@@ -223,6 +235,9 @@ class BrowseMatch extends React.Component
                             id="panel1a-header"
                         >
                         <Typography className={classes.heading}>Possible matches to learn {item.languageName}</Typography>
+                        <Tooltip title={languageTooltip}>
+                            <Box pl={2}><InfoOutlinedIcon/></Box>
+                        </Tooltip>
                         </ExpansionPanelSummary>
                         <ExpansionPanelDetails>
                             {
