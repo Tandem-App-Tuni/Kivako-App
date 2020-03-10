@@ -34,14 +34,14 @@ const useStyles = theme => ({
             {this.props.data.name}
             </Typography>
             <Typography gutterBottom variant="subtitle2" color="textSecondary">
-            Cities: {this.props.type === "partner" &&  this.props.data.city.join(", ")}
+            Municipilities: {this.props.type === "partner" &&  this.props.data.city.join(", ")}
             {this.props.type === "invite" &&  this.props.data.cities.join(", ")}
             </Typography>
             <Typography gutterBottom variant="body2" color="textSecondary">
-            Teach:  {this.props.type === "partner" &&this.props.data.teachLanguages.join(", ")}
+            Can teach:  {this.props.type === "partner" &&this.props.data.teachLanguages.join(", ")}
             {this.props.type === "invite" &&this.props.data.languagesToTeach.map(e => e.language + " " + e.level).join(", ")}. 
             <br></br>
-            Learn:  {this.props.type === "partner" &&this.props.data.studyLanguages.join(", ")}
+            Wants to learn:  {this.props.type === "partner" &&this.props.data.studyLanguages.join(", ")}
             {this.props.type === "invite" &&this.props.data.languagesToLearn.map(e => e.language + " " + e.level).join(", ")}
             </Typography>
             <Typography variant="body2" color="textSecondary" component="p">
@@ -51,7 +51,7 @@ const useStyles = theme => ({
         </CardActionArea>
         <CardActions>
         {this.props.type === "invite" && <Button size="small" color="primary" onClick = {() => this.props.onClose("invite")}>
-            Invite
+            SEND MATCH REQUEST
           </Button>}
 
           {this.props.type === "partner" &&

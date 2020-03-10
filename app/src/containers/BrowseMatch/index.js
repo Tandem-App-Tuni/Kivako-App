@@ -158,10 +158,6 @@ class BrowseMatch extends React.Component
                                         <Divider variant="middle" />
                                         <List>
                                             <ListItem>
-                                                <ListItemIcon><Icon fontSize="small">home</Icon></ListItemIcon>
-                                                <ListItemText primary={"Cities: " + (match.cities && match.cities.join(", "))}/>
-                                            </ListItem>
-                                            <ListItem>
                                                 <ListItemIcon><Icon fontSize="small">language</Icon></ListItemIcon>
                                                 <ListItemText primary={"Wants to learn: " + (match.languagesToLearn && match.languagesToLearn.map(e => e.language).join(", "))}/>
                                             </ListItem>
@@ -234,10 +230,7 @@ class BrowseMatch extends React.Component
                             aria-controls="panel1a-content"
                             id="panel1a-header"
                         >
-                        <Typography className={classes.heading}>Possible matches to learn {item.languageName}</Typography>
-                        <Tooltip title={languageTooltip}>
-                            <Box pl={2}><InfoOutlinedIcon/></Box>
-                        </Tooltip>
+                        <Typography className={classes.heading}>Possible matches who can teach you {item.languageName}</Typography>
                         </ExpansionPanelSummary>
                         <ExpansionPanelDetails>
                             {

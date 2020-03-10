@@ -141,11 +141,10 @@ class LanguagePicker extends Component {
 
     return (<div>
       <Dialog disableBackdropClick disableEscapeKeyDown open={this.props.open}>
-        <DialogTitle>Input Language
-        <IconButton  size="small" className={classes.buttonInfo} color="primary" >
-            <InfoIcon fontSize="inherit"  onClick={this.handleShowInfo}/>
-            </IconButton>
-        </DialogTitle>    
+        <DialogTitle>Input a language</DialogTitle>
+        <Typography><a href="https://europass.cedefop.europa.eu/resources/european-language-levels-cefr" target="_blank">
+          What are the levels?</a>
+        </Typography>    
         <DialogContent>
         <Autocomplete
                 options={filteredLanguages}

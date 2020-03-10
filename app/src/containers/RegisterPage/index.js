@@ -199,9 +199,9 @@ class SignUpPage extends Component {
 
   handleChangeCities = value => {
     if (value.length > 2) {
-      this.setState( {citiesError: true, citiesErrorMessage: 'Maximum number of cities is 2'} );
+      this.setState( {citiesError: true, citiesErrorMessage: 'Maximum number of municipilities is 2'} );
     }else if(value.length < 1){
-      this.setState( {citiesError: true, citiesErrorMessage: 'Minimun number of cities is 1'} );
+      this.setState( {citiesError: true, citiesErrorMessage: 'Minimun number of municipilities is 1'} );
     }else{
       this.setState( {citiesError: false, citiesErrorMessage: ''} );
       this.setState({cities: value});
@@ -461,7 +461,7 @@ class SignUpPage extends Component {
               </Typography>
               <br></br>
               <Typography variant="caption" >
-                    Please, fill just some more informations to use Tandem App and confirm your registration!
+                    Please fill in the following information to confirm your registration!
               </Typography>
               <br></br>
         </div>
@@ -479,7 +479,7 @@ class SignUpPage extends Component {
                   required={true}
                   fullWidth
                   id="firstName"
-                  label="First Name"
+                  label="First name"
                   autoFocus
                   error={this.state.firstNameError}
                   helperText={ this.state.firstNameError === false ? '' : this.state.firstNameErrorMessage}
@@ -494,7 +494,7 @@ class SignUpPage extends Component {
                   required={true}
                   fullWidth
                   id="lastName"
-                  label="Last Name"
+                  label="Last name"
                   name="lastName"
                   autoComplete="lname"
                   error={this.state.lastNameError}
@@ -510,12 +510,12 @@ class SignUpPage extends Component {
                   required
                   fullWidth
                   id="email"
-                  label="Email Address"
+                  label="Email address"
                   value = {this.state.email}
                   name="email"
                   autoComplete="email"
                   onChange =  {this.handleChangeEmail}
-                  helperText="Please, use your university email. Ex: email@tuni.fi"
+                  helperText="Please use your university email (firstname.lastname@university.fi)"
                 />
               </Grid>
               
@@ -537,7 +537,7 @@ class SignUpPage extends Component {
               <Grid item xs={12}>
                 <TextField
                     id="passwordConfirmation"
-                    label="Password Confirmation"
+                    label="Password confirmation"
                     type="password"
                     autoComplete="current-password"
                     variant="outlined"
@@ -578,7 +578,7 @@ class SignUpPage extends Component {
              
               <Grid item xs={12}>
                 <Typography variant="subtitle1" gutterBottom>
-                  Languages I can teach (maximum of 3)
+                  Languages I can teach (max 3) (Note: you need to be a native or a near-native speaker to teach)
                 </Typography>
 
                 <List>
@@ -609,7 +609,7 @@ class SignUpPage extends Component {
 
               <Grid item xs={12}>
                     <Typography variant="subtitle1" gutterBottom>
-                          Languages I want to learn (maximum of 3)
+                          Languages I want to learn (max. 3)
                     </Typography>
 
                     <List>

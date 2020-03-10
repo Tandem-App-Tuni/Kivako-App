@@ -210,7 +210,7 @@ class EditProfilePage extends Component
       {
         if (response.status === 200)
         {
-          alert('You can always create a new account at the Sing Up page. Goodbye!');
+          alert('You can always create a new account by signing in again. Goodbye!');
           window.location.reload();
         }
         else alert('Something went wrong. Try again later.');
@@ -274,9 +274,9 @@ class EditProfilePage extends Component
 
   handleChangeCities = value => {
     if (value.length > 2) {
-      this.setState( {citiesError: true, citiesErrorMessage: 'Maximum number of cities is 2'} );
+      this.setState( {citiesError: true, citiesErrorMessage: 'Maximum number of municipilities is 2'} );
     }else if(value.length < 1){
-      this.setState( {citiesError: true, citiesErrorMessage: 'Minimun number of cities is 1'} );
+      this.setState( {citiesError: true, citiesErrorMessage: 'Minimun number of municipilities is 1'} );
     }else{
       this.setState( {citiesError: false, citiesErrorMessage: ''} );
       this.setState({cities: value});
@@ -445,7 +445,7 @@ class EditProfilePage extends Component
     const mediaCard =  this.state.profileVideoURL 
                           ? <Grid item xs={12} >
                               <Card>
-                              <CardHeader title="Profile video preview"  subheader="Note: Remember to click save changes button if you updated your profile video">
+                              <CardHeader title="Profile video URL"  subheader="Note: Remember to click save changes button if you updated your profile video">
                               </CardHeader>
                               <CardMedia className={classes.cardMedia} component="iframe" src={this.state.profileVideoURL}></CardMedia>
                               </Card>
@@ -486,7 +486,7 @@ class EditProfilePage extends Component
                     required={true}
                     fullWidth
                     id="firstName"
-                    label="First Name"
+                    label="First name"
                     autoFocus
                     error={this.state.firstNameError}
                     value = {this.state.firstName}
@@ -502,7 +502,7 @@ class EditProfilePage extends Component
                     required={true}
                     fullWidth
                     id="lastName"
-                    label="Last Name"
+                    label="Last name"
                     name="lastName"
                     autoComplete="lname"
                     value = {this.state.lastName}
@@ -519,7 +519,7 @@ class EditProfilePage extends Component
                     required
                     fullWidth
                     id="email"
-                    label="Email Address"
+                    label="Email address"
                     value = {this.state.email}
                     name="email"
                     autoComplete="email"
@@ -539,7 +539,7 @@ class EditProfilePage extends Component
                     name="video"
                     autoComplete="video"
                     onChange =  {this.handleChangeProfileVideo}
-                    helperText="Make sure the video is accessible publicly. Youtube link is recommended."/>
+                    helperText="Please make sure the video is publicly accessible. A YouTube link is recommended."/>
                 </Grid>
 
                 {mediaCard}
@@ -573,7 +573,7 @@ class EditProfilePage extends Component
               
                 <Grid item xs={12}>
                   <Typography variant="subtitle1" gutterBottom>
-                    Languages I can teach (maximum of 3)
+                  Languages I can teach (max 3) (Note: you need to be a native or a near-native speaker to teach)
                   </Typography>
 
                   <List>
@@ -606,7 +606,7 @@ class EditProfilePage extends Component
 
                 <Grid item xs={12}>
                     <Typography variant="subtitle1" gutterBottom>
-                          Languages I want to learn (maximum of 3)
+                          Languages I want to learn (max. 3)
                     </Typography>
 
                     <List>
