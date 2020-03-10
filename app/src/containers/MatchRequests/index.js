@@ -215,7 +215,6 @@ class MatchRequests extends React.Component
         {  
             return  (
                 <div className={classes.root}>
-                    <ResponsiveDrawer title = "Pending requests">
                         <div align = "center">
                             <Paper>
       
@@ -239,7 +238,6 @@ class MatchRequests extends React.Component
                             <br></br>
                             <br></br>
                         </div>
-                    </ResponsiveDrawer>
                 </div>
 
             )
