@@ -1,17 +1,28 @@
 body{
     font-family:'Arial','Montserrat-Black', sans-serif;
-    text-align: center;
 }
 h1,h2,h3,h4,h5,h6{
     font-family: 'Montserrat-Black';
 }
-.container-fluid{
-    padding:2% 15%;
+p{
+    font-size: 1rem;
+    line-height: 1.5rem;
 }
 
 .colured-section{
-    background: #4E008E;
+    background-color: #4E008E;
     color: white;
+    padding: 2% 5%;   
+}
+.white-section{
+    color: #4E008E;
+    background-color: white;
+    padding: 2% 5%;
+}
+.third-section-container{
+    color: #4E008E;
+    background-color: rgb(231,219,239);
+    padding: 2% 5%;
 }
 
 .clear-div{
@@ -19,133 +30,96 @@ h1,h2,h3,h4,h5,h6{
 }
 
 
-/* first section starts here*/
-#first-section{
-    text-align: left;
-    padding-bottom: 30px;
+
+/* Navbar codes starts here */
+.navbar{
+    padding: 1% 5%;
 }
-.btn-style{
-    margin:20px 20px 10px 0;
-}
-.website-logo{
+.navbar .nav-logo{
     width: 300px;
-    /* border-radius: 50%; */
     margin-right: 10px;
     margin-left: -7px;
 }
-.navbar{
-    padding: 0 0 2rem 0;
+.navbar a{
+    color: #4E008E;  
+    margin-right: 20px;
+    font-size: 1.2rem;   
 }
-.navbar-brand{
-    font-family: ubuntu;
-    font-size: 2.5rem;
-    font-weight: bold;
+.navbar a:hover{
+    color: rgb(139, 1, 251);
+    cursor: pointer; 
+    text-decoration: none;   
 }
-.nav-item{
-    padding: 0 18px;
-}
-.nav-link{
-    font-family: 'Montserrat-white';
-    font-size: 1.2rem;
-}
+/* Navbar codes ends here */
 
 
-/* designing title div*/
-.title-heading{
-    font-family: 'Montserrat-Black', sans-serif;
-    font-size: 3 rem;
-    line-height: 1.5;
+#first-section{
+    padding: 0% 5%;
 }
+/* first section starts here */
+.cover-pic{
+    width: 100%;
+    height: 100%;
+    padding: 0% 5%;
+}
+
 .title-paragraph{
-    padding: 3% 0%;
-    font-family: 'Montserrat-Black', sans-serif;
-    
-}
-
-.title-image{
-    width:70%;
-    transform: rotate(15deg);
-    position: absolute;
-    right: 15%;
-    margin-top: 50px;
-    
+   text-align: justify;     
 }
 
 .title-btn{
-    margin:5% 5% 5% 0;
+    margin:1% 3% 3% 0;
+    color:  #4E008E;
+    background-color: white;
+    border-color: white;
+    font-weight: bolder;
+    padding: 0% 2%;    
+}
+.btn-outline-success:hover{
+    border-color:#fff
+}
+/* first section ends here */
+
+
+/* second section starts here */
+#second-section h2{
+    text-align: center;
     
 }
-
-.btn-outline-success {
-    color: white;
-    border-color: white;
-}
-
-.title-icon{
-  margin-right: 15px;
-}
-/* first section ends here*/
-
-
-/* second section starts */
-#second-section{
-    position: relative;
-    z-index: 1;
-    color: black;
-   margin-top: -50px;
-
-}
-#second-section .card{
-   
-    background-color: white;
-    padding: 50px 0px;
-}
-#second-section .card .card-title{
-    font-size: 2 rem;
-    font-weight: bold;
-}
-#second-section .card .card-text{
-    font-size: 1.5 rem;
-}
-
-
-/* third section starts here */
-#third-section{
-    margin-top: -50px;
-    padding: 7% 0% 0% 0%;
+#second-section .row{
+    padding: 0% 7%;
 }
 .feature-title{
     font-size: 1.5rem;
     margin-top: 20px;
+    color: white;    
 }
 
 .feature-box{
     text-align: center;
-    padding: 3%;
-    
+    padding: 1%;    
 }
 
 .feature-box p{
-    color: gray;
-    font-size: 1.2rem;
+    color: rgb(139, 1, 251);   
 }
 
 .feature-icon{
-    border: 5px solid white;
+    border: 7px solid white;
     border-radius: 50%;
-    padding: 7px;
-    margin-bottom: 15px;
+    padding: 10px;
+    margin-bottom: 10px;
 }
 
-.feature-box .card .face{
-   
+
+.feature-box .card .face{   
     height: 200px;
     transition: 0.5s;
 }
 
 .feature-box .card .face1{
     position: relative;
-    background: #333;
+    background: #4E008E;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -155,7 +129,7 @@ h1,h2,h3,h4,h5,h6{
 
 .feature-box .card:hover .face1{
     transform: translateY(0);
-    background: tomato;
+    background: rgb(139, 1, 251);
 }
 
 .feature-box .card .face1 .content{
@@ -182,24 +156,27 @@ h1,h2,h3,h4,h5,h6{
 
 }
 
-.feature-box .card:hover .face2{
-    
+.feature-box .card:hover .face2{    
    transform: translateY(0);
-   border-color: tomato;
+   border-color: rgb(139, 1, 251);
 }
+/* second section ends here */
 
 
-/* fourth section starts here */
-#fourth-section{
-    margin-top: 50px;
-   
+/* third section starts here */
+#third-section{
+    margin-top: 5px;
+    text-align: center;
+    padding: 0% 5%;
+  
 }
-#fourth-section .timeline{
+#third-section .timeline{
     position: relative;
-    margin-top: 50px;
+    margin-top: 15px;  
+    
 }
 
-#fourth-section .timeline:before{
+#third-section .timeline:before{
     content: '';
     position: absolute;
     left: 50%;
@@ -208,34 +185,34 @@ h1,h2,h3,h4,h5,h6{
     background: #c5c5c5;
 }
 
-#fourth-section .timeline ul{
+#third-section .timeline ul{
     margin: 0;
     padding: 0;
 
 }
-#fourth-section .timeline ul li{
+#third-section .timeline ul li{
     list-style: none;
     position: relative;
     width: 50%;
     padding: 10px 20px;
     box-sizing: border-box;
 }
-#fourth-section .timeline ul li:nth-child(odd){
+#third-section .timeline ul li:nth-child(odd){
    float: left;
    text-align: right;
    clear: both;
 }
 
-#fourth-section .timeline ul li:nth-child(even){
+#third-section .timeline ul li:nth-child(even){
     float: right;
     text-align: left;
     clear: both;
  }
- #fourth-section .content{
-     padding-bottom: 20px;
+ #third-section .content{
+     padding-bottom: 15px;
  }
 
- #fourth-section .timeline ul li:nth-child(odd):before{
+ #third-section .timeline ul li:nth-child(odd):before{
     content: '';
     position: absolute;
     top: 24px;
@@ -248,7 +225,7 @@ h1,h2,h3,h4,h5,h6{
  }
 
 
- #fourth-section .timeline ul li:nth-child(even):before{
+ #third-section .timeline ul li:nth-child(even):before{
     content: '';
     position: absolute;
     top: 24px;
@@ -260,20 +237,23 @@ h1,h2,h3,h4,h5,h6{
     box-shadow: 0 0 0 3px rgba(233,33,99,0.2);
  }
 
- #fourth-section .timeline ul li h3{
+ #third-section .timeline ul li h3{
      font-weight: 600;
      background:#4E008E; 
      color: #fff;
      border-radius: 18px;
      display: inline;
-     padding: 2%;
-
+     padding: 1%;    
  }
 
- #fourth-section .timeline ul li p{
-    margin: 10px 0 0;
-    
+ #third-section .timeline ul li p{
+    margin: 10px 0 0;    
 }
+.timeline a{
+    color: #4E008E;
+    font-weight: bolder;
+    text-decoration: underline;
+  }
 
 .link-button {
     background-color: transparent;
@@ -282,8 +262,9 @@ h1,h2,h3,h4,h5,h6{
     display: inline;
     margin: 0;
     padding: 0;
-    color: #0056B3;
-    
+    color: #4E008E;
+    font-weight: bolder;
+    text-decoration: underline;
   }
   
   .link-button:hover,
@@ -292,127 +273,72 @@ h1,h2,h3,h4,h5,h6{
   color: #0056B3;
   }
 
+/* third section ends here */
+
+/* fourth section starts here */
+#fourth-section{
+    padding: 0% 5%;
+    text-align: center;
+}
 /* fourth section ends here */
 
-
 /* footer section starts here */
-#footer-section .footer-left,
-#footer-section .footer-right{
-    display: inline-block;
-	vertical-align: top;
-}
-#footer-section .footer-left{
-	width: 50%;
-}
-.kivako-logo{
-    width: 25%;
-    
+#footer-section .content{
+    text-align: center;
+    margin: 1% 0%;
+    font-size: 1rem;
 }
 
-.cc-logo{
-    width: 25%;
+#footer-section .content a{
+    display: block;
+    color: black;
+}
+#footer-section .content a:hover{
+    font-weight: bolder;
+    text-decoration: underline;
+}
+ #footer-section .content  .footer-logo1{
+    margin-top: 20px;
+    width: 250px;
+     
+} 
+
+#footer-section .content .footer-logos .footer-logo2{
+    margin-top: 20px;
+    width: 100px;
+    margin-right: 20px;   
+}
+#footer-section .content .footer-logos .footer-logo3{
+    margin-top: 20px;
+    width: 100px;   
 }
 
-#footer-section .footer-left-links{
-	color:  red;
-	margin: 5px 10px;	
-}
-#footer-section .footer-left-links a{
-	display:inline-block;
-	line-height: 1.5;
-    font-weight:500;
-	text-decoration: none;
-	color:  white;
-}
-#footer-section .footer-left-links a:before {
-    content: "|";
-    font-weight: 400;
-    font-size: 25px;
-    color: #fff;
-    display: inline-block;
-    padding: 0 5px;
-}
-#footer-section .footer-left-links .first-link:before {
-    content: none;
-}
-#footer-section .footer-right{
-    width: 49%;
-    padding-left: 100px;
-}
-
-#footer-section .footer-right img{	
-	color: white;
-	font-size: 25px;	
-	text-align: center;
-	line-height: 42px;
-	margin: 10px;
-    vertical-align: middle;
-    
-}
-#footer-section .footer-right p{
-    
-    margin-left: 120px;
-}
-
-#footer-section .footer-right a{
-    color: white;
-}
 /* footer section ends here */
 
-
 @media (max-width: 900px){
-    .title-image{       
-        visibility: hidden;
-    }
-
-
-#fourth-section .timeline:before{
-    content: none;
-   
-}
-
-#fourth-section .timeline ul li{
-  
-    width: 100%;
-    padding: 20px 10px;
-  
-}
-#fourth-section .timeline ul li:nth-child(odd){
-   float: none;
-   text-align: center;
- 
-}
-#fourth-section .timeline ul li:nth-child(even){
-    float: none;
-    text-align: center;
-    
- }
- #fourth-section .timeline ul li:nth-child(odd):before{
-    content: none;
-  }
-
- #fourth-section .timeline ul li:nth-child(even):before{
-    content: none;
-}
-
-
-    #footer-section .footer-left,
-	#footer-section .footer-right{
-		display: block;
-		width: 100%;
-		margin-bottom: 20px;
-        text-align: center;
-         padding-left: 0px;
-	} 
-
-	#footer-section .footer-right img{
-		margin-left: 0;
-    }
-    
-    #footer-section .footer-right p{
-    
-        margin-left: 110px;
-    }
      
-  
+    #third-section .timeline:before{
+        content: none;    
+    }
+
+    #third-section .timeline ul li{    
+        width: 100%;
+        padding: 15px 10px;    
+    }
+    #third-section .timeline ul li:nth-child(odd){
+        float: none;
+        text-align: center;    
+    }
+    #third-section .timeline ul li:nth-child(even){
+        float: none;
+        text-align: center;        
+    }
+    #third-section .timeline ul li:nth-child(odd):before{
+        content: none;
+    }
+
+    #third-section .timeline ul li:nth-child(even):before{
+        content: none;
+    }        
 }
+
