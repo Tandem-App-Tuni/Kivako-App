@@ -13,11 +13,13 @@ import IconButton from '@material-ui/core/IconButton';
 
 import EditIcon from '@material-ui/icons/Edit';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+import DeleteRoundedIcon from '@material-ui/icons/DeleteRounded';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -328,6 +330,27 @@ class SignUpPage extends Component {
     )
   };
 
+  onDeleteLanguage = (type, itemIndex) => {
+    switch(type) {
+      case "teach":
+        const oldTeachList = this.state.languagesToTeach;
+        let newTeachList = oldTeachList.filter((x, index) => index !== itemIndex); 
+        this.setState({
+          languagesToTeach: newTeachList
+        })
+        break;
+      case "learn":
+        const oldLearnList = this.state.languagesToLearn;
+        let newLearnList = oldLearnList.filter((x, index) => index !== itemIndex); 
+        this.setState({
+            languagesToLearn: newLearnList
+        })
+        break;
+      default:
+        break;
+    }
+  }
+
   toExcludeLanguages = () =>{
     var langs = [];
     
@@ -586,9 +609,14 @@ class SignUpPage extends Component {
                         return (
                             <ListItem button key={item.language} onClick={() =>this.onShowInputTeachLanguage(true, this.state.languagesToTeach.indexOf(item))}>
                               <ListItemText primary={item.language + ", Level: " + item.level  + ", Credits: " + item.credits} />
-                              <ListItemIcon>
-                                <EditIcon />
-                              </ListItemIcon>
+                                <ListItemSecondaryAction>
+                                <IconButton edge="end" aria-label="add" onClick={() =>this.onShowInputTeachLanguage(true, this.state.languagesToTeach.indexOf(item))}>
+                                  <EditIcon  />
+                                </IconButton>
+                                <IconButton edge="end" aria-label="delete" onClick={() => this.onDeleteLanguage("teach", this.state.languagesToTeach.indexOf(item))}>
+                                  <DeleteRoundedIcon />
+                                </IconButton>
+                              </ListItemSecondaryAction>
                             </ListItem>
                         )
                       })}
@@ -617,9 +645,14 @@ class SignUpPage extends Component {
                         return (
                             <ListItem button key={item.language} onClick={() =>this.onShowInputLearnLanguage(true, this.state.languagesToLearn.indexOf(item))}>
                               <ListItemText primary={item.language + ", Level " + item.level + ", Credits: " + item.credits } />
-                              <ListItemIcon>
-                                <EditIcon />
-                              </ListItemIcon>
+                              <ListItemSecondaryAction>
+                                <IconButton edge="end" aria-label="add" onClick={() =>this.onShowInputLearnLanguage(true, this.state.languagesToLearn.indexOf(item))}>
+                                  <EditIcon  />
+                                </IconButton>
+                                <IconButton edge="end" aria-label="delete" onClick={() => this.onDeleteLanguage("learn", this.state.languagesToLearn.indexOf(item))}>
+                                  <DeleteRoundedIcon />
+                                </IconButton>
+                              </ListItemSecondaryAction>
                             </ListItem>
                         )
                       })}
