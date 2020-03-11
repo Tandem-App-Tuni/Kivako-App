@@ -121,6 +121,7 @@ class EditProfilePage extends Component
       alertText: '',
       editingTeachLanguageIndex: 0,
       editingLearnLanguageIndex: 0,
+      videoError: false,
       portOption: ConstantsList.PORT_IN_USE //set to 3000 for local testing
     };
   }
@@ -268,10 +269,20 @@ class EditProfilePage extends Component
   handleChangeProfileVideo = event => 
   {
     var value = (event.target.value);
-
-    this.setState({
-      profileVideoURL: value
-    })
+    // ex: https://www.youtube.com/watch?v=2ZjcBwlZSxI
+    if(value.includes("www.youtube.com/watch?v=")) {
+      let id = value.split("watch?v=")[1];
+      value = `https://www.youtube.com/embed/${id}`;
+      this.setState({
+        profileVideoURL: value,
+        videoError: false
+      })
+    }
+    else {
+      this.setState({
+        videoError: true
+      })
+    }
   };
 
   handleChangeCities = value => {
@@ -562,7 +573,12 @@ class EditProfilePage extends Component
                     name="video"
                     autoComplete="video"
                     onChange =  {this.handleChangeProfileVideo}
-                    helperText="Please make sure the video is publicly accessible. A YouTube link is recommended."/>
+                    error = {this.state.videoError}
+                    helperText= {
+                      this.state.videoError ? "Url is not supported. Only youtube Url is supported at the moment."
+                      : "Please make sure the video is publicly accessible. A YouTube link is recommended."
+                    }
+                    />
                 </Grid>
 
                 {mediaCard}
