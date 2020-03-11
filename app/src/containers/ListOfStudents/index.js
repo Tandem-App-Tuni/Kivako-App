@@ -78,9 +78,7 @@ class ListOfStudents extends Component
     this.state = {
       isLoadingTable:true,
       page: 0,
-      setPage: 0,
       rowsPerPage: 10,
-      setRowsPerPage : 10,
       rows: [],
       message: '',
       socket:props.socket
@@ -89,20 +87,19 @@ class ListOfStudents extends Component
     console.log('[ListOfStudents] Constructor');
   }
 
-  handleChangePage = event =>  
+  handleChangePage = (event, page) =>  
   {
-    this.setState({page:this.page+1});
+    this.setState({page: page});
+  };
+
+  handleChangeRowsPerPage = event => 
+  {
+    this.setState({rowsPerPage:event.target.value, page:0});
   };
   
   handleChangeMessage = (e) =>
   {
     this.setState({message: e.target.value});
-  };
-
-  handleChangeRowsPerPage = event => 
-  {
-    this.setState({rowsPerPage:+event.target.value});
-    this.setState({page:0});
   };
 
   componentDidMount() 
@@ -193,7 +190,6 @@ class ListOfStudents extends Component
             </Button>
           </Grid>
         </Grid>
-        <div>
           <Table stickyHeader aria-label="sticky table" className={classes.tableWrapper}>
             <TableHead>
               <TableRow>
@@ -208,7 +204,7 @@ class ListOfStudents extends Component
               </TableRow>
             </TableHead>
             <TableBody>
-              {this.state.rows.slice(this.state.page * this.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((row, index) => {
+              {this.state.rows.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((row, index) => {
                 return (
                   <TableRow hover role="checkbox" tabIndex={-1} key={index}>
                     {this.columns.map(column => {
@@ -235,16 +231,14 @@ class ListOfStudents extends Component
               })}
             </TableBody>
           </Table>
-        </div>
-        <TablePagination
-          rowsPerPageOptions={[10, 25, 100]}
-          component="div"
-          count={this.state.rows.length}
-          rowsPerPage={this.state.rowsPerPage}
-          page={this.state.page}
-          onChangePage={this.handleChangePage}
-          onChangeRowsPerPage={this.handleChangeRowsPerPage}
-        />
+          <TablePagination
+            rowsPerPageOptions={[10, 25, 100]}
+            component="div"
+            count={this.state.rows.length}
+            rowsPerPage={this.state.rowsPerPage}
+            page={this.state.page}
+            onChangePage={this.handleChangePage}
+            onChangeRowsPerPage={this.handleChangeRowsPerPage}/>
       </Paper>
     );
   }
