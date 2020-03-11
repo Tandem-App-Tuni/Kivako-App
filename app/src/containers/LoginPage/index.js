@@ -11,17 +11,15 @@ import './style.css'
 import 'bootstrap/dist/js/bootstrap.js';
 
 
-import address from "./images/address.png"
+
 import arrows from "./images/arrows.png"
 import elastic from "./images/elastic.png"
-import email from "./images/email.png"
-import eyeglass from "./images/eyeglass.jfif"
 import friendship from "./images/friendship.png"
-import logo from "./images/logo.png"
-import smartphone from "./images/smartphone.png"
 import kivako_logo from "./images/kivako_logo.png"
 import cc_image from "./images/cc.png"
-
+import unitandem_logo from "./images/unitandem_logo.png"
+import cover_pic from "./images/cover_photo.png"
+import '@fortawesome/fontawesome-free/css/all.min.css';
 const useStyles = theme =>
   ({
     '@global':
@@ -68,92 +66,51 @@ class LandingPage extends Component {
     return (
 
       <div>
-        {/* first section starts  */}
-        <section id="first-section" className="colured-section">
-          <div className="container-fluid">
-            <nav className="navbar navbar-expand-lg navbar-dark">
-              <img className="website-logo" src={logo} alt="website-logo" />
-              <button className="navbar-toggler" type="button" data-toggle="collapse"
-                data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <span className="navbar-toggler-icon"></span>
-              </button>
+        <nav className="navbar navbar-expand-md navbar-light">{/* navigation starts here */}
+          <a href="."><img className="nav-logo" src={unitandem_logo} alt="unitandem logo" /></a>
+          <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01"
+            aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+            <span><i className="fas fa-bars" style={{ color: "#4E008E", fontSize: "28px" }}></i></span>
+          </button>
+          <div className="collapse navbar-collapse" id="navbarTogglerDemo01">
+            <ul className="navbar-nav ml-auto navbar-right">
+              <a className="nav-text" href=".">Home</a>
+              <a className="nav-text" href="#footer-section">Contact</a>
+            </ul>
+          </div>
+        </nav> {/* navigation ends here */}
 
-              <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul className="navbar-nav ml-auto">
-                  <li className="nav-item active">
-                    <a className="nav-link" href=".">Home <span className="sr-only">(current)</span></a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="#footer-section">Contact <span
-                      className="sr-only">(current)</span></a>
-
-                  </li>
-
-
-                </ul>
-              </div>
-            </nav>
-
-
-            {/* Title */}
-            <div className="row">
-              <div className="col-lg-6">
-                <h1 className="title-heading">Welcome to UniTandem!</h1>
-
-                <p className="title-paragraph">UniTandem provides higher education students in Finland with a chance to
-                      learn languages and cultures through tandem learning. </p>
-
-                <button id="signUpButton" className="btn btn-outline-success btn-lg title-btn" type="button" onClick={() => { this.onSignUpButtonClicked() }}>
-                  Sign Up</button>
-                <button id="signInButton" className="btn btn-outline-success btn-lg title-btn" type="button" onClick={() => { this.onLoginButtonClicked() }}>
-                  Sign In</button>
-                <a id="moodle-button" href="https://digicampus.fi/login/index.php"
-                  className="btn btn-outline-success btn-lg title-btn">Go to
-                      Moodle</a>
-              </div>
-              <div className="col-lg-6">
-                <img className="title-image" src={eyeglass} alt="iphone-mockup" />
-              </div>
+        <img className="cover-pic" src={cover_pic} alt="" /> {/*cover photo is added here*/}
+        <section id="first-section"> {/* first section starts here */}
+          <div className="container-fluid colured-section">
+            <div id="title-div">
+              <h2>Welcome to UniTandem!</h2>
+              <p className="title-paragraph">UniTandem provides higher education students in Finland with a chance to
+                learn languages and cultures through tandem learning. </p>
+              <button id="signUpButton" className="btn btn-outline-success btn-lg title-btn" type="button" onClick={() => { this.onSignUpButtonClicked() }}>
+                Sign Up</button>
+              <button id="signInButton" className="btn btn-outline-success btn-lg title-btn" type="button" onClick={() => { this.onLoginButtonClicked() }}>
+                Sign In</button>
+              <a id="moodle-button" href=" https://digicampus.fi/course/view.php?id=272"
+                className="btn btn-lg btn-outline-success title-btn">Go to
+                DigiCampus</a>
+              <h2>What is tandem learning? </h2>
+              <p className="title-paragraph">Tandem (also known as Each One Teach One) is a method where
+                  two
+                  students teach each other their native (or native-like) languages in informal meetings,
+                  acting both in the teacher’s and the learner’s roles. Tandem can be utilized from
+                  beginner to advanced levels, and it can be used to support regular language studies or
+                  taken separately.
+            </p>
             </div>
           </div>
-        </section>
-        {/* first section ends here  */}
+        </section>  {/* first section ends here */}
 
-
-
-        {/* second section starts here */}
-        <section id="second-section">
-          <div className="container-fluid">
+        <section id="second-section"> {/* second section or feature section starts here */}
+          <div className=" container-fluid white-section">
+            <h2>Why UniTandem?</h2>
             <div className="row">
-              <div className="col-md-12">
-                <div className="card">
-                  <div className="card-body">
-                    <h3 className="card-title">What is UniTandem Learning? </h3>
-                    <p className="card-text text-muted">Tandem (also known as Each One Teach One) is a method where
-                        two
-                        students teach each other their native (or native-like) languages in informal meetings,
-                        acting both in the teacher’s and the learner’s roles. Tandem can be utilized from
-                        beginner to advanced levels, and it can be used to support regular language studies or
-                        taken separately.
-                          </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </section>
-        {/* second section ends here  */}
-
-
-
-        {/* third section or feature section starts here  */}
-        <section id="third-section" className="colured-section">
-          <div className="container-fluid">
-            <h2>Why Choose UniTandem?</h2>
-            <div className="row">
-              <div className="feature-box col-lg-4">
+              <div className="feature-box col-lg-4 col-md-4 col-sm-6">
                 <div className="card">
                   <div className="face face1">
                     <div className="content">
@@ -161,17 +118,15 @@ class LandingPage extends Component {
                       <h3 className="feature-title">Possibilities</h3>
                     </div>
                   </div>
-
                   <div className="face face2">
                     <div className="content">
-                      <p>an unmatched selection of languages available – see it yourself ! </p>
-                      <a href="#fifth-section">Click here to see the available languages</a>
+                      <p>An unmatched selection of languages available. </p>
+                      <a href="#fourth-section">Click here to see the available languages</a>
                     </div>
                   </div>
                 </div>
               </div>
-
-              <div className="feature-box col-lg-4">
+              <div className="feature-box col-lg-4 col-md-4 col-sm-6">
                 <div className="card">
                   <div className="face face1">
                     <div className="content">
@@ -179,15 +134,14 @@ class LandingPage extends Component {
                       <h3 className="feature-title">Flexibility</h3>
                     </div>
                   </div>
-
                   <div className="face face2">
                     <div className="content">
-                      <p>you can study 1–5 ECTS .</p>
+                      <p>You can study 1–5 ECTS .</p>
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="feature-box col-lg-4">
+              <div className="feature-box col-lg-4 col-md-4 col-sm-6">
                 <div className="card">
                   <div className="face face1">
                     <div className="content">
@@ -195,7 +149,6 @@ class LandingPage extends Component {
                       <h3 className="feature-title">Guaranteed to work</h3>
                     </div>
                   </div>
-
                   <div className="face face2">
                     <div className="content">
                       <p>UniTandem is a great way to make new friends.</p>
@@ -203,159 +156,92 @@ class LandingPage extends Component {
                   </div>
                 </div>
               </div>
-
             </div>
           </div>
-        </section>
+        </section>{/* second section or feature section ends here */}
 
-
-        {/* third section or feature section ends here  */}
-
-
-
-        {/* fourth section starts here  */}
-        <section id="fourth-section">
-          <div className="container-fluid">
-
+        <section id="third-section">{/* third section starts here  */}
+          <div className="container-fluid third-section-container">
             <h2> How does UniTandem work?</h2>
-
             <div className="timeline">
               <ul>
                 <li>
                   <div className="content">
                     <h3>Step 1</h3>
-                    <p> Take a look at the <a href="#fifth-section">UniTandem data sheet</a> to see if there are people who
+                    <p> Take a look at the <a href="#fourth-section">UniTandem data sheet</a> to see if there are people who
                               could teach you the language you’re interested in learning. If there isn't, sign up anyway - there might be suitable partners for you later on! </p>
                   </div>
-
                 </li>
-
-
                 <li>
                   <div className="content">
                     <h3>Step 2</h3>
                     <p><button type="button" className="link-button" onClick={() => { this.onSignUpButtonClicked() }}> Sign up to UniTandem</button> using your university or university of
                               applied sciences email address.</p>
                   </div>
-
                 </li>
-
                 <li>
                   <div className="content">
                     <h3>Step 3</h3>
-                    <p>Find a language partner. When you have found a partner, send an email to <a href="mailto:info@unitandem.fi"> info@unitandem.fi</a> to get the password for <a href="https://digicampus.fi/course/view.php?id=272">DigiCampus</a>, where the instructions and materials are.</p>
+                    <p>Find a language partner. When you have found a partner, send an email to <a href="mailto:info@unitandem.fi"> info@unitandem.fi</a> to get the password for <a href="https://digicampus.fi/course/view.php?id=272">DigiCampus</a>, where the instructions and materials are available.</p>
                   </div>
-
                 </li>
-
-
                 <li>
                   <div className="content">
                     <h3>Step 4</h3>
-                    <p>Sign up to <a href="https://digicampus.fi/course/view.php?id=272">DigiCampus</a> using
-                              your university of university of applied sciences email address (HAKA), and when prompted, enter the enrolment key you have received from <a href="mailto:info@unitandem.fi"> info@unitandem.fi</a>. </p>
+                    <p>Sign up to <a href="https://digicampus.fi/course/view.php?id=272">DigiCampus</a> using your university of university of applied sciences email address (HAKA), and when prompted, enter the enrolment key you have received from <a href="mailto:info@unitandem.fi"> info@unitandem.fi</a>. </p>
                   </div>
-
                 </li>
-
-
                 <li>
                   <div className="content">
                     <h3>Step 5</h3>
-                    <p>Read the instructions and choose the topics or triggers that you find interesting (3
-                              triggers as a learner = 1 credit).</p>
+                    <p>Read the instructions and choose the topics or triggers that you find interesting (3 triggers as a learner = 1 credit).</p>
                   </div>
-
                 </li>
-
                 <li>
                   <div className="content">
                     <h3>Step 6</h3>
-                    <p>Collect the outputs of each trigger you complete in your portfolio and submit it when
-                              you’re finished.</p>
+                    <p>Collect the outputs of each trigger you complete in your portfolio and submit it when you’re finished.</p>
                   </div>
-
                 </li>
-
                 <li>
                   <div className="content">
                     <h3>Step 7</h3>
                     <p>Give your partner and yourself feedback at the end.</p>
                   </div>
-
                 </li>
-
                 <li>
                   <div className="content">
                     <h3>Step 8</h3>
-                    <p>The university coordinating UniTandem awards the credits </p>
+                    <p>The university coordinating UniTandem awards the credits. </p>
                   </div>
-
                 </li>
-
                 <div className="clear-div"></div>
               </ul>
             </div>
           </div>
-        </section>
-        {/* fourth section ends here  */}
+        </section>  {/* third section ends here  */}
 
 
-        <section id="fifth-section" className="colured-section">
-          <div className="container-fluid">
-            <h2>Languages available in UniTandem:</h2>
-
-            <InfoTable></InfoTable>
-            <br></br>
+        <section id="fourth-section">{/* fourth section starts */}
+          <div className="container-fluid colured-section">
+            <h2>Languages available in UniTandem</h2>
+            <InfoTable></InfoTable><br />
           </div>
-        </section>
+        </section> {/* fourt section ends here */}
 
-
-
-        {/*  footer-section starts her*/}
-
-        <section id="footer-section" className="colured-section">
-
-          <div className="container-fluid" >
-            <div className="footer-left">
-              <img className="kivako-logo" src={kivako_logo} alt="kivako-logo" />
-              <p className="footer-left-links">
-                <a href="#first-section" className="first-link">Home</a>
-                <a href="#second-section">About</a>
-                <a href="#third-section">Features</a>
-              </p>
-              <p><img className="cc-logo" src={cc_image} alt="cc logo" /></p>
+        <section id="footer-section">{/* footer-section starts her  */}
+          <div class="content">
+            <a href="."> <img className="footer-logo1" src={unitandem_logo} alt="unitandem logo" /> </a> <br />
+            Tampere University <br />
+            Kalevantie 4, 33104 Tampere <br />
+            <a href="tel:+358 (0) 294 5211">+358 (0) 294 5211</a>
+            <a href="mailto:info@unitandem.fi"> info@unitandem.fi</a>
+            <div class="footer-logos">
+              <img class="footer-logo2" src={kivako_logo} alt="kivako logo" />
+              <img class="footer-logo3" src={cc_image} alt="cc logo" />
             </div>
-
-            <div className="footer-right">
-              <div>
-                <img src={address} alt="address logo" />
-                <span>Tampere University</span>
-                <p>Kalevantie 4, 33104 Tampere</p>
-              </div>
-
-              <div>
-                <img src={smartphone} alt="smartphone logo" />
-                <span><a href="tel:+358 (0) 294 5211">+358 (0) 294 5211</a></span>
-              </div>
-
-              <div>
-                <img src={email} alt="email logo" />
-                <span><a href="mailto:info@unitandem.fi"> info@unitandem.fi</a></span>
-              </div>
-
-            </div>
-
-
           </div>
-
-        </section>
-
-        {/*  footer-section ends here  */}
-
-
-
-      </div >
+        </section>   {/* footer-section ends here  */}       </div >
 
     )
 
