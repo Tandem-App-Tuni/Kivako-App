@@ -10,8 +10,6 @@ import './bootstrap.min.css'
 import './style.css'
 import 'bootstrap/dist/js/bootstrap.js';
 
-
-
 import arrows from "./images/arrows.png"
 import elastic from "./images/elastic.png"
 import friendship from "./images/friendship.png"
@@ -19,6 +17,7 @@ import kivako_logo from "./images/kivako_logo.png"
 import cc_image from "./images/cc.png"
 import unitandem_logo from "./images/unitandem_logo.png"
 import cover_pic from "./images/cover_photo.png"
+
 import '@fortawesome/fontawesome-free/css/all.min.css';
 const useStyles = theme =>
   ({
@@ -65,7 +64,7 @@ class LandingPage extends Component {
 
     return (
 
-      <div>
+      <div className="container">
         <nav className="navbar navbar-expand-md navbar-light">{/* navigation starts here */}
           <a href="."><img className="nav-logo" src={unitandem_logo} alt="unitandem logo" /></a>
           <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01"
@@ -80,7 +79,7 @@ class LandingPage extends Component {
           </div>
         </nav> {/* navigation ends here */}
 
-        <img className="cover-pic" src={cover_pic} alt="" /> {/*cover photo is added here*/}
+        <img  className="cover-pic" src={cover_pic} alt="" /> {/*cover photo is added here*/}
         <section id="first-section"> {/* first section starts here */}
           <div className="container-fluid colured-section">
             <div id="title-div">
