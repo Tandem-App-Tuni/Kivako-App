@@ -1,4 +1,4 @@
-const LOCAL_TEST_ENVIRONMENT = true;
+const LOCAL_TEST_ENVIRONMENT = false;
 
 module.exports = Object.freeze({
     APPLICATION_URL: LOCAL_TEST_ENVIRONMENT ? 'http://localhost:3000' : 'https://www.unitandem.fi',

@@ -69,24 +69,21 @@ class ListOfAdmins extends React.Component
     this.state = {
       isLoadingTable:true,
       page: 0,
-      setPage: 0,
       rowsPerPage: 10,
-      setRowsPerPage : 10,
       rows: [],
     };
 
     console.log('[ListOfAdmins] Constructor');
   }
 
-  handleChangePage = event =>  
+  handleChangePage = (event, page) =>  
   {
-    this.setState({page:this.page+1});
+    this.setState({page: page});
   };
 
-  handleChangeRowsPerPage = event => {
-
-    this.setState({rowsPerPage:+event.target.value});
-    this.setState({page:0});
+  handleChangeRowsPerPage = event => 
+  {
+    this.setState({rowsPerPage:event.target.value, page:0});
   };
 
   componentDidMount() 
@@ -135,7 +132,7 @@ class ListOfAdmins extends React.Component
             </TableRow>
           </TableHead>
           <TableBody>
-            {this.state.rows.slice(this.state.page * this.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((row, index) => 
+            {this.state.rows.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((row, index) => 
             {
               return (
                 <TableRow hover role="checkbox" tabIndex={-1} key={index}>
@@ -154,14 +151,13 @@ class ListOfAdmins extends React.Component
           </TableBody>
         </Table>
         <TablePagination
-          rowsPerPageOptions={[10, 25, 100]}
-          component="div"
-          count={this.state.rows.length}
-          rowsPerPage={this.state.rowsPerPage}
-          page={this.state.page}
-          onChangePage={this.handleChangePage}
-          onChangeRowsPerPage={this.handleChangeRowsPerPage}
-        />
+            rowsPerPageOptions={[1, 10, 25, 100]}
+            component="div"
+            count={this.state.rows.length}
+            rowsPerPage={this.state.rowsPerPage}
+            page={this.state.page}
+            onChangePage={this.handleChangePage}
+            onChangeRowsPerPage={this.handleChangeRowsPerPage}/>
       </Paper>
     );
   }
