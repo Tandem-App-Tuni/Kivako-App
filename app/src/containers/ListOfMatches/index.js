@@ -44,7 +44,8 @@ class ListOfMatches extends React.Component
 
   columns = [
     { id: 's0', label: 'Request sender', minWidth: 100 },
-    { id: 's1', label: 'Recipient', minWidth: 100 }]
+    { id: 's1', label: 'Recipient', minWidth: 100 },
+    { id: 's2', label: 'Match languages', minWidth: 100 }]
 
   constructor(props) 
   {
@@ -53,24 +54,21 @@ class ListOfMatches extends React.Component
     this.state = {
       isLoadingTable:true,
       page: 0,
-      setPage: 0,
       rowsPerPage: 10,
-      setRowsPerPage : 10,
       rows: [],
     };
 
     console.log('[ListOfMatches] Constructor');
   }
 
-  handleChangePage = event =>  
+  handleChangePage = (event, page) =>  
   {
-    this.setState({page:this.page+1});
+    this.setState({page: page});
   };
 
-  handleChangeRowsPerPage = event => {
-
-    this.setState({rowsPerPage:+event.target.value});
-    this.setState({page:0});
+  handleChangeRowsPerPage = event => 
+  {
+    this.setState({rowsPerPage:event.target.value, page:0});
   };
 
   componentDidMount() 
@@ -119,14 +117,21 @@ class ListOfMatches extends React.Component
             </TableRow>
           </TableHead>
           <TableBody>
-            {this.state.rows.slice(this.state.page * this.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((row, index) => 
+            {this.state.rows.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((row, index) => 
             {
-              console.log(row);
+              
+              const languageArray = row.requesterUser.languagesToLearn.filter(e => 
+                {
+                  for (let i = 0; i < row.recipientUser.languagesToTeach.length; i++)
+                    if (e.language === row.recipientUser.languagesToTeach[i].language) return true;
+                  return false;
+                });
 
               return (
                 <TableRow hover role="checkbox" tabIndex={-1} key={index}>
                   <TableCell key='s0'><div>{row.requesterUser.firstName + ' ' + row.requesterUser.lastName}</div></TableCell>
                   <TableCell key='s1'><div>{row.recipientUser.firstName + ' ' + row.recipientUser.lastName}</div></TableCell>
+                  <TableCell key='s2'><div>{languageArray.map((e, i) => e.language + (i === (languageArray.length - 1) ? '' : ', '))}</div></TableCell>
                 </TableRow>
               );
             })}
@@ -139,8 +144,7 @@ class ListOfMatches extends React.Component
           rowsPerPage={this.state.rowsPerPage}
           page={this.state.page}
           onChangePage={this.handleChangePage}
-          onChangeRowsPerPage={this.handleChangeRowsPerPage}
-        />
+          onChangeRowsPerPage={this.handleChangeRowsPerPage}/>
       </Paper>
     );
   }
