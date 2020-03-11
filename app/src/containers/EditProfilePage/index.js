@@ -11,16 +11,18 @@ import Container from '@material-ui/core/Container';
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
+import DeleteRoundedIcon from '@material-ui/icons/DeleteRounded';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import {ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails} from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+
 //Components
 import {CityPicker} from '../../components/CityPicker';
 import LanguagePicker from '../../components/LanguagePicker'
@@ -409,6 +411,27 @@ class EditProfilePage extends Component
     })
   };
 
+  onDeleteLanguage = (type, itemIndex) => {
+    switch(type) {
+      case "teach":
+        const oldTeachList = this.state.languagesToTeach;
+        let newTeachList = oldTeachList.filter((x, index) => index !== itemIndex); 
+        this.setState({
+          languagesToTeach: newTeachList
+        })
+        break;
+      case "learn":
+        const oldLearnList = this.state.languagesToLearn;
+        let newLearnList = oldLearnList.filter((x, index) => index !== itemIndex); 
+        this.setState({
+            languagesToLearn: newLearnList
+        })
+        break;
+      default:
+        break;
+    }
+  }
+
   toExcludeLanguages = () => 
   {
     var langs = [];
@@ -579,11 +602,16 @@ class EditProfilePage extends Component
                   <List>
                     {this.state.languagesToTeach.map(item => {
                       return (
-                          <ListItem button key={item.language} onClick={() =>this.onShowInputTeachLanguage(true, this.state.languagesToTeach.indexOf(item))}>
+                          <ListItem key={item.language} >
                             <ListItemText primary={item.language + ", Level: " + item.level  + ", Credits: " + item.credits} />
-                            <ListItemIcon>
-                              <EditIcon />
-                            </ListItemIcon>
+                            <ListItemSecondaryAction>
+                              <IconButton edge="end" aria-label="add" onClick={() =>this.onShowInputTeachLanguage(true, this.state.languagesToTeach.indexOf(item))}>
+                                <EditIcon  />
+                              </IconButton>
+                              <IconButton edge="end" aria-label="delete" onClick={() => this.onDeleteLanguage("teach", this.state.languagesToTeach.indexOf(item))}>
+                                <DeleteRoundedIcon />
+                              </IconButton>
+                            </ListItemSecondaryAction>
                           </ListItem>
                       )
                     })}
@@ -612,11 +640,16 @@ class EditProfilePage extends Component
                     <List>
                       {this.state.languagesToLearn.map(item => {
                         return (
-                            <ListItem button key={item.language} onClick={() =>this.onShowInputLearnLanguage(true, this.state.languagesToLearn.indexOf(item))}>
+                            <ListItem key={item.language} >
                               <ListItemText primary={item.language + ", Level " + item.level + ", Credits: " + item.credits } />
-                              <ListItemIcon>
-                                <EditIcon />
-                              </ListItemIcon>
+                                <ListItemSecondaryAction>
+                                <IconButton edge="end" aria-label="add" onClick={() =>this.onShowInputLearnLanguage(true, this.state.languagesToLearn.indexOf(item))}>
+                                  <EditIcon  />
+                                </IconButton>
+                                <IconButton edge="end" aria-label="delete" onClick={() => this.onDeleteLanguage("learn", this.state.languagesToLearn.indexOf(item))}>
+                                  <DeleteRoundedIcon />
+                                </IconButton>
+                              </ListItemSecondaryAction>
                             </ListItem>
                         )
                       })}
