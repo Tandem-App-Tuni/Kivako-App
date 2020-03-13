@@ -247,7 +247,7 @@ class EditProfilePage extends Component
 
     if(validNameRegex.test(formLastName)===true){
       this.setState( {lastNameError: true, lastNameErrorMessage: 'Special characters are not accepted'} );
-    }else if(formLastName.length <= 2 || formLastName.length >=20){
+    }else if(formLastName.length <= 1 || formLastName.length >=20){
       this.setState( {lastNameError: true, lastNameErrorMessage: 'Number of characters not accepted'} );
     }else{
       this.setState( {lastNameError: false, lastNameErrorMessage: ''} );

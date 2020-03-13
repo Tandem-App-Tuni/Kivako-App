@@ -167,7 +167,7 @@ class SignUpPage extends Component {
 
     if(validNameRegex.test(formFirstName)===true){
       this.setState( {firstNameError: true, firstNameErrorMessage: 'Special characters are not accepted'} )
-    }else if(formFirstName.length <= 2 || formFirstName.length >=20){
+    }else if(formFirstName.length <= 1 || formFirstName.length >=20){
       this.setState( {firstNameError: true, firstNameErrorMessage: 'Number of characters not accepted'} )
     }else{
       this.setState( {firstNameError: false, firstNameErrorMessage: ''} )
@@ -184,7 +184,7 @@ class SignUpPage extends Component {
 
     if(validNameRegex.test(formLastName)===true){
       this.setState( {lastNameError: true, lastNameErrorMessage: 'Special characters are not accepted'} );
-    }else if(formLastName.length <= 2 || formLastName.length >=20){
+    }else if(formLastName.length <= 1 || formLastName.length >=20){
       this.setState( {lastNameError: true, lastNameErrorMessage: 'Number of characters not accepted'} );
     }else{
       this.setState( {lastNameError: false, lastNameErrorMessage: ''} );
