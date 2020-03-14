@@ -35,6 +35,14 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ConstantsList from '../../config_constants';
 import UserActionCard from '../../components/UserActionCard';
 
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+import {clone} from "ramda";
+
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
 const styles = ({
     root: {
         display: 'inline',
@@ -105,21 +113,25 @@ class BrowseMatch extends React.Component
         portOption:ConstantsList.PORT_IN_USE,
         open:false,
         modalData: null,
-        modalLanguage: null
+        modalLanguage: null,
+        alertType: "",
+        alertOpen: false
       };
     }
 
+    handleAlertClose() {
+        this.setState({alertOpen: false})
+    }
 
-    openModal = () => {
+    openModal() {
         this.setState({open: true})
     };
 
-    handleClose = () => {
+    handleClose() {
         this.setState({open: false});
     };
 
-    getMatchesTiles(item, classes) 
-    {
+    getMatchesTiles(item, classes) {
         return (
             item.matches.length === 0 ? (
                 <Typography variant="overline" gutterBottom>
@@ -183,8 +195,7 @@ class BrowseMatch extends React.Component
         )
     }
 
-    onShowActionCard= (open, data, action) =>  
-    {
+    onShowActionCard(open, data, action) {
         if (open === true) 
         {
             this.setState({modalData: data});
@@ -194,8 +205,6 @@ class BrowseMatch extends React.Component
         {
             if (action === "invite") 
             {
-                console.log(this.state.modalData, this.state.modalLanguage);
-
                 this.onInviteAction(this.state.modalData, this.state.modalLanguage);
             }
         }
@@ -245,8 +254,7 @@ class BrowseMatch extends React.Component
             );
     }
 
-    onInviteAction = (user,language) =>
-    {
+    onInviteAction(user,language) {
         const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/usersMatch/sendRequest");
 
         fetch(url, 
@@ -264,22 +272,21 @@ class BrowseMatch extends React.Component
             })
         })
         .then((response) => 
-        {
-            if (response.status === 200)
             {
-                alert('Match request sent.');
-                window.location.reload();
-            }
-            else alert('Something went wrong.');
-        })
-        .catch((error) => {
-            console.error(error);
-        });
+                let cloneUserMatches = clone(this.state.userMatches);
+                let languageMatch = cloneUserMatches.find(item=>item.languageName === language)
+                cloneUserMatches.matches = languageMatch.matches.splice(languageMatch.matches.indexOf(user), 1);
+                this.setState({alertType: "success", alertOpen: true, userMatches: cloneUserMatches});
+            })
+            .catch((error) => 
+            {
+                this.setState({alertType: "error", alertOpen: true})
+                console.error(error);
+            }); 
 
     }
 
-    getUserPossibleMatchsListAPI = (callback) =>
-    {
+    getUserPossibleMatchsListAPI(callback) {
         const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/usersMatch/possibleMatchs");
     
         fetch(url, {
@@ -336,6 +343,16 @@ class BrowseMatch extends React.Component
                     })
                 }
             </div>
+            <Snackbar
+                open={this.state.alertOpen} autoHideDuration={4000} onClose={this.handleAlertClose.bind(this)}
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}>
+                <Alert onClose={this.handleAlertClose.bind(this)} severity={this.state.alertType}>
+                    {this.state.alertType === "success" ?
+                        "Invitation sent"
+                        : "Failed to send invitation"
+                    }
+                </Alert>
+            </Snackbar>
         </div>
         );
     }
