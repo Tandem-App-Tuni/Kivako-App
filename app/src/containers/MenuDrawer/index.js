@@ -15,7 +15,7 @@ import MessageIcon from '@material-ui/icons/Message';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import { mainListItems, secondaryListItems, thirdListItems, adminListItems } from './listItems';
 import { Link } from 'react-router-dom';
-import {withStyles} from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import logo from '../../tandemlogo.png'
 import ConstantsList from '../../config_constants';
 
@@ -100,117 +100,109 @@ const useStyles = theme => ({
   },
 });
 
-class Dashboard extends React.Component
-{
+class Dashboard extends React.Component {
   _isMounted = false;
 
-  constructor(props)
-  {
+  constructor(props) {
     super(props);
 
-    this.state = {open:true, isAdmin:false, requestAmount:0 , socket: props.chatBundle.socket, getChatN: props.chatBundle.getChatNotification, setChatN: props.chatBundle.setChatNotification};
+    this.state = { open: true, isAdmin: false, requestAmount: 0, socket: props.chatBundle.socket, getChatN: props.chatBundle.getChatNotification, setChatN: props.chatBundle.setChatNotification };
   }
 
-  handleDrawerOpen = () => 
-  {
-    this.setState({open:true});
+  handleDrawerOpen = () => {
+    this.setState({ open: true });
   }
 
-  handleDrawerClose = () => 
-  {
-    this.setState({open:false});
+  handleDrawerClose = () => {
+    this.setState({ open: false });
   }
 
-  async componentDidMount()
-  {
-    try 
-    {
+  async componentDidMount() {
+    try {
       this._isMounted = true;
 
       this.state.socket.on('notification', () => this.state.setChatN(true));
-      
+
       this.state.socket.emit('checkNotifications', {});
 
-      const p0 = fetch(window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/api/v1/users/isAdmin', 
-      {
+      const p0 = fetch(window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/api/v1/users/isAdmin',
+        {
           method: 'GET',
           credentials: 'include',
           cors: 'no-cors'
-      });
+        });
 
-      const p1 = fetch(window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + "/api/v1/usersMatch/receiptMatchsRequests", 
-      {
-        method: 'GET',
-        credentials: 'include',
-        cors:'no-cors'
-      });
+      const p1 = fetch(window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + "/api/v1/usersMatch/receiptMatchsRequests",
+        {
+          method: 'GET',
+          credentials: 'include',
+          cors: 'no-cors'
+        });
 
       const results = await Promise.all([p0, p1]);
       const responseResults = await Promise.all([results[0].json(), results[1].json()]);
 
-      this.setState({isAdmin: responseResults[0].isAdmin, requestAmount: responseResults[1].userReceiptMatches.length});
+      this.setState({ isAdmin: responseResults[0].isAdmin, requestAmount: responseResults[1].userReceiptMatches.length });
     }
-    catch(e) 
-    {
+    catch (e) {
       console.log("Error when menu mounted:", e)
     }
   }
 
-  render()
-  {
+  render() {
     const { classes } = this.props;
 
-    return(
-    <div className={classes.root}>
-      <CssBaseline />
-      <AppBar position="absolute" className={clsx(classes.appBar, this.state.open && classes.appBarShift)}>
-        <Toolbar className={classes.toolbar}>
-          <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            onClick={this.handleDrawerOpen}
-            className={clsx(classes.menuButton, this.state.open && classes.menuButtonHidden)}>
-            <MenuIcon/>
-          </IconButton>
-          <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            {this.props.title}
-          </Typography>
-          <IconButton color="inherit" component={Link} to="/match-requests">
+    return (
+      <div className={classes.root}>
+        <CssBaseline />
+        <AppBar position="absolute" className={clsx(classes.appBar, this.state.open && classes.appBarShift)}>
+          <Toolbar className={classes.toolbar}>
+            <IconButton
+              edge="start"
+              color="inherit"
+              aria-label="open drawer"
+              onClick={this.handleDrawerOpen}
+              className={clsx(classes.menuButton, this.state.open && classes.menuButtonHidden)}>
+              <MenuIcon />
+            </IconButton>
+            <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
+              {this.props.title}
+            </Typography>
+            {/* <IconButton color="inherit" component={Link} to="/match-requests">
               <PersonAddIcon />
-          </IconButton>
-          <IconButton color="inherit" component={Link} to="/chat-page">
+            </IconButton> */}
+            {/* <IconButton color="inherit" component={Link} to="/chat-page">
               <MessageIcon />
-          </IconButton>
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        variant="permanent"
-        classes={{
-          paper: clsx(classes.drawerPaper, !this.state.open && classes.drawerPaperClose),
-        }}
-        open={this.state.open}> 
+            </IconButton> */}
+          </Toolbar>
+        </AppBar>
+        <Drawer
+          variant="permanent"
+          classes={{
+            paper: clsx(classes.drawerPaper, !this.state.open && classes.drawerPaperClose),
+          }}
+          open={this.state.open}>
           <div className={classes.toolbarIcon}>
-            <img alt="" src={logo} style={{ maxHeight: 100 , maxWidth: '70%', align:'center'}}/>
+            <img alt="" src={logo} style={{ maxHeight: 100, maxWidth: '70%', align: 'center' }} />
             <IconButton onClick={this.handleDrawerClose}>
-              <ChevronLeftIcon/>
+              <ChevronLeftIcon />
             </IconButton>
           </div>
-          <Divider/>
+          <Divider />
           <List>{mainListItems(this.state.getChatN())}</List>
           <Divider />
           <List>{secondaryListItems(this.state.requestAmount)}</List>
-          {this.state.isAdmin ? <div><Divider /><List>{adminListItems}</List></div> : <div/>}
+          {this.state.isAdmin ? <div><Divider /><List>{adminListItems}</List></div> : <div />}
           <Divider />
           <List>{thirdListItems}</List>
-      </Drawer>
-      <main className={classes.content}>
-      <div className={classes.appBarSpacer} />
-      <Container maxWidth="lg" className={classes.container}>
-          {this.props.children}
-      </Container>
-      </main>
-    </div>
+        </Drawer>
+        <main className={classes.content}>
+          <div className={classes.appBarSpacer} />
+          <Container maxWidth="lg" className={classes.container}>
+            {this.props.children}
+          </Container>
+        </main>
+      </div>
     );
   }
 }
