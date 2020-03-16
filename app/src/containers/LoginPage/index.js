@@ -229,7 +229,7 @@ class LandingPage extends Component {
         </section> {/* fourt section ends here */}
 
         <section id="footer-section">{/* footer-section starts her  */}
-          <div class="content">
+          <div className="content">
             <a href="."> <img className="footer-logo1" src={unitandem_logo} alt="unitandem logo" /> </a> <br />
             Tampere University <br />
             Kalevantie 4, 33104 Tampere <br />

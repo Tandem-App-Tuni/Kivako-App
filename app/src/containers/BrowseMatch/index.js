@@ -34,7 +34,7 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 
 import ConstantsList from '../../config_constants';
 import UserActionCard from '../../components/UserActionCard';
-
+import UserStyleCard from '../../components/UserStyleCard';
 const styles = ({
     root: {
         display: 'inline',
@@ -69,23 +69,23 @@ const styles = ({
         padding: '0'
     },
     gridListTile: {
-        height:"100%",
-        width:"100%",   
-        minHeight: "310px",
-        maxHeight: "310px",
-        maxWidth: "310px",
-        minWidth: "310px",
-        space:2,
-        marginBottom: 5,
-        marginLeft: 1
+        // height:"100%",
+        // width:"100%",   
+        // minHeight: "310px",
+        // maxHeight: "310px",
+        // maxWidth: "610px",
+        // minWidth: "310px",
+        // space:2,
+        // marginBottom: 5,
+        // marginLeft: 1
     },
     card:{
         margin: '5px',
-        height:"300px",
-        width:"300px"
+        height:"30px",
+        width:"700px"
     },
     gridListTileBar: {
-        background: "#3f51b5",
+        // background: "#3f51b5",
     },
     leftText:{
         textAlign: 'left'
@@ -120,6 +120,15 @@ class BrowseMatch extends React.Component
 
     getMatchesTiles(item, classes) 
     {
+        item.matches.push({})
+        item.matches.push({})
+        item.matches.push({})
+        item.matches.push({})
+        item.matches.push({})
+        item.matches.push({})
+        item.matches.push({})
+        item.matches.push({})
+
         return (
             item.matches.length === 0 ? (
                 <Typography variant="overline" gutterBottom>
@@ -127,48 +136,51 @@ class BrowseMatch extends React.Component
                 </Typography>
             ) : (
             <div >
-                <GridList className={classes.gridList} >
+                <GridList   classsName={classes.gridList} cols={2} spacing={20}>
                 {
                     item.matches.map((match, key) =>  
                     {
-                        let r = 255*(1 - match.fitQuality) + 149*(match.fitQuality);
-                        let g = 255*(1 - match.fitQuality) + 117*(match.fitQuality);
-                        let b = 255*(1 - match.fitQuality) + 205*(match.fitQuality);
-
-                        return (<GridListTile 
-                            key={key} 
-                            className={classes.gridListTile}>
-                                <Card 
-                                onClick = {() => this.onShowActionCard(true, match, item.languageName)}
-                                className={classes.card}
-                                style={{backgroundColor: 'rgb('+r+','+g+','+b+')'}}>
-                                    <CardHeader
-                                    avatar=
-                                    {
-                                        <Avatar 
-                                        src={window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/avatar/getAvatar/' + match.email} 
-                                        aria-label="recipe" 
-                                        className={classes.bigAvatar}>
-                                        </Avatar>
-                                    }
-                                    className = {classes.leftText}
-                                    title={match.firstName + ' ' + match.lastName}
-                                    subheader={ match.cities}/>
-                                    <CardContent>  
-                                        <Divider variant="middle" />
-                                        <List>
-                                            <ListItem>
-                                                <ListItemIcon><Icon fontSize="small">language</Icon></ListItemIcon>
-                                                <ListItemText primary={"Wants to learn: " + (match.languagesToLearn && match.languagesToLearn.map(e => e.language).join(", "))}/>
-                                            </ListItem>
-                                            <ListItem>
-                                                <ListItemIcon><Icon fontSize="small">check</Icon></ListItemIcon>
-                                                <ListItemText primary={"Credits and level: " + (match.languagesToLearn && match.languagesToLearn.map(e => e.credits + ' ' + e.level).join(", "))}/>
-                                            </ListItem>
-                                        </List>
-                                    </CardContent>      
-                                </Card>
-                            </GridListTile>);
+                        // let r = 255*(1 - match.fitQuality) + 149*(match.fitQuality);
+                        // let g = 255*(1 - match.fitQuality) + 117*(match.fitQuality);
+                        // let b = 255*(1 - match.fitQuality) + 205*(match.fitQuality);
+                        return(<GridListTile rows={2}>
+                                    <UserStyleCard >
+                                    </UserStyleCard>
+                                </GridListTile>)
+                        // return (<GridListTile 
+                        //     key={key} 
+                        //     className={classes.gridListTile}>
+                        //         <Card 
+                        //         onClick = {() => this.onShowActionCard(true, match, item.languageName)}
+                        //         className={classes.card}
+                        //         style={{backgroundColor: 'rgb('+r+','+g+','+b+')'}}>
+                        //             <CardHeader
+                        //             avatar=
+                        //             {
+                        //                 <Avatar 
+                        //                 src={window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/avatar/getAvatar/' + match.email} 
+                        //                 aria-label="recipe" 
+                        //                 className={classes.bigAvatar}>
+                        //                 </Avatar>
+                        //             }
+                        //             className = {classes.leftText}
+                        //             title={match.firstName + ' ' + match.lastName}
+                        //             subheader={ match.cities}/>
+                        //             <CardContent>  
+                        //                 <Divider variant="middle" />
+                        //                 <List>
+                        //                     <ListItem>
+                        //                         <ListItemIcon><Icon fontSize="small">language</Icon></ListItemIcon>
+                        //                         <ListItemText primary={"Wants to learn: haha " + (match.languagesToLearn && match.languagesToLearn.map(e => e.language).join(", "))}/>
+                        //                     </ListItem>
+                        //                     <ListItem>
+                        //                         <ListItemIcon><Icon fontSize="small">check</Icon></ListItemIcon>
+                        //                         <ListItemText primary={"Credits and level: " + (match.languagesToLearn && match.languagesToLearn.map(e => e.credits + ' ' + e.level).join(", "))}/>
+                        //                     </ListItem>
+                        //                 </List>
+                        //             </CardContent>      
+                        //         </Card>
+                        //     </GridListTile>);
                     }
                 )}
                 </GridList>
