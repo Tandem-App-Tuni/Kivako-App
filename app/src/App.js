@@ -10,6 +10,7 @@ import {Colors} from './components/constant/index'
 import './App.css';
 import LoginPage from './containers/LoginPage'
 import EditProfilePage from './containers/EditProfilePage'
+import ViewProfile from './containers/ViewProfile'
 import PartnerListPage from './containers/PartnerListPage'
 import BrowseMatch from './containers/BrowseMatch'
 import ChatPage from './containers/ChatPage'
@@ -95,8 +96,16 @@ class App extends React.Component
 
         <Route exact path='/edit-profile'>
           <Checker activeSocket={this.activeSocket} setSocket={this.setSocket}>
-            <ResponsiveDrawer title = 'Profile' chatBundle={chatBundle}>
+            <ResponsiveDrawer title = 'Edit Profile' chatBundle={chatBundle}>
               <EditProfilePage />
+            </ResponsiveDrawer>
+          </Checker>
+        </Route>
+
+	 <Route exact path='/view-profile'>
+          <Checker activeSocket={this.activeSocket} setSocket={this.setSocket}>
+            <ResponsiveDrawer title = 'Profile' chatBundle={chatBundle}>
+              <ViewProfile />
             </ResponsiveDrawer>
           </Checker>
         </Route>
