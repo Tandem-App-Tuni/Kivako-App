@@ -129,7 +129,8 @@ class EditProfilePage extends Component
   {
     if (event.target.files.length > 0)
     {
-      if (!event.target.files[0].name.match(/.(jpg|jpeg|png|gif)$/)) alert('Selected file is not an image.');
+      if (!event.target.files[0].name.match(/.(jpg|jpeg|png|gif)$/)) 
+        this.toggleAlert(true, "error", "Selected file is not an image.")
       else
       {
         let form = new FormData()
@@ -181,16 +182,15 @@ class EditProfilePage extends Component
       })
     })
     .then((response) => response.json())
-    .then((responseJson) => 
-    {
-      if (responseJson.update) 
-      {
-        this.toogleAlert(true, 'success', 'User informations updated succesfully!')
-        window.location.reload();
-      } else this.toogleAlert(true, 'error', 'Update failed. Please try again later')
+    .then((responseJson) => {
+      if (responseJson.update)
+        this.toggleAlert(true, 'success', 'User informations updated succesfully!')
+      else 
+        this.toggleAlert(true, 'error', 'Update failed. Please try again later')
     })
     .catch((error) => {
       console.error(error);
+      this.toggleAlert(true, 'error', 'Update failed. Please try again later')
     });
   }
 
@@ -210,12 +210,15 @@ class EditProfilePage extends Component
       })
       .then((response) => 
       {
-        if (response.status === 200)
-        {
-          alert('You can always create a new account by signing in again. Goodbye!');
-          window.location.reload();
+        if (response.status === 200){
+          this.toggleAlert(true, "info","You can always create a new account by signing in again. Goodbye!")
         }
-        else alert('Something went wrong. Try again later.');
+        else
+          this.toggleAlert(true, "error", 'Something went wrong. Try again later.');
+      })
+      .catch(err => {
+        console.log(err)
+        this.toggleAlert(true, "error", 'Something went wrong. Try again later.');
       });
     }
   }
@@ -443,7 +446,7 @@ class EditProfilePage extends Component
     return langs
   }
 
-  toogleAlert(open, type, text)
+  toggleAlert(open, type, text)
   {
     //type is 'error', 'info', 'success', 'warning'
     if (open === true) {
@@ -711,16 +714,11 @@ class EditProfilePage extends Component
           </Box>
         </Container>
         <AlertView
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
-        open={this.state.showAlert}
-        autoHideDuration={6000}
-        onClose={() =>this.toogleAlert(false, null, null)}
-        variant={this.state.alertType}
-        message={this.state.alertText}
-      />
+          open={this.state.showAlert}
+          onClose={() =>this.toggleAlert(false, null, null)}
+          variant={this.state.alertType}
+          message={this.state.alertText}
+        />
       </div> 
     );
   }

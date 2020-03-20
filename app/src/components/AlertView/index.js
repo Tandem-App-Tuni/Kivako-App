@@ -53,15 +53,15 @@ export function AlertView(props) {
   return (
     <Snackbar
     anchorOrigin={{
-      vertical: 'bottom',
-      horizontal: 'left',
+      vertical: 'top',
+      horizontal: 'right',
     }}
     open={props.open}
-    autoHideDuration={6000}
-    onClose={props.handleClose}
+    autoHideDuration={4000}
+    onClose={props.onClose}
   >
     <SnackbarContent
-      className={clsx(classes[variant], className)}
+      className={clsx(classes[variant], className)} autoHideDuration={4000} 
       aria-describedby="client-snackbar"
       message={
         <span id="client-snackbar" className={classes.message}>
