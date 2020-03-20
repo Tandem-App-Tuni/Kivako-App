@@ -11,6 +11,8 @@ import { withStyles } from '@material-ui/styles';
 import ConstantsList from '../../config_constants';
 import Grid from '@material-ui/core/Grid';
 
+import {AlertView} from '../../components/AlertView';
+
 /**
  * The activation page is based on a template available on: https://github.com/mui-org/material-ui/tree/master/docs/src/pages/getting-started/templates/sign-in
  * For conveniance it is converted to a non-funcitonal, standard component. The login functionality is authored by Peter Mlakar.
@@ -48,6 +50,9 @@ class ActivationPage extends Component
 
     this.state = (
     {
+      showAlert: false,
+      alertType: "",
+      alertText: "",
       email: '',
     });
   }
@@ -69,9 +74,28 @@ class ActivationPage extends Component
     {
       console.log(response);
 
-      if (response.status !== 200) alert('Something went wrong. Try again later.');
-      else alert('Activation link sent. Do not forget to check the junk/spam mail folder.');
+      if (response.status !== 200) 
+        this.toggleAlert(true, "error",'Something went wrong. Try again later.');
+      else
+        this.toggleAlert(true, "success", 'Activation link sent. Do not forget to check the junk/spam mail folder.');
     });
+  }
+
+  toggleAlert(open, type, text)
+  {
+    //type is 'error', 'info', 'success', 'warning'
+    if (open === true) {
+      this.setState({
+        showAlert: open,
+        alertType: type,
+        alertText: text
+      })
+    }
+    else{
+      this.setState({
+        showAlert: open
+      })
+    }
   }
 
   render()
@@ -135,6 +159,10 @@ class ActivationPage extends Component
           {'.'}
         </Typography>
       </Box>
+      <AlertView
+        open={this.state.showAlert}
+        message={this.state.alertText}
+        variant={this.state.alertType}/>
     </Container>);
   }
 }

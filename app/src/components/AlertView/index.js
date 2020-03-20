@@ -61,7 +61,7 @@ export function AlertView(props) {
     onClose={props.onClose}
   >
     <SnackbarContent
-      className={clsx(classes[variant], className)} autoHideDuration={4000} 
+      className={clsx(classes[variant], className)} autohideduration={4000} 
       aria-describedby="client-snackbar"
       message={
         <span id="client-snackbar" className={classes.message}>

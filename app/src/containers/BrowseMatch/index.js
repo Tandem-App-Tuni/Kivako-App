@@ -34,14 +34,8 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 
 import ConstantsList from '../../config_constants';
 import UserActionCard from '../../components/UserActionCard';
-import {AlertView} from '../../components/AlertView'
-import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert from '@material-ui/lab/Alert';
+import {AlertView} from '../../components/AlertView';
 import {clone} from "ramda";
-
-function Alert(props) {
-    return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
 
 const styles = ({
     root: {
@@ -344,13 +338,13 @@ class BrowseMatch extends React.Component
                 }
             </div>
             <AlertView
-            open={this.state.alertOpen}
-            onClose={this.handleAlertClose.bind(this)}
-            variant={this.state.alertType}
-            message={this.state.alertType === "success" ?
-                "Invitation sent"
-                : "Failed to send invitation"
-            }
+                open={this.state.alertOpen}
+                onClose={this.handleAlertClose.bind(this)}
+                variant={this.state.alertType}
+                message={this.state.alertType === "success" ?
+                    "Invitation sent"
+                    : "Failed to send invitation"
+                }
             />
         </div>
         );
