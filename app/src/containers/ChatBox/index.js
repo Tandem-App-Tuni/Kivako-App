@@ -259,7 +259,7 @@ class ChatBubble extends React.Component
             message: props.message,
             text: props.message.text,
             partner: props.partner,
-            side: props.message.id === props.user ? 'flex-start' : 'flex-end',
+            side: props.message.id === props.user ? 'flex-end' : 'flex-start',
             color: props.message.id === props.user ? '#2073E8' : '#24B8FF',
             align: props.message.id === props.user ? 'left' : 'right'
         };
@@ -273,7 +273,7 @@ class ChatBubble extends React.Component
             message: props.message,
             text: props.message.text,
             partner: props.partner,
-            side: props.message.id === props.user ? 'flex-start' : 'flex-end',
+            side: props.message.id === props.user ? 'flex-end' : 'flex-start',
             color: props.message.id === props.user ? '#D5BDFF' : '#8A72B3',
             align: props.message.id === props.user ? 'left' : 'right'
         };
@@ -299,8 +299,8 @@ class ChatBubble extends React.Component
                 <Grid
                 container
                 direction='row'
-                justify={alignmentLeft ? 'flex-start' : 'flex-end'}>
-                    {alignmentLeft ? <Avatar src={avatarUrl0}></Avatar> : <div></div>}
+                justify={alignmentLeft ? 'flex-end' : 'flex-start'}>
+                    {!alignmentLeft ? <Avatar src={avatarUrl0}></Avatar> : <div></div>}
                     <Paper
                     elevation={3}
                     style={{backgroundColor: this.state.color}}>
@@ -314,7 +314,7 @@ class ChatBubble extends React.Component
                             {this.convertTimeStampToDate(this.state.message.timestamp)}
                         </Typography>
                     </Paper>
-                    {!alignmentLeft ? <Avatar src={avatarUrl1}></Avatar> : <div></div>}
+                    {alignmentLeft ? <Avatar src={avatarUrl1}></Avatar> : <div></div>}
                 </Grid>
             <br></br>    
             </div>
