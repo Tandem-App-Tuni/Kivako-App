@@ -187,7 +187,7 @@ class EditProfilePage extends Component
       if (responseJson.update) 
       {
         this.toogleAlert(true, 'success', 'User informations updated succesfully!')
-        window.location.reload();
+          window.location.href='/view-profile';
       } else this.toogleAlert(true, 'error', 'Update failed. Please try again later')
     })
     .catch((error) => {
