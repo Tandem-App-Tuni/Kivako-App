@@ -2,52 +2,48 @@ import React, {Component} from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
-import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Box from '@material-ui/core/Box';
 import Link from '@material-ui/core/Link';
 import CardMedia from '@material-ui/core/CardMedia';
-import Divider from '@material-ui/core/Divider';
-import Rating from '@material-ui/lab/Rating';
 import ArrowForwardIos from '@material-ui/icons/ArrowForwardIos';
-import ModeComment from '@material-ui/icons/ModeComment';
-import Favorite from '@material-ui/icons/Favorite';
 import Chip from '@material-ui/core/Chip';
 import Grid from '@material-ui/core/Grid';
-import Avatar from '@material-ui/core/Avatar';
-
-// const useStyles = theme => ({
-   
-//     card: {
-//       maxWidth: 400,
-//       textAlign: 'left'
-//     },
-//     leftText:{
-//       textAlign: 'left'
-//   }
-//   });
-
+import ProfilePage from '../../containers/ViewProfile'
+import ConstantsList from '../../config_constants';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
   const useStyles = theme => ({
     card: {
       display: 'flex',
       padding: "1px",
       borderRadius: 16,
-      backgroundColor: "#FAFAFA"
-    },
+      backgroundColor: "#FAFAFA",
+      },
     media: {
-      minWidth: '25%',
-      maxWidth: '25%',
       flexShrink: 0,
-      maxHeight:"200px",
       backgroundColor: "#F4F4F4",
-      borderRadius: 15,
+      borderRadius: "80%",
       boxShadow: '0 2px 8px 0 #c1c9d7, 0 -2px 8px 0 #cce1e9',
-      marginTop:"20px",
-      marginRight:"20px"
+      marginRight:"2%",
+      [theme.breakpoints.between('lg','xl')]: {
+        minWidth: '35%',
+        maxWidth: '35%',
+        maxHeight:"190px",
+        marginTop:"20px",
+        marginRight: "5%",
+      },
+      [theme.breakpoints.between('md', 'lg')]: {
+        minWidth: '26%',
+        maxWidth: '26%',
+        maxHeight: '8rem',
+        marginRight: "5px",
+        borderRadius: "80%"
+      },
+      [theme.breakpoints.down('md')]: {
+        display: "none"
+      },
     },
     content: {
       padding: "0px, 0, 0, 0",
@@ -60,12 +56,9 @@ import Avatar from '@material-ui/core/Avatar';
       marginRight: "1.5em",
       display: 'inline-block',
     },
-    body: {
+    body : {
       fontSize: 14,
-      wordWrap: "break-word"
-    },
-    textFooter: {
-      fontSize: 14,
+      wordWrap: "break-word",
     },
     icon: {
       fontSize: '0.8rem',
@@ -73,67 +66,200 @@ import Avatar from '@material-ui/core/Avatar';
     chip: {
       marginLeft: "5px"
     },
+    buttonGroup: {
+      marginTop: "1.1rem"
+    },
     button: {
       marginRight: "10px"
+    },
+    descriptionText: {
+      fontSize: 14,
+      wordWrap: "break-word",
+      minHeight: "120px",
+      minWidth: "321.77px",
+      maxWidth: "321.77px",
+      [theme.breakpoints.between('md', 'lg')]: {
+        minWidth: "285.77px",
+        maxWidth: "285.77px"
+      },
+      [theme.breakpoints.down('md')]: {
+        minWidth: "auto",
+        maxWidth: "auto",
+        minHeight: "auto"
+      }
+    },
+    circleIcon: {
+      minWidth: '35%',
+      maxWidth: '35%',
+      maxHeight:"190px",
+      minHeight:"190px",
+      [theme.breakpoints.between('lg','xl')]: {
+        minWidth: '35%',
+        maxWidth: '35%',
+        maxHeight:"190px",
+        marginTop:"10px",
+        marginRight: "0%",
+      },
+      [theme.breakpoints.between('md', 'lg')]: {
+        minWidth: '28%',
+        maxWidth: '28%',
+        minHeight: '190px',
+        maxHeight: '190px',
+        marginRight: "0%",
+      },
+      [theme.breakpoints.down('md')]: {
+        display: "none"
+      }
     }
   });
   
   class UserStyleCard extends Component 
   {
-    render ()
-    {
-        const { classes } = this.props;
+    constructor(props) {
+      super(props);
+      this.handleOnYesClick = this.handleOnYesClick.bind(this);
+      this.handleOnError = this.handleOnError.bind(this);
+
+      this.state = (
+      {
+        detailProfileOpen: false,
+        portOption:ConstantsList.PORT_IN_USE,
+        showDefaultAvatar: false
+      });
+    }
+    
+    handleDetailProfileOpen = () => {
+      this.setState({
+        detailProfileOpen: true
+      })
+    }
+    handleClose = () => {
+      this.setState({
+        detailProfileOpen: false
+      })
+    };
+
+    handleOnYesClick= () => {
+      switch(this.props.page) {
+        case "browse-match": 
+          this.props.yesFunction(this.props.user, this.props.matchingLanguage)
+          break;
+        default:
+          break;
+      }
+    }
+
+    handleOnError() {
+      this.setState({
+        showDefaultAvatar: true
+      })
+    }
+
+    renderAvatar = (classes) => {
+      const defaultAvatar = (<CardMedia
+        className={classes.circleIcon}
+        component={AccountCircleIcon} />);
+      
+      const UserAvatar = (<CardMedia
+        className={classes.media}
+            component="img"
+            onError={this.handleOnError}
+            image={window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/avatar/getAvatar/' + this.props.user.email}
+      />);
+
+      if(this.state.showDefaultAvatar) return defaultAvatar;
+      else return UserAvatar
+    }
+
+    renderButtonGroup = (yesText, yesFunction, noText, noFunction, cssClasses) => {
+        const yesButton = (yesText && yesFunction) 
+        ? (  <Button className={cssClasses.button} onClick={this.handleOnYesClick} variant="outlined" size="small" color="primary" >
+                {yesText}
+              </Button>
+          )
+        : (<></>);
+        const noButton = (noText && noFunction) 
+        ? (  <Button className={cssClasses.button} variant="outlined" size="small" color="primary" >
+                Send Invitation
+              </Button>
+          )
+        : (<></>);
 
         return(
-          <Card className={classes.card} elevation={0}>
-          <CardContent className={classes.content}>
-            <Box mb={1}>
-              <h2 className={classes.heading}>Teemu Pukki</h2>
-              <Link
-                component={'button'}
-              >
-                Full profile <ArrowForwardIos className={classes.icon}/>
-              </Link>
-            </Box>
-            <Box mb={1}>
-              <h6 className={classes.heading}> Helsinki </h6>
-            </Box>
-            <p className={classes.body}>
-              Lorem ipsum is placeholder text commonly used in the graphic, print,
-              credit (www.brighttv.co.th)
-            </p>
-            <div>
+          <div className={cssClasses.buttonGroup}> 
+            <Grid>
+              {yesButton}
+              {noButton}
+            </Grid>
+          </div>
+        )
+    }
+
+    render ()
+    {  
+        const { classes, user, yesText, yesFunction, noText, noFunction } = this.props;
+        console.log(this.props)
+        const userDescription = (user.descriptionText == null || user.descriptionText === "") 
+                                ? "< User has no description >" : `${user.descriptionText.substr(0,180)} ...`
+
+        console.log("Hey there", user);
+        return(
+          <div>
+            <Card className={classes.card} elevation={0}>
+            <CardContent className={classes.content}>
+
+
+              <Box mb={1}>
+                <h2 className={classes.heading}>{user.firstName} {user.lastName}</h2>
+                <Link
+                  component={'button'}  onClick={this.handleDetailProfileOpen}
+                >
+                  Full profile <ArrowForwardIos className={classes.icon}/>
+                </Link>
+              </Box>
+              <Box mb={1}>
+                <h6 className={classes.heading}> { user.cities.join(', ') }  </h6>
+              </Box>
+              <p className={classes.descriptionText}>
               
-            </div>
-            <p className={classes.body}> Want to learn   
-              <Chip className={classes.chip} color="primary" variant="outlined" size="small" label="English - 1A - 5 credits" />
-              <Chip className={classes.chip} color="primary" variant="outlined" size="small" label="Finnish - 1A - 5 credits" />
-              <Chip className={classes.chip} color="primary" variant="outlined" size="small" label="Spanish - 1A - 5 credits" />
-            </p>
-            <p className={classes.body}> 
+                {userDescription}     
+              </p>
+              <div>
+                
+              </div>
+              <div className={classes.body}>   
+                <div className={classes.chipGroup}>
+                  Want to learn
+                  {user.languagesToLearn.map(lang => {
+                    return ( <Chip key={lang.language} className={classes.chip} color="primary" variant="outlined" size="small" 
+                             label={`${lang.language} - ${lang.level} - ${lang.credits} credits`} /> )
+                  })}
+                </div>
+              </div>
+              {this.renderButtonGroup(yesText,yesFunction,noText,noFunction,classes)}
 
-              <Grid>
-                <Button className={classes.button} variant="outlined" size="small" color="primary" >
-                  Accept
-                </Button>
-                <Button className={classes.button} variant="outlined" size="small" color="secondary" >
-                  Deny
-                </Button>
+            </CardContent>
+            {/* <CardMedia
+              className={classes.circleIcon}
+              // component="img"
+              // onError={this.handleOnError}
+              // image={this.state.userAvatarUrl}
+              component={AccountCircleIcon}
+            /> */}
+            {this.renderAvatar(classes)}
 
-              </Grid>
-            </p>
-            {/* <Divider className={classes.divider} light /> */}
-            <div className={classes.parent}> 
-            </div>
-          </CardContent>
-          <CardMedia
-            className={classes.media}
-            image={
-              'https://www.thesun.co.uk/wp-content/uploads/2019/08/NINTCHDBPICT000514173333-e1566058275271.jpg'
-            }
-          />
-        </Card>
-
+          </Card>
+            <Dialog
+            aria-labelledby="simple-modal-title"
+            aria-describedby="simple-modal-description"
+            open={this.state.detailProfileOpen}
+            onClose={this.handleClose}
+            maxWidth={'md'}
+            fullWidth={true}
+            >
+              <ProfilePage></ProfilePage>
+            </Dialog>
+        </div>
         );
     }
         

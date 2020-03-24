@@ -21,19 +21,13 @@ import Divider from '@material-ui/core/Divider';
 import Avatar from '@material-ui/core/Avatar';
 
 import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-
-import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Icon from '@material-ui/core/Icon';
 
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 
 import ConstantsList from '../../config_constants';
-import UserActionCard from '../../components/UserActionCard';
 import UserStyleCard from '../../components/UserStyleCard';
 const styles = ({
     root: {
@@ -68,25 +62,6 @@ const styles = ({
     cardContent: {
         padding: '0'
     },
-    gridListTile: {
-        // height:"100%",
-        // width:"100%",   
-        // minHeight: "310px",
-        // maxHeight: "310px",
-        // maxWidth: "610px",
-        // minWidth: "310px",
-        // space:2,
-        // marginBottom: 5,
-        // marginLeft: 1
-    },
-    card:{
-        margin: '5px',
-        height:"30px",
-        width:"700px"
-    },
-    gridListTileBar: {
-        // background: "#3f51b5",
-    },
     leftText:{
         textAlign: 'left'
     }
@@ -120,100 +95,29 @@ class BrowseMatch extends React.Component
 
     getMatchesTiles(item, classes) 
     {
-        item.matches.push({})
-        item.matches.push({})
-        item.matches.push({})
-        item.matches.push({})
-        item.matches.push({})
-        item.matches.push({})
-        item.matches.push({})
-        item.matches.push({})
-
         return (
             item.matches.length === 0 ? (
                 <Typography variant="overline" gutterBottom>
                     {"No matches found for "} {item.languageName} :( !
                 </Typography>
             ) : (
-            <div >
-                <GridList   classsName={classes.gridList} cols={2} spacing={20}>
+            <div className={classes.fullWidth}>
+                <GridList cellHeight="auto" spacing={25} >
                 {
                     item.matches.map((match, key) =>  
                     {
-                        // let r = 255*(1 - match.fitQuality) + 149*(match.fitQuality);
-                        // let g = 255*(1 - match.fitQuality) + 117*(match.fitQuality);
-                        // let b = 255*(1 - match.fitQuality) + 205*(match.fitQuality);
-                        return(<GridListTile rows={2}>
-                                    <UserStyleCard >
+                        return(<GridListTile key={key} className={classes.gridListTile} rows={2}>
+                                    <UserStyleCard  user={match} yesText="Send invitation" yesFunction={this.onInviteAction} 
+                                     page="browse-match" matchingLanguage={item.languageName}> 
                                     </UserStyleCard>
                                 </GridListTile>)
-                        // return (<GridListTile 
-                        //     key={key} 
-                        //     className={classes.gridListTile}>
-                        //         <Card 
-                        //         onClick = {() => this.onShowActionCard(true, match, item.languageName)}
-                        //         className={classes.card}
-                        //         style={{backgroundColor: 'rgb('+r+','+g+','+b+')'}}>
-                        //             <CardHeader
-                        //             avatar=
-                        //             {
-                        //                 <Avatar 
-                        //                 src={window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/avatar/getAvatar/' + match.email} 
-                        //                 aria-label="recipe" 
-                        //                 className={classes.bigAvatar}>
-                        //                 </Avatar>
-                        //             }
-                        //             className = {classes.leftText}
-                        //             title={match.firstName + ' ' + match.lastName}
-                        //             subheader={ match.cities}/>
-                        //             <CardContent>  
-                        //                 <Divider variant="middle" />
-                        //                 <List>
-                        //                     <ListItem>
-                        //                         <ListItemIcon><Icon fontSize="small">language</Icon></ListItemIcon>
-                        //                         <ListItemText primary={"Wants to learn: haha " + (match.languagesToLearn && match.languagesToLearn.map(e => e.language).join(", "))}/>
-                        //                     </ListItem>
-                        //                     <ListItem>
-                        //                         <ListItemIcon><Icon fontSize="small">check</Icon></ListItemIcon>
-                        //                         <ListItemText primary={"Credits and level: " + (match.languagesToLearn && match.languagesToLearn.map(e => e.credits + ' ' + e.level).join(", "))}/>
-                        //                     </ListItem>
-                        //                 </List>
-                        //             </CardContent>      
-                        //         </Card>
-                        //     </GridListTile>);
                     }
                 )}
                 </GridList>
-                {this.state.modalData != null && 
-                    <UserActionCard 
-                    type = "invite"
-                    open = {this.state.open} 
-                    data = {this.state.modalData}
-                    onClose = {(data) =>this.onShowActionCard(false, null, data)}/>}
             </div>   
             )
         )
     }
-
-    onShowActionCard= (open, data, action) =>  
-    {
-        if (open === true) 
-        {
-            this.setState({modalData: data});
-            this.setState({modalLanguage: action});
-        }
-        else
-        {
-            if (action === "invite") 
-            {
-                console.log(this.state.modalData, this.state.modalLanguage);
-
-                this.onInviteAction(this.state.modalData, this.state.modalLanguage);
-            }
-        }
-
-        this.setState({open: open});
-    };
 
     getAlreadyExistsDiv(item, classes) {
         return (
@@ -236,7 +140,7 @@ class BrowseMatch extends React.Component
 
         return (
                 <div key={item.languageName}>
-                    <ExpansionPanel>
+                    <ExpansionPanel defaultExpanded={true}>
                         <ExpansionPanelSummary
                             expandIcon={<ExpandMoreIcon />}
                             aria-controls="panel1a-content"
