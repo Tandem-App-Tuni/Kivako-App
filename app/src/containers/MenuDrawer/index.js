@@ -176,12 +176,12 @@ class Dashboard extends React.Component
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
             {this.props.title}
           </Typography>
-          <IconButton color="inherit" component={Link} to="/match-requests">
+          {/* <IconButton color="inherit" component={Link} to="/match-requests">
               <PersonAddIcon />
           </IconButton>
           <IconButton color="inherit" component={Link} to="/chat-page">
               <MessageIcon />
-          </IconButton>
+          </IconButton> */}
         </Toolbar>
       </AppBar>
       <Drawer
