@@ -108,10 +108,7 @@ class Dashboard extends React.Component
   {
     super(props);
 
-    this.state = {open:true, isAdmin:false, requestAmount:0 , socket: props.chatBundle.socket, getChatN: props.chatBundle.getChatNotification, setChatN: props.chatBundle.setChatNotification,
-      open: true, isAdmin: false, requestAmount: 0, socket: props.chatBundle.socket, getChatN: props.chatBundle.getChatNotification, setChatN: props.chatBundle.setChatNotification,
-      initialPage: ConstantsList.IS_LOCAL_TEST_ENV ? 'http://localhost:3001' : ConstantsList.APPLICATION_URL
-    };
+    this.state = {open:true, isAdmin:false, requestAmount:0 , socket: props.chatBundle.socket, getChatN: props.chatBundle.getChatNotification, setChatN: props.chatBundle.setChatNotification,};
     
   }
 
@@ -189,7 +186,7 @@ class Dashboard extends React.Component
         }}
         open={this.state.open}> 
           <div className={classes.toolbarIcon}>
-            <a href={this.state.initialPage}>
+            <a href={ConstantsList.APPLICATION_URL + '/logout'}>
               <img alt="" src={logo} style={{ maxHeight: 100, maxWidth: '70%', align: 'center' }} />
             </a>
             <IconButton onClick={this.handleDrawerClose}>
