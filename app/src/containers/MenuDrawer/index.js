@@ -109,6 +109,11 @@ class Dashboard extends React.Component
     super(props);
 
     this.state = {open:true, isAdmin:false, requestAmount:0 , socket: props.chatBundle.socket, getChatN: props.chatBundle.getChatNotification, setChatN: props.chatBundle.setChatNotification};
+    this.state = {
+      open: true, isAdmin: false, requestAmount: 0, socket: props.chatBundle.socket, getChatN: props.chatBundle.getChatNotification, setChatN: props.chatBundle.setChatNotification,
+      initialPage: ConstantsList.IS_LOCAL_TEST_ENV ? 'http://localhost:3001' : ConstantsList.APPLICATION_URL
+
+    };
   }
 
   handleDrawerOpen = () => 
@@ -185,7 +190,9 @@ class Dashboard extends React.Component
         }}
         open={this.state.open}> 
           <div className={classes.toolbarIcon}>
-            <img alt="" src={logo} style={{ maxHeight: 100 , maxWidth: '70%', align:'center'}}/>
+            <a href={this.state.initialPage}>
+              <img alt="" src={logo} style={{ maxHeight: 100, maxWidth: '70%', align: 'center' }} />
+            </a>
             <IconButton onClick={this.handleDrawerClose}>
               <ChevronLeftIcon/>
             </IconButton>
