@@ -221,11 +221,8 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
     render ()
     {  
         const { classes, user, yesText, yesFunction, noText, noFunction } = this.props;
-        console.log(this.props)
         const userDescription = (user.descriptionText == null || user.descriptionText === "") 
                                 ? "< User has no description >" : `${user.descriptionText.substr(0,180)} ...`
-
-        console.log("Hey there", user);
         return(
           <div>
             <Card className={classes.card} elevation={0}>
@@ -262,13 +259,6 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
               {this.renderButtonGroup(yesText,yesFunction,noText,noFunction,classes)}
 
             </CardContent>
-            {/* <CardMedia
-              className={classes.circleIcon}
-              // component="img"
-              // onError={this.handleOnError}
-              // image={this.state.userAvatarUrl}
-              component={AccountCircleIcon}
-            /> */}
             {this.renderAvatar(classes)}
 
           </Card>

@@ -9,16 +9,11 @@ import GridListTile from '@material-ui/core/GridListTile';
 import ListItem from '@material-ui/core/ListItem';
 import {withStyles} from '@material-ui/core/styles';
 import {CircularProgress} from '@material-ui/core'
-import List from '@material-ui/core/List';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import Box from '@material-ui/core/Box'
 import Tooltip from '@material-ui/core/Tooltip';
+import InfoIcon from '@material-ui/icons/Info';
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	Styles
 
 import Divider from '@material-ui/core/Divider';
-import Avatar from '@material-ui/core/Avatar';
 
 import { makeStyles } from '@material-ui/core/styles';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -80,7 +75,8 @@ class BrowseMatch extends React.Component
         portOption:ConstantsList.PORT_IN_USE,
         open:false,
         modalData: null,
-        modalLanguage: null
+        modalLanguage: null,
+        isDefaultExpand: false
       };
     }
 
@@ -136,17 +132,22 @@ class BrowseMatch extends React.Component
     getMatchesList(item, classes)
     {
         const languageTooltip = 'Matches are sorted by compatibility relative to your language preferences. ' +
-                                'Matches on the left with the most purple hue are rated higher with a descending compatibility going right.';
+                                'Matches on the left are rated higher with a descending compatibility going right.';
 
         return (
                 <div key={item.languageName}>
-                    <ExpansionPanel defaultExpanded={true}>
+                    <ExpansionPanel defaultExpanded={this.state.isDefaultExpand}>
                         <ExpansionPanelSummary
                             expandIcon={<ExpandMoreIcon />}
                             aria-controls="panel1a-content"
                             id="panel1a-header"
                         >
-                        <Typography className={classes.heading}>Possible matches who can teach you {item.languageName}</Typography>
+                        <Typography className={classes.heading}>
+                            Possible matches who can teach you {item.languageName} - <strong>{item.matches.length} match(es) &nbsp;&nbsp;&nbsp;&nbsp;</strong> 
+                            <Tooltip title={languageTooltip} arrow>
+                                <InfoIcon>Arrow</InfoIcon>
+                            </Tooltip>
+                        </Typography>
                         </ExpansionPanelSummary>
                         <ExpansionPanelDetails>
                             {
@@ -206,7 +207,12 @@ class BrowseMatch extends React.Component
         .then((response) => response.json())
         .then((responseJson) => 
         {
-            if (responseJson.userPossibleMatches !== undefined) this.setState({userMatches: responseJson.userPossibleMatches})
+            if (responseJson.userPossibleMatches !== undefined) this.setState(
+                { userMatches: responseJson.userPossibleMatches,
+                  isDefaultExpand: responseJson.userPossibleMatches.length > 1 
+                                   ? false : true     
+                })
+            
         })
         .catch((error) => {
             console.error(error);
@@ -219,7 +225,11 @@ class BrowseMatch extends React.Component
     {
         this.getUserPossibleMatchsListAPI(() => 
         {
-            this.setState({isLoadingPage:false});
+            this.setState(
+                {
+                    isLoadingPage:false,
+                }
+            );
         });
     }
 
