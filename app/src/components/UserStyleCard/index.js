@@ -34,12 +34,22 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
         marginTop:"20px",
         marginRight: "5%",
       },
-      [theme.breakpoints.between('md', 'lg')]: {
-        minWidth: '26%',
-        maxWidth: '26%',
-        maxHeight: '8rem',
+      [theme.breakpoints.down('lg')]: {
+        minWidth: '30%',
+        maxWidth: '30%',
+        maxHeight: '10rem',
         marginRight: "5px",
-        borderRadius: "80%"
+        borderRadius: "50%",
+      },
+      [theme.breakpoints.down('1462')]: {
+        minWidth: '30%',
+        maxWidth: '30%',
+        maxHeight: '9rem',
+        marginRight: "5px",
+        borderRadius: "60%",
+      },
+      [theme.breakpoints.down('1346')]: {
+        maxHeight: '8rem',
       },
       [theme.breakpoints.down('md')]: {
         display: "none"
@@ -78,9 +88,13 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
       minHeight: "120px",
       minWidth: "321.77px",
       maxWidth: "321.77px",
-      [theme.breakpoints.between('md', 'lg')]: {
+      [theme.breakpoints.down('lg')]: {
         minWidth: "285.77px",
         maxWidth: "285.77px"
+      },
+      [theme.breakpoints.down('1346')]: {
+        minWidth: "235.77px",
+        maxWidth: "235.77px"
       },
       [theme.breakpoints.down('md')]: {
         minWidth: "auto",
@@ -100,12 +114,20 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
         marginTop:"10px",
         marginRight: "0%",
       },
-      [theme.breakpoints.between('md', 'lg')]: {
-        minWidth: '28%',
-        maxWidth: '28%',
+      [theme.breakpoints.down('lg')]: {
+        minWidth: '51%',
+        maxWidth: '51%',
         minHeight: '190px',
-        maxHeight: '190px',
-        marginRight: "0%",
+        maxHeight: '170px',
+      },
+      [theme.breakpoints.down('1462')]: {
+        minWidth: '38%',
+        maxWidth: '38%',
+        maxHeight: '5rem',
+      },
+      [theme.breakpoints.down('1354')]: {
+        minWidth: '33%',
+        maxWidth: '33%'
       },
       [theme.breakpoints.down('md')]: {
         display: "none"
@@ -158,7 +180,8 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
     renderAvatar = (classes) => {
       const defaultAvatar = (<CardMedia
         className={classes.circleIcon}
-        component={AccountCircleIcon} />);
+        component={AccountCircleIcon}
+        children=" " />);
       
       const UserAvatar = (<CardMedia
         className={classes.media}
