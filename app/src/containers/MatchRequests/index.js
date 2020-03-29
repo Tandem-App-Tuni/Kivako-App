@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import { Link } from 'react-router-dom';
 
 import GridList from '@material-ui/core/GridList';
+import GridListTile from '@material-ui/core/GridListTile';
 import {withStyles} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
@@ -25,7 +26,12 @@ import logo from '../../tandemlogo.png'
 import Grid from '@material-ui/core/Grid'
 
 import ConstantsList from '../../config_constants';
+import UserStyleCard from '../../components/UserStyleCard';
 
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 const styles = ({
     root: {
@@ -60,16 +66,7 @@ const styles = ({
     cardContent: {
         padding: '0'
     },
-    gridListTile: {
-        height:"100%",
-        width:"100%",   
-        minHeight: "300px",
-        maxWidth: "150px",
-        minWidth: "400px",
-        space:2,
-        marginBottom: 5,
-        marginLeft: 1
-    },
+
     gridListTileBar: {
         background: "#3f51b5",
     },
@@ -89,6 +86,8 @@ class MatchRequests extends React.Component
         open:false,
         portOption:ConstantsList.PORT_IN_USE
       };
+      this.acceptMatchRequest = this.acceptMatchRequest.bind(this);
+      this.denyMatchRequest = this.denyMatchRequest.bind(this);
     }
 
     openModal = () => {
@@ -100,10 +99,8 @@ class MatchRequests extends React.Component
     };
 
     acceptMatchRequest(match) 
-    {
-        if (window.confirm("Accept match request?")) 
-        {
-            fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/usersMatch/acceptMatchRequest/' + match._id, 
+    {   
+        fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/usersMatch/acceptMatchRequest/' + match._id, 
             {
                 method: 'POST',
                 headers: {
@@ -128,18 +125,13 @@ class MatchRequests extends React.Component
                 console.log('Error');
                 console.error(error);
             }); 
-        }
     }
 
     denyMatchRequest(match) 
     {
-        //console.log(user)
-        //console.log(language)
-        //alert("Match "+ match._id);
-
         const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/usersMatch/denyMatchRequest/"+match._id);
 
-        if (window.confirm("Deny match request?")) {
+       
             fetch(url, {
                 method: 'POST',
                 headers: {
@@ -161,7 +153,7 @@ class MatchRequests extends React.Component
             .catch((error) => {
                 console.error(error);
             }); 
-        }
+        
         //console.log(url)
     }
 
@@ -195,6 +187,26 @@ class MatchRequests extends React.Component
             this.setState({isLoadingPage:false});
         });
     }
+    getMatchesTiles(matches, classes) 
+    {
+        return (
+            <div className={classes.fullWidth}>
+                <GridList cellHeight="auto" spacing={25} >
+                {
+                    matches.map((match, key) =>  
+                    {
+                        return(<GridListTile key={key} rows={2}>
+                                    <UserStyleCard  user={match.requesterUser} yesText="Accept" yesFunction={this.acceptMatchRequest} 
+                                      noText="Deny" noFunction={this.denyMatchRequest}  page="pending-match" match={match}> 
+                                    </UserStyleCard>
+                                </GridListTile>)
+                    }
+                )}
+                </GridList>
+            </div>   
+            )
+    }
+
 
     render() {
         const {classes} = this.props;
@@ -217,7 +229,6 @@ class MatchRequests extends React.Component
                 <div className={classes.root}>
                         <div align = "center">
                             <Paper>
-      
                                 <br></br>
                                 <br></br>
                                 <br></br>
@@ -244,70 +255,24 @@ class MatchRequests extends React.Component
         }
         return (
             <div className={classes.root}>
-                    <GridList container='true' cols={1} spacing={30} cellHeight={'auto'}>
-                        {
-                            this.state.userRequestMatches.map((match, key) =>
-                        
-                                <Grid container spacing={3} key={key}>
-                                    <Grid item xs >
-                                        <Card border={1} className={cardStyle.card} key={key}>
-                                                <CardHeader
-                                                className = {classes.leftText}
-                                                    avatar={
-                                                        <Avatar src={window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/avatar/getAvatar/' + match.requesterUser.email} 
-                                                                aria-label="recipe" 
-                                                                className={classes.bigAvatar}>
-                                                        </Avatar>
-                                                    }
-                                                    
-                                                    title={match.requesterUser.firstName + ' ' + match.requesterUser.lastName}
-                                                    //subheader={ match._id}
-                                                />
-                                                
-                                                <CardContent className = {classes.leftText}>
-        
-                                                    <Typography variant="body1" color="textSecondary" component="p">
-                                                        
-                                                        {match.requesterUser.descriptionText}
-        
-                                                    </Typography>
-                                                    <br></br>
-                                                    <Divider variant="middle" />
-                                                    <br></br>
-                                                    <Typography variant="body2" color="textSecondary" component="p">
-                                                        <Icon fontSize="small">home</Icon> Cities: {match.requesterUser.cities.join(', ')}<br></br>
-                                                        <Icon fontSize="small">language</Icon> Languages want to learn: {(match.requesterUser.languagesToLearn && match.requesterUser.languagesToLearn.map(e => e.language).join(", "))}<br></br>
-                                                    </Typography>                                                    
-                                                </CardContent>
-                                                <CardActions disableSpacing >
-                                                    <Grid container>
-                                                    <Grid item xs={12} sm={4}>
-                                                        <Button variant="contained" 
-                                                                color="primary"
-                                                                onClick = {this.acceptMatchRequest.bind(this,match)}
-                                                        >
-                                                            Accept
-                                                        </Button>
-                                                    </Grid>
-                                                    <Grid item xs>
-            
-                                                    </Grid>
-                                                    <Grid item xs={12} sm={4}>
-                                                        <Button variant="outlined" 
-                                                                color="secondary"
-                                                                onClick = {this.denyMatchRequest.bind(this,match)}
-                                                            >
-                                                            Deny
-                                                        </Button>
-                                                    </Grid>
-                                                    </Grid>
-                                                </CardActions>
-                                        </Card>
-                                    </Grid>
-                                </Grid>
-                            )
-                        }
-                    </GridList>
+                <ExpansionPanel defaultExpanded={true}>
+                        <ExpansionPanelSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="panel1a-content"
+                            id="panel1a-header"
+                        >
+                        <Typography variant="h6">
+                            Your pending request(s)
+                        </Typography>
+                        </ExpansionPanelSummary>
+                        <ExpansionPanelDetails>
+                            { 
+                                this.getMatchesTiles(this.state.userRequestMatches, classes)
+                            }
+                            <br></br>
+                            <Divider variant="middle" />
+                        </ExpansionPanelDetails>
+                </ExpansionPanel>
             </div>
         );
     }
