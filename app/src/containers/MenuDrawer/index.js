@@ -122,6 +122,11 @@ class Dashboard extends React.Component
     this.setState({open:false});
   }
 
+  logoClick = () => 
+  {
+    window.location.href="/";
+  }
+
   async componentDidMount()
   {
     try 
@@ -160,7 +165,6 @@ class Dashboard extends React.Component
   render()
   {
     const { classes } = this.props;
-
     return(
     <div className={classes.root}>
       <CssBaseline />
@@ -185,10 +189,8 @@ class Dashboard extends React.Component
           paper: clsx(classes.drawerPaper, !this.state.open && classes.drawerPaperClose),
         }}
         open={this.state.open}> 
-          <div className={classes.toolbarIcon}>
-            <a href={ConstantsList.APPLICATION_URL + '/logout'}>
-              <img alt="" src={logo} style={{ maxHeight: 100, maxWidth: '70%', align: 'center' }} />
-            </a>
+          <div className={classes.toolbarIcon}>     
+            <img alt="" src={logo}  onClick={this.logoClick} style={{ maxHeight: 100, maxWidth: '70%', align: 'center' }} />
             <IconButton onClick={this.handleDrawerClose}>
               <ChevronLeftIcon/>
             </IconButton>
