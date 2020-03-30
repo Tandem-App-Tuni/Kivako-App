@@ -22,6 +22,10 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 
+import Fab from '@material-ui/core/Fab';
+import LocationCityIcon from '@material-ui/icons/LocationCity';
+import ThumbUpIcon from '@material-ui/icons/ThumbUp';
+
 import ConstantsList from '../../config_constants';
 import UserStyleCard from '../../components/UserStyleCard';
 const styles = ({
@@ -59,6 +63,14 @@ const styles = ({
     },
     leftText:{
         textAlign: 'left'
+    },
+    fab: {
+        margin: "0px",
+        top: "auto",
+        right: "20px",
+        bottom: "20px",
+        left: "auto",
+        position: "fixed",
     }
 });
 
@@ -76,7 +88,10 @@ class BrowseMatch extends React.Component
         open:false,
         modalData: null,
         modalLanguage: null,
-        isDefaultExpand: false
+        isDefaultExpand: false,
+        loginUser: {},
+        isCityFirst: false, //sorting by same city first
+        userMatchesFilterByCity: []
       };
     }
 
@@ -102,7 +117,7 @@ class BrowseMatch extends React.Component
                 {
                     item.matches.map((match, key) =>  
                     {
-                        return(<GridListTile key={key} className={classes.gridListTile} rows={2}>
+                        return(<GridListTile key={match._id} className={classes.gridListTile} rows={2}>
                                     <UserStyleCard  user={match} yesText="Send invitation" yesFunction={this.onInviteAction} 
                                      page="browse-match" matchingLanguage={item.languageName}> 
                                     </UserStyleCard>
@@ -195,42 +210,85 @@ class BrowseMatch extends React.Component
 
     }
 
-    getUserPossibleMatchsListAPI = (callback) =>
-    {
-        const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/usersMatch/possibleMatchs");
-    
-        fetch(url, {
-            method: 'GET',
-            credentials: 'include',
-            cors:'no-cors'
-        })
-        .then((response) => response.json())
-        .then((responseJson) => 
-        {
-            if (responseJson.userPossibleMatches !== undefined) this.setState(
-                { userMatches: responseJson.userPossibleMatches,
-                  isDefaultExpand: responseJson.userPossibleMatches.length > 1 
-                                   ? false : true     
-                })
+    onhandleSortBy = () => {
+        this.setState({ isCityFirst: !this.state.isCityFirst });
+    }
+ 
+    sortByCity = () => {
+        if(this.state.loginUser && this.state.userMatches) {
+            const langs = [...this.state.userMatches];
+            const userCities = this.state.loginUser.cities;
             
-        })
-        .catch((error) => {
-            console.error(error);
-        });
+            console.log("Loggined user", this.state.loginUser)
 
-        callback();
+           const newList = langs.map(language => {
+                let sort = [];
+                userCities.forEach(city => {
+                    const userMatched = language.matches.filter(x => x.cities.includes(city))
+                    sort = [...sort,...userMatched]
+                });
+                // push all the user to sort list, this will add those who don't match with user's cities at the end of the array
+                sort = [...sort, ...language.matches]; 
+                const uniqueSet = new Set(sort); // get rid of duplicate
+                return {...language, matches: [...uniqueSet]} // spread back to array
+            });
+            return newList;
+        }
+    }
+
+    getUserPossibleMatchsListAPI = async () =>
+    {
+        const response = await fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/usersMatch/possibleMatchs", 
+        {
+          method: 'GET',
+          credentials: 'include',
+          cors:'no-cors'
+        });
+        const responseJson = await response.json();
+        if(responseJson.userPossibleMatches !== undefined) {
+            this.setState(
+                {
+                    userMatches: responseJson.userPossibleMatches,
+                    isDefaultExpand: responseJson.userPossibleMatches.length > 1 
+                                   ? false : true     
+                }
+            )
+            const result = this.sortByCity();
+            console.log("YEE MAN", result)
+            this.setState({
+                userMatchesFilterByCity: result
+            })
+        } 
     };
 
-    componentDidMount()
-    {
-        this.getUserPossibleMatchsListAPI(() => 
+    getLoginUserInfo = async () => {
+        const response = await fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/users/userInfo", 
         {
+          method: 'GET',
+          credentials: 'include',
+          cors:'no-cors'
+        });
+        const responseJson = await response.json();
+        this.setState({
+            loginUser: responseJson.data
+        });
+    }
+
+    async componentDidMount()
+    {
+        try {
+            await this.getLoginUserInfo(); // must wait for this to come first
+            await this.getUserPossibleMatchsListAPI();
             this.setState(
                 {
                     isLoadingPage:false,
                 }
             );
-        });
+        }
+        catch(e) {
+            console.log("Error when trying to mount component. Err:", e)
+        }
+        
     }
 
     render() 
@@ -245,13 +303,22 @@ class BrowseMatch extends React.Component
               fontWeight: theme.typography.fontWeightRegular,
             },
           }));
-        
-        if(this.state.isLoadingPage) return(<CircularProgress/>);
-            
-        return (
-        <div className={classes.root}>
-            <div className={classesPanel.root}>
-                {
+
+        const mainList = (this.state.isCityFirst) ? 
+          ( <div className={classesPanel.root}>
+                {   
+                    this.state.userMatchesFilterByCity.map(item => 
+                    {
+                        return item.alreadyExists ? (
+                            this.getAlreadyExistsDiv(item, classes)
+                        ) : (
+                            this.getMatchesList(item, classes)
+                        )
+                    })
+                }
+            </div>  ) : 
+            ( <div className={classesPanel.root}>
+                {   
                     this.state.userMatches.map(item => 
                     {
                         return item.alreadyExists ? (
@@ -261,7 +328,29 @@ class BrowseMatch extends React.Component
                         )
                     })
                 }
+            </div>  )
+        
+        const fabButton = (this.state.isCityFirst) ? 
+          (
+            <Fab onClick={this.onhandleSortBy} className={classes.fab} color="primary" size="small" variant="extended" aria-label="edit">
+                <ThumbUpIcon />
+                &nbsp; Best Match first
+            </Fab>
+          ) :
+          (
+            <Fab onClick={this.onhandleSortBy} className={classes.fab} color="primary" size="small" variant="extended" aria-label="edit">
+                <LocationCityIcon />
+                &nbsp; Same city first
+            </Fab>
+          )
+        if(this.state.isLoadingPage) return(<CircularProgress/>);
+            
+        return (
+        <div className={classes.root}>
+            <div className={classesPanel.root}>
+                {mainList}
             </div>
+           { fabButton }
         </div>
         );
     }
