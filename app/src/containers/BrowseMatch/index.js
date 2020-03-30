@@ -22,7 +22,7 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 
-import Fab from '@material-ui/core/Fab';
+import Chip from '@material-ui/core/Chip';
 import LocationCityIcon from '@material-ui/icons/LocationCity';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 
@@ -64,13 +64,13 @@ const styles = ({
     leftText:{
         textAlign: 'left'
     },
-    fab: {
-        margin: "0px",
-        top: "auto",
-        right: "20px",
-        bottom: "20px",
-        left: "auto",
-        position: "fixed",
+    chipRoot: {
+        display: 'flex',
+        flexWrap: 'wrap',
+        '& > *': {
+            margin: "0.5%",
+        },
+        marginBottom: "2%"
     }
 });
 
@@ -90,19 +90,11 @@ class BrowseMatch extends React.Component
         modalLanguage: null,
         isDefaultExpand: false,
         loginUser: {},
-        isCityFirst: false, //sorting by same city first
+        sortBy: "best-match", //sorting by same city first
         userMatchesFilterByCity: []
       };
     }
 
-
-    openModal = () => {
-        this.setState({open: true})
-    };
-
-    handleClose = () => {
-        this.setState({open: false});
-    };
 
     getMatchesTiles(item, classes) 
     {
@@ -129,6 +121,19 @@ class BrowseMatch extends React.Component
             )
         )
     }
+
+    onSortByBestMatch = () => {
+        if(this.state.sortBy === "city-first") {
+            this.setState({ sortBy: "best-match" });
+        }
+    }
+
+    onSortByCityFirst = () => {
+        if(this.state.sortBy === "best-match") {
+            this.setState({ sortBy: "city-first" });
+        }
+    }
+
 
     getAlreadyExistsDiv(item, classes) {
         return (
@@ -165,9 +170,31 @@ class BrowseMatch extends React.Component
                         </Typography>
                         </ExpansionPanelSummary>
                         <ExpansionPanelDetails>
-                            {
-                                this.getMatchesTiles(item, classes)
-                            }
+                            <div className={classes.fullWidth}> 
+                                <div className={classes.chipRoot}>
+                                    <Chip
+                                        icon={<ThumbUpIcon />}
+                                        label="Best match first"
+                                        clickable={this.state.sortBy !== "best-match"}
+                                        color={(this.state.sortBy === "best-match") ? "primary" : "default"}
+                                        size="small"
+                                        onClick={this.onSortByBestMatch}
+                                    />
+                                    <Chip
+                                        icon={<LocationCityIcon />}
+                                        label="Same city first"
+                                        size="small"
+                                        clickable={this.state.sortBy !== "city-first"}
+                                        color={(this.state.sortBy === "city-first") ? "primary" : "default"}
+                                        onClick={this.onSortByCityFirst}
+                                    />
+                                </div>
+                             
+                                {
+                                    this.getMatchesTiles(item, classes)
+                                }
+                            </div>
+                           
                             <br></br>
                             <Divider variant="middle" />
                         </ExpansionPanelDetails>
@@ -210,26 +237,22 @@ class BrowseMatch extends React.Component
 
     }
 
-    onhandleSortBy = () => {
-        this.setState({ isCityFirst: !this.state.isCityFirst });
-    }
+
  
     sortByCity = () => {
         if(this.state.loginUser && this.state.userMatches) {
-            const langs = [...this.state.userMatches];
+            const languageToLearn = [...this.state.userMatches];
             const userCities = this.state.loginUser.cities;
             
-            console.log("Loggined user", this.state.loginUser)
-
-           const newList = langs.map(language => {
-                let sort = [];
+           const newList = languageToLearn.map(language => {
+                let sortedList = [];
                 userCities.forEach(city => {
                     const userMatched = language.matches.filter(x => x.cities.includes(city))
-                    sort = [...sort,...userMatched]
+                    sortedList = [...sortedList,...userMatched]
                 });
                 // push all the user to sort list, this will add those who don't match with user's cities at the end of the array
-                sort = [...sort, ...language.matches]; 
-                const uniqueSet = new Set(sort); // get rid of duplicate
+                sortedList = [...sortedList, ...language.matches]; 
+                const uniqueSet = new Set(sortedList); // get rid of duplicate
                 return {...language, matches: [...uniqueSet]} // spread back to array
             });
             return newList;
@@ -304,10 +327,10 @@ class BrowseMatch extends React.Component
             },
           }));
 
-        const mainList = (this.state.isCityFirst) ? 
+        const mainList = (this.state.sortBy === "best-match") ? 
           ( <div className={classesPanel.root}>
                 {   
-                    this.state.userMatchesFilterByCity.map(item => 
+                    this.state.userMatches.map(item => 
                     {
                         return item.alreadyExists ? (
                             this.getAlreadyExistsDiv(item, classes)
@@ -319,7 +342,7 @@ class BrowseMatch extends React.Component
             </div>  ) : 
             ( <div className={classesPanel.root}>
                 {   
-                    this.state.userMatches.map(item => 
+                    this.state.userMatchesFilterByCity.map(item => 
                     {
                         return item.alreadyExists ? (
                             this.getAlreadyExistsDiv(item, classes)
@@ -330,19 +353,6 @@ class BrowseMatch extends React.Component
                 }
             </div>  )
         
-        const fabButton = (this.state.isCityFirst) ? 
-          (
-            <Fab onClick={this.onhandleSortBy} className={classes.fab} color="primary" size="small" variant="extended" aria-label="edit">
-                <ThumbUpIcon />
-                &nbsp; Best Match first
-            </Fab>
-          ) :
-          (
-            <Fab onClick={this.onhandleSortBy} className={classes.fab} color="primary" size="small" variant="extended" aria-label="edit">
-                <LocationCityIcon />
-                &nbsp; Same city first
-            </Fab>
-          )
         if(this.state.isLoadingPage) return(<CircularProgress/>);
             
         return (
@@ -350,7 +360,6 @@ class BrowseMatch extends React.Component
             <div className={classesPanel.root}>
                 {mainList}
             </div>
-           { fabButton }
         </div>
         );
     }
