@@ -98,6 +98,7 @@ class PartnerListPage extends Component
             city: user.cities,
             teachLanguages: ltt,
             studyLanguages: ltl,
+            email:user.email,
             photo_url:window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/avatar/getAvatar/' + user.email,
         });
       }
@@ -154,6 +155,13 @@ class PartnerListPage extends Component
                   Teach: {item.teachLanguages.join(", ")}. Learn: {item.studyLanguages.join(", ")}
                 </Typography>
               {" — " + item.city.join(", ")}
+              <Typography
+                  component="span"
+                  variant="body2"
+                  style={{display:"block"}}
+                  color="textPrimary">
+                  Email: {item.email}
+                </Typography>
             </React.Fragment>}/>
           </ListItem>
           <Divider variant="inset" component="li" />
