@@ -105,6 +105,7 @@ class PartnerListPage extends Component
             city: user.cities,
             teachLanguages: ltt,
             studyLanguages: ltl,
+            email:user.email,
             photo_url:window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/avatar/getAvatar/' + user.email,
         });
       }
@@ -168,6 +169,14 @@ class PartnerListPage extends Component
             <Button size="small" variant="contained" color="secondary" className={classes.inline} target="blank" href="https://forms.gle/3Hh8nDbNiz6KwmkS8">
               Report
             </Button>
+              {" — " + item.city.join(", ")}
+              <Typography
+                  component="span"
+                  variant="body2"
+                  style={{display:"block"}}
+                  color="textPrimary">
+                  Email: {item.email}
+                </Typography>
           </ListItem>
           <Divider className={classes.divider}  component="li" />
           </div>
