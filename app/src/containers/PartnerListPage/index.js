@@ -161,7 +161,14 @@ class PartnerListPage extends Component
                   color="textPrimary">
                   Teach: {item.teachLanguages.join(", ")}. Learn: {item.studyLanguages.join(", ")}
                 </Typography>
-              {" — " + item.city.join(", ")}            
+              {" — " + item.city.join(", ")} 
+              <Typography
+                  component="span"
+                  variant="body2"
+                  className={classes.inline}
+                  color="textPrimary">
+                  Email: {item.email}
+                </Typography>           
             </React.Fragment>}/>          
 
           </ListItem>
@@ -169,14 +176,6 @@ class PartnerListPage extends Component
             <Button size="small" variant="contained" color="secondary" className={classes.inline} target="blank" href="https://forms.gle/3Hh8nDbNiz6KwmkS8">
               Report
             </Button>
-              {" — " + item.city.join(", ")}
-              <Typography
-                  component="span"
-                  variant="body2"
-                  style={{display:"block"}}
-                  color="textPrimary">
-                  Email: {item.email}
-                </Typography>
           </ListItem>
           <Divider className={classes.divider}  component="li" />
           </div>
