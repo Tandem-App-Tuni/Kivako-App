@@ -77,7 +77,7 @@ class ChatPage extends React.Component
       this.partners.push({
         name: data.name,
         roomId: roomInformation.roomId,
-        conversationName: 'Conversation with ' + data.name,
+        conversationName: data.name,
         conversationId: this.state.chatRooms,
         messages: roomInformation.messages,
         email: data.email
@@ -113,6 +113,11 @@ class ChatPage extends React.Component
     this.state.socket.emit('chatLeave', {});
   }
 
+  capitalizeWords = (str) =>
+  {
+    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+  }
+
   /**
    * renderPartnerArray renders the request array stored in this.partners, defined in the constructor.
    * These elements also contain a handleClick function, which if clicked, opens the chat window with the
@@ -136,17 +141,17 @@ class ChatPage extends React.Component
               <ListItem 
                 alignItems="flex-start"
                 key={index}
-                divider>
+                divider style={{cursor: 'pointer'}}>
                 <ListItemAvatar>
-                  <Avatar 
+                  <Avatar
                     alt={element.name} 
                     src={window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/api/v1/avatar/getAvatar/' + element.email}/>
                 </ListItemAvatar>
                 <ListItemText
-                  primary={element.conversationName}
+                  primary={this.capitalizeWords(element.conversationName)}
                   secondary={
                     <React.Fragment>
-                      {"  " + this.getMessagePeek(element.messages)}
+                      <p  style={{overflowWrap: "break-word"}}>{"  " + this.getMessagePeek(element.messages)}</p>
                     </React.Fragment>
                   }
               />
@@ -226,8 +231,11 @@ class ChatPage extends React.Component
    */
   renderChatWindow = () =>
   {
-    if (typeof this.state.currentOpenConversation == 'undefined') return(<div></div>);
-    else return(<Chat partner={this.state.currentOpenConversation.email} user={this.state.user} roomId={this.state.currentOpenConversation.roomId} socket={this.state.socket} messages={this.state.currentOpenConversation.messages} conversationName={this.state.currentOpenConversation.conversationName}/>);
+    if (typeof this.state.currentOpenConversation == 'undefined') return(<div className="left_bg"><p className="placeholder_text">Please click on the partner name to view the conversation.</p></div>);
+    else return(<Chat partner={this.state.currentOpenConversation.email} user={this.state.user}
+      roomId={this.state.currentOpenConversation.roomId} socket={this.state.socket} messages={this.state.currentOpenConversation.messages}
+      conversationName={this.state.currentOpenConversation.conversationName}
+      />);
   }
 
   /**
@@ -249,7 +257,7 @@ class ChatPage extends React.Component
       }));
 
     return(
-      <div>
+      <div style = {{height:"88vh"}}>
         <Typography variant="h6" gutterBottom>
                 Partners
         </Typography> 
@@ -267,8 +275,8 @@ class ChatPage extends React.Component
                     container
                     direction='row'
                     justify='space-around'
-                    alignItems={this.state.side}>
-                    <Grid item xs={12} sm={2}>
+                    alignItems={this.state.side}  style={{height: '72vh'}}>
+                    <Grid item xs={12} sm={3}>
                       <Box borderRadius={10}>
 
                         <List 
@@ -279,7 +287,7 @@ class ChatPage extends React.Component
                       </Box>
                     </Grid>
 
-                    <Grid item xs={12} sm={9}> 
+                    <Grid item xs={12} sm={8} > 
                       {this.renderChatWindow()}
                     </Grid>
                 </Grid>
