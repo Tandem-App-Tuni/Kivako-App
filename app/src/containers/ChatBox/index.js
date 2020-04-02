@@ -283,7 +283,7 @@ class ChatBubble extends React.Component
             text: props.message.text,
             partner: props.partner,
             side: props.message.id === props.user ? 'flex-end' : 'flex-start',
-            color: props.message.id === props.user ? '#2073E8' : '#24B8FF',
+            color: props.message.id === props.user ? '#2073E8' : '#f8f9fa',
             align: props.message.id === props.user ? 'left' : 'right',
             isSameUser: props.isSameUser
         };
@@ -298,7 +298,7 @@ class ChatBubble extends React.Component
             text: props.message.text,
             partner: props.partner,
             side: props.message.id === props.user ? 'flex-end' : 'flex-start',
-            color: props.message.id === props.user ? '#D5BDFF' : '#8A72B3',
+            color: props.message.id === props.user ? '#D5BDFF' : '#f8f9fa',
             align: props.message.id === props.user ? 'left' : 'right'
         };
 
@@ -327,7 +327,7 @@ class ChatBubble extends React.Component
                     {!alignmentLeft && !this.state.isSameUser ? <Avatar className="avatar" src={avatarUrl1}></Avatar> : <div style={{width:50}}></div>}
                     <Paper
                     elevation={3}
-                    style={{backgroundColor: this.state.color, padding: 5, maxWidth: '75%' }}>
+                    style={{backgroundColor: this.state.color, padding: 5, maxWidth: '75%', minWidth:'25%' }}>
                         <Typography style={{overflowWrap: "break-word"}}>
                             {this.state.text}
                         </Typography>
