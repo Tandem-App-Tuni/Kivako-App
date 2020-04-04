@@ -83,6 +83,7 @@ class BrowseMatch extends React.Component
         alertOpen: false,
         isDefaultExpand: false
       };
+      this.onInviteAction = this.onInviteAction.bind(this);
     }
 
     handleAlertClose() {
