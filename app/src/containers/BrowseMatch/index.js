@@ -24,7 +24,6 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 
 import ConstantsList from '../../config_constants';
 import {AlertView} from '../../components/AlertView';
-import {clone} from "ramda";
 
 import UserStyleCard from '../../components/UserStyleCard';
 const styles = ({
