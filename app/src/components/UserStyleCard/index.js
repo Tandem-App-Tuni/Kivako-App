@@ -142,12 +142,12 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
       this.handleOnYesClick = this.handleOnYesClick.bind(this);
       this.handleOnError = this.handleOnError.bind(this);
 
-      this.state = (
+      this.state = 
       {
         detailProfileOpen: false,
         portOption:ConstantsList.PORT_IN_USE,
         showDefaultAvatar: false
-      });
+      };
     }
     
     handleDetailProfileOpen = () => {
@@ -166,6 +166,17 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
         case "browse-match": 
           this.props.yesFunction(this.props.user, this.props.matchingLanguage)
           break;
+        case "pending-match":
+          this.props.yesFunction(this.props.match)
+        default:
+          break;
+      }
+    }
+
+    handleOnNoClick= () => {
+      switch(this.props.page) {
+        case "pending-match":
+          this.props.noFunction(this.props.match)
         default:
           break;
       }
@@ -196,14 +207,14 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
     renderButtonGroup = (yesText, yesFunction, noText, noFunction, cssClasses) => {
         const yesButton = (yesText && yesFunction) 
-        ? (  <Button className={cssClasses.button} onClick={this.handleOnYesClick} variant="outlined" size="small" color="primary" >
+        ? (  <Button className={cssClasses.button} onClick={this.handleOnYesClick} variant="outlined" size="medium" color="primary" >
                 {yesText}
               </Button>
           )
         : (<></>);
         const noButton = (noText && noFunction) 
-        ? (  <Button className={cssClasses.button} variant="outlined" size="small" color="primary" >
-                Send Invitation
+        ? (  <Button className={cssClasses.button} onClick={this.handleOnNoClick} variant="outlined" size="medium" color="secondary" >
+                {noText}
               </Button>
           )
         : (<></>);
