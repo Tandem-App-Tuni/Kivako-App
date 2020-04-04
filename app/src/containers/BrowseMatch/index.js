@@ -90,7 +90,7 @@ class BrowseMatch extends React.Component
         modalLanguage: null,
         isDefaultExpand: false,
         loginUser: {},
-        sortBy: "best-match", //sorting by same city first
+        sortBy: "best-match", //sorting by best match first
         userMatchesFilterByCity: []
       };
     }
