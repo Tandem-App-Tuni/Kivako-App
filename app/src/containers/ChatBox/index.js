@@ -51,6 +51,7 @@ class Chat extends React.Component
             console.log('Client', this.state.user, 'recieved message!');
             console.log('Displaying      message    ');
             var messages = this.state.messages;
+            console.log(messages);
 
             messages.push({
                 id: data.id,
@@ -87,6 +88,7 @@ class Chat extends React.Component
      */
     componentWillUnmount()
     {
+        console.log("socket was turned off")
         this.state.socket.off('message');
     }
 
@@ -99,7 +101,7 @@ class Chat extends React.Component
      */
     handleTextChange(e)
     {
-        this.setState({textFieldContent: e.target.value});
+        if (e.target.value !== '\n') this.setState({textFieldContent: e.target.value});
     }
 
     /**
@@ -110,11 +112,16 @@ class Chat extends React.Component
     renderMessages()
     {
         let bubbles = [];
+        let userOfPreviousMsg="";
 
         this.state.messages.forEach((element, index) => 
         {
-            bubbles.push(<ChatBubble key={index} partner={this.state.partner} user={this.state.user} message={element}></ChatBubble>);
+            let isSameUser = userOfPreviousMsg == element.id;
+            userOfPreviousMsg = element.id;
+            bubbles.push(<ChatBubble key={index} isSameUser={isSameUser} partner={this.state.partner} user={this.state.user} message={element}></ChatBubble>);
         });
+
+        this.scrollToBottom();
 
         return bubbles;
     }
@@ -151,9 +158,10 @@ class Chat extends React.Component
     handleSend(newMessages)
     {
         console.log('Processing post send...emitting to socket.io',newMessages[newMessages.length - 1]);
+        console.log(this.state.roomId);
 
         this.state.socket.emit('message', {user: this.state.user, roomId: this.state.roomId, message: newMessages[newMessages.length - 1]});
-
+        console.log('after emitting');
         this.setState({
             messages: newMessages,
             textFieldContent: ''
@@ -176,24 +184,39 @@ class Chat extends React.Component
      */
     sendMessageEnter(event)
     {
-        if (event.key === 'Enter' && this.setState.textFieldContent !== '') this.handleSend(this.state.sendMessageFunction(this.state.textFieldContent, this.state.messages, this.state.user));
+        if (event.key === 'Enter' && this.state.textFieldContent !== '') this.handleSend(this.state.sendMessageFunction(this.state.textFieldContent, this.state.messages, this.state.user));     
+    }
+
+    capitalizeWords = (str) =>
+    {
+        return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+    }
+    scrollToBottom = () =>
+    {
+      let objDiv = document.getElementById("parentDiv");
+      if(objDiv) objDiv.scrollTop = objDiv.scrollHeight;
+    }
+    componentDidMount() {
+      this.scrollToBottom();
     }
 
     render()
     {
         return(
             <Box
+            
                 borderRadius={5}
                 boxShadow={3}>
                 <Toolbar
                     style={{backgroundColor:'indigo', color:'white'}}>
-                    {this.state.conversationName}
+                    {this.capitalizeWords(this.state.conversationName)}
                 </Toolbar>
                 <br></br>
-                {this.renderMessages()}
+                <div id='parentDiv' style={{height:'52vh', overflow: 'auto'}}>
+                    {this.renderMessages()}
+                </div>
                 <br></br>
                 <Divider variant="middle" />
-                <br></br>
                 <Box
                     p={1} m={0}>
                     <Grid
@@ -259,9 +282,10 @@ class ChatBubble extends React.Component
             message: props.message,
             text: props.message.text,
             partner: props.partner,
-            side: props.message.id === props.user ? 'flex-start' : 'flex-end',
-            color: props.message.id === props.user ? '#2073E8' : '#24B8FF',
-            align: props.message.id === props.user ? 'left' : 'right'
+            side: props.message.id === props.user ? 'flex-end' : 'flex-start',
+            color: props.message.id === props.user ? '#2073E8' : '#f8f9fa',
+            align: props.message.id === props.user ? 'left' : 'right',
+            isSameUser: props.isSameUser
         };
     }
 
@@ -273,8 +297,8 @@ class ChatBubble extends React.Component
             message: props.message,
             text: props.message.text,
             partner: props.partner,
-            side: props.message.id === props.user ? 'flex-start' : 'flex-end',
-            color: props.message.id === props.user ? '#D5BDFF' : '#8A72B3',
+            side: props.message.id === props.user ? 'flex-end' : 'flex-start',
+            color: props.message.id === props.user ? '#D5BDFF' : '#f8f9fa',
             align: props.message.id === props.user ? 'left' : 'right'
         };
 
@@ -296,15 +320,15 @@ class ChatBubble extends React.Component
 
         return(
             <div>
-                <Grid
+                <Grid 
                 container
                 direction='row'
-                justify={alignmentLeft ? 'flex-start' : 'flex-end'}>
-                    {alignmentLeft ? <Avatar src={avatarUrl0}></Avatar> : <div></div>}
+                justify={alignmentLeft ? 'flex-end' : 'flex-start'}>
+                    {!alignmentLeft && !this.state.isSameUser ? <Avatar className="avatar" src={avatarUrl1}></Avatar> : <div style={{width:50}}></div>}
                     <Paper
                     elevation={3}
-                    style={{backgroundColor: this.state.color}}>
-                        <Typography>
+                    style={{backgroundColor: this.state.color, padding: 5, maxWidth: '75%', minWidth:'25%' }}>
+                        <Typography style={{overflowWrap: "break-word"}}>
                             {this.state.text}
                         </Typography>
                         <Typography
@@ -314,9 +338,9 @@ class ChatBubble extends React.Component
                             {this.convertTimeStampToDate(this.state.message.timestamp)}
                         </Typography>
                     </Paper>
-                    {!alignmentLeft ? <Avatar src={avatarUrl1}></Avatar> : <div></div>}
+                    {alignmentLeft && !this.state.isSameUser ? <Avatar className="avatar" src={avatarUrl0}></Avatar> : <div style={{width:50}}></div>}
                 </Grid>
-            <br></br>    
+                <div style={{ marginTop: 5}}></div>
             </div>
         );
     }

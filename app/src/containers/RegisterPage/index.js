@@ -169,13 +169,13 @@ class SignUpPage extends Component {
     var formFirstName = (event.target.value);
     const validNameRegex = RegExp(/^.*(?=.{1,})(?=.*[a-zA-Z\\u0080-\\uFFFF])(?=.*\d).*$/);
 
-    if (validNameRegex.test(formFirstName) === true) {
-      this.setState({ firstNameError: true, firstNameErrorMessage: 'Special characters are not accepted' })
-    } else if (formFirstName.length <= 2 || formFirstName.length >= 20) {
-      this.setState({ firstNameError: true, firstNameErrorMessage: 'Number of characters not accepted' })
-    } else {
-      this.setState({ firstNameError: false, firstNameErrorMessage: '' })
-      this.setState({ firstName: formFirstName })
+    if(validNameRegex.test(formFirstName)===true){
+      this.setState( {firstNameError: true, firstNameErrorMessage: 'Special characters are not accepted'} )
+    }else if(formFirstName.length <= 1 || formFirstName.length >=20){
+      this.setState( {firstNameError: true, firstNameErrorMessage: 'Number of characters not accepted'} )
+    }else{
+      this.setState( {firstNameError: false, firstNameErrorMessage: ''} )
+      this.setState( {firstName: formFirstName} )
     }
 
 
@@ -186,13 +186,13 @@ class SignUpPage extends Component {
     var formLastName = (event.target.value);
     const validNameRegex = RegExp(/^.*(?=.{1,})(?=.*[a-zA-Z\\u0080-\\uFFFF])(?=.*\d).*$/);
 
-    if (validNameRegex.test(formLastName) === true) {
-      this.setState({ lastNameError: true, lastNameErrorMessage: 'Special characters are not accepted' });
-    } else if (formLastName.length <= 2 || formLastName.length >= 20) {
-      this.setState({ lastNameError: true, lastNameErrorMessage: 'Number of characters not accepted' });
-    } else {
-      this.setState({ lastNameError: false, lastNameErrorMessage: '' });
-      this.setState({ lastName: formLastName });
+    if(validNameRegex.test(formLastName)===true){
+      this.setState( {lastNameError: true, lastNameErrorMessage: 'Special characters are not accepted'} );
+    }else if(formLastName.length <= 1 || formLastName.length >=20){
+      this.setState( {lastNameError: true, lastNameErrorMessage: 'Number of characters not accepted'} );
+    }else{
+      this.setState( {lastNameError: false, lastNameErrorMessage: ''} );
+      this.setState( {lastName: formLastName} );
     }
 
   };

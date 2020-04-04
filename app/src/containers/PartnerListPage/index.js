@@ -6,7 +6,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
-
+import Button from '@material-ui/core/Button';
 import UserActionCard from '../../components/UserActionCard';
 
 import Constants from '../../config_constants';
@@ -23,10 +23,17 @@ const useStyles =  theme =>
   {
     display: 'inline',
   },
+  inline: 
+  {
+    display: 'block',
+  },
   item: 
   {
     backgroundColor: 'white',
   },
+  divider:{
+    height:'2px',
+  }
 });
 
 /**
@@ -98,6 +105,7 @@ class PartnerListPage extends Component
             city: user.cities,
             teachLanguages: ltt,
             studyLanguages: ltl,
+            email:user.email,
             photo_url:window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/avatar/getAvatar/' + user.email,
         });
       }
@@ -149,14 +157,27 @@ class PartnerListPage extends Component
                 <Typography
                   component="span"
                   variant="body2"
-                  className={classes.inline}
+                  className={classes.block}
                   color="textPrimary">
                   Teach: {item.teachLanguages.join(", ")}. Learn: {item.studyLanguages.join(", ")}
                 </Typography>
-              {" — " + item.city.join(", ")}
-            </React.Fragment>}/>
+              {" — " + item.city.join(", ")} 
+              <Typography
+                  component="span"
+                  variant="body2"
+                  className={classes.inline}
+                  color="textPrimary">
+                  Email: {item.email}
+                </Typography>           
+            </React.Fragment>}/>          
+
           </ListItem>
-          <Divider variant="inset" component="li" />
+          <ListItem  className = {classes.item}>
+            <Button size="small" variant="contained" color="secondary" className={classes.inline} target="blank" href="https://forms.gle/3Hh8nDbNiz6KwmkS8">
+              Report
+            </Button>
+          </ListItem>
+          <Divider className={classes.divider}  component="li" />
           </div>
           );
         })}

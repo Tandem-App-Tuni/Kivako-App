@@ -33,7 +33,7 @@ export const mainListItems = chatNotification => (
     </ListItem>
 
     <ListItem button component={Link} 
-      to={"/edit-profile"}>
+      to={"/view-profile"}>
       <ListItemIcon>
         <PersonIcon/>
       </ListItemIcon>

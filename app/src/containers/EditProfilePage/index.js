@@ -119,6 +119,7 @@ class EditProfilePage extends Component {
       alertText: '',
       editingTeachLanguageIndex: 0,
       editingLearnLanguageIndex: 0,
+      videoError: false,
       portOption: ConstantsList.PORT_IN_USE //set to 3000 for local testing
     };
   }
@@ -175,15 +176,52 @@ class EditProfilePage extends Component {
       })
       .then((response) => response.json())
       .then((responseJson) => {
-        if (responseJson.update)
-          this.toggleAlert(true, 'success', 'User informations updated succesfully!')
-        else
-          this.toggleAlert(true, 'error', 'Update failed. Please try again later')
+        if (responseJson.update) {
+          this.toogleAlert(true, 'success', 'User informations updated succesfully!')
+          window.location.href = '/view-profile';
+        } else this.toogleAlert(true, 'error', 'Update failed. Please try again later')
       })
       .catch((error) => {
         console.error(error);
-        this.toggleAlert(true, 'error', 'Update failed. Please try again later')
       });
+  }
+
+  onDeleteButtonClicked = () => {
+    if (window.confirm('Are you sure you want to delete your profile?')) {
+      fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/users/delete',
+        {
+          method: 'POST',
+          headers:
+          {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+          cors: 'no-cors',
+          body: JSON.stringify({
+            languagesToTeach: this.state.languagesToTeach,
+            languagesToLearn: this.state.languagesToLearn,
+            firstName: this.state.firstName,
+            lastName: this.state.lastName,
+            email: this.state.email,
+            cities: this.state.cities,
+            descriptionText: this.state.descriptionText,
+            userIsActivie: true,
+            profileVideoURL: this.state.profileVideoURL
+          })
+        })
+        .then((response) => response.json())
+        .then((responseJson) => {
+          if (responseJson.update)
+            this.toggleAlert(true, 'success', 'User informations updated succesfully!')
+          else
+            this.toggleAlert(true, 'error', 'Update failed. Please try again later')
+        })
+        .catch((error) => {
+          console.error(error);
+          this.toggleAlert(true, 'error', 'Update failed. Please try again later')
+        });
+    }
   }
 
   onDeleteButtonClicked = () => {
@@ -238,7 +276,7 @@ class EditProfilePage extends Component {
 
     if (validNameRegex.test(formLastName) === true) {
       this.setState({ lastNameError: true, lastNameErrorMessage: 'Special characters are not accepted' });
-    } else if (formLastName.length <= 2 || formLastName.length >= 20) {
+    } else if (formLastName.length <= 1 || formLastName.length >= 20) {
       this.setState({ lastNameError: true, lastNameErrorMessage: 'Number of characters not accepted' });
     } else {
       this.setState({ lastNameError: false, lastNameErrorMessage: '' });
@@ -257,10 +295,20 @@ class EditProfilePage extends Component {
 
   handleChangeProfileVideo = event => {
     var value = (event.target.value);
-
-    this.setState({
-      profileVideoURL: value
-    })
+    // ex: https://www.youtube.com/watch?v=2ZjcBwlZSxI
+    if (value.includes("www.youtube.com/watch?v=")) {
+      let id = value.split("watch?v=")[1];
+      value = `https://www.youtube.com/embed/${id}`;
+      this.setState({
+        profileVideoURL: value,
+        videoError: false
+      })
+    }
+    else {
+      this.setState({
+        videoError: true
+      })
+    }
   };
 
   handleChangeCities = value => {
@@ -536,7 +584,12 @@ class EditProfilePage extends Component {
                     name="video"
                     autoComplete="video"
                     onChange={this.handleChangeProfileVideo}
-                    helperText="Please make sure the video is publicly accessible. A YouTube link is recommended." />
+                    error={this.state.videoError}
+                    helperText={
+                      this.state.videoError ? "Url is not supported. Only youtube Url is supported at the moment."
+                        : "Please make sure the video is publicly accessible. A YouTube link is recommended."
+                    }
+                  />
                 </Grid>
 
                 {mediaCard}
@@ -693,7 +746,6 @@ class EditProfilePage extends Component {
       </div>
     );
   }
-
 }
 
 export default withStyles(useStyles)(EditProfilePage);

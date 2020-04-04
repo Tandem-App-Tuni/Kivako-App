@@ -108,7 +108,8 @@ class Dashboard extends React.Component
   {
     super(props);
 
-    this.state = {open:true, isAdmin:false, requestAmount:0 , socket: props.chatBundle.socket, getChatN: props.chatBundle.getChatNotification, setChatN: props.chatBundle.setChatNotification};
+    this.state = {open:true, isAdmin:false, requestAmount:0 , socket: props.chatBundle.socket, getChatN: props.chatBundle.getChatNotification, setChatN: props.chatBundle.setChatNotification,};
+    
   }
 
   handleDrawerOpen = () => 
@@ -119,6 +120,11 @@ class Dashboard extends React.Component
   handleDrawerClose = () => 
   {
     this.setState({open:false});
+  }
+
+  logoClick = () => 
+  {
+    window.location.href="/";
   }
 
   async componentDidMount()
@@ -159,7 +165,6 @@ class Dashboard extends React.Component
   render()
   {
     const { classes } = this.props;
-
     return(
     <div className={classes.root}>
       <CssBaseline />
@@ -176,12 +181,6 @@ class Dashboard extends React.Component
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
             {this.props.title}
           </Typography>
-          <IconButton color="inherit" component={Link} to="/match-requests">
-              <PersonAddIcon />
-          </IconButton>
-          <IconButton color="inherit" component={Link} to="/chat-page">
-              <MessageIcon />
-          </IconButton>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -190,8 +189,8 @@ class Dashboard extends React.Component
           paper: clsx(classes.drawerPaper, !this.state.open && classes.drawerPaperClose),
         }}
         open={this.state.open}> 
-          <div className={classes.toolbarIcon}>
-            <img alt="" src={logo} style={{ maxHeight: 100 , maxWidth: '70%', align:'center'}}/>
+          <div className={classes.toolbarIcon}>     
+            <img alt="" src={logo}  onClick={this.logoClick} style={{ maxHeight: 100, maxWidth: '70%', align: 'center' }} />
             <IconButton onClick={this.handleDrawerClose}>
               <ChevronLeftIcon/>
             </IconButton>
