@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import { Link } from 'react-router-dom';
 
 import GridList from '@material-ui/core/GridList';
-import {withStyles} from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 
@@ -24,6 +24,7 @@ import Icon from '@material-ui/core/Icon';
 import logo from '../../tandemlogo.png'
 import Grid from '@material-ui/core/Grid'
 
+import { AlertView } from '../../components/AlertView';
 import ConstantsList from '../../config_constants';
 
 
@@ -61,253 +62,262 @@ const styles = ({
         padding: '0'
     },
     gridListTile: {
-        height:"100%",
-        width:"100%",   
+        height: "100%",
+        width: "100%",
         minHeight: "300px",
         maxWidth: "150px",
         minWidth: "400px",
-        space:2,
+        space: 2,
         marginBottom: 5,
         marginLeft: 1
     },
     gridListTileBar: {
         background: "#3f51b5",
     },
-    leftText:{
+    leftText: {
         textAlign: 'left'
     }
 });
 
-class MatchRequests extends React.Component 
-{
-    constructor(props) 
-    {
-      super(props);
-      this.state = {
-        userRequestMatches:[],
-        isLoadingPage:true,
-        open:false,
-        portOption:ConstantsList.PORT_IN_USE
-      };
+class MatchRequests extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            userRequestMatches: [],
+            isLoadingPage: true,
+            open: false,
+            portOption: ConstantsList.PORT_IN_USE,
+            showAlert: false,
+            alertType: "",
+            alertText: ""
+        };
+
+        this.toggleAlert = this.toggleAlert.bind(this);
     }
 
-    openModal = () => {
-        this.setState({open: true})
+    openModal() {
+        this.setState({ open: true })
     };
 
-    handleClose = () => {
-        this.setState({open: false});
+    handleClose() {
+        this.setState({ open: false });
     };
 
-    acceptMatchRequest(match) 
-    {
-        if (window.confirm("Accept match request?")) 
-        {
-            fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/usersMatch/acceptMatchRequest/' + match._id, 
-            {
-                method: 'POST',
-                headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                },
-                credentials: 'include',
-                cors: 'no-cors',
-                body: JSON.stringify({})
-            })
-            .then((response) => 
-            {
-                if (response.status === 200)
+    acceptMatchRequest(match) {
+        if (window.confirm("Accept match request?")) {
+            fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/usersMatch/acceptMatchRequest/' + match._id,
                 {
-                    alert('Match request accepted.');
-                    window.location.reload();
-                }
-                else alert('Something went wrong.')
-            })
-            .catch((error) => 
-            {
-                console.log('Error');
-                console.error(error);
-            }); 
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include',
+                    cors: 'no-cors',
+                    body: JSON.stringify({})
+                })
+                .then((response) => {
+                    if (response.status === 200) {
+                        this.toggleAlert(true, "success", "Match request accepted.")
+                        this.getUserMatchsRequestListAPI();
+                    }
+                    else
+                        this.toggleAlert(true, "error", "Something went wrong.");
+                })
+                .catch((error) => {
+                    console.log('Error');
+                    console.error(error);
+                });
         }
     }
 
-    denyMatchRequest(match) 
-    {
-        //console.log(user)
-        //console.log(language)
-        //alert("Match "+ match._id);
-
-        const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/usersMatch/denyMatchRequest/"+match._id);
+    denyMatchRequest(match) {
+        const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/usersMatch/denyMatchRequest/" + match._id);
 
         if (window.confirm("Deny match request?")) {
             fetch(url, {
                 method: 'POST',
                 headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
                 },
                 credentials: 'include',
                 cors: 'no-cors',
             })
-            .then((response) => 
-            {
-                if (response.status === 200) 
-                {
-                    alert('Match request denied.');
-                    window.location.reload();
-                } 
-                else alert('Something went wrong.')
-            })
-            .catch((error) => {
-                console.error(error);
-            }); 
+                .then((response) => {
+                    if (response.status === 200) {
+                        this.toggleAlert(true, "success", "Match request denied.")
+                        this.getUserMatchsRequestListAPI();
+                    }
+                    else
+                        this.toggleAlert(true, "error", "Something went wrong.");
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
         }
-        //console.log(url)
     }
 
-    getUserMatchsRequestListAPI = (callback) =>
-    {
+    getUserMatchsRequestListAPI(callback) {
         const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/usersMatch/receiptMatchsRequests");
-    
+
         fetch(url, {
             method: 'GET',
             credentials: 'include',
-            cors:'no-cors'
+            cors: 'no-cors'
         }).then((response) => response.json())
-        .then((responseJson) => {
-            // Resposta
-            //console.log(this.state.userRequestMatches);
-            console.log(responseJson.userReceiptMatches)
-            this.setState({userRequestMatches: responseJson.userReceiptMatches})
-           
-        }).catch((error) => {
-            console.error(error);
-        });
+            .then((responseJson) => {
+                // Resposta
+                //console.log(this.state.userRequestMatches);
+                console.log(responseJson.userReceiptMatches)
+                this.setState({ userRequestMatches: responseJson.userReceiptMatches })
+
+            }).catch((error) => {
+                console.error(error);
+            });
 
         callback();
     };
-    
 
-    componentDidMount()
-    {      
-        this.getUserMatchsRequestListAPI( () => 
-        {
-            this.setState({isLoadingPage:false});
+
+    componentDidMount() {
+        this.getUserMatchsRequestListAPI(() => {
+            this.setState({ isLoadingPage: false });
         });
     }
 
+    toggleAlert(open, type, text) {
+        //type is 'error', 'info', 'success', 'warning'
+        if (open === true) {
+            this.setState({
+                showAlert: open,
+                alertType: type,
+                alertText: text
+            })
+        }
+        else {
+            this.setState({
+                showAlert: open
+            })
+        }
+    }
+
     render() {
-        const {classes} = this.props;
-        const cardStyle =makeStyles(theme => ({
+        const { classes } = this.props;
+        const cardStyle = makeStyles(theme => ({
             card: {
-              maxWidth: 345,
+                maxWidth: 345,
             },
             media: {
-              height: 0,
-              paddingTop: '56.25%', // 16:9
+                height: 0,
+                paddingTop: '56.25%', // 16:9
             }
-          }));
-        
+        }));
+
         //Wait until all informations be render until continue
-        if(this.state.isLoadingPage) return null;
-        
-        if(this.state.userRequestMatches.length === 0)
-        {  
-            return  (
+        if (this.state.isLoadingPage) return null;
+
+        if (this.state.userRequestMatches.length === 0) {
+            return (
                 <div className={classes.root}>
-                        <div align = "center">
-                            <Paper>
-      
-                                <br></br>
-                                <br></br>
-                                <br></br>
-                                <br></br>
-                                <Typography variant="h5" gutterBottom>
-                                    No pending requests
+                    <div align="center">
+                        <Paper>
+
+                            <br></br>
+                            <br></br>
+                            <br></br>
+                            <br></br>
+                            <Typography variant="h5" gutterBottom>
+                                No pending requests
                                 </Typography>
-                                <br></br>
-                                <Typography variant="h6" gutterBottom>
-                                    Click the button below to search for language partners
+                            <br></br>
+                            <Typography variant="h6" gutterBottom>
+                                Click the button below to search for language partners
                                 </Typography>
-                                <br></br>
-                                <Button component={Link} to="/browse-match" variant="contained" color="primary">Search!</Button>
-                                <br></br>
-                                <br></br>
-                            </Paper>
+                            <br></br>
+                            <Button component={Link} to="/browse-match" variant="contained" color="primary">Search!</Button>
                             <br></br>
                             <br></br>
-                            <br></br>
-                        </div>
+                        </Paper>
+                        <br></br>
+                        <br></br>
+                        <br></br>
+                    </div>
                 </div>
 
             )
         }
         return (
             <div className={classes.root}>
-                    <GridList container='true' cols={1} spacing={30} cellHeight={'auto'}>
-                        {
-                            this.state.userRequestMatches.map((match, key) =>
-                        
-                                <Grid container spacing={3} key={key}>
-                                    <Grid item xs >
-                                        <Card border={1} className={cardStyle.card} key={key}>
-                                                <CardHeader
-                                                className = {classes.leftText}
-                                                    avatar={
-                                                        <Avatar src={window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/avatar/getAvatar/' + match.requesterUser.email} 
-                                                                aria-label="recipe" 
-                                                                className={classes.bigAvatar}>
-                                                        </Avatar>
-                                                    }
-                                                    
-                                                    title={match.requesterUser.firstName + ' ' + match.requesterUser.lastName}
-                                                    //subheader={ match._id}
-                                                />
-                                                
-                                                <CardContent className = {classes.leftText}>
-        
-                                                    <Typography variant="body1" color="textSecondary" component="p">
-                                                        
-                                                        {match.requesterUser.descriptionText}
-        
-                                                    </Typography>
-                                                    <br></br>
-                                                    <Divider variant="middle" />
-                                                    <br></br>
-                                                    <Typography variant="body2" color="textSecondary" component="p">
-                                                        <Icon fontSize="small">home</Icon> Cities: {match.requesterUser.cities.join(', ')}<br></br>
-                                                        <Icon fontSize="small">language</Icon> Languages want to learn: {(match.requesterUser.languagesToLearn && match.requesterUser.languagesToLearn.map(e => e.language).join(", "))}<br></br>
-                                                    </Typography>                                                    
-                                                </CardContent>
-                                                <CardActions disableSpacing >
-                                                    <Grid container>
-                                                    <Grid item xs={12} sm={4}>
-                                                        <Button variant="contained" 
-                                                                color="primary"
-                                                                onClick = {this.acceptMatchRequest.bind(this,match)}
-                                                        >
-                                                            Accept
+                <GridList container='true' cols={1} spacing={30} cellHeight={'auto'}>
+                    {
+                        this.state.userRequestMatches.map((match, key) =>
+
+                            <Grid container spacing={3} key={key}>
+                                <Grid item xs >
+                                    <Card border={1} className={cardStyle.card} key={key}>
+                                        <CardHeader
+                                            className={classes.leftText}
+                                            avatar={
+                                                <Avatar src={window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/avatar/getAvatar/' + match.requesterUser.email}
+                                                    aria-label="recipe"
+                                                    className={classes.bigAvatar}>
+                                                </Avatar>
+                                            }
+
+                                            title={match.requesterUser.firstName + ' ' + match.requesterUser.lastName}
+                                        //subheader={ match._id}
+                                        />
+
+                                        <CardContent className={classes.leftText}>
+
+                                            <Typography variant="body1" color="textSecondary" component="p">
+
+                                                {match.requesterUser.descriptionText}
+
+                                            </Typography>
+                                            <br></br>
+                                            <Divider variant="middle" />
+                                            <br></br>
+                                            <Typography variant="body2" color="textSecondary" component="p">
+                                                <Icon fontSize="small">home</Icon> Cities: {match.requesterUser.cities.join(', ')}<br></br>
+                                                <Icon fontSize="small">language</Icon> Languages want to learn: {(match.requesterUser.languagesToLearn && match.requesterUser.languagesToLearn.map(e => e.language).join(", "))}<br></br>
+                                            </Typography>
+                                        </CardContent>
+                                        <CardActions disableSpacing >
+                                            <Grid container>
+                                                <Grid item xs={12} sm={4}>
+                                                    <Button variant="contained"
+                                                        color="primary"
+                                                        onClick={this.acceptMatchRequest.bind(this, match)}
+                                                    >
+                                                        Accept
                                                         </Button>
-                                                    </Grid>
-                                                    <Grid item xs>
-            
-                                                    </Grid>
-                                                    <Grid item xs={12} sm={4}>
-                                                        <Button variant="outlined" 
-                                                                color="secondary"
-                                                                onClick = {this.denyMatchRequest.bind(this,match)}
-                                                            >
-                                                            Deny
+                                                </Grid>
+                                                <Grid item xs>
+
+                                                </Grid>
+                                                <Grid item xs={12} sm={4}>
+                                                    <Button variant="outlined"
+                                                        color="secondary"
+                                                        onClick={this.denyMatchRequest.bind(this, match)}
+                                                    >
+                                                        Deny
                                                         </Button>
-                                                    </Grid>
-                                                    </Grid>
-                                                </CardActions>
-                                        </Card>
-                                    </Grid>
+                                                </Grid>
+                                            </Grid>
+                                        </CardActions>
+                                    </Card>
                                 </Grid>
-                            )
-                        }
-                    </GridList>
+                            </Grid>
+                        )
+                    }
+                </GridList>
+                <AlertView
+                    open={this.state.showAlert}
+                    variant={this.state.alertType}
+                    message={this.state.alertText}
+                    onClose={() => { this.setState({ showAlert: false }) }} />
             </div>
         );
     }
