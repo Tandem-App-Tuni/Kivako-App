@@ -188,10 +188,11 @@ class BrowseMatch extends React.Component
         })
         .then((response) => 
             {
-                let cloneUserMatches = clone(this.state.userMatches);
-                let languageMatch = cloneUserMatches.find(item=>item.languageName === language)
-                cloneUserMatches.matches = languageMatch.matches.splice(languageMatch.matches.indexOf(user), 1);
-                this.setState({alertType: "success", alertOpen: true, userMatches: cloneUserMatches});
+                this.setState(state => {
+                    let languageMatch = state.userMatches.find(item => item.languageName === language);
+                    state.userMatches.matches = languageMatch.matches.splice(languageMatch.matches.indexOf(user), 1);
+                    return {alertType: "success", alertOpen: true, userMatches: state.userMatches}
+                })
             })
             .catch((error) => 
             {
