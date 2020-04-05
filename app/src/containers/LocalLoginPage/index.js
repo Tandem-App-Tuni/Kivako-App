@@ -60,7 +60,7 @@ class LocalLoginPage extends Component {
       redirectURL: '',
       initialPage: ConstantsList.IS_LOCAL_TEST_ENV ? 'http://localhost:3001' : ConstantsList.APPLICATION_URL,
       showAlert: false,
-      alertType: "",
+      alertType: "success",
       alertText: ""
     };
 

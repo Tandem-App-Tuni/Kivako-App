@@ -90,7 +90,7 @@ class BrowseMatch extends React.Component
         open:false,
         modalData: null,
         modalLanguage: null,
-        alertType: "",
+        alertType: "success",
         showAlert: false,
         isDefaultExpand: false,
         loginUser: {},

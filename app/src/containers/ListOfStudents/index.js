@@ -82,7 +82,7 @@ class ListOfStudents extends Component {
       message: '',
       socket: props.socket,
       showAlert: false,
-      alertType: "",
+      alertType: "success",
       alertText: ""
     };
 

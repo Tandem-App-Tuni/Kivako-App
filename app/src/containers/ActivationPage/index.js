@@ -51,7 +51,7 @@ class ActivationPage extends Component
     this.state = (
     {
       showAlert: false,
-      alertType: "",
+      alertType: "success",
       alertText: "",
       email: '',
     });

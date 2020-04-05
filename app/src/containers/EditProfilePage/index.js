@@ -115,7 +115,7 @@ class EditProfilePage extends Component {
       showInputTeachLanguage: false,
       showInputLearnLanguage: false,
       showAlert: false,
-      alertType: '',
+      alertType: "success",
       alertText: '',
       editingTeachLanguageIndex: 0,
       editingLearnLanguageIndex: 0,

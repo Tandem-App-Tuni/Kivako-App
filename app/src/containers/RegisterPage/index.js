@@ -134,7 +134,7 @@ class SignUpPage extends Component {
       isLoadingPage: true,
       portOption: ConstantsList.PORT_IN_USE, //set to 3000 for local testing,
       showAlert: false,
-      alertType: "",
+      alertType: "success",
       alertText: ""
     };
 
