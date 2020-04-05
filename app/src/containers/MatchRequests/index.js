@@ -108,7 +108,7 @@ class MatchRequests extends React.Component {
                 .then((response) => {
                     if (response.status === 200) {
                         this.toggleAlert(true, "success", "Match request accepted.")
-                        this.getUserMatchsRequestListAPI();
+                        this.getUserMatchsRequestListAPI(()=>{this.setState({isLoadingPage: false})});
                     }
                     else
                         this.toggleAlert(true, "error", "Something went wrong.");
@@ -131,17 +131,17 @@ class MatchRequests extends React.Component {
                 credentials: 'include',
                 cors: 'no-cors',
             })
-                .then((response) => {
-                    if (response.status === 200) {
-                        this.toggleAlert(true, "success", "Match request denied.")
-                        this.getUserMatchsRequestListAPI();
-                    }
-                    else
-                        this.toggleAlert(true, "error", "Something went wrong.");
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
+            .then((response) => {
+                if (response.status == 200) {
+                    this.toggleAlert(true, "success", "Match request denied.")
+                    this.getUserMatchsRequestListAPI(()=>{this.setState({isLoadingPage: false})});
+                }
+                else
+                    this.toggleAlert(true, "error", "Something went wrong.");
+            })
+            .catch((error) => {
+                console.error(error);
+            });
     }
 
     getUserMatchsRequestListAPI(callback) {
@@ -153,11 +153,7 @@ class MatchRequests extends React.Component {
             cors: 'no-cors'
         }).then((response) => response.json())
             .then((responseJson) => {
-                // Resposta
-                //console.log(this.state.userRequestMatches);
-                console.log(responseJson.userReceiptMatches)
                 this.setState({ userRequestMatches: responseJson.userReceiptMatches })
-
             }).catch((error) => {
                 console.error(error);
             });
