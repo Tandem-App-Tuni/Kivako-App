@@ -100,10 +100,6 @@ class BrowseMatch extends React.Component
       this.onInviteAction = this.onInviteAction.bind(this);
     }
 
-    handleAlertClose() {
-        this.setState({showAlert: false})
-    }
-
     getMatchesTiles(item, classes) 
     {
         return (
@@ -229,18 +225,22 @@ class BrowseMatch extends React.Component
                 matchLanguage: language
             })
         })
-        .then((response) => 
+        .then((response) => response.json())
+        .then(response =>
             {
-                this.getUserPossibleMatchsListAPI();
-                this.setState(state => {
-                    return {alertType: "success", showAlert: true, userMatches: state.userMatches}
-                })
+                if(response.status !== "fail"){
+                    this.getUserPossibleMatchsListAPI();
+                    this.setState({alertType: "success", showAlert: true});
+                }
+                else {
+                    this.setState({alertType: "error", showAlert: true});
+                }
             })
-            .catch((error) => 
-            {
-                this.setState({alertType: "error", showAlert: true})
-                console.error(error);
-            }); 
+        .catch((error) => 
+        {
+            this.setState({alertType: "error", showAlert: true});
+            console.error(error);
+        }); 
 
     }
 
@@ -368,7 +368,7 @@ class BrowseMatch extends React.Component
             </div>
             <AlertView
                 open={this.state.showAlert}
-                onClose={this.handleAlertClose.bind(this)}
+                onClose={()=>{this.setState({showAlert: false})}}
                 variant={this.state.alertType}
                 message={this.state.alertType === "success" ?
                     "Invitation sent"
