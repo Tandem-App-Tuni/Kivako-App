@@ -231,9 +231,8 @@ class BrowseMatch extends React.Component
         })
         .then((response) => 
             {
+                this.getUserPossibleMatchsListAPI();
                 this.setState(state => {
-                    let languageMatch = state.userMatches.find(item => item.languageName === language);
-                    state.userMatches.matches = languageMatch.matches.splice(languageMatch.matches.indexOf(user), 1);
                     return {alertType: "success", showAlert: true, userMatches: state.userMatches}
                 })
             })
@@ -285,7 +284,6 @@ class BrowseMatch extends React.Component
                 }
             )
             const result = this.sortByCity();
-            console.log("YEE MAN", result)
             this.setState({
                 userMatchesFilterByCity: result
             })
