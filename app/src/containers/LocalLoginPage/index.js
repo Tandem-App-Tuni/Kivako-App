@@ -252,7 +252,8 @@ class LocalLoginPage extends Component {
         <AlertView
           open={this.state.showAlert}
           variant={this.state.alertType}
-          message={this.state.alertText} />
+          message={this.state.alertText}
+          onClose={()=>{this.setState({showAlert: false})}}/>
       </React.Fragment>
     )
   }

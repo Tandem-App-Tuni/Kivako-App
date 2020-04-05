@@ -115,13 +115,15 @@ class EditProfilePage extends Component {
       showInputTeachLanguage: false,
       showInputLearnLanguage: false,
       showAlert: false,
-      alertType: 'error',
+      alertType: '',
       alertText: '',
       editingTeachLanguageIndex: 0,
       editingLearnLanguageIndex: 0,
       videoError: false,
       portOption: ConstantsList.PORT_IN_USE //set to 3000 for local testing
     };
+
+    this.toggleAlert = this.toggleAlert.bind(this);
   }
 
   onImageChange = (event) => {
@@ -177,9 +179,10 @@ class EditProfilePage extends Component {
       .then((response) => response.json())
       .then((responseJson) => {
         if (responseJson.update) {
-          this.toogleAlert(true, 'success', 'User informations updated succesfully!')
-          window.location.href = '/view-profile';
-        } else this.toogleAlert(true, 'error', 'Update failed. Please try again later')
+          this.toggleAlert(true, 'success', 'User informations updated succesfully!');
+        } 
+        else
+          this.toggleAlert(true, 'error', 'Update failed. Please try again later');
       })
       .catch((error) => {
         console.error(error);
@@ -213,13 +216,13 @@ class EditProfilePage extends Component {
         .then((response) => response.json())
         .then((responseJson) => {
           if (responseJson.update)
-            this.toggleAlert(true, 'success', 'User informations updated succesfully!')
+            this.toggleAlert(true, 'success', 'User informations updated succesfully!');
           else
-            this.toggleAlert(true, 'error', 'Update failed. Please try again later')
+            this.toggleAlert(true, 'error', 'Update failed. Please try again later');
         })
         .catch((error) => {
           console.error(error);
-          this.toggleAlert(true, 'error', 'Update failed. Please try again later')
+          this.toggleAlert(true, 'error', 'Update failed. Please try again later');
         });
     }
   }
@@ -739,7 +742,7 @@ class EditProfilePage extends Component {
         </Container>
         <AlertView
           open={this.state.showAlert}
-          onClose={() => this.toggleAlert(false, null, null)}
+          onClose={() => {this.setState({showAlert: false})}}
           variant={this.state.alertType}
           message={this.state.alertText}
         />
