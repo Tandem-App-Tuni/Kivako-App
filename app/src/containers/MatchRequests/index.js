@@ -82,20 +82,14 @@ class MatchRequests extends React.Component {
       this.state = {
         userRequestMatches:[],
         isLoadingPage:true,
-        open:false,
+        showAlert:false,
+        alertType: "success",
+        alertText:"",
         portOption:ConstantsList.PORT_IN_USE
       };
       this.acceptMatchRequest = this.acceptMatchRequest.bind(this);
       this.denyMatchRequest = this.denyMatchRequest.bind(this);
       this.toggleAlert = this.toggleAlert.bind(this);
-    }
-
-    openModal() {
-        this.setState({ open: true })
-    }
-
-    handleClose() {
-        this.setState({ open: false });
     }
 
     acceptMatchRequest(match) {
