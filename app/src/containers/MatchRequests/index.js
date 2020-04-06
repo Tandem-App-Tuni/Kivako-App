@@ -94,6 +94,7 @@ class MatchRequests extends React.Component {
 
     acceptMatchRequest(match) {
         if (window.confirm("Accept match request?")) {
+            this.setState({isLoadingPage: true})
             fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/usersMatch/acceptMatchRequest/' + match._id,
                 {
                     method: 'POST',
@@ -107,13 +108,17 @@ class MatchRequests extends React.Component {
                 })
                 .then((response) => {
                     if (response.status === 200) {
-                        this.toggleAlert(true, "success", "Match request accepted.")
-                        this.getUserMatchsRequestListAPI(()=>{this.setState({isLoadingPage: false})});
+                        this.getUserMatchsRequestListAPI(()=>{
+                            this.toggleAlert(true, "success", "Match request accepted.")
+                            this.setState({isLoadingPage: false})
+                        });
                     }
-                    else
+                    else {
                         this.toggleAlert(true, "error", "Something went wrong.");
+                    }
                 })
                 .catch((error) => {
+                    this.setState({isLoadingPage: false})
                     console.log('Error');
                     console.error(error);
                 });
@@ -121,7 +126,9 @@ class MatchRequests extends React.Component {
     }
 
     denyMatchRequest(match) {
-        const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/usersMatch/denyMatchRequest/" + match._id);
+        if (window.confirm("Deny match request?")) {
+            this.setState({isLoadingPage: true})
+            const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/usersMatch/denyMatchRequest/" + match._id);
             fetch(url, {
                 method: 'POST',
                 headers: {
@@ -132,9 +139,11 @@ class MatchRequests extends React.Component {
                 cors: 'no-cors',
             })
             .then((response) => {
-                if (response.status == 200) {
-                    this.toggleAlert(true, "success", "Match request denied.")
-                    this.getUserMatchsRequestListAPI(()=>{this.setState({isLoadingPage: false})});
+                if (response.status === 200) {
+                    this.getUserMatchsRequestListAPI(()=>{
+                        this.toggleAlert(true, "success", "Match request denied.")
+                        this.setState({isLoadingPage: false})
+                    });
                 }
                 else
                     this.toggleAlert(true, "error", "Something went wrong.");
@@ -142,6 +151,7 @@ class MatchRequests extends React.Component {
             .catch((error) => {
                 console.error(error);
             });
+         }
     }
 
     getUserMatchsRequestListAPI(callback) {
@@ -245,6 +255,11 @@ class MatchRequests extends React.Component {
                         <br></br>
                         <br></br>
                     </div>
+                    <AlertView
+                    open={this.state.showAlert}
+                    variant={this.state.alertType}
+                    message={this.state.alertText}
+                    onClose={() => { this.setState({ showAlert: false }) }} />
                 </div>
 
             )
