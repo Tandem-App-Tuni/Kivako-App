@@ -27,6 +27,8 @@ import LocationCityIcon from '@material-ui/icons/LocationCity';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 
 import ConstantsList from '../../config_constants';
+import {AlertView} from '../../components/AlertView';
+
 import UserStyleCard from '../../components/UserStyleCard';
 const styles = ({
     root: {
@@ -88,13 +90,15 @@ class BrowseMatch extends React.Component
         open:false,
         modalData: null,
         modalLanguage: null,
+        alertType: "success",
+        showAlert: false,
         isDefaultExpand: false,
         loginUser: {},
         sortBy: "best-match", //sorting by best match first
         userMatchesFilterByCity: []
       };
+      this.onInviteAction = this.onInviteAction.bind(this);
     }
-
 
     getMatchesTiles(item, classes) 
     {
@@ -204,8 +208,7 @@ class BrowseMatch extends React.Component
             );
     }
 
-    onInviteAction = (user,language) =>
-    {
+    onInviteAction(user,language) {
         const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/usersMatch/sendRequest");
 
         fetch(url, 
@@ -222,18 +225,22 @@ class BrowseMatch extends React.Component
                 matchLanguage: language
             })
         })
-        .then((response) => 
-        {
-            if (response.status === 200)
+        .then((response) => response.json())
+        .then(response =>
             {
-                alert('Match request sent.');
-                window.location.reload();
-            }
-            else alert('Something went wrong.');
-        })
-        .catch((error) => {
+                if(response.status !== "fail"){
+                    this.getUserPossibleMatchsListAPI();
+                    this.setState({alertType: "success", showAlert: true});
+                }
+                else {
+                    this.setState({alertType: "error", showAlert: true});
+                }
+            })
+        .catch((error) => 
+        {
+            this.setState({alertType: "error", showAlert: true});
             console.error(error);
-        });
+        }); 
 
     }
 
@@ -277,7 +284,6 @@ class BrowseMatch extends React.Component
                 }
             )
             const result = this.sortByCity();
-            console.log("YEE MAN", result)
             this.setState({
                 userMatchesFilterByCity: result
             })
@@ -360,6 +366,15 @@ class BrowseMatch extends React.Component
             <div className={classesPanel.root}>
                 {mainList}
             </div>
+            <AlertView
+                open={this.state.showAlert}
+                onClose={()=>{this.setState({showAlert: false})}}
+                variant={this.state.alertType}
+                message={this.state.alertType === "success" ?
+                    "Invitation sent"
+                    : "Failed to send invitation"
+                }
+            />
         </div>
         );
     }

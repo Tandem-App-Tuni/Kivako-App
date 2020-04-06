@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -6,7 +6,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
-import {withStyles} from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
 import IconButton from '@material-ui/core/IconButton';
@@ -16,7 +16,7 @@ import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import {ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails} from '@material-ui/core';
+import { ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -24,9 +24,9 @@ import CardMedia from '@material-ui/core/CardMedia';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 
 //Components
-import {CityPicker} from '../../components/CityPicker';
+import { CityPicker } from '../../components/CityPicker';
 import LanguagePicker from '../../components/LanguagePicker'
-import {AlertView} from '../../components/AlertView'
+import { AlertView } from '../../components/AlertView';
 
 import ConstantsList from '../../config_constants';
 
@@ -94,15 +94,13 @@ const useStyles = theme => ({
     flexDirection: 'row',
     padding: 0,
   },
-  cardMedia:  {
+  cardMedia: {
     minHeight: '300px'
   }
 });
 
-class EditProfilePage extends Component 
-{
-  constructor(props) 
-  {
+class EditProfilePage extends Component {
+  constructor(props) {
     super(props);
     this.state = {
       profileImgURL: window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/api/v1/avatar/getAvatar',
@@ -117,39 +115,37 @@ class EditProfilePage extends Component
       showInputTeachLanguage: false,
       showInputLearnLanguage: false,
       showAlert: false,
-      alertType: 'error',
+      alertType: "success",
       alertText: '',
       editingTeachLanguageIndex: 0,
       editingLearnLanguageIndex: 0,
       videoError: false,
       portOption: ConstantsList.PORT_IN_USE //set to 3000 for local testing
     };
+
+    this.toggleAlert = this.toggleAlert.bind(this);
   }
 
-  onImageChange = (event) => 
-  {
-    if (event.target.files.length > 0)
-    {
-      if (!event.target.files[0].name.match(/.(jpg|jpeg|png|gif)$/)) alert('Selected file is not an image.');
-      else
-      {
+  onImageChange = (event) => {
+    if (event.target.files.length > 0) {
+      if (!event.target.files[0].name.match(/.(jpg|jpeg|png|gif)$/))
+        this.toggleAlert(true, "error", "Selected file is not an image.")
+      else {
         let form = new FormData()
         form.append('avatar', event.target.files[0]);
 
         fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/avatar/uploadAvatar',
-        {
-          method: 'POST',
-          credentials: 'include',
-          body: form
-        })
-        .then(response => response.json())
-        .then(responseJson => 
           {
-            if (responseJson.message === 'Avatar saved!')
-            {
+            method: 'POST',
+            credentials: 'include',
+            body: form
+          })
+          .then(response => response.json())
+          .then(responseJson => {
+            if (responseJson.message === 'Avatar saved!') {
               console.log('Fetching image...');
 
-              this.setState({profileImgURL:window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/avatar/getAvatar'});
+              this.setState({ profileImgURL: window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/avatar/getAvatar' });
               window.location.reload();
             }
           });
@@ -157,108 +153,142 @@ class EditProfilePage extends Component
     }
   }
 
-  onSaveButtonClicked = () => 
-  {
-    fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/users/update", 
-    {
-      method: 'POST',
-      headers: 
+  onSaveButtonClicked = () => {
+    fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/users/update",
       {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-      cors: 'no-cors',
-      body: JSON.stringify({
-        languagesToTeach: this.state.languagesToTeach,
-        languagesToLearn: this.state.languagesToLearn,
-        firstName: this.state.firstName,
-        lastName: this.state.lastName,
-        email: this.state.email,
-        cities: this.state.cities,
-        descriptionText: this.state.descriptionText,
-        userIsActivie: true,
-        profileVideoURL: this.state.profileVideoURL
-      })
-    })
-    .then((response) => response.json())
-    .then((responseJson) => 
-    {
-      if (responseJson.update) 
-      {
-        this.toogleAlert(true, 'success', 'User informations updated succesfully!')
-          window.location.href='/view-profile';
-      } else this.toogleAlert(true, 'error', 'Update failed. Please try again later')
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-  }
-
-  onDeleteButtonClicked = () =>
-  {
-    if (window.confirm('Are you sure you want to delete your profile?'))
-    {
-      fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/users/delete',
-      {
-        method: 'DELETE',
+        method: 'POST',
         headers:
         {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
-        credentials: 'include'
+        credentials: 'include',
+        cors: 'no-cors',
+        body: JSON.stringify({
+          languagesToTeach: this.state.languagesToTeach,
+          languagesToLearn: this.state.languagesToLearn,
+          firstName: this.state.firstName,
+          lastName: this.state.lastName,
+          email: this.state.email,
+          cities: this.state.cities,
+          descriptionText: this.state.descriptionText,
+          userIsActivie: true,
+          profileVideoURL: this.state.profileVideoURL
+        })
       })
-      .then((response) => 
-      {
-        if (response.status === 200)
-        {
-          alert('You can always create a new account by signing in again. Goodbye!');
-          window.location.reload();
-        }
-        else alert('Something went wrong. Try again later.');
+      .then((response) => response.json())
+      .then((responseJson) => {
+        if (responseJson.update) {
+          this.toggleAlert(true, 'success', 'User informations updated succesfully!');
+        } 
+        else
+          this.toggleAlert(true, 'error', 'Update failed. Please try again later');
+      })
+      .catch((error) => {
+        console.error(error);
       });
+  }
+
+  onDeleteButtonClicked = () => {
+    if (window.confirm('Are you sure you want to delete your profile?')) {
+      fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/users/delete',
+        {
+          method: 'POST',
+          headers:
+          {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+          cors: 'no-cors',
+          body: JSON.stringify({
+            languagesToTeach: this.state.languagesToTeach,
+            languagesToLearn: this.state.languagesToLearn,
+            firstName: this.state.firstName,
+            lastName: this.state.lastName,
+            email: this.state.email,
+            cities: this.state.cities,
+            descriptionText: this.state.descriptionText,
+            userIsActivie: true,
+            profileVideoURL: this.state.profileVideoURL
+          })
+        })
+        .then((response) => response.json())
+        .then((responseJson) => {
+          if (responseJson.update)
+            this.toggleAlert(true, 'success', 'User informations updated succesfully!');
+          else
+            this.toggleAlert(true, 'error', 'Update failed. Please try again later');
+        })
+        .catch((error) => {
+          console.error(error);
+          this.toggleAlert(true, 'error', 'Update failed. Please try again later');
+        });
+    }
+  }
+
+  onDeleteButtonClicked = () => {
+    if (window.confirm('Are you sure you want to delete your profile?')) {
+      fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/users/delete',
+        {
+          method: 'DELETE',
+          headers:
+          {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include'
+        })
+        .then((response) => {
+          if (response.status === 200) {
+            this.toggleAlert(true, "info", "You can always create a new account by signing in again. Goodbye!")
+          }
+          else
+            this.toggleAlert(true, "error", 'Something went wrong. Try again later.');
+        })
+        .catch(err => {
+          console.log(err)
+          this.toggleAlert(true, "error", 'Something went wrong. Try again later.');
+        });
     }
   }
 
   handleChangeTeach = event => {
     var value = (event.target.value);
-    this.setState({languagesToTeach: value})
+    this.setState({ languagesToTeach: value })
   };
 
   handleChangeLearn = event => {
     var value = (event.target.value);
-    this.setState({languagesToLearn: value});
+    this.setState({ languagesToLearn: value });
   };
 
-  handleChangeFirstName = event => 
-  {
-    var formFirstName= (event.target.value);
+  handleChangeFirstName = event => {
+    var formFirstName = (event.target.value);
     const validNameRegex = RegExp(/^.*(?=.{1,})(?=.*[a-zA-Z\\u0080-\\uFFFF])(?=.*\d).*$/);
 
-    if(validNameRegex.test(formFirstName)) this.setState({firstNameError: true, firstNameErrorMessage: 'Special characters are not accepted'});
-    else if(formFirstName.length <= 1 || formFirstName.length >=20) this.setState({firstNameError: true, firstNameErrorMessage: 'Number of characters not accepted'});
-    else this.setState({firstNameError: false, firstNameErrorMessage: '', firstName: formFirstName});
+    if (validNameRegex.test(formFirstName)) this.setState({ firstNameError: true, firstNameErrorMessage: 'Special characters are not accepted' });
+    else if (formFirstName.length <= 1 || formFirstName.length >= 20) this.setState({ firstNameError: true, firstNameErrorMessage: 'Number of characters not accepted' });
+    else this.setState({ firstNameError: false, firstNameErrorMessage: '', firstName: formFirstName });
   };
 
   handleChangeLastName = event => {
 
-    var formLastName= (event.target.value);
+    var formLastName = (event.target.value);
     const validNameRegex = RegExp(/^.*(?=.{1,})(?=.*[a-zA-Z\\u0080-\\uFFFF])(?=.*\d).*$/);
 
-    if(validNameRegex.test(formLastName)===true){
-      this.setState( {lastNameError: true, lastNameErrorMessage: 'Special characters are not accepted'} );
-    }else if(formLastName.length <= 1 || formLastName.length >=20){
-      this.setState( {lastNameError: true, lastNameErrorMessage: 'Number of characters not accepted'} );
-    }else{
-      this.setState( {lastNameError: false, lastNameErrorMessage: ''} );
-      this.setState( {lastName: formLastName} );
+    if (validNameRegex.test(formLastName) === true) {
+      this.setState({ lastNameError: true, lastNameErrorMessage: 'Special characters are not accepted' });
+    } else if (formLastName.length <= 1 || formLastName.length >= 20) {
+      this.setState({ lastNameError: true, lastNameErrorMessage: 'Number of characters not accepted' });
+    } else {
+      this.setState({ lastNameError: false, lastNameErrorMessage: '' });
+      this.setState({ lastName: formLastName });
     }
 
   };
 
-  handleChangeEmail = event => 
-  {
+  handleChangeEmail = event => {
     var value = (event.target.value);
 
     this.setState({
@@ -266,11 +296,10 @@ class EditProfilePage extends Component
     })
   };
 
-  handleChangeProfileVideo = event => 
-  {
+  handleChangeProfileVideo = event => {
     var value = (event.target.value);
     // ex: https://www.youtube.com/watch?v=2ZjcBwlZSxI
-    if(value.includes("www.youtube.com/watch?v=")) {
+    if (value.includes("www.youtube.com/watch?v=")) {
       let id = value.split("watch?v=")[1];
       value = `https://www.youtube.com/embed/${id}`;
       this.setState({
@@ -287,95 +316,85 @@ class EditProfilePage extends Component
 
   handleChangeCities = value => {
     if (value.length > 2) {
-      this.setState( {citiesError: true, citiesErrorMessage: 'Maximum number of municipilities is 2'} );
-    }else if(value.length < 1){
-      this.setState( {citiesError: true, citiesErrorMessage: 'Minimun number of municipilities is 1'} );
-    }else{
-      this.setState( {citiesError: false, citiesErrorMessage: ''} );
-      this.setState({cities: value});
+      this.setState({ citiesError: true, citiesErrorMessage: 'Maximum number of municipilities is 2' });
+    } else if (value.length < 1) {
+      this.setState({ citiesError: true, citiesErrorMessage: 'Minimun number of municipilities is 1' });
+    } else {
+      this.setState({ citiesError: false, citiesErrorMessage: '' });
+      this.setState({ cities: value });
     }
   };
 
-  handleChangeIntroduction = event => 
-  {
-    var value= (event.target.value);
-    this.setState({descriptionText: value});
+  handleChangeIntroduction = event => {
+    var value = (event.target.value);
+    this.setState({ descriptionText: value });
 
     if (value.length < 5 && value.length > 0) {
-      this.setState( {introError: true, introErrorMessage: 'We recommend to write about you'} );
-    }else if(value.length > 500){
-      this.setState( {introError: true, introErrorMessage: 'Maximum number of characters is 500!'} );
-    }else{
-      this.setState( {introError: false, introErrorMessage: ''} );
-      this.setState({descriptionText: value});
+      this.setState({ introError: true, introErrorMessage: 'We recommend to write about you' });
+    } else if (value.length > 500) {
+      this.setState({ introError: true, introErrorMessage: 'Maximum number of characters is 500!' });
+    } else {
+      this.setState({ introError: false, introErrorMessage: '' });
+      this.setState({ descriptionText: value });
     }
   };
 
-  checkIfUserIsAuthenticaded (callback)
-  {
-    fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/isAuthenticated', 
-    {
-      method: 'GET',
-      credentials: 'include',
-      cors:'no-cors'
-    })
-    .then((response) => response.json())
-    .then((responseData) => 
-    {
-      if(responseData.isAuthenticated)
+  checkIfUserIsAuthenticaded(callback) {
+    fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/isAuthenticated',
       {
-        this.setState({email: responseData.email});
-
-        callback();
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-  }
-
-  preLoadUserInformations = () => 
-  {
-    console.log('[INFO]Loading user information...');
-
-    fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/users/userInfo", 
-    {
         method: 'GET',
         credentials: 'include',
         cors: 'no-cors'
-    })
-    .then((response) => response.json())
-    .then((responseData) => 
-    {
-      console.log('Load user info:', responseData.data.firstName);
-
-      this.setState({
-        firstName: responseData.data.firstName,
-        lastName: responseData.data.lastName,
-        email: responseData.data.email,
-        languagesToLearn: responseData.data.languagesToLearn.filter(language => language.language != null),
-        languagesToTeach: responseData.data.languagesToTeach.filter(language => language.language != null),
-        descriptionText: responseData.data.descriptionText,
-        cities: responseData.data.cities,
-        profileVideoURL: responseData.data.profileVideoURL ? responseData.data.profileVideoURL : ''
       })
-    })
-    .catch((error) => 
-    {
-      console.error(error);
-    });
+      .then((response) => response.json())
+      .then((responseData) => {
+        if (responseData.isAuthenticated) {
+          this.setState({ email: responseData.email });
+
+          callback();
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
-  componentDidMount() 
-  {
-    this.checkIfUserIsAuthenticaded(() => 
-    {
+  preLoadUserInformations = () => {
+    console.log('[INFO]Loading user information...');
+
+    fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/users/userInfo",
+      {
+        method: 'GET',
+        credentials: 'include',
+        cors: 'no-cors'
+      })
+      .then((response) => response.json())
+      .then((responseData) => {
+        console.log('Load user info:', responseData.data.firstName);
+
+        this.setState({
+          firstName: responseData.data.firstName,
+          lastName: responseData.data.lastName,
+          email: responseData.data.email,
+          languagesToLearn: responseData.data.languagesToLearn.filter(language => language.language != null),
+          languagesToTeach: responseData.data.languagesToTeach.filter(language => language.language != null),
+          descriptionText: responseData.data.descriptionText,
+          cities: responseData.data.cities,
+          profileVideoURL: responseData.data.profileVideoURL ? responseData.data.profileVideoURL : ''
+        })
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
+  componentDidMount() {
+    this.checkIfUserIsAuthenticaded(() => {
       this.preLoadUserInformations();
     });
   }
 
-  onShowInputTeachLanguage = (open, index, newValue) => 
-  {
+  onShowInputTeachLanguage = (open, index, newValue) => {
     if (open === true) {
       this.setState({
         editingTeachLanguageIndex: index
@@ -398,8 +417,7 @@ class EditProfilePage extends Component
     })
   };
 
-  onShowInputLearnLanguage = (open, index, newValue) => 
-  {
+  onShowInputLearnLanguage = (open, index, newValue) => {
     if (open === true) {
       this.setState({
         editingLearnLanguageIndex: index
@@ -423,19 +441,19 @@ class EditProfilePage extends Component
   };
 
   onDeleteLanguage = (type, itemIndex) => {
-    switch(type) {
+    switch (type) {
       case "teach":
         const oldTeachList = this.state.languagesToTeach;
-        let newTeachList = oldTeachList.filter((x, index) => index !== itemIndex); 
+        let newTeachList = oldTeachList.filter((x, index) => index !== itemIndex);
         this.setState({
           languagesToTeach: newTeachList
         })
         break;
       case "learn":
         const oldLearnList = this.state.languagesToLearn;
-        let newLearnList = oldLearnList.filter((x, index) => index !== itemIndex); 
+        let newLearnList = oldLearnList.filter((x, index) => index !== itemIndex);
         this.setState({
-            languagesToLearn: newLearnList
+          languagesToLearn: newLearnList
         })
         break;
       default:
@@ -443,8 +461,7 @@ class EditProfilePage extends Component
     }
   }
 
-  toExcludeLanguages = () => 
-  {
+  toExcludeLanguages = () => {
     var langs = [];
 
     this.state.languagesToTeach.forEach(item => {
@@ -454,8 +471,7 @@ class EditProfilePage extends Component
     return langs
   }
 
-  toogleAlert(open, type, text)
-  {
+  toggleAlert(open, type, text) {
     //type is 'error', 'info', 'success', 'warning'
     if (open === true) {
       this.setState({
@@ -464,46 +480,44 @@ class EditProfilePage extends Component
         alertText: text
       })
     }
-    else{
+    else {
       this.setState({
         showAlert: open
       })
     }
   }
-  
 
-  render() 
-  {
+  render() {
     const { classes } = this.props;
     const excludedLanguages = this.toExcludeLanguages();
-    const mediaCard =  this.state.profileVideoURL 
-                          ? <Grid item xs={12} >
-                              <Card>
-                              <CardHeader title="Profile video URL"  subheader="Note: Remember to click save changes button if you updated your profile video">
-                              </CardHeader>
-                              <CardMedia className={classes.cardMedia} component="iframe" src={this.state.profileVideoURL}></CardMedia>
-                              </Card>
-                            </Grid> 
-                          : <></>
+    const mediaCard = this.state.profileVideoURL
+      ? <Grid item xs={12} >
+        <Card>
+          <CardHeader title="Profile video URL" subheader="Note: Remember to click save changes button if you updated your profile video">
+          </CardHeader>
+          <CardMedia className={classes.cardMedia} component="iframe" src={this.state.profileVideoURL}></CardMedia>
+        </Card>
+      </Grid>
+      : <></>
 
-    return  (
+    return (
       <div>
         <Container component="main" maxWidth="xs">
           <CssBaseline />
-  
+
           <div className={classes.paper}>
             <Avatar className={classes.avatar} src={this.state.profileImgURL}>
-            
+
             </Avatar>
             <div className={classes.uploadBtnWrapper}>
-            
+
               <IconButton
                 color="primary"
                 className={classes.button}
                 aria-label="upload picture"
                 component="span"
               >
-              <PhotoCamera />
+                <PhotoCamera />
 
               </IconButton>
               <input type="file" name="myfile" onChange={this.onImageChange} />
@@ -523,10 +537,10 @@ class EditProfilePage extends Component
                     label="First name"
                     autoFocus
                     error={this.state.firstNameError}
-                    value = {this.state.firstName}
-                    helperText={ this.state.firstNameError === false ? '' : this.state.firstNameErrorMessage}
-                    onChange =  {this.handleChangeFirstName}
-                    inputProps={{maxLength: 21}}
+                    value={this.state.firstName}
+                    helperText={this.state.firstNameError === false ? '' : this.state.firstNameErrorMessage}
+                    onChange={this.handleChangeFirstName}
+                    inputProps={{ maxLength: 21 }}
                   />
                 </Grid>
 
@@ -539,11 +553,11 @@ class EditProfilePage extends Component
                     label="Last name"
                     name="lastName"
                     autoComplete="lname"
-                    value = {this.state.lastName}
+                    value={this.state.lastName}
                     error={this.state.lastNameError}
-                    helperText={ this.state.lastNameError === false ? '' : this.state.lastNameErrorMessage}
-                    onChange =  {this.handleChangeLastName}
-                    inputProps={{maxLength: 21}}
+                    helperText={this.state.lastNameError === false ? '' : this.state.lastNameErrorMessage}
+                    onChange={this.handleChangeLastName}
+                    inputProps={{ maxLength: 21 }}
                   />
                 </Grid>
 
@@ -554,13 +568,13 @@ class EditProfilePage extends Component
                     fullWidth
                     id="email"
                     label="Email address"
-                    value = {this.state.email}
+                    value={this.state.email}
                     name="email"
                     autoComplete="email"
-                    onChange =  {this.handleChangeEmail}
+                    onChange={this.handleChangeEmail}
                     InputProps={{
                       readOnly: true,
-                    }}/>
+                    }} />
                 </Grid>
 
                 <Grid item xs={12}>
@@ -569,157 +583,157 @@ class EditProfilePage extends Component
                     fullWidth
                     id="video"
                     label="Video profile URL"
-                    value = {this.state.profileVideoURL}
+                    value={this.state.profileVideoURL}
                     name="video"
                     autoComplete="video"
-                    onChange =  {this.handleChangeProfileVideo}
-                    error = {this.state.videoError}
-                    helperText= {
+                    onChange={this.handleChangeProfileVideo}
+                    error={this.state.videoError}
+                    helperText={
                       this.state.videoError ? "Url is not supported. Only youtube Url is supported at the moment."
-                      : "Please make sure the video is publicly accessible. A YouTube link is recommended."
+                        : "Please make sure the video is publicly accessible. A YouTube link is recommended."
                     }
-                    />
+                  />
                 </Grid>
 
                 {mediaCard}
-              
+
                 <Grid item xs={12}>
                   <CityPicker
-                    classes = {classes}
-                    selectedItem = {this.state.cities}
-                    onChange = {this.handleChangeCities}
+                    classes={classes}
+                    selectedItem={this.state.cities}
+                    onChange={this.handleChangeCities}
                   />
                 </Grid>
-                
+
                 <Grid item xs={12}>
                   <TextField
-                      variant="outlined"
-                      id="introduction"
-                      label="Short introduction about you"
-                      value = {this.state.descriptionText}
-                      multiline
-                      fullWidth={true}
-                      rows="4"
-                      className={classes.textField}
-                      maxLength = {500}
-                      margin="normal"
-                      onChange =  {this.handleChangeIntroduction}
-                      //helperText = "The max number of characters is 500."
-                      error={this.state.introError}
-                      helperText={ this.state.introError === false ? 'The max number of characters is 500.' : this.state.introErrorMessage}
-                    />
+                    variant="outlined"
+                    id="introduction"
+                    label="Short introduction about you"
+                    value={this.state.descriptionText}
+                    multiline
+                    fullWidth={true}
+                    rows="4"
+                    className={classes.textField}
+                    maxLength={500}
+                    margin="normal"
+                    onChange={this.handleChangeIntroduction}
+                    //helperText = "The max number of characters is 500."
+                    error={this.state.introError}
+                    helperText={this.state.introError === false ? 'The max number of characters is 500.' : this.state.introErrorMessage}
+                  />
                 </Grid>
-              
+
                 <Grid item xs={12}>
                   <Typography variant="subtitle1" gutterBottom>
-                  Languages I can teach (max 3) (Note: you need to be a native or a near-native speaker to teach)
+                    Languages I can teach (max 3) (Note: you need to be a native or a near-native speaker to teach)
                   </Typography>
 
                   <List>
                     {this.state.languagesToTeach.map(item => {
                       return (
-                          <ListItem key={item.language} >
-                            <ListItemText primary={item.language + ", Level: " + item.level  + ", Credits: " + item.credits} />
-                            <ListItemSecondaryAction>
-                              <IconButton edge="end" aria-label="add" onClick={() =>this.onShowInputTeachLanguage(true, this.state.languagesToTeach.indexOf(item))}>
-                                <EditIcon  />
-                              </IconButton>
-                              <IconButton edge="end" aria-label="delete" onClick={() => this.onDeleteLanguage("teach", this.state.languagesToTeach.indexOf(item))}>
-                                <DeleteRoundedIcon />
-                              </IconButton>
-                            </ListItemSecondaryAction>
-                          </ListItem>
+                        <ListItem key={item.language} >
+                          <ListItemText primary={item.language + ", Level: " + item.level + ", Credits: " + item.credits} />
+                          <ListItemSecondaryAction>
+                            <IconButton edge="end" aria-label="add" onClick={() => this.onShowInputTeachLanguage(true, this.state.languagesToTeach.indexOf(item))}>
+                              <EditIcon />
+                            </IconButton>
+                            <IconButton edge="end" aria-label="delete" onClick={() => this.onDeleteLanguage("teach", this.state.languagesToTeach.indexOf(item))}>
+                              <DeleteRoundedIcon />
+                            </IconButton>
+                          </ListItemSecondaryAction>
+                        </ListItem>
                       )
                     })}
                   </List>
 
                   <div align="center">
-                      <IconButton disabled={this.state.languagesToTeach.length>=3} className={classes.margin} onClick={() =>this.onShowInputTeachLanguage(true, this.state.languagesToTeach.length)}>
-                        <AddCircleOutlineIcon fontSize="small" /> <Typography align="center"  variant="button"> Add more languages to teach</Typography>
-                      </IconButton>
+                    <IconButton disabled={this.state.languagesToTeach.length >= 3} className={classes.margin} onClick={() => this.onShowInputTeachLanguage(true, this.state.languagesToTeach.length)}>
+                      <AddCircleOutlineIcon fontSize="small" /> <Typography align="center" variant="button"> Add more languages to teach</Typography>
+                    </IconButton>
                   </div>
 
                 </Grid>
 
-                <LanguagePicker open = {this.state.showInputTeachLanguage} 
-                    type = "teach"
-                    language = {this.state.languagesToTeach[this.state.editingTeachLanguageIndex]}  
-                    onClose={(value) =>this.onShowInputTeachLanguage(false, this.state.editingTeachLanguageIndex, value)}
-                    excludedLanguages = {excludedLanguages}
+                <LanguagePicker open={this.state.showInputTeachLanguage}
+                  type="teach"
+                  language={this.state.languagesToTeach[this.state.editingTeachLanguageIndex]}
+                  onClose={(value) => this.onShowInputTeachLanguage(false, this.state.editingTeachLanguageIndex, value)}
+                  excludedLanguages={excludedLanguages}
                 />
 
                 <Grid item xs={12}>
-                    <Typography variant="subtitle1" gutterBottom>
-                          Languages I want to learn (max. 3)
+                  <Typography variant="subtitle1" gutterBottom>
+                    Languages I want to learn (max. 3)
                     </Typography>
 
-                    <List>
-                      {this.state.languagesToLearn.map(item => {
-                        return (
-                            <ListItem key={item.language} >
-                              <ListItemText primary={item.language + ", Level " + item.level + ", Credits: " + item.credits } />
-                                <ListItemSecondaryAction>
-                                <IconButton edge="end" aria-label="add" onClick={() =>this.onShowInputLearnLanguage(true, this.state.languagesToLearn.indexOf(item))}>
-                                  <EditIcon  />
-                                </IconButton>
-                                <IconButton edge="end" aria-label="delete" onClick={() => this.onDeleteLanguage("learn", this.state.languagesToLearn.indexOf(item))}>
-                                  <DeleteRoundedIcon />
-                                </IconButton>
-                              </ListItemSecondaryAction>
-                            </ListItem>
-                        )
-                      })}
-                    </List>
+                  <List>
+                    {this.state.languagesToLearn.map(item => {
+                      return (
+                        <ListItem key={item.language} >
+                          <ListItemText primary={item.language + ", Level " + item.level + ", Credits: " + item.credits} />
+                          <ListItemSecondaryAction>
+                            <IconButton edge="end" aria-label="add" onClick={() => this.onShowInputLearnLanguage(true, this.state.languagesToLearn.indexOf(item))}>
+                              <EditIcon />
+                            </IconButton>
+                            <IconButton edge="end" aria-label="delete" onClick={() => this.onDeleteLanguage("learn", this.state.languagesToLearn.indexOf(item))}>
+                              <DeleteRoundedIcon />
+                            </IconButton>
+                          </ListItemSecondaryAction>
+                        </ListItem>
+                      )
+                    })}
+                  </List>
 
-                    <div align="center">
-                      <IconButton disabled={this.state.languagesToLearn.length>=3} align="center" className={classes.margin} onClick={() =>this.onShowInputLearnLanguage(true, this.state.languagesToLearn.length)}>
-                        <AddCircleOutlineIcon fontSize="small" />  <Typography align="center"  variant="button"> Add more languages to learn</Typography>
-                      </IconButton>
-                    </div>
+                  <div align="center">
+                    <IconButton disabled={this.state.languagesToLearn.length >= 3} align="center" className={classes.margin} onClick={() => this.onShowInputLearnLanguage(true, this.state.languagesToLearn.length)}>
+                      <AddCircleOutlineIcon fontSize="small" />  <Typography align="center" variant="button"> Add more languages to learn</Typography>
+                    </IconButton>
+                  </div>
 
                 </Grid>
 
-                <LanguagePicker 
-                      open = {this.state.showInputLearnLanguage} 
-                      type = "learn"
-                      language = {this.state.languagesToLearn[this.state.editingLearnLanguageIndex]}  
-                      onClose={(value) =>this.onShowInputLearnLanguage(false, this.state.editingLearnLanguageIndex, value)}
-                      excludedLanguages = {excludedLanguages}
+                <LanguagePicker
+                  open={this.state.showInputLearnLanguage}
+                  type="learn"
+                  language={this.state.languagesToLearn[this.state.editingLearnLanguageIndex]}
+                  onClose={(value) => this.onShowInputLearnLanguage(false, this.state.editingLearnLanguageIndex, value)}
+                  excludedLanguages={excludedLanguages}
                 />
-            
+
               </Grid>
 
-                <Button
-                  //type="submit"
-                  fullWidth
-                  variant="contained"
-                  color="primary"
-                  className={classes.submit}
-                  onClick={this.onSaveButtonClicked}
-                  >
-                  Save changes
+              <Button
+                //type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+                onClick={this.onSaveButtonClicked}
+              >
+                Save changes
                 </Button>
 
-                <ExpansionPanel 
-                  defaultExpanded={false}> 
-                  <ExpansionPanelSummary
-                    expandIcon={<ExpandMoreIcon/>}
-                    aria-controls="panel1a-content"
-                    id="panel1a-header">
-                    <Typography>Delete your profile</Typography>
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
-                    <Button
-                      fullWidth
-                      variant='contained'
-                      color='primary'
-                      className={classes.submit}
-                      onClick={this.onDeleteButtonClicked}>
-                      Delete profile
+              <ExpansionPanel
+                defaultExpanded={false}>
+                <ExpansionPanelSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header">
+                  <Typography>Delete your profile</Typography>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails>
+                  <Button
+                    fullWidth
+                    variant='contained'
+                    color='primary'
+                    className={classes.submit}
+                    onClick={this.onDeleteButtonClicked}>
+                    Delete profile
                     </Button>
                 </ExpansionPanelDetails>
-                </ExpansionPanel>
-              
+              </ExpansionPanel>
+
             </form>
 
           </div>
@@ -727,20 +741,14 @@ class EditProfilePage extends Component
           </Box>
         </Container>
         <AlertView
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
-        open={this.state.showAlert}
-        autoHideDuration={6000}
-        onClose={() =>this.toogleAlert(false, null, null)}
-        variant={this.state.alertType}
-        message={this.state.alertText}
-      />
-      </div> 
+          open={this.state.showAlert}
+          onClose={() => {this.setState({showAlert: false})}}
+          variant={this.state.alertType}
+          message={this.state.alertText}
+        />
+      </div>
     );
   }
-
 }
 
 export default withStyles(useStyles)(EditProfilePage);

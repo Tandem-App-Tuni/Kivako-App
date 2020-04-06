@@ -25,6 +25,7 @@ import Icon from '@material-ui/core/Icon';
 import logo from '../../tandemlogo.png'
 import Grid from '@material-ui/core/Grid'
 
+import { AlertView } from '../../components/AlertView';
 import ConstantsList from '../../config_constants';
 import UserStyleCard from '../../components/UserStyleCard';
 
@@ -66,129 +67,118 @@ const styles = ({
     cardContent: {
         padding: '0'
     },
-
     gridListTileBar: {
         background: "#3f51b5",
     },
-    leftText:{
+    leftText: {
         textAlign: 'left'
     }
 });
 
-class MatchRequests extends React.Component 
-{
+class MatchRequests extends React.Component {
     constructor(props) 
     {
       super(props);
       this.state = {
         userRequestMatches:[],
         isLoadingPage:true,
-        open:false,
+        showAlert:false,
+        alertType: "success",
+        alertText:"",
         portOption:ConstantsList.PORT_IN_USE
       };
       this.acceptMatchRequest = this.acceptMatchRequest.bind(this);
       this.denyMatchRequest = this.denyMatchRequest.bind(this);
+      this.toggleAlert = this.toggleAlert.bind(this);
     }
 
-    openModal = () => {
-        this.setState({open: true})
-    };
-
-    handleClose = () => {
-        this.setState({open: false});
-    };
-
-    acceptMatchRequest(match) 
-    {   
-        fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/usersMatch/acceptMatchRequest/' + match._id, 
-            {
-                method: 'POST',
-                headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                },
-                credentials: 'include',
-                cors: 'no-cors',
-                body: JSON.stringify({})
-            })
-            .then((response) => 
-            {
-                if (response.status === 200)
+    acceptMatchRequest(match) {
+        if (window.confirm("Accept match request?")) {
+            this.setState({isLoadingPage: true})
+            fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/usersMatch/acceptMatchRequest/' + match._id,
                 {
-                    alert('Match request accepted.');
-                    window.location.reload();
-                }
-                else alert('Something went wrong.')
-            })
-            .catch((error) => 
-            {
-                console.log('Error');
-                console.error(error);
-            }); 
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include',
+                    cors: 'no-cors',
+                    body: JSON.stringify({})
+                })
+                .then((response) => {
+                    if (response.status === 200) {
+                        this.getUserMatchsRequestListAPI(()=>{
+                            this.toggleAlert(true, "success", "Match request accepted.")
+                            this.setState({isLoadingPage: false})
+                        });
+                    }
+                    else {
+                        this.toggleAlert(true, "error", "Something went wrong.");
+                    }
+                })
+                .catch((error) => {
+                    this.setState({isLoadingPage: false})
+                    console.log('Error');
+                    console.error(error);
+                });
+        }
     }
 
-    denyMatchRequest(match) 
-    {
-        const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/usersMatch/denyMatchRequest/"+match._id);
-
-       
+    denyMatchRequest(match) {
+        if (window.confirm("Deny match request?")) {
+            this.setState({isLoadingPage: true})
+            const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/usersMatch/denyMatchRequest/" + match._id);
             fetch(url, {
                 method: 'POST',
                 headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
                 },
                 credentials: 'include',
                 cors: 'no-cors',
             })
-            .then((response) => 
-            {
-                if (response.status === 200) 
-                {
-                    alert('Match request denied.');
-                    window.location.reload();
-                } 
-                else alert('Something went wrong.')
+            .then((response) => {
+                if (response.status === 200) {
+                    this.getUserMatchsRequestListAPI(()=>{
+                        this.toggleAlert(true, "success", "Match request denied.")
+                        this.setState({isLoadingPage: false})
+                    });
+                }
+                else
+                    this.toggleAlert(true, "error", "Something went wrong.");
             })
             .catch((error) => {
                 console.error(error);
-            }); 
-        
-        //console.log(url)
+            });
+         }
     }
 
-    getUserMatchsRequestListAPI = (callback) =>
-    {
+    getUserMatchsRequestListAPI(callback) {
         const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/usersMatch/receiptMatchsRequests");
-    
+
         fetch(url, {
             method: 'GET',
             credentials: 'include',
-            cors:'no-cors'
+            cors: 'no-cors'
         }).then((response) => response.json())
-        .then((responseJson) => {
-            // Resposta
-            //console.log(this.state.userRequestMatches);
-            console.log(responseJson.userReceiptMatches)
-            this.setState({userRequestMatches: responseJson.userReceiptMatches})
-           
-        }).catch((error) => {
-            console.error(error);
-        });
+            .then((responseJson) => {
+                this.setState({ userRequestMatches: responseJson.userReceiptMatches })
+            }).catch((error) => {
+                console.error(error);
+            });
 
         callback();
-    };
-    
+    }
 
-    componentDidMount()
-    {      
-        this.getUserMatchsRequestListAPI( () => 
-        {
-            this.setState({isLoadingPage:false});
+
+    componentDidMount() {
+        this.getUserMatchsRequestListAPI(() => {
+            this.setState({ isLoadingPage: false });
         });
     }
-    getMatchesTiles(matches, classes) 
-    {
+
+    getMatchesTiles(matches, classes) {
         return (
             <div className={classes.fullWidth}>
                 <GridList cellHeight="auto" spacing={25} >
@@ -208,47 +198,68 @@ class MatchRequests extends React.Component
     }
 
 
+    toggleAlert(open, type, text) {
+        //type is 'error', 'info', 'success', 'warning'
+        if (open === true) {
+            this.setState({
+                showAlert: open,
+                alertType: type,
+                alertText: text
+            })
+        }
+        else {
+            this.setState({
+                showAlert: open
+            })
+        }
+    }
+
     render() {
-        const {classes} = this.props;
-        const cardStyle =makeStyles(theme => ({
+        const { classes } = this.props;
+        const cardStyle = makeStyles(theme => ({
             card: {
-              maxWidth: 345,
+                maxWidth: 345,
             },
             media: {
-              height: 0,
-              paddingTop: '56.25%', // 16:9
+                height: 0,
+                paddingTop: '56.25%', // 16:9
             }
-          }));
-        
+        }));
+
         //Wait until all informations be render until continue
-        if(this.state.isLoadingPage) return null;
-        
-        if(this.state.userRequestMatches.length === 0)
-        {  
-            return  (
+        if (this.state.isLoadingPage) return null;
+
+        if (this.state.userRequestMatches.length === 0) {
+            return (
                 <div className={classes.root}>
-                        <div align = "center">
-                            <Paper>
-                                <br></br>
-                                <br></br>
-                                <br></br>
-                                <br></br>
-                                <Typography variant="h5" gutterBottom>
-                                    No pending requests
+                    <div align="center">
+                        <Paper>
+
+                            <br></br>
+                            <br></br>
+                            <br></br>
+                            <br></br>
+                            <Typography variant="h5" gutterBottom>
+                                No pending requests
                                 </Typography>
-                                <br></br>
-                                <Typography variant="h6" gutterBottom>
-                                    Click the button below to search for language partners
+                            <br></br>
+                            <Typography variant="h6" gutterBottom>
+                                Click the button below to search for language partners
                                 </Typography>
-                                <br></br>
-                                <Button component={Link} to="/browse-match" variant="contained" color="primary">Search!</Button>
-                                <br></br>
-                                <br></br>
-                            </Paper>
+                            <br></br>
+                            <Button component={Link} to="/browse-match" variant="contained" color="primary">Search!</Button>
                             <br></br>
                             <br></br>
-                            <br></br>
-                        </div>
+                        </Paper>
+                        <br></br>
+                        <br></br>
+                        <br></br>
+                    </div>
+                    <AlertView
+                    open={this.state.showAlert}
+                    variant={this.state.alertType}
+                    message={this.state.alertText}
+                    onClose={() => { this.setState({ showAlert: false }) }} />
                 </div>
 
             )
@@ -273,11 +284,15 @@ class MatchRequests extends React.Component
                             <Divider variant="middle" />
                         </ExpansionPanelDetails>
                 </ExpansionPanel>
+                <AlertView
+                    open={this.state.showAlert}
+                    variant={this.state.alertType}
+                    message={this.state.alertText}
+                    onClose={() => { this.setState({ showAlert: false }) }} />
             </div>
         );
     }
 }
-
 MatchRequests.propTypes = {
     classes: PropTypes.object.isRequired,
 };
