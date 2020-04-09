@@ -18,6 +18,7 @@ import { Link } from 'react-router-dom';
 import {withStyles} from '@material-ui/core/styles';
 import logo from '../../tandemlogo.png'
 import ConstantsList from '../../config_constants';
+import {AppContext} from "../../components/context/context";
 
 const drawerWidth = 240;
 
@@ -104,6 +105,8 @@ class Dashboard extends React.Component
 {
   _isMounted = false;
 
+  static contextType = AppContext;
+
   constructor(props)
   {
     super(props);
@@ -165,6 +168,7 @@ class Dashboard extends React.Component
   render()
   {
     const { classes } = this.props;
+    console.log(this.context)
     return(
     <div className={classes.root}>
       <CssBaseline />
@@ -198,7 +202,7 @@ class Dashboard extends React.Component
           <Divider/>
           <List>{mainListItems(this.state.getChatN())}</List>
           <Divider />
-          <List>{secondaryListItems(this.state.requestAmount)}</List>
+          <List>{secondaryListItems(this.context.requestAmount)}</List>
           {this.state.isAdmin ? <div><Divider /><List>{adminListItems}</List></div> : <div/>}
           <Divider />
           <List>{thirdListItems}</List>

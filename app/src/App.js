@@ -31,6 +31,7 @@ import openSocket from 'socket.io-client';
 import ConstantsList from './config_constants';
 
 import ResponsiveDrawer from './containers/MenuDrawer';
+import AppContextProvider from "./components/context/context";
 
 class App extends React.Component 
 {
@@ -102,7 +103,7 @@ class App extends React.Component
           </Checker>
         </Route>
 
-	 <Route exact path='/view-profile'>
+	      <Route exact path='/view-profile'>
           <Checker activeSocket={this.activeSocket} setSocket={this.setSocket}>
             <ResponsiveDrawer title = 'Profile' chatBundle={chatBundle}>
               <ViewProfile />
@@ -136,9 +137,11 @@ class App extends React.Component
 
         <Route exact path='/match-requests'>
           <Checker activeSocket={this.activeSocket} setSocket={this.setSocket}>
+          <AppContextProvider>
             <ResponsiveDrawer title ='Matches requests!' chatBundle={chatBundle}>
               <MatchRequests/>
             </ResponsiveDrawer>
+          </AppContextProvider>
           </Checker>
         </Route>
 
