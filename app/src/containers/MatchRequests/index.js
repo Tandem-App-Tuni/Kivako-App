@@ -34,8 +34,6 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-import {AppContext} from "../../components/context/context";
-
 const styles = ({
     root: {
         display: 'inline',
@@ -78,8 +76,6 @@ const styles = ({
 });
 
 class MatchRequests extends React.Component {
-    static contextType = AppContext;
-
     constructor(props) 
     {
       super(props);
@@ -167,9 +163,7 @@ class MatchRequests extends React.Component {
             cors: 'no-cors'
         }).then((response) => response.json())
             .then((responseJson) => {
-                const {updateContext} = this.context;
                 this.setState({ userRequestMatches: responseJson.userReceiptMatches })
-                updateContext("requestAmount", responseJson.userReceiptMatches.length)
             }).catch((error) => {
                 console.error(error);
             });
@@ -270,7 +264,6 @@ class MatchRequests extends React.Component {
 
             )
         }
-        console.log(this.context)
         return (
             <div className={classes.root}>
                 <ExpansionPanel defaultExpanded={true}>
