@@ -15,10 +15,9 @@ import { Redirect } from 'react-router';
 import { History } from 'react-router';
 
 //Components
-import {AlertView} from '../../components/AlertView'
+import {AlertView, Alert} from '../../components/AlertView'
 
 import ConstantsList from '../../config_constants';
-
 
 const useStyles = theme => ({
   '@global': {
@@ -97,6 +96,7 @@ class ViewProfile extends Component {
       super(props);
       this.state = {
       profileImgURL: window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/api/v1/avatar/getAvatar',
+      profileImgWarning: false,
       languagesToTeach: [],
       languagesToLearn: [],
       firstName: '',
@@ -109,11 +109,11 @@ class ViewProfile extends Component {
       showInputLearnLanguage: false,
       showAlert: false,
       alertType: 'error',
-	  alertText: '',
+	    alertText: '',
       editingTeachLanguageIndex: 0,
       editingLearnLanguageIndex: 0,
-	  videoError: false,
-	  redirectURL: '',
+	    videoError: false,
+	    redirectURL: '',
       portOption: ConstantsList.PORT_IN_USE //set to 3000 for local testing
     };
   }
@@ -217,9 +217,19 @@ class ViewProfile extends Component {
           <CssBaseline />
   
           <div className={classes.paper}>
-            <Avatar className={classes.avatar} src={this.state.profileImgURL}>
-            </Avatar>
-
+            {this.state.profileImgWarning ?
+  	          <Alert severity="error">You don't have a valid profile image, please upload a profile image!</Alert>
+              : null
+            }
+            <Avatar
+              className={classes.avatar}
+              src={this.state.profileImgURL}
+              imgProps={{
+                onError: () => {
+                  this.setState({profileImgWarning: true})
+                }
+              }}
+            />
 
         <form className={classes.form} noValidate>
           <Grid container spacing={2}>
