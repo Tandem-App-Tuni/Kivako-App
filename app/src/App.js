@@ -104,7 +104,7 @@ class App extends React.Component
           </Checker>
         </Route>
 
-	      <Route exact path='/view-profile'>
+	 <Route exact path='/view-profile'>
           <Checker activeSocket={this.activeSocket} setSocket={this.setSocket}>
             <ResponsiveDrawer title = 'Profile' chatBundle={chatBundle}>
               <ViewProfile />
@@ -138,11 +138,9 @@ class App extends React.Component
 
         <Route exact path='/match-requests'>
           <Checker activeSocket={this.activeSocket} setSocket={this.setSocket}>
-
             <ResponsiveDrawer title ='Matches requests!' chatBundle={chatBundle}>
               <MatchRequests/>
             </ResponsiveDrawer>
-
           </Checker>
         </Route>
 

@@ -270,7 +270,7 @@ class MatchRequests extends React.Component {
 
             )
         }
-        console.log(this.context)
+
         return (
             <div className={classes.root}>
                 <ExpansionPanel defaultExpanded={true}>
