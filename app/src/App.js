@@ -73,6 +73,7 @@ class App extends React.Component
 
     return (
       <MuiThemeProvider theme={this.state.theme}>
+                  <AppContextProvider>
       <Router>
         
         <Route exact path='/'>
@@ -137,11 +138,11 @@ class App extends React.Component
 
         <Route exact path='/match-requests'>
           <Checker activeSocket={this.activeSocket} setSocket={this.setSocket}>
-          <AppContextProvider>
+
             <ResponsiveDrawer title ='Matches requests!' chatBundle={chatBundle}>
               <MatchRequests/>
             </ResponsiveDrawer>
-          </AppContextProvider>
+
           </Checker>
         </Route>
 
@@ -178,6 +179,7 @@ class App extends React.Component
         </Route>
 
       </Router>
+      </AppContextProvider>
       </MuiThemeProvider>
     );
   }

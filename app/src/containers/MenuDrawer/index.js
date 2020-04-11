@@ -156,7 +156,7 @@ class Dashboard extends React.Component
 
       const results = await Promise.all([p0, p1]);
       const responseResults = await Promise.all([results[0].json(), results[1].json()]);
-
+      this.context.updateContext("requestAmount", responseResults[1].userReceiptMatches.length)
       this.setState({isAdmin: responseResults[0].isAdmin, requestAmount: responseResults[1].userReceiptMatches.length});
     }
     catch(e) 
@@ -168,7 +168,6 @@ class Dashboard extends React.Component
   render()
   {
     const { classes } = this.props;
-    console.log(this.context)
     return(
     <div className={classes.root}>
       <CssBaseline />
