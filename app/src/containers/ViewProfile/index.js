@@ -98,8 +98,9 @@ class ViewProfile extends Component {
 
     constructor(props) {
       super(props);
+      let imgUrl = props.userEmail ? "/" + props.userEmail : "";
       this.state = {
-      profileImgURL: window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/api/v1/avatar/getAvatar',
+      profileImgURL: window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/api/v1/avatar/getAvatar' + imgUrl,
       languagesToTeach: [],
       languagesToLearn: [],
       firstName: '',
@@ -226,7 +227,7 @@ class ViewProfile extends Component {
                             </Grid> 
                           : <Typography variant='caption'>
                               Video profile URL
-                                <Typography variant='body1' gutterBotton={true}>
+                                <Typography variant='body1'>
                                   {this.state.profileVideoURL}
                                 </Typography>
                             </Typography>
@@ -247,7 +248,7 @@ class ViewProfile extends Component {
           <Grid item xs={12}>
 	    <Typography variant='caption'>
 	      First name
-              <Typography variant='body1' gutterBotton={true}>
+              <Typography variant='body1'>
 	        {this.state.firstName}
               </Typography>
             </Typography>
@@ -256,7 +257,7 @@ class ViewProfile extends Component {
           <Grid item xs={12}>
 	    <Typography variant='caption'>
 	      Last name
-              <Typography variant='body1' gutterBotton={true}>
+              <Typography variant='body1'>
 	        {this.state.lastName}
               </Typography>
             </Typography>
@@ -265,7 +266,7 @@ class ViewProfile extends Component {
           <Grid item xs={12}>
 	    <Typography variant='caption'>
 	      Email address
-              <Typography variant='body1' gutterBotton={true}>
+              <Typography variant='body1'>
 	        {this.state.email}
               </Typography>
             </Typography>
@@ -279,8 +280,8 @@ class ViewProfile extends Component {
           <Grid item xs={12}>
 	    <Typography variant='caption'>
 	      Municipalities
-              <Typography variant='body1' gutterBotton={true}>
-	        {this.state.cities}
+              <Typography variant='body1'>
+	        {this.state.cities.join(', ')}
               </Typography>
             </Typography>
           </Grid>
@@ -288,7 +289,7 @@ class ViewProfile extends Component {
           <Grid item xs={12}>
 	    <Typography variant='caption'>
 	      Short introduction about you
-              <Typography variant='body1' gutterBotton>
+              <Typography variant='body1'>
 	        {this.state.descriptionText}
               </Typography>
             </Typography>
