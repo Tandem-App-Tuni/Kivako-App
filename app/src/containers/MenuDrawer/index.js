@@ -18,6 +18,7 @@ import { Link } from 'react-router-dom';
 import {withStyles} from '@material-ui/core/styles';
 import logo from '../../tandemlogo.png'
 import ConstantsList from '../../config_constants';
+import {AppContext} from "../../components/context/context";
 
 const drawerWidth = 240;
 
@@ -104,6 +105,8 @@ class Dashboard extends React.Component
 {
   _isMounted = false;
 
+  static contextType = AppContext;
+
   constructor(props)
   {
     super(props);
@@ -153,7 +156,7 @@ class Dashboard extends React.Component
 
       const results = await Promise.all([p0, p1]);
       const responseResults = await Promise.all([results[0].json(), results[1].json()]);
-
+      this.context.updateContext("requestAmount", responseResults[1].userReceiptMatches.length)
       this.setState({isAdmin: responseResults[0].isAdmin, requestAmount: responseResults[1].userReceiptMatches.length});
     }
     catch(e) 
@@ -198,7 +201,7 @@ class Dashboard extends React.Component
           <Divider/>
           <List>{mainListItems(this.state.getChatN())}</List>
           <Divider />
-          <List>{secondaryListItems(this.state.requestAmount)}</List>
+          <List>{secondaryListItems(this.context.requestAmount)}</List>
           {this.state.isAdmin ? <div><Divider /><List>{adminListItems}</List></div> : <div/>}
           <Divider />
           <List>{thirdListItems}</List>
