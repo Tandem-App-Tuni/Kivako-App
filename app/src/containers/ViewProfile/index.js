@@ -157,21 +157,6 @@ class ViewProfile extends Component {
     {
       this.preLoadUserInformations();
     });
-    fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/avatar/getAvatar",
-    {
-        method: 'GET',
-        credentials: 'include',
-        cors: 'no-cors'
-    })
-    .then((response) =>
-    // .then((responseData) => 
-    {
-      console.log(response)
-    })
-    .catch((error) => 
-    {
-      console.error(error);
-    });
   }
 
   checkIfUserIsAuthenticaded (callback)
@@ -236,15 +221,20 @@ class ViewProfile extends Component {
   	          <StaticAlert severity="error">You don't have a valid profile image, please upload a profile image!</StaticAlert>
               : null
             }
-            <Avatar
-              className={classes.avatar}
+            {this.state.profileImgWarning ?
+              <Avatar className={classes.avatar}></Avatar>
+              : <img
+              className={classes.avatar + " avatar"}
+              width="80"
+              height="80"
               src={this.state.profileImgURL}
-              imgProps={{
-                onError: () => {
-                  this.setState({profileImgWarning: true})
-                }
+              alt=""
+              onError={(event) => {
+                this.setState({profileImgWarning: true})
               }}
             />
+            }
+            
 
         <form className={classes.form} noValidate>
           <Grid container spacing={2}>
