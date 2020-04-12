@@ -35,7 +35,7 @@ import { Redirect } from 'react-router-dom';
 //Components
 import { CityPicker } from '../../components/CityPicker';
 import LanguagePicker from '../../components/LanguagePicker'
-import { AlertView } from '../../components/AlertView';
+import { AlertPopup } from '../../components/AlertView';
 import ConstantsList from '../../config_constants';
 import TermsEnglishDialog from './privacy_policy_en'
 import TermsFinnishDialog from './privacy_policy_fi'
@@ -739,7 +739,7 @@ class SignUpPage extends Component {
           <Box mt={5}>
           </Box>
         </Container>
-        <AlertView
+        <AlertPopup
           open={this.state.showAlert}
           variant={this.state.alertType}
           message={this.state.alertText}

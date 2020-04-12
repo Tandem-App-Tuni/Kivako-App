@@ -27,7 +27,7 @@ import LocationCityIcon from '@material-ui/icons/LocationCity';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 
 import ConstantsList from '../../config_constants';
-import {AlertView} from '../../components/AlertView';
+import {AlertPopup} from '../../components/AlertView';
 
 import UserStyleCard from '../../components/UserStyleCard';
 const styles = ({
@@ -366,7 +366,7 @@ class BrowseMatch extends React.Component
             <div className={classesPanel.root}>
                 {mainList}
             </div>
-            <AlertView
+            <AlertPopup
                 open={this.state.showAlert}
                 onClose={()=>{this.setState({showAlert: false})}}
                 variant={this.state.alertType}

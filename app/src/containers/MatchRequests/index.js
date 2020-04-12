@@ -25,7 +25,7 @@ import Icon from '@material-ui/core/Icon';
 import logo from '../../tandemlogo.png'
 import Grid from '@material-ui/core/Grid'
 
-import { AlertView } from '../../components/AlertView';
+import { AlertPopup } from '../../components/AlertView';
 import ConstantsList from '../../config_constants';
 import UserStyleCard from '../../components/UserStyleCard';
 
@@ -255,7 +255,7 @@ class MatchRequests extends React.Component {
                         <br></br>
                         <br></br>
                     </div>
-                    <AlertView
+                    <AlertPopup
                     open={this.state.showAlert}
                     variant={this.state.alertType}
                     message={this.state.alertText}
@@ -284,7 +284,7 @@ class MatchRequests extends React.Component {
                             <Divider variant="middle" />
                         </ExpansionPanelDetails>
                 </ExpansionPanel>
-                <AlertView
+                <AlertPopup
                     open={this.state.showAlert}
                     variant={this.state.alertType}
                     message={this.state.alertText}

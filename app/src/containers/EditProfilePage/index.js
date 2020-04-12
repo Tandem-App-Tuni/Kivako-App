@@ -26,7 +26,7 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 //Components
 import { CityPicker } from '../../components/CityPicker';
 import LanguagePicker from '../../components/LanguagePicker'
-import { AlertView } from '../../components/AlertView';
+import { AlertPopup } from '../../components/AlertView';
 
 import ConstantsList from '../../config_constants';
 
@@ -740,7 +740,7 @@ class EditProfilePage extends Component {
           <Box mt={5}>
           </Box>
         </Container>
-        <AlertView
+        <AlertPopup
           open={this.state.showAlert}
           onClose={() => {this.setState({showAlert: false})}}
           variant={this.state.alertType}

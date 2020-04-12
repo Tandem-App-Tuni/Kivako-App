@@ -12,7 +12,7 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 
-import { AlertView } from '../../components/AlertView';
+import { AlertPopup } from '../../components/AlertView';
 import Constants from '../../config_constants';
 
 const useStyles = theme => ({
@@ -253,7 +253,7 @@ class ListOfStudents extends Component {
           page={this.state.page}
           onChangePage={this.handleChangePage}
           onChangeRowsPerPage={this.handleChangeRowsPerPage} />
-        <AlertView
+        <AlertPopup
           open={this.state.showAlert}
           variant={this.state.alertType}
           message={this.state.alertText}

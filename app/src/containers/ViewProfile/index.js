@@ -15,7 +15,7 @@ import { Redirect } from 'react-router';
 import { History } from 'react-router';
 
 //Components
-import {AlertView, Alert} from '../../components/AlertView'
+import {AlertPopup, StaticAlert} from '../../components/AlertView'
 
 import ConstantsList from '../../config_constants';
 
@@ -157,6 +157,21 @@ class ViewProfile extends Component {
     {
       this.preLoadUserInformations();
     });
+    fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/avatar/getAvatar",
+    {
+        method: 'GET',
+        credentials: 'include',
+        cors: 'no-cors'
+    })
+    .then((response) =>
+    // .then((responseData) => 
+    {
+      console.log(response)
+    })
+    .catch((error) => 
+    {
+      console.error(error);
+    });
   }
 
   checkIfUserIsAuthenticaded (callback)
@@ -218,7 +233,7 @@ class ViewProfile extends Component {
   
           <div className={classes.paper}>
             {this.state.profileImgWarning ?
-  	          <Alert severity="error">You don't have a valid profile image, please upload a profile image!</Alert>
+  	          <StaticAlert severity="error">You don't have a valid profile image, please upload a profile image!</StaticAlert>
               : null
             }
             <Avatar
@@ -340,7 +355,7 @@ class ViewProfile extends Component {
           <Box mt={5}>
           </Box>
         </Container>
-        <AlertView
+        <AlertPopup
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'left',
