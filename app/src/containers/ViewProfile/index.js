@@ -43,7 +43,7 @@ const useStyles = theme => ({
     marginTop: theme.spacing(3),
   },
   submit: {
-    margin: theme.spacing(3, 0, 2),
+    margin: theme.spacing(1, 0, 2),
   },
   avatarUpload: {
     display: 'flex',
@@ -182,6 +182,36 @@ class ViewProfile extends Component {
     });
   }
 
+  onExcludeIncludeButtonClicked = value => () => {
+    var clickedValue = eval(value);
+    if (window.confirm('Are you sure you want to exclude your profile from matching?')) {
+    fetch(
+			window.location.protocol + "//" + window.location.hostname + this.state.portOption +
+			"/api/v1/users/setMatchingVisibility",
+			{
+       	method: "POST",
+				headers: {
+					Accept: "application/json",
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify({
+          email:this.state.email,
+          flag:clickedValue,
+				})
+			}).then((response) => response.json())
+      .then((response) => { 
+        if(clickedValue===true)       
+          this.toggleAlert(true, 'success', 'profile excluded succesfully!');
+        else
+        this.toggleAlert(true, 'success', 'profile included succesfully!');       
+      })
+      
+      .catch((error) => {
+        console.error("error is "+error);
+      });
+    }
+  }
+
   onShowInputTeachLanguage = (open, index, newValue) => 
   {
     if (open === true) {
@@ -206,6 +236,22 @@ class ViewProfile extends Component {
     })
   };
 
+
+  toggleAlert(open, type, text) {
+    //type is 'error', 'info', 'success', 'warning'
+    if (open === true) {
+      this.setState({
+        showAlert: open,
+        alertType: type,
+        alertText: text
+      })
+    }
+    else {
+      this.setState({
+        showAlert: open
+      })
+    }
+  }
     
   render() 
   {
@@ -323,6 +369,24 @@ class ViewProfile extends Component {
                   Edit profile
                 </Button>
 
+                <Button  
+                 fullWidth            
+                  variant="contained"
+                  color="secondary"
+                  className={classes.submit}
+                  onClick={this.onExcludeIncludeButtonClicked('true')}>
+                  Exclude Matching
+                </Button>
+
+                <Button  
+                 fullWidth            
+                  variant="contained"
+                  color="primary"
+                  className={classes.submit}
+                  onClick={this.onExcludeIncludeButtonClicked('false')}>
+                  include Matching
+                </Button>
+
               
             </form>
 
@@ -337,7 +401,7 @@ class ViewProfile extends Component {
         }}
         open={this.state.showAlert}
         autoHideDuration={6000}
-        onClose={() =>this.toogleAlert(false, null, null)}
+        onClose={() => {this.setState({showAlert: false})}}
         variant={this.state.alertType}
         message={this.state.alertText}
       />
