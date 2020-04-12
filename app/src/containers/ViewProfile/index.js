@@ -188,31 +188,6 @@ class ViewProfile extends Component {
       console.error(error);
     });
   }
-
-  onShowInputTeachLanguage = (open, index, newValue) => 
-  {
-    if (open === true) {
-      this.setState({
-        editingTeachLanguageIndex: index
-      })
-    } else {
-      if (newValue != null) {
-        var arr = this.state.languagesToTeach
-        if (index < this.state.languagesToTeach.length) {
-          arr[index] = newValue
-        } else {
-          arr.push(newValue)
-        }
-        this.setState({
-          languagesToTeach: arr
-        })
-      }
-    }
-    this.setState({
-      showInputTeachLanguage: open
-    })
-  };
-
     
   render() 
   {
