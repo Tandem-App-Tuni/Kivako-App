@@ -174,10 +174,14 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
     handleOnYesClick= () => {
       switch(this.props.page) {
         case "browse-match": 
-          this.props.yesFunction(this.props.user, this.props.matchingLanguage)
+          this.props.yesFunction(this.props.user, this.props.matchingLanguage);
           break;
         case "pending-match":
-          this.props.yesFunction(this.props.match)
+          this.props.yesFunction(this.props.match);
+          break;
+        case "partner-list": 
+          this.props.yesFunction(this.props.matchId);
+          break;
         default:
           break;
       }
@@ -186,7 +190,11 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
     handleOnNoClick= () => {
       switch(this.props.page) {
         case "pending-match":
-          this.props.noFunction(this.props.match)
+          this.props.noFunction(this.props.match);
+          break;
+        case "partner-list":
+          this.props.noFunction();
+          break;
         default:
           break;
       }
@@ -263,7 +271,6 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
                 <h6 className={classes.email}> { user.email}  </h6>
               </Box>
               <p className={classes.descriptionText}>
-              
                 {userDescription}     
               </p>
               <div>

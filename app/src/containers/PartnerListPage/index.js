@@ -1,24 +1,9 @@
 import React, {Component} from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Avatar from '@material-ui/core/Avatar';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
-import { Link } from 'react-router-dom';
-import Button from '@material-ui/core/Button';
-import UserActionCard from '../../components/UserActionCard';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
-import Icon from '@material-ui/core/Icon';
-import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import Paper from '@material-ui/core/Paper';
 import UserStyleCard from '../../components/UserStyleCard';
 import Constants from '../../config_constants';
 import Divider from '@material-ui/core/Divider';
@@ -26,10 +11,8 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import logo from '../../tandemlogo.png';
-import Grid from '@material-ui/core/Grid';
 import { AlertView } from '../../components/AlertView';
-import ConstantsList from '../../config_constants';
+import Dialog from '@material-ui/core/Dialog';
 
 
 const styles =  theme => 
@@ -79,10 +62,6 @@ const styles =  theme =>
   {
     display: 'inline',
   },
-  inline: 
-  {
-    display: 'block',
-  },
   item: 
   {
     backgroundColor: 'white',
@@ -100,19 +79,20 @@ const styles =  theme =>
  */
 class PartnerListPage extends Component 
 {
-
+  constructor(props) {
+    super(props);
+    this.state = 
+    {
+      partnerList: [],
+      isReportFormOpen: false
+    };
+    this.onUnmatchUser = this.onUnmatchUser.bind(this);
+    this.onReportPartner = this.onReportPartner.bind(this);
+  }
+ 
   
-  state = 
-  {
-    openAction: false,
-    actionIndex: 0,
-    partnerList: []
-  };
-  
-
-  componentDidMount()
-  {
-  fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/usersMatch/getUserActiveMatches',
+  getPartnerList() {
+    fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/usersMatch/getUserActiveMatches',
     {
       method: 'GET',
       headers: 
@@ -177,45 +157,25 @@ class PartnerListPage extends Component
     });
   }
 
-  onShowActionCard= (open, index, action) =>  
+  componentDidMount()
   {
-    if (open === true) this.setState({actionIndex: index});
-    else
-    {
-      let data = this.state.partnerList[index];
-
-      if (action === "unmatch") this.onUnmatchUser(data);
-    }
-
-    this.setState({openAction: open});
-  };
-
-
-
-  reportPartnerRequest(partner) {
-      console.log("report button is clicked");
+    this.getPartnerList();
   }
-
-  unmatchRequest(partner) {
-    console.log("unmatch button is clicked");
-  }
-
 
   getPartnersTiles(partnerList, classes) {
-    console.log(partnerList)
     return (
       
         <div className={classes.fullWidth}>
           <GridList cellHeight="auto" spacing={25} >
             {
                 partnerList.map((partner, _id) =>  
-                {
-                                   
-                    return(<GridListTile key={_id} rows={2}>
-                                <UserStyleCard  user={partner} yesText="Unmatch" yesFunction={this.unmatchRequest} noText="Report" noFunction={this.reportPartnerRequest} partner={partner}> 
-                                </UserStyleCard>
-
-                            </GridListTile>)
+                {      
+                  return(<GridListTile key={_id} rows={2}>
+                            <UserStyleCard  user={partner} page="partner-list"
+                            yesText="Unmatch" yesFunction={this.onUnmatchUser} matchId={partner.matchId}
+                            noText="Report" noFunction={this.onReportPartner}> 
+                            </UserStyleCard>
+                        </GridListTile>)
                 }
             )}
             </GridList>
@@ -230,7 +190,6 @@ class PartnerListPage extends Component
     {
       return (
       <div className={classes.root}>
-
           <ExpansionPanel defaultExpanded={true}>
             <ExpansionPanelSummary
                 expandIcon={<ExpandMoreIcon />}
@@ -255,41 +214,55 @@ class PartnerListPage extends Component
     }
   }
 
-  onUnmatchUser = (data) =>
+  onUnmatchUser = (matchId) =>
   {
-    fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/usersMatch/removeExistingMatch', 
-    {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-      body: JSON.stringify({matchId: data.matchId})
-    })
-    .then((response) => 
-    {
-      console.log('Removed!');
-      window.location.reload();
-    });
+    if (window.confirm("Unmatch partner?")) {
+      fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/usersMatch/removeExistingMatch', 
+      {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({matchId: matchId})
+      })
+      .then((response) => 
+      {
+        console.log('Removed!');
+        this.getPartnerList();
+      });
+    }
   }
+
+  onReportPartner() {
+    this.setState({ isReportFormOpen: true})
+  }
+
+  handleReportFormClose = () => {
+    this.setState({
+      isReportFormOpen: false
+    })
+  };
 
   render()
   {
-   
     const { classes } = this.props;
-    const cardStyle = makeStyles(theme => ({
-        card: {
-            maxWidth: 345,
-        },
-        media: {
-            height: 0,
-            paddingTop: '56.25%', // 16:9
-        }
-    }));
     return (
       <div className={classes.root}>
        {this.getPartnerDiv(this.state.partnerList, classes)}
+       <Dialog
+            aria-labelledby="simple-modal-title"
+            aria-describedby="simple-modal-description"
+            open={this.state.isReportFormOpen}
+            onClose={this.handleReportFormClose}
+            maxWidth={'md'}
+            fullWidth={true}
+            >
+              {/* TODO: update it ASAP when getting a correct link from customer */}           
+              <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSetaB2hGzv_BAKsEshVhraQrh_cfLzshafKnpJFYrO5H4zw_Q/viewform?embedded=true" 
+              width="100%" height="1491" >Loading…</iframe>
+        </Dialog>
       </div>
     );
   }
