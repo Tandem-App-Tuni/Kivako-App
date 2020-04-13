@@ -1,31 +1,66 @@
 import React, {Component} from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Avatar from '@material-ui/core/Avatar';
+import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import UserActionCard from '../../components/UserActionCard';
-
+import GridList from '@material-ui/core/GridList';
+import GridListTile from '@material-ui/core/GridListTile';
+import UserStyleCard from '../../components/UserStyleCard';
 import Constants from '../../config_constants';
 import Divider from '@material-ui/core/Divider';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { AlertView } from '../../components/AlertView';
+import Dialog from '@material-ui/core/Dialog';
 
-const useStyles =  theme => 
+
+const styles =  theme => 
 ({
   root: 
   {
-    width: '100%',
+    display: 'inline',
+    flexWrap: 'wrap',
+    justifyContent: 'space-around',
+    overflow: 'hidden',
+    
     // backgroundColor: theme.palette.background.paper,
+  },
+    gridList: {
+      //flexWrap: 'nowrap',
+      // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
+      transform: 'translateZ(0)',
+      width: "auto",
+      height: "auto"
+  },
+  fullWidth: {
+      width: "100%",
+  },
+  bottomMargin: {
+      marginBottom: '2em',
+  },
+  title: {
+      color: '#fff',
+  },
+  titleBar: {
+      background:
+          'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
+  },
+  preferencesLink: {
+      color: '#3f51b5'
+  },
+  cardContent: {
+      padding: '0'
+  },
+  gridListTileBar: {
+      background: "#3f51b5",
+  },
+  leftText: {
+      textAlign: 'left'
   },
   inline: 
   {
     display: 'inline',
-  },
-  inline: 
-  {
-    display: 'block',
   },
   item: 
   {
@@ -44,16 +79,20 @@ const useStyles =  theme =>
  */
 class PartnerListPage extends Component 
 {
-  state = 
-  {
-    openAction: false,
-    actionIndex: 0,
-    partnerList: []
+  constructor(props) {
+    super(props);
+    this.state = 
+    {
+      partnerList: [],
+      isReportFormOpen: false
+    };
+    this.onUnmatchUser = this.onUnmatchUser.bind(this);
+    this.onReportPartner = this.onReportPartner.bind(this);
   }
-
-  componentDidMount()
-  {
-  fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/usersMatch/getUserActiveMatches',
+ 
+  
+  getPartnerList() {
+    fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/usersMatch/getUserActiveMatches',
     {
       method: 'GET',
       headers: 
@@ -99,13 +138,17 @@ class PartnerListPage extends Component
 
         partners.push(
         {
-            name: user.firstName + ' ' + user.lastName,
+           
+            firstName:user.firstName,
+            lastName:user.lastName,
             _id: i,
-            matchId: match._id,
-            city: user.cities,
+            matchId: match._id,            
+            cities: user.cities,
             teachLanguages: ltt,
             studyLanguages: ltl,
             email:user.email,
+            languagesToLearn:user.languagesToLearn,
+            descriptionText:user.descriptionText,
             photo_url:window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/avatar/getAvatar/' + user.email,
         });
       }
@@ -114,18 +157,31 @@ class PartnerListPage extends Component
     });
   }
 
-  onShowActionCard= (open, index, action) =>  
+  componentDidMount()
   {
-    if (open === true) this.setState({actionIndex: index});
-    else
-    {
-      let data = this.state.partnerList[index];
+    this.getPartnerList();
+  }
 
-      if (action === "unmatch") this.onUnmatchUser(data);
-    }
-
-    this.setState({openAction: open});
-  };
+  getPartnersTiles(partnerList, classes) {
+    return (
+      
+        <div className={classes.fullWidth}>
+          <GridList cellHeight="auto" spacing={25} >
+            {
+                partnerList.map((partner, _id) =>  
+                {      
+                  return(<GridListTile key={_id} rows={2}>
+                            <UserStyleCard  user={partner} page="partner-list"
+                            yesText="Unmatch" yesFunction={this.onUnmatchUser} matchId={partner.matchId}
+                            noText="Report" noFunction={this.onReportPartner}> 
+                            </UserStyleCard>
+                        </GridListTile>)
+                }
+            )}
+            </GridList>
+        </div>   
+        )
+}
 
   getPartnerDiv(list, classes) 
   {
@@ -133,83 +189,61 @@ class PartnerListPage extends Component
     else
     {
       return (
-      <div>
-      <Typography variant="h6" gutterBottom>
-         Partners
-      </Typography>  
-      <List 
-        className={classes.root}>
-        {list.map(item => 
-        {
-          return (
-            <div  key = {item._id}>
-            <ListItem 
-              className = {classes.item}
-              alignItems="flex-start"
-              onClick={() => this.onShowActionCard(true, this.state.partnerList.indexOf(item), null)}>
-            <ListItemAvatar>
-              <Avatar src={item.photo_url} />
-            </ListItemAvatar>
-            <ListItemText
-              primary={item.name}
-              secondary={
-              <React.Fragment>
-                <Typography
-                  component="span"
-                  variant="body2"
-                  className={classes.block}
-                  color="textPrimary">
-                  Teach: {item.teachLanguages.join(", ")}. Learn: {item.studyLanguages.join(", ")}
-                </Typography>
-              {" — " + item.city.join(", ")} 
-              <Typography
-                  component="span"
-                  variant="body2"
-                  className={classes.inline}
-                  color="textPrimary">
-                  Email: {item.email}
-                </Typography>           
-            </React.Fragment>}/>          
-
-          </ListItem>
-          <ListItem  className = {classes.item}>
-            <Button size="small" variant="contained" color="secondary" className={classes.inline} target="blank" href="https://forms.gle/3Hh8nDbNiz6KwmkS8">
-              Report
-            </Button>
-          </ListItem>
-          <Divider className={classes.divider}  component="li" />
-          </div>
-          );
-        })}
-      </List>
-      <UserActionCard 
-          type = "partner"
-          open = {this.state.openAction} 
-          data = {this.state.partnerList[this.state.actionIndex]}
-          onClose = {(value) =>this.onShowActionCard(false, this.state.actionIndex, value)}/>
+      <div className={classes.root}>
+          <ExpansionPanel defaultExpanded={true}>
+            <ExpansionPanelSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+            >
+            <Typography variant="h6">
+                Your current partner(s)
+            </Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+                  { 
+                      this.getPartnersTiles(this.state.partnerList, classes)
+                  }
+                  <br></br>
+                  <Divider variant="middle" />
+            </ExpansionPanelDetails>
+          
+        </ExpansionPanel>     
       </div>
       );
     }
   }
 
-  onUnmatchUser = (data) =>
+  onUnmatchUser = (matchId) =>
   {
-    fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/usersMatch/removeExistingMatch', 
-    {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-      body: JSON.stringify({matchId: data.matchId})
-    })
-    .then((response) => 
-    {
-      console.log('Removed!');
-      window.location.reload();
-    });
+    if (window.confirm("Unmatch partner?")) {
+      fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/usersMatch/removeExistingMatch', 
+      {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({matchId: matchId})
+      })
+      .then((response) => 
+      {
+        console.log('Removed!');
+        this.getPartnerList();
+      });
+    }
   }
+
+  onReportPartner() {
+    this.setState({ isReportFormOpen: true})
+  }
+
+  handleReportFormClose = () => {
+    this.setState({
+      isReportFormOpen: false
+    })
+  };
 
   render()
   {
@@ -217,10 +251,25 @@ class PartnerListPage extends Component
     return (
       <div className={classes.root}>
        {this.getPartnerDiv(this.state.partnerList, classes)}
+       <Dialog
+            aria-labelledby="simple-modal-title"
+            aria-describedby="simple-modal-description"
+            open={this.state.isReportFormOpen}
+            onClose={this.handleReportFormClose}
+            maxWidth={'md'}
+            fullWidth={true}
+            >
+              {/* TODO: update it ASAP when getting a correct link from customer */}           
+              <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSetaB2hGzv_BAKsEshVhraQrh_cfLzshafKnpJFYrO5H4zw_Q/viewform?embedded=true" 
+              width="100%" height="1491" >Loading…</iframe>
+        </Dialog>
       </div>
     );
   }
 
 }
+PartnerListPage.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
 
-export default withStyles(useStyles) (PartnerListPage);
+export default withStyles(styles) (PartnerListPage);
