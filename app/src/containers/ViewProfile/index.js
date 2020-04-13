@@ -367,27 +367,7 @@ class ViewProfile extends Component {
                   onClick={event => window.location.href='/edit-profile'}
                   >
                   Edit profile
-                </Button>
-
-                <Button  
-                 fullWidth            
-                  variant="contained"
-                  color="secondary"
-                  className={classes.submit}
-                  onClick={this.onExcludeIncludeButtonClicked('true')}>
-                  Exclude Matching
-                </Button>
-
-                <Button  
-                 fullWidth            
-                  variant="contained"
-                  color="primary"
-                  className={classes.submit}
-                  onClick={this.onExcludeIncludeButtonClicked('false')}>
-                  include Matching
-                </Button>
-
-              
+                </Button>              
             </form>
 
           </div>
