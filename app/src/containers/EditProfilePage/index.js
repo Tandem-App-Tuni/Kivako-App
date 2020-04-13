@@ -22,6 +22,7 @@ import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import Tooltip from '@material-ui/core/Tooltip';
 
 //Components
 import { CityPicker } from '../../components/CityPicker';
@@ -96,6 +97,9 @@ const useStyles = theme => ({
   },
   cardMedia: {
     minHeight: '300px'
+  },
+  includeInMatchingButton: {
+    backgroundColor: 'green'
   }
 });
 
@@ -120,6 +124,7 @@ class EditProfilePage extends Component {
       editingTeachLanguageIndex: 0,
       editingLearnLanguageIndex: 0,
       videoError: false,
+      isExcludeFromMatching: false,
       portOption: ConstantsList.PORT_IN_USE //set to 3000 for local testing
     };
 
@@ -380,7 +385,8 @@ class EditProfilePage extends Component {
           languagesToTeach: responseData.data.languagesToTeach.filter(language => language.language != null),
           descriptionText: responseData.data.descriptionText,
           cities: responseData.data.cities,
-          profileVideoURL: responseData.data.profileVideoURL ? responseData.data.profileVideoURL : ''
+          profileVideoURL: responseData.data.profileVideoURL ? responseData.data.profileVideoURL : '',
+          isExcludeFromMatching: responseData.data.excludeFromMatching,
         })
       })
       .catch((error) => {
@@ -459,6 +465,35 @@ class EditProfilePage extends Component {
       default:
         break;
     }
+  }
+  onExcludeIncludeButtonClicked = async flagValue => {
+      try {
+        const response = await fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/users/setMatchingVisibility", 
+        {
+          method: 'POST',
+          credentials: 'include',
+          cors: 'no-cors',
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            flag: flagValue,
+          })
+        });
+        const responseData = await response.json();
+        if(responseData.excludeFromMatching) {
+          this.setState({ isExcludeFromMatching: true })
+          this.toggleAlert(true, 'success', 'Exclude from matching succesfully!');
+        }
+        else {
+          this.setState({ isExcludeFromMatching: false })
+          this.toggleAlert(true, 'success', 'Include in matching succesfully!');
+        }
+      }
+      catch(e) {
+        this.toggleAlert(true, "error", 'Something went wrong. Try again later.');
+      }
   }
 
   toExcludeLanguages = () => {
@@ -713,6 +748,30 @@ class EditProfilePage extends Component {
               >
                 Save changes
                 </Button>
+              
+              { this.state.isExcludeFromMatching ? 
+                  <Tooltip title="Your profile will be visible in find partner page. Other users will be able to send you a partner request.">
+                    <Button  
+                    fullWidth            
+                    variant="contained"
+                    color="primary"
+                    className={classes.includeInMatchingButton}
+                    onClick={() => this.onExcludeIncludeButtonClicked(false)}>
+                               Include In Matching
+                    </Button>
+                  </Tooltip>
+                  : 
+                  <Tooltip title="Your profile will be excluded from find partner page. Other users won't be able to send you a partner request.">
+                    <Button  
+                     fullWidth            
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => this.onExcludeIncludeButtonClicked(true)}>
+                      Exclude From Matching
+                    </Button>
+                  </Tooltip>
+              }
+              <br /><br />
 
               <ExpansionPanel
                 defaultExpanded={false}>
