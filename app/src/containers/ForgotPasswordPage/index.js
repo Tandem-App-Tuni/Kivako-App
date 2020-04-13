@@ -12,7 +12,7 @@ import { Redirect } from "react-router-dom";
 import ConstantsList from "../../config_constants";
 import Grid from "@material-ui/core/Grid";
 
-import { AlertView } from "../../components/AlertView";
+import { AlertPopup } from "../../components/AlertView";
 
 /**
  * The activation page is based on a template available on: https://github.com/mui-org/material-ui/tree/master/docs/src/pages/getting-started/templates/sign-in
@@ -291,7 +291,7 @@ class ForgotPasswordPage extends React.Component {
 						{"."}
 					</Typography>
 				</Box>
-				<AlertView
+				<AlertPopup
 					open={this.state.showAlert}
 					variant={this.state.alertType}
 					message={this.state.alertText}

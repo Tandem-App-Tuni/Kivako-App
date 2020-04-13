@@ -13,7 +13,7 @@ import { Redirect } from 'react-router';
 import ConstantsList from '../../config_constants';
 import Grid from '@material-ui/core/Grid';
 
-import { AlertView } from '../../components/AlertView';
+import { AlertPopup } from '../../components/AlertView';
 
 
 /**
@@ -249,7 +249,7 @@ class LocalLoginPage extends Component {
             </Typography>
           </Box>
         </Container>
-        <AlertView
+        <AlertPopup
           open={this.state.showAlert}
           variant={this.state.alertType}
           message={this.state.alertText}

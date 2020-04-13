@@ -11,6 +11,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
 import WarningIcon from '@material-ui/icons/Warning';
 import { makeStyles } from '@material-ui/core/styles';
+import MuiAlert from '@material-ui/lab/Alert';
 
 const variantIcon = {
   success: CheckCircleIcon,
@@ -45,7 +46,7 @@ const useStyles1 = makeStyles(theme => ({
   },
 }));
 
-export function AlertView(props) {
+export function AlertPopup(props) {
   const classes = useStyles1();
   const { className, message, onClose, variant, ...other } = props;
   const Icon = variantIcon[variant];
@@ -79,9 +80,13 @@ export function AlertView(props) {
   );
 }
 
-AlertView.propTypes = {
+AlertPopup.propTypes = {
   className: PropTypes.string,
   message: PropTypes.string,
   onClose: PropTypes.func,
   variant: PropTypes.oneOf(['error', 'info', 'success', 'warning']).isRequired,
 };
+
+export const StaticAlert = (props) => {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
