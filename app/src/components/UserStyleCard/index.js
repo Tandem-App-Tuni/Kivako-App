@@ -82,6 +82,15 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
     button: {
       marginRight: "10px"
     },
+    email: {
+      fontSize: 14,
+      fontWeight: 'bold',
+      letterSpacing: '0.5px',
+      marginTop:'1rem',
+      marginBottom: 0,
+      marginRight: "1.5em",
+      display: 'block',
+    },
     descriptionText: {
       fontSize: 14,
       wordWrap: "break-word",
@@ -250,6 +259,8 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
               </Box>
               <Box mb={1}>
                 <h6 className={classes.heading}> { user.cities.join(', ') }  </h6>
+                
+                <h6 className={classes.email}> { user.email}  </h6>
               </Box>
               <p className={classes.descriptionText}>
               
