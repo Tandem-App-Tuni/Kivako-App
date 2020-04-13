@@ -46,7 +46,7 @@ const useStyles = theme => ({
     marginTop: theme.spacing(3),
   },
   submit: {
-    margin: theme.spacing(3, 0, 2),
+    margin: theme.spacing(1, 0, 2),
   },
   avatarUpload: {
     display: 'flex',
@@ -329,7 +329,7 @@ class ViewProfile extends Component {
         }}
         open={this.state.showAlert}
         autoHideDuration={6000}
-        onClose={() =>this.toogleAlert(false, null, null)}
+        onClose={() => {this.setState({showAlert: false})}}
         variant={this.state.alertType}
         message={this.state.alertText}
       />
