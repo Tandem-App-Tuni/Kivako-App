@@ -10,6 +10,9 @@ import Container from '@material-ui/core/Container';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardMedia from '@material-ui/core/CardMedia';
 
 import { Redirect } from 'react-router';
 import { History } from 'react-router';
@@ -95,8 +98,9 @@ class ViewProfile extends Component {
 
     constructor(props) {
       super(props);
+      let imgUrl = props.userEmail ? "/" + props.userEmail : "";
       this.state = {
-      profileImgURL: window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/api/v1/avatar/getAvatar',
+      profileImgURL: window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/api/v1/avatar/getAvatar' + imgUrl,
       languagesToTeach: [],
       languagesToLearn: [],
       firstName: '',
@@ -112,7 +116,9 @@ class ViewProfile extends Component {
 	  alertText: '',
       editingTeachLanguageIndex: 0,
       editingLearnLanguageIndex: 0,
-	  videoError: false,
+    videoError: false,
+    //This will be used to fetch the user info from backend
+    userEmail: props.userEmail,
 	  redirectURL: '',
       portOption: ConstantsList.PORT_IN_USE //set to 3000 for local testing
     };
@@ -122,8 +128,9 @@ class ViewProfile extends Component {
   preLoadUserInformations = () => 
   {
     console.log('[INFO]Loading user information...');
+    let queryParameter = this.state.userEmail ? "?userEmail=" + this.state.userEmail : "";
 
-    fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/users/userInfo", 
+    fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/users/userInfo" + queryParameter, 
     {
         method: 'GET',
         credentials: 'include',
@@ -181,81 +188,24 @@ class ViewProfile extends Component {
       console.error(error);
     });
   }
-
-  onExcludeIncludeButtonClicked = value => () => {
-    var clickedValue = eval(value);
-    if (window.confirm('Are you sure you want to exclude your profile from matching?')) {
-    fetch(
-			window.location.protocol + "//" + window.location.hostname + this.state.portOption +
-			"/api/v1/users/setMatchingVisibility",
-			{
-       	method: "POST",
-				headers: {
-					Accept: "application/json",
-					"Content-Type": "application/json"
-				},
-				body: JSON.stringify({
-          email:this.state.email,
-          flag:clickedValue,
-				})
-			}).then((response) => response.json())
-      .then((response) => { 
-        if(clickedValue===true)       
-          this.toggleAlert(true, 'success', 'profile excluded succesfully!');
-        else
-        this.toggleAlert(true, 'success', 'profile included succesfully!');       
-      })
-      
-      .catch((error) => {
-        console.error("error is "+error);
-      });
-    }
-  }
-
-  onShowInputTeachLanguage = (open, index, newValue) => 
-  {
-    if (open === true) {
-      this.setState({
-        editingTeachLanguageIndex: index
-      })
-    } else {
-      if (newValue != null) {
-        var arr = this.state.languagesToTeach
-        if (index < this.state.languagesToTeach.length) {
-          arr[index] = newValue
-        } else {
-          arr.push(newValue)
-        }
-        this.setState({
-          languagesToTeach: arr
-        })
-      }
-    }
-    this.setState({
-      showInputTeachLanguage: open
-    })
-  };
-
-
-  toggleAlert(open, type, text) {
-    //type is 'error', 'info', 'success', 'warning'
-    if (open === true) {
-      this.setState({
-        showAlert: open,
-        alertType: type,
-        alertText: text
-      })
-    }
-    else {
-      this.setState({
-        showAlert: open
-      })
-    }
-  }
     
   render() 
   {
     const { classes } = this.props;
+    const mediaCard =  this.state.profileVideoURL 
+                          ? <Grid item xs={12} >
+                              <Card>
+                              <CardHeader title="Profile video URL">
+                              </CardHeader>
+                              <CardMedia className={classes.cardMedia} component="iframe" src={this.state.profileVideoURL}></CardMedia>
+                              </Card>
+                            </Grid> 
+                          : <Typography variant='caption'>
+                              Video profile URL
+                                <Typography variant='body1'>
+                                  {this.state.profileVideoURL}
+                                </Typography>
+                            </Typography>
 
     return  (
       <div>
@@ -273,7 +223,7 @@ class ViewProfile extends Component {
           <Grid item xs={12}>
 	    <Typography variant='caption'>
 	      First name
-              <Typography variant='body1' gutterBotton={true}>
+              <Typography variant='body1'>
 	        {this.state.firstName}
               </Typography>
             </Typography>
@@ -282,7 +232,7 @@ class ViewProfile extends Component {
           <Grid item xs={12}>
 	    <Typography variant='caption'>
 	      Last name
-              <Typography variant='body1' gutterBotton={true}>
+              <Typography variant='body1'>
 	        {this.state.lastName}
               </Typography>
             </Typography>
@@ -291,26 +241,22 @@ class ViewProfile extends Component {
           <Grid item xs={12}>
 	    <Typography variant='caption'>
 	      Email address
-              <Typography variant='body1' gutterBotton={true}>
+              <Typography variant='body1'>
 	        {this.state.email}
               </Typography>
             </Typography>
           </Grid>
 
           <Grid item xs={12}>
-	    <Typography variant='caption'>
-	      Video profile URL
-              <Typography variant='body1' gutterBotton={true}>
-	        {this.state.profileVideoURL}
-              </Typography>
-            </Typography>
+	    
+            {mediaCard}
           </Grid>
 
           <Grid item xs={12}>
 	    <Typography variant='caption'>
 	      Municipalities
-              <Typography variant='body1' gutterBotton={true}>
-	        {this.state.cities}
+              <Typography variant='body1'>
+	        {this.state.cities.join(', ')}
               </Typography>
             </Typography>
           </Grid>
@@ -318,7 +264,7 @@ class ViewProfile extends Component {
           <Grid item xs={12}>
 	    <Typography variant='caption'>
 	      Short introduction about you
-              <Typography variant='body1' gutterBotton>
+              <Typography variant='body1'>
 	        {this.state.descriptionText}
               </Typography>
             </Typography>
@@ -357,8 +303,7 @@ class ViewProfile extends Component {
                 </Grid>
             
               </Grid>
-
-            <Button
+            { !this.state.userEmail ? <Button
 	      //type="submit"
               fullWidth
                   variant="contained"
@@ -367,7 +312,10 @@ class ViewProfile extends Component {
                   onClick={event => window.location.href='/edit-profile'}
                   >
                   Edit profile
-                </Button>              
+                </Button> : <div/>}
+            
+
+              
             </form>
 
           </div>
