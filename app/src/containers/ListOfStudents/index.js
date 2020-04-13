@@ -54,14 +54,21 @@ class ListOfStudents extends Component
       label: 'Last Access',
       minWidth: 170,
       align: 'center',
-      format: value => value.toLocaleString('fi-FI', { timeZone: 'UTC' })
+      format: value =>  {
+        let time = new Date(value);
+        return +time.getDate()+ '.' +(time.getMonth()+1)+'.' +time.getFullYear()+' '+time.getHours()+'.'+time.getMinutes();
+        //11-4-2020 10.03
+      }
+      
     },
+    
     {
       id: 'userIsActivie',
       label: 'Active',
       minWidth: 170,
       align: 'center',
       format: value => value.toString()
+
     },
     {
       id: 'removeUserButton',
@@ -80,6 +87,8 @@ class ListOfStudents extends Component
       page: 0,
       rowsPerPage: 10,
       rows: [],
+      data: [],
+      searchValue: "",
       message: '',
       socket:props.socket
     };
@@ -115,7 +124,7 @@ class ListOfStudents extends Component
     .then((response) => response.json())
     .then((responseJson) => 
     {
-      this.setState({rows: responseJson.data, isLoadingTable:false});
+      this.setState({data: responseJson.data, rows: responseJson.data, isLoadingTable:false});
     })
     .catch((error) => {
       console.error(error);
@@ -149,6 +158,23 @@ class ListOfStudents extends Component
       });
     else console.log('Not removed!');
   }
+  handleSearchChange = (event) => {
+    console.log(event.target.value)
+    this.setState({searchValue: event.target.value})
+    let searchValue = event.target.value.toLowerCase();
+    if (event.target.value.length >= 2){
+      let searchResult = this.state.data.filter(item => {
+        return item.lastName.toLowerCase().includes( searchValue)
+        ||item.firstName.toLowerCase().includes( searchValue)
+        ||item.email.toLowerCase().includes( searchValue);
+
+      })
+      this.setState({rows:searchResult})
+    } 
+    if (searchValue.length == 0){
+      this.setState({rows:this.state.data})
+    }
+  }
 
   render()
   {
@@ -160,6 +186,7 @@ class ListOfStudents extends Component
 
     return (
       <Paper className={classes.tableRoot}>
+        
         <Grid 
           container 
           direction='row'
@@ -190,6 +217,15 @@ class ListOfStudents extends Component
             </Button>
           </Grid>
         </Grid>
+        <TextField 
+        variant='outlined'
+        margin='normal'
+        fullWidth
+        id='search'
+        label='Search for students by name or email'
+        name='search'
+        onChange = {this.handleSearchChange} value={this.state.searchValue}
+        />
           <Table stickyHeader aria-label="sticky table" className={classes.tableWrapper}>
             <TableHead>
               <TableRow>
@@ -204,7 +240,7 @@ class ListOfStudents extends Component
               </TableRow>
             </TableHead>
             <TableBody>
-              {this.state.rows.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((row, index) => {
+              {this.state.rows.length ? this.state.rows.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((row, index) => {
                 return (
                   <TableRow hover role="checkbox" tabIndex={-1} key={index}>
                     {this.columns.map(column => {
@@ -212,7 +248,7 @@ class ListOfStudents extends Component
                       return (
                         <TableCell key={column.id} align={column.align}>
                           <div>
-                            {column.format && typeof value === ('number' || 'bool') ? column.format(value) : value}
+                            {column.format ? column.format(value) : value}
                             {column.id === 'removeUserButton' ? 
                               <Button
                                 fullWidth
@@ -228,7 +264,7 @@ class ListOfStudents extends Component
                     })}
                   </TableRow>
                 );
-              })}
+              }): null}
             </TableBody>
           </Table>
           <TablePagination

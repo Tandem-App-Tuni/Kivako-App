@@ -118,8 +118,10 @@ class ListOfMatches extends React.Component
       })
       this.setState({rows:searchResult})
     } 
+    if (searchValue.length == 0){
+      this.setState({rows:this.state.data})
+    }
   }
-
   render()
   {    
     console.log('[ListOfMatches] Render');
@@ -133,7 +135,13 @@ class ListOfMatches extends React.Component
       
       <Paper className={classes.tableRoot}>
         
-        <TextField onChange = {this.handleSearchChange} value={this.state.searchValue}
+        <TextField 
+        variant='outlined'
+        margin='normal'
+        fullWidth
+        id='search'
+        label='Search matches by name or email'     
+        onChange = {this.handleSearchChange} value={this.state.searchValue}
         />
         <Table stickyHeader aria-label="sticky table" className={classes.tableWrapper}>
           <TableHead>
@@ -175,7 +183,8 @@ class ListOfMatches extends React.Component
                   <TableCell key='s1'><div>{row.requesterUser.email}</div></TableCell>
                   <TableCell key='s2'><div>{row.recipientUser.firstName + ' ' + row.recipientUser.lastName}</div></TableCell>
                   <TableCell key='s3'><div>{row.recipientUser.email}</div></TableCell>
-                  <TableCell key='s4'><div>{languageArray.map((e, i) => e.language + (i === (languageArray.length - 1) ? '' : ', ')) +', '+ languageArray2.map((e, i) => e.language + (i === (languageArray2.length - 1) ? '' : ', '))}</div></TableCell>
+                  <TableCell key='s4'><div>{languageArray.map((e, i) => e.language + (i === (languageArray.length - 1) ? '' : ', '))}</div>
+                  <div> {languageArray2.map((e, i) => e.language + (i === (languageArray2.length - 1) ? '' : ', '))}</div></TableCell>
                   
                 </TableRow>
               );
