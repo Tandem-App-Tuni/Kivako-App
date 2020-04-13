@@ -213,7 +213,7 @@ class ViewProfile extends Component {
           <CssBaseline />
   
           <div className={classes.paper}>
-            {this.state.profileImgWarning ?
+            {( this.state.profileImgWarning && !this.state.userEmail)  ?
   	          <StaticAlert severity="error">You don't have a valid profile image, please upload a profile image!</StaticAlert>
               : null
             }
