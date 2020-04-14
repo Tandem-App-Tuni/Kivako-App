@@ -53,16 +53,20 @@ class ListOfAdmins extends React.Component
       minWidth: 170,
       align: 'center',
       format: value =>  {
-        let time = new Date(value);
-        return +time.getDate()+ '.' +(time.getMonth()+1)+'.' +time.getFullYear()+' '+time.getHours()+'.'+time.getMinutes();
+        if (value){
+          let time = new Date(value);
+          return +time.getDate()+ '.' +(time.getMonth()+1)+'.' +time.getFullYear()+' '+time.getHours()+'.'+time.getMinutes();
+        }
+        
         }
     },
     {
-      id: 'userIsActivie',
+      id: 'isActive',
       label: 'Active',
       minWidth: 170,
       align: 'center',
       format: value => value.toString()
+            
     }]
 
   constructor(props) 
