@@ -260,7 +260,7 @@ class PartnerListPage extends Component
             fullWidth={true}
             >
               {/* TODO: update it ASAP when getting a correct link from customer */}           
-              <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSetaB2hGzv_BAKsEshVhraQrh_cfLzshafKnpJFYrO5H4zw_Q/viewform?embedded=true" 
+              <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSeNpw2ZAAa0gmvlpw1B5KJv2SSr41bNTz9uXAB-eqKD4TvcXA/viewform?embedded=true" 
               width="100%" height="1491" >Loading…</iframe>
         </Dialog>
       </div>
