@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {withStyles} from '@material-ui/core/styles';
+import React, { Component } from 'react';
+import { withStyles } from '@material-ui/core/styles';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -12,6 +12,7 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 
+import { AlertView } from '../../components/AlertView';
 import Constants from '../../config_constants';
 
 const useStyles = theme => ({
@@ -42,9 +43,8 @@ const useStyles = theme => ({
 
 });
 
-class ListOfStudents extends Component 
-{
-  _isTableMounted=false;
+class ListOfStudents extends Component {
+  _isTableMounted = false;
   columns = [
     { id: 'firstName', label: 'First Name', minWidth: 100 },
     { id: 'lastName', label: 'Last  Name', minWidth: 100 },
@@ -78,84 +78,99 @@ class ListOfStudents extends Component
     }
   ]
 
-  
-  constructor(props) 
-  {
+
+  constructor(props) {
     super(props);
     this.state = {
-      isLoadingTable:true,
+      isLoadingTable: true,
       page: 0,
       rowsPerPage: 10,
       rows: [],
       data: [],
       searchValue: "",
       message: '',
-      socket:props.socket
+      socket: props.socket,
+      showAlert: false,
+      alertType: "success",
+      alertText: ""
     };
 
-    console.log('[ListOfStudents] Constructor');
+    this.toggleAlert = this.toggleAlert.bind(this);
   }
 
-  handleChangePage = (event, page) =>  
-  {
-    this.setState({page: page});
+  handleChangePage = (event, page) => {
+    this.setState({ page: page });
   };
 
-  handleChangeRowsPerPage = event => 
-  {
-    this.setState({rowsPerPage:event.target.value, page:0});
-  };
-  
-  handleChangeMessage = (e) =>
-  {
-    this.setState({message: e.target.value});
+  handleChangeRowsPerPage = event => {
+    this.setState({ rowsPerPage: event.target.value, page: 0 });
   };
 
-  componentDidMount() 
-  {
-    console.log('[ListOfStudents] Mounting',window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/admin/studentUsers');
+  handleChangeMessage = (e) => {
+    this.setState({ message: e.target.value });
+  };
 
-    fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/admin/studentUsers', 
-    {
-      method: 'GET',
-      credentials: 'include',
-      cors:'no-cors'
-    })
-    .then((response) => response.json())
-    .then((responseJson) => 
-    {
-      this.setState({data: responseJson.data, rows: responseJson.data, isLoadingTable:false});
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+  componentDidMount() {
+    console.log('[ListOfStudents] Mounting', window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/admin/studentUsers');
+    this.fetchUserList();
   }
 
-  onSendMessage = () =>
-  {
-    console.log('[ListOfMatches] Message sent to students!');
-    this.state.socket.emit('adminGlobal', {message: this.state.message});
-  }
-
-  onRemoveClick(data)
-  {
-    console.log('Remove user:',data.email);
-
-    if (window.confirm('Are you sure you want to delete the user?'))
-      fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/users/deleteAdmin/' + data.email,
+  fetchUserList() {
+    fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/admin/studentUsers',
       {
         method: 'GET',
         credentials: 'include',
-        cors:'no-cors'
+        cors: 'no-cors'
       })
-      .then((response) => 
-      {
-        if (response.status === 200) window.location.reload();
-        else alert('Something went wrong.');
+      .then((response) => response.json())
+      .then((responseJson) => {
+        this.setState({data: responseJson.data, rows: responseJson.data, isLoadingTable: false });
       })
       .catch((error) => {
         console.error(error);
       });
+  }
+
+  onSendMessage = () => {
+    console.log('[ListOfMatches] Message sent to students!');
+    this.state.socket.emit('adminGlobal', { message: this.state.message });
+  }
+
+  toggleAlert(open, type, text) {
+    //type is 'error', 'info', 'success', 'warning'
+    if (open === true) {
+      this.setState({
+        showAlert: open,
+        alertType: type,
+        alertText: text
+      })
+    }
+    else {
+      this.setState({
+        showAlert: open
+      })
+    }
+  }
+
+  onRemoveClick(data) {
+    console.log('Remove user:', data.email);
+
+    if (window.confirm('Are you sure you want to delete the user?'))
+      fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/users/deleteAdmin/' + data.email,
+        {
+          method: 'GET',
+          credentials: 'include',
+          cors: 'no-cors'
+        })
+        .then((response) => {
+          if (response.status === 200) 
+            this.fetchUserList();
+          else
+            this.toggleAlert(true, "error", "Something went wrong");
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     else console.log('Not removed!');
   }
   handleSearchChange = (event) => {
@@ -176,13 +191,12 @@ class ListOfStudents extends Component
     }
   }
 
-  render()
-  {
+  render() {
     console.log('[ListOfStudents] Render');
 
     const { classes } = this.props;
 
-    if(this.state.isLoadingTable) return null;
+    if (this.state.isLoadingTable) return null;
 
     return (
       <Paper className={classes.tableRoot}>
@@ -194,16 +208,16 @@ class ListOfStudents extends Component
           alignItems='center'>
           <Grid item xs={9}>
             <TextField
-                variant='outlined'
-                margin='normal'
-                required
-                fullWidth
-                id='message'
-                label='Message for students'
-                name='message'
-                autoComplete='message'
-                onChange={(e)=>{this.handleChangeMessage(e)}}
-                autoFocus/>
+              variant='outlined'
+              margin='normal'
+              required
+              fullWidth
+              id='message'
+              label='Message for students'
+              name='message'
+              autoComplete='message'
+              onChange={(e) => { this.handleChangeMessage(e) }}
+              autoFocus />
           </Grid>
           <Grid item xs={3}>
             <Button
@@ -275,6 +289,11 @@ class ListOfStudents extends Component
             page={this.state.page}
             onChangePage={this.handleChangePage}
             onChangeRowsPerPage={this.handleChangeRowsPerPage}/>
+             <AlertView
+          open={this.state.showAlert}
+          variant={this.state.alertType}
+          message={this.state.alertText}
+          onClose={()=>{this.setState({showAlert: false})}}/>
       </Paper>
     );
   }

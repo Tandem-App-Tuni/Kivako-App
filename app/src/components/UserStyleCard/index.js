@@ -281,7 +281,7 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
             maxWidth={'md'}
             fullWidth={true}
             >
-              <ProfilePage></ProfilePage>
+              <ProfilePage userEmail={user.email}></ProfilePage>
             </Dialog>
         </div>
         );
