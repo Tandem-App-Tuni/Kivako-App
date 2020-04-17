@@ -52,14 +52,23 @@ class ListOfAdmins extends React.Component
       label: 'Last Access',
       minWidth: 170,
       align: 'center',
-      format: value => value.toLocaleString('fi-FI', { timeZone: 'UTC' })
+      format: value =>  {
+        if (value){
+          let time = new Date(value);
+          return +time.getDate()+ '.' +(time.getMonth()+1)+'.' +time.getFullYear()+' '+time.getHours()+'.'+time.getMinutes();
+        }
+        
+        }
     },
     {
-      id: 'userIsActivie',
+      id: 'isActive',
       label: 'Active',
       minWidth: 170,
       align: 'center',
-      format: value => value.toString()
+      format: value => {
+        if(value) value.toString()
+      } 
+            
     }]
 
   constructor(props) 
@@ -139,9 +148,10 @@ class ListOfAdmins extends React.Component
                   {this.columns.map(column => 
                   {
                     const value = row[column.id];
+                    
                     return (
-                      <TableCell key={column.id} align={column.align}>
-                        <div>{value}</div>
+                      <TableCell key={column.id} align={column.align}>    
+                        <div>{column.format ? column.format(value) : value}</div>
                       </TableCell>
                     );
                   })}

@@ -1,12 +1,13 @@
 import React from 'react';
 import {withStyles} from '@material-ui/core/styles';
-
+import MaterialTable from "material-table";
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
+import TextField from '@material-ui/core/TextField';
 
 import Paper from '@material-ui/core/Paper';
 import Constants from '../../config_constants';
@@ -43,9 +44,12 @@ class ListOfMatches extends React.Component
   _isTableMounted=false;
 
   columns = [
-    { id: 's0', label: 'Request sender', minWidth: 100 },
-    { id: 's1', label: 'Recipient', minWidth: 100 },
-    { id: 's2', label: 'Match languages', minWidth: 100 }]
+    { id: 's0', label: 'Partner 1', minWidth: 100 },
+    { id: 's1', label: 'Partner 1 email', minWidth: 100 },
+    { id: 's2', label: 'Partner 2', minWidth: 100 },
+    { id: 's3', label: 'Partner 2 email', minWidth: 100 },
+    { id: 's4', label: 'Match languages', minWidth: 100 },
+    ]
 
   constructor(props) 
   {
@@ -54,9 +58,15 @@ class ListOfMatches extends React.Component
     this.state = {
       isLoadingTable:true,
       page: 0,
-      rowsPerPage: 10,
+      setPage: 0,
+      rowsPerPage: 30,
+      setRowsPerPage : 10,
       rows: [],
-    };
+      data: [],
+      searchValue: "",
+      
+      };
+
 
     console.log('[ListOfMatches] Constructor');
   }
@@ -70,7 +80,7 @@ class ListOfMatches extends React.Component
   {
     this.setState({rowsPerPage:event.target.value, page:0});
   };
-
+    
   componentDidMount() 
   {
     this._isTableMounted = true;
@@ -86,15 +96,33 @@ class ListOfMatches extends React.Component
     .then((response) => response.json())
     .then((responseJson) => 
     {
-      if(this._isTableMounted) this.setState({rows: responseJson.data, isLoadingTable:false});
+    
+      if(this._isTableMounted) this.setState({data: responseJson.data, rows: responseJson.data, isLoadingTable:false});
+           
     })
     .catch((error) => {
       console.error(error);
     });
+   
   }
+  handleSearchChange = (event) => {
+    this.setState({searchValue: event.target.value})
+    let searchValue = event.target.value.toLowerCase();
+    if (event.target.value.length >= 2){
+      let searchResult = this.state.data.filter(item => {
+        return item.requesterUser.lastName.toLowerCase().includes( searchValue) || item.recipientUser.lastName.toLowerCase().includes( searchValue) 
+        ||item.requesterUser.firstName.toLowerCase().includes( searchValue) || item.recipientUser.firstName.toLowerCase().includes( searchValue)
+        ||item.requesterUser.email.toLowerCase().includes( searchValue) || item.recipientUser.email.toLowerCase().includes( searchValue);
 
+      })
+      this.setState({rows:searchResult})
+    } 
+    if (searchValue.length == 0){
+      this.setState({rows:this.state.data})
+    }
+  }
   render()
-  {
+  {    
     console.log('[ListOfMatches] Render');
 
     if(this.state.isLoadingTable) return null;
@@ -102,7 +130,18 @@ class ListOfMatches extends React.Component
     const { classes } = this.props;
 
     return (
+
+      
       <Paper className={classes.tableRoot}>
+        
+        <TextField 
+        variant='outlined'
+        margin='normal'
+        fullWidth
+        id='search'
+        label='Search matches by name or email'     
+        onChange = {this.handleSearchChange} value={this.state.searchValue}
+        />
         <Table stickyHeader aria-label="sticky table" className={classes.tableWrapper}>
           <TableHead>
             <TableRow>
@@ -116,10 +155,13 @@ class ListOfMatches extends React.Component
               ))}
             </TableRow>
           </TableHead>
-          <TableBody>
-            {this.state.rows.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((row, index) => 
-            {
-              
+          <TableBody>        
+         
+
+            {this.state.rows.length ? this.state.rows.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((row, index) => 
+            {  
+              console.log(row, index);  
+                        
               const languageArray = row.requesterUser.languagesToLearn.filter(e => 
                 {
                   for (let i = 0; i < row.recipientUser.languagesToTeach.length; i++)
@@ -127,14 +169,26 @@ class ListOfMatches extends React.Component
                   return false;
                 });
 
+                const languageArray2 = row.requesterUser.languagesToTeach.filter(e => 
+                  {
+                    for (let i = 0; i < row.recipientUser.languagesToLearn.length; i++)
+                      if (e.language === row.recipientUser.languagesToLearn[i].language) return true;
+                    return false;
+                  });
+
               return (
                 <TableRow hover role="checkbox" tabIndex={-1} key={index}>
                   <TableCell key='s0'><div>{row.requesterUser.firstName + ' ' + row.requesterUser.lastName}</div></TableCell>
-                  <TableCell key='s1'><div>{row.recipientUser.firstName + ' ' + row.recipientUser.lastName}</div></TableCell>
-                  <TableCell key='s2'><div>{languageArray.map((e, i) => e.language + (i === (languageArray.length - 1) ? '' : ', '))}</div></TableCell>
+                  <TableCell key='s1'><div>{row.requesterUser.email}</div></TableCell>
+                  <TableCell key='s2'><div>{row.recipientUser.firstName + ' ' + row.recipientUser.lastName}</div></TableCell>
+                  <TableCell key='s3'><div>{row.recipientUser.email}</div></TableCell>
+                  <TableCell key='s4'><div>{languageArray.map((e, i) => e.language + (i === (languageArray.length - 1) ? '' : ', '))}</div>
+                  <div> {languageArray2.map((e, i) => e.language + (i === (languageArray2.length - 1) ? '' : ', '))}</div></TableCell>
+                  
                 </TableRow>
               );
-            })}
+            }): null}
+
           </TableBody>
         </Table>
         <TablePagination
@@ -145,9 +199,10 @@ class ListOfMatches extends React.Component
           page={this.state.page}
           onChangePage={this.handleChangePage}
           onChangeRowsPerPage={this.handleChangeRowsPerPage}/>
-      </Paper>
-    );
+      </Paper> 
+          );
   }
 
 }
+
 export default withStyles(useStyles)(ListOfMatches);

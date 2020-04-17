@@ -54,14 +54,23 @@ class ListOfStudents extends Component {
       label: 'Last Access',
       minWidth: 170,
       align: 'center',
-      format: value => value.toLocaleString('fi-FI', { timeZone: 'UTC' })
+      format: value =>  {
+        if(value) {
+          let time = new Date(value);
+          return +time.getDate()+ '.' +(time.getMonth()+1)+'.' +time.getFullYear()+' '+time.getHours()+'.'+time.getMinutes();
+        }
+      }
     },
+    
     {
       id: 'userIsActivie',
       label: 'Active',
       minWidth: 170,
       align: 'center',
-      format: value => value.toString()
+      format: value => {
+        if(value) value.toString()
+      } 
+
     },
     {
       id: 'removeUserButton',
@@ -79,6 +88,8 @@ class ListOfStudents extends Component {
       page: 0,
       rowsPerPage: 10,
       rows: [],
+      data: [],
+      searchValue: "",
       message: '',
       socket: props.socket,
       showConfirm: false,
@@ -116,7 +127,7 @@ class ListOfStudents extends Component {
       })
       .then((response) => response.json())
       .then((responseJson) => {
-        this.setState({ rows: responseJson.data, isLoadingTable: false });
+        this.setState({data: responseJson.data, rows: responseJson.data, isLoadingTable: false });
       })
       .catch((error) => {
         console.error(error);
@@ -161,6 +172,22 @@ class ListOfStudents extends Component {
         });
     this.setState({showConfirm: false, deleteData: {}})
   }
+  handleSearchChange = (event) => {
+    this.setState({searchValue: event.target.value})
+    let searchValue = event.target.value.toLowerCase();
+    if (event.target.value.length >= 2){
+      let searchResult = this.state.data.filter(item => {
+        return item.lastName.toLowerCase().includes( searchValue)
+        ||item.firstName.toLowerCase().includes( searchValue)
+        ||item.email.toLowerCase().includes( searchValue);
+
+      })
+      this.setState({rows:searchResult})
+    } 
+    if (searchValue.length == 0){
+      this.setState({rows:this.state.data})
+    }
+  }
 
   render() {
     const { classes } = this.props;
@@ -169,8 +196,9 @@ class ListOfStudents extends Component {
 
     return (
       <Paper className={classes.tableRoot}>
-        <Grid
-          container
+        
+        <Grid 
+          container 
           direction='row'
           justify='center'
           alignItems='center'>
@@ -199,55 +227,64 @@ class ListOfStudents extends Component {
             </Button>
           </Grid>
         </Grid>
-        <Table stickyHeader aria-label="sticky table" className={classes.tableWrapper}>
-          <TableHead>
-            <TableRow>
-              {this.columns.map(column => (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{ minWidth: column.minWidth }}>
-                  {column.label}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {this.state.rows.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((row, index) => {
-              return (
-                <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                  {this.columns.map(column => {
-                    const value = row[column.id];
-                    return (
-                      <TableCell key={column.id} align={column.align}>
-                        <div>
-                          {column.format && typeof value === ('number' || 'bool') ? column.format(value) : value}
-                          {column.id === 'removeUserButton' ?
-                            <Button
-                              fullWidth
-                              variant='contained'
-                              color='primary'
-                              className={classes.chip}
-                              onClick={() => {this.setState({showConfirm: true, deleteData: row})}}>
-                              Remove
-                              </Button> : <div />}
-                        </div>
-                      </TableCell>
-                    );
-                  })}
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-        <TablePagination
-          rowsPerPageOptions={[10, 25, 100]}
-          component="div"
-          count={this.state.rows.length}
-          rowsPerPage={this.state.rowsPerPage}
-          page={this.state.page}
-          onChangePage={this.handleChangePage}
-          onChangeRowsPerPage={this.handleChangeRowsPerPage} />
+        <TextField 
+        variant='outlined'
+        margin='normal'
+        fullWidth
+        id='search'
+        label='Search for students by name or email'
+        name='search'
+        onChange = {this.handleSearchChange} value={this.state.searchValue}
+        />
+          <Table stickyHeader aria-label="sticky table" className={classes.tableWrapper}>
+            <TableHead>
+              <TableRow>
+                {this.columns.map(column => (
+                  <TableCell
+                    key={column.id}
+                    align={column.align}
+                    style={{ minWidth: column.minWidth }}>
+                    {column.label}
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {this.state.rows.length ? this.state.rows.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((row, index) => {
+                return (
+                  <TableRow hover role="checkbox" tabIndex={-1} key={index}>
+                    {this.columns.map(column => {
+                      const value = row[column.id];
+                      return (
+                        <TableCell key={column.id} align={column.align}>
+                          <div>
+                            {column.format ? column.format(value) : value}
+                            {column.id === 'removeUserButton' ? 
+                              <Button
+                                fullWidth
+                                variant='contained'
+                                color='primary'
+                                className={classes.chip}
+                                onClick={() => this.onRemoveClick(row)}>
+                                Remove
+                              </Button> : <div/>}
+                          </div>
+                        </TableCell>
+                      );
+                    })}
+                  </TableRow>
+                );
+              }): null}
+            </TableBody>
+          </Table>
+          <TablePagination
+            rowsPerPageOptions={[10, 25, 100]}
+            component="div"
+            count={this.state.rows.length}
+            rowsPerPage={this.state.rowsPerPage}
+            page={this.state.page}
+            onChangePage={this.handleChangePage}
+            onChangeRowsPerPage={this.handleChangeRowsPerPage}/>
         <AlertPopup
           open={this.state.showAlert}
           variant={this.state.alertType}
