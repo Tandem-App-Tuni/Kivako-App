@@ -58,7 +58,6 @@ class ListOfStudents extends Component {
         if(value) {
           let time = new Date(value);
           return +time.getDate()+ '.' +(time.getMonth()+1)+'.' +time.getFullYear()+' '+time.getHours()+'.'+time.getMinutes();
-          //11-4-2020 10.03
         }
       }
     },
@@ -174,7 +173,6 @@ class ListOfStudents extends Component {
     this.setState({showConfirm: false, deleteData: {}})
   }
   handleSearchChange = (event) => {
-    console.log(event.target.value)
     this.setState({searchValue: event.target.value})
     let searchValue = event.target.value.toLowerCase();
     if (event.target.value.length >= 2){

@@ -106,7 +106,6 @@ class ListOfMatches extends React.Component
    
   }
   handleSearchChange = (event) => {
-    console.log(event.target.value)
     this.setState({searchValue: event.target.value})
     let searchValue = event.target.value.toLowerCase();
     if (event.target.value.length >= 2){
