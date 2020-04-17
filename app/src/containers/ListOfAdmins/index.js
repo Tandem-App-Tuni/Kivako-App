@@ -65,7 +65,9 @@ class ListOfAdmins extends React.Component
       label: 'Active',
       minWidth: 170,
       align: 'center',
-      format: value => value.toString()
+      format: value => {
+        if(value) value.toString()
+      } 
             
     }]
 

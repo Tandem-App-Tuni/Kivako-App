@@ -55,11 +55,12 @@ class ListOfStudents extends Component {
       minWidth: 170,
       align: 'center',
       format: value =>  {
-        let time = new Date(value);
-        return +time.getDate()+ '.' +(time.getMonth()+1)+'.' +time.getFullYear()+' '+time.getHours()+'.'+time.getMinutes();
-        //11-4-2020 10.03
+        if(value) {
+          let time = new Date(value);
+          return +time.getDate()+ '.' +(time.getMonth()+1)+'.' +time.getFullYear()+' '+time.getHours()+'.'+time.getMinutes();
+          //11-4-2020 10.03
+        }
       }
-      
     },
     
     {
@@ -67,7 +68,9 @@ class ListOfStudents extends Component {
       label: 'Active',
       minWidth: 170,
       align: 'center',
-      format: value => value.toString()
+      format: value => {
+        if(value) value.toString()
+      } 
 
     },
     {
