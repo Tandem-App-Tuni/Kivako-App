@@ -12,6 +12,13 @@ import SnackbarContent from '@material-ui/core/SnackbarContent';
 import WarningIcon from '@material-ui/icons/Warning';
 import { makeStyles } from '@material-ui/core/styles';
 import MuiAlert from '@material-ui/lab/Alert';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Button from '@material-ui/core/Button';
+
 
 const variantIcon = {
   success: CheckCircleIcon,
@@ -53,30 +60,18 @@ export function AlertPopup(props) {
 
   return (
     <Snackbar
-    anchorOrigin={{
-      vertical: 'top',
-      horizontal: 'right',
-    }}
-    open={props.open}
-    autoHideDuration={4000}
-    onClose={props.onClose}
-  >
-    <SnackbarContent
-      className={clsx(classes[variant], className)} autohideduration={4000} 
-      aria-describedby="client-snackbar"
-      message={
-        <span id="client-snackbar" className={classes.message}>
-          <Icon className={clsx(classes.icon, classes.iconVariant)}/>
-          {message}
-        </span>
-      }
-      action={[
-        <IconButton key="close" aria-label="close" color="inherit" onClick={onClose}>
-          <CloseIcon className={classes.icon} />
-        </IconButton>,
-      ]}
-      {...other}
-    /></Snackbar>
+      anchorOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+      open={props.open}
+      autoHideDuration={4000}
+      onClose={props.onClose}
+    >
+      <StaticAlert onClose={props.onClose} severity={props.variant}>
+        {message}
+      </StaticAlert>
+    </Snackbar>
   );
 }
 
@@ -89,4 +84,33 @@ AlertPopup.propTypes = {
 
 export const StaticAlert = (props) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
+export const ConfirmDialog = ({title, content, open, onClose, onConfirm}) => {
+  return (
+    <Dialog
+    open={open}
+    onClose={onClose}
+    aria-labelledby="alert-dialog-title"
+    aria-describedby="alert-dialog-description"
+  >
+    <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
+    {content ? 
+      <DialogContent>
+        <DialogContentText id="alert-dialog-description">
+          {content}
+        </DialogContentText>
+      </DialogContent>
+      : null
+    }
+    <DialogActions>
+      <Button onClick={onConfirm} color="primary" autoFocus>
+        Yes
+      </Button>
+      <Button onClick={onClose} close="primary">
+        No
+      </Button>
+    </DialogActions>
+  </Dialog>
+  )
 }

@@ -27,7 +27,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 //Components
 import { CityPicker } from '../../components/CityPicker';
 import LanguagePicker from '../../components/LanguagePicker'
-import { AlertPopup } from '../../components/AlertView';
+import { AlertPopup, ConfirmDialog } from '../../components/AlertView';
 
 import ConstantsList from '../../config_constants';
 
@@ -118,6 +118,7 @@ class EditProfilePage extends Component {
       profileVideoURL: '',
       showInputTeachLanguage: false,
       showInputLearnLanguage: false,
+      showConfirm: false,
       showAlert: false,
       alertType: "success",
       alertText: '',
@@ -194,68 +195,43 @@ class EditProfilePage extends Component {
       });
   }
 
-  onDeleteButtonClicked = () => {
-    if (window.confirm('Are you sure you want to delete your profile?')) {
-      fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/users/delete',
+  onDeleteProfile = () => {
+    fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/users/delete',
+      {
+        method: 'DELETE',
+        headers:
         {
-          method: 'POST',
-          headers:
-          {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include',
-          cors: 'no-cors',
-          body: JSON.stringify({
-            languagesToTeach: this.state.languagesToTeach,
-            languagesToLearn: this.state.languagesToLearn,
-            firstName: this.state.firstName,
-            lastName: this.state.lastName,
-            email: this.state.email,
-            cities: this.state.cities,
-            descriptionText: this.state.descriptionText,
-            userIsActivie: true,
-            profileVideoURL: this.state.profileVideoURL
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include'
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          this.setState({
+            showAlert: true,
+            showConfirm: false,
+            alertText: "You can always create a new account by signing in again. Goodbye!",
+            alertType: "info"
           })
+        }
+        else
+          this.setState({
+            showAlert: true,
+            showConfirm: false,
+            alertText: "Something went wrong. Please try again later.",
+            alertType: "error"
+          })
+      })
+      .catch(err => {
+        console.log(err)
+        this.setState({
+          showAlert: true,
+          showConfirm: false,
+          alertText: "Something went wrong. Please try again later.",
+          alertType: "error"
         })
-        .then((response) => response.json())
-        .then((responseJson) => {
-          if (responseJson.update)
-            this.toggleAlert(true, 'success', 'User informations updated succesfully!');
-          else
-            this.toggleAlert(true, 'error', 'Update failed. Please try again later');
-        })
-        .catch((error) => {
-          console.error(error);
-          this.toggleAlert(true, 'error', 'Update failed. Please try again later');
-        });
-    }
-  }
-
-  onDeleteButtonClicked = () => {
-    if (window.confirm('Are you sure you want to delete your profile?')) {
-      fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/users/delete',
-        {
-          method: 'DELETE',
-          headers:
-          {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include'
-        })
-        .then((response) => {
-          if (response.status === 200) {
-            this.toggleAlert(true, "info", "You can always create a new account by signing in again. Goodbye!")
-          }
-          else
-            this.toggleAlert(true, "error", 'Something went wrong. Try again later.');
-        })
-        .catch(err => {
-          console.log(err)
-          this.toggleAlert(true, "error", 'Something went wrong. Try again later.');
-        });
-    }
+      });
   }
 
   handleChangeTeach = event => {
@@ -787,7 +763,7 @@ class EditProfilePage extends Component {
                     variant='contained'
                     color='primary'
                     className={classes.submit}
-                    onClick={this.onDeleteButtonClicked}>
+                    onClick={()=>{this.setState({showConfirm: true})}}>
                     Delete profile
                     </Button>
                 </ExpansionPanelDetails>
@@ -805,6 +781,11 @@ class EditProfilePage extends Component {
           variant={this.state.alertType}
           message={this.state.alertText}
         />
+        <ConfirmDialog
+          open={this.state.showConfirm}
+          onClose={()=>{this.setState({showConfirm: false})}}
+          title="Are you sure you want to delete your profile ?"
+          onConfirm={this.onDeleteProfile}/>
       </div>
     );
   }

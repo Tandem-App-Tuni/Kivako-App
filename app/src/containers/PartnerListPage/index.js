@@ -11,7 +11,7 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { AlertView } from '../../components/AlertView';
+import { ConfirmDialog } from '../../components/AlertView';
 import Dialog from '@material-ui/core/Dialog';
 
 
@@ -84,7 +84,9 @@ class PartnerListPage extends Component
     this.state = 
     {
       partnerList: [],
-      isReportFormOpen: false
+      isReportFormOpen: false,
+      showConfirm: false,
+      unmatchId: ""
     };
     this.onUnmatchUser = this.onUnmatchUser.bind(this);
     this.onReportPartner = this.onReportPartner.bind(this);
@@ -172,7 +174,7 @@ class PartnerListPage extends Component
                 {      
                   return(<GridListTile key={_id} rows={2}>
                             <UserStyleCard  user={partner} page="partner-list"
-                            yesText="Unmatch" yesFunction={this.onUnmatchUser} matchId={partner.matchId}
+                            yesText="Unmatch" yesFunction={()=>{this.setState({showConfirm: true, unmatchId: partner.matchId})}} matchId={partner.matchId}
                             noText="Report" noFunction={this.onReportPartner}> 
                             </UserStyleCard>
                         </GridListTile>)
@@ -214,25 +216,22 @@ class PartnerListPage extends Component
     }
   }
 
-  onUnmatchUser = (matchId) =>
+  onUnmatchUser = () =>
   {
-    if (window.confirm("Unmatch partner?")) {
-      fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/usersMatch/removeExistingMatch', 
-      {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({matchId: matchId})
-      })
-      .then((response) => 
-      {
-        console.log('Removed!');
-        this.getPartnerList();
-      });
-    }
+    fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/usersMatch/removeExistingMatch', 
+    {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({matchId: this.state.unmatchId})
+    })
+    .then((response) => 
+    {
+      this.getPartnerList();
+    });
   }
 
   onReportPartner() {
@@ -263,6 +262,11 @@ class PartnerListPage extends Component
               <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSeNpw2ZAAa0gmvlpw1B5KJv2SSr41bNTz9uXAB-eqKD4TvcXA/viewform?embedded=true" 
               width="100%" height="1491" >Loading…</iframe>
         </Dialog>
+        <ConfirmDialog
+          open={this.state.showConfirm}
+          onClose={()=>{this.setState({showConfirm: false, unmatchId: ""})}}
+          title="Are you sure you want to unmatch this user ?"
+          onConfirm={this.onUnmatchUser}/>
       </div>
     );
   }
