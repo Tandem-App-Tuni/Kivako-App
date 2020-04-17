@@ -18,10 +18,9 @@ import { Redirect } from 'react-router';
 import { History } from 'react-router';
 
 //Components
-import {AlertView} from '../../components/AlertView'
+import {AlertPopup, StaticAlert} from '../../components/AlertView'
 
 import ConstantsList from '../../config_constants';
-
 
 const useStyles = theme => ({
   '@global': {
@@ -46,7 +45,7 @@ const useStyles = theme => ({
     marginTop: theme.spacing(3),
   },
   submit: {
-    margin: theme.spacing(3, 0, 2),
+    margin: theme.spacing(1, 0, 2),
   },
   avatarUpload: {
     display: 'flex',
@@ -101,6 +100,7 @@ class ViewProfile extends Component {
       let imgUrl = props.userEmail ? "/" + props.userEmail : "";
       this.state = {
       profileImgURL: window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/api/v1/avatar/getAvatar' + imgUrl,
+      profileImgWarning: false,
       languagesToTeach: [],
       languagesToLearn: [],
       firstName: '',
@@ -113,13 +113,13 @@ class ViewProfile extends Component {
       showInputLearnLanguage: false,
       showAlert: false,
       alertType: 'error',
-	  alertText: '',
+	    alertText: '',
       editingTeachLanguageIndex: 0,
       editingLearnLanguageIndex: 0,
-    videoError: false,
-    //This will be used to fetch the user info from backend
-    userEmail: props.userEmail,
-	  redirectURL: '',
+      videoError: false,
+      //This will be used to fetch the user info from backend
+      userEmail: props.userEmail,
+      redirectURL: '',
       portOption: ConstantsList.PORT_IN_USE //set to 3000 for local testing
     };
   }
@@ -213,9 +213,24 @@ class ViewProfile extends Component {
           <CssBaseline />
   
           <div className={classes.paper}>
-            <Avatar className={classes.avatar} src={this.state.profileImgURL}>
-            </Avatar>
-
+            {( this.state.profileImgWarning && !this.state.userEmail)  ?
+  	          <StaticAlert severity="error">You don't have a valid profile image, please upload a profile image!</StaticAlert>
+              : null
+            }
+            {this.state.profileImgWarning ?
+              <Avatar className={classes.avatar}></Avatar>
+              : <img
+              className={classes.avatar + " avatar"}
+              width="80"
+              height="80"
+              src={this.state.profileImgURL}
+              alt=""
+              onError={(event) => {
+                this.setState({profileImgWarning: true})
+              }}
+            />
+            }
+            
 
         <form className={classes.form} noValidate>
           <Grid container spacing={2}>
@@ -322,14 +337,14 @@ class ViewProfile extends Component {
           <Box mt={5}>
           </Box>
         </Container>
-        <AlertView
+        <AlertPopup
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'left',
         }}
         open={this.state.showAlert}
         autoHideDuration={6000}
-        onClose={() =>this.toogleAlert(false, null, null)}
+        onClose={() => {this.setState({showAlert: false})}}
         variant={this.state.alertType}
         message={this.state.alertText}
       />

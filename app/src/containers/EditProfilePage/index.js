@@ -22,11 +22,12 @@ import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import Tooltip from '@material-ui/core/Tooltip';
 
 //Components
 import { CityPicker } from '../../components/CityPicker';
 import LanguagePicker from '../../components/LanguagePicker'
-import { AlertView } from '../../components/AlertView';
+import { AlertPopup, ConfirmDialog } from '../../components/AlertView';
 
 import ConstantsList from '../../config_constants';
 
@@ -96,6 +97,9 @@ const useStyles = theme => ({
   },
   cardMedia: {
     minHeight: '300px'
+  },
+  includeInMatchingButton: {
+    backgroundColor: 'green'
   }
 });
 
@@ -114,12 +118,14 @@ class EditProfilePage extends Component {
       profileVideoURL: '',
       showInputTeachLanguage: false,
       showInputLearnLanguage: false,
+      showConfirm: false,
       showAlert: false,
       alertType: "success",
       alertText: '',
       editingTeachLanguageIndex: 0,
       editingLearnLanguageIndex: 0,
       videoError: false,
+      isExcludeFromMatching: false,
       portOption: ConstantsList.PORT_IN_USE //set to 3000 for local testing
     };
 
@@ -189,68 +195,43 @@ class EditProfilePage extends Component {
       });
   }
 
-  onDeleteButtonClicked = () => {
-    if (window.confirm('Are you sure you want to delete your profile?')) {
-      fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/users/delete',
+  onDeleteProfile = () => {
+    fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/users/delete',
+      {
+        method: 'DELETE',
+        headers:
         {
-          method: 'POST',
-          headers:
-          {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include',
-          cors: 'no-cors',
-          body: JSON.stringify({
-            languagesToTeach: this.state.languagesToTeach,
-            languagesToLearn: this.state.languagesToLearn,
-            firstName: this.state.firstName,
-            lastName: this.state.lastName,
-            email: this.state.email,
-            cities: this.state.cities,
-            descriptionText: this.state.descriptionText,
-            userIsActivie: true,
-            profileVideoURL: this.state.profileVideoURL
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include'
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          this.setState({
+            showAlert: true,
+            showConfirm: false,
+            alertText: "You can always create a new account by signing in again. Goodbye!",
+            alertType: "info"
           })
+        }
+        else
+          this.setState({
+            showAlert: true,
+            showConfirm: false,
+            alertText: "Something went wrong. Please try again later.",
+            alertType: "error"
+          })
+      })
+      .catch(err => {
+        console.log(err)
+        this.setState({
+          showAlert: true,
+          showConfirm: false,
+          alertText: "Something went wrong. Please try again later.",
+          alertType: "error"
         })
-        .then((response) => response.json())
-        .then((responseJson) => {
-          if (responseJson.update)
-            this.toggleAlert(true, 'success', 'User informations updated succesfully!');
-          else
-            this.toggleAlert(true, 'error', 'Update failed. Please try again later');
-        })
-        .catch((error) => {
-          console.error(error);
-          this.toggleAlert(true, 'error', 'Update failed. Please try again later');
-        });
-    }
-  }
-
-  onDeleteButtonClicked = () => {
-    if (window.confirm('Are you sure you want to delete your profile?')) {
-      fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/users/delete',
-        {
-          method: 'DELETE',
-          headers:
-          {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include'
-        })
-        .then((response) => {
-          if (response.status === 200) {
-            this.toggleAlert(true, "info", "You can always create a new account by signing in again. Goodbye!")
-          }
-          else
-            this.toggleAlert(true, "error", 'Something went wrong. Try again later.');
-        })
-        .catch(err => {
-          console.log(err)
-          this.toggleAlert(true, "error", 'Something went wrong. Try again later.');
-        });
-    }
+      });
   }
 
   handleChangeTeach = event => {
@@ -380,7 +361,8 @@ class EditProfilePage extends Component {
           languagesToTeach: responseData.data.languagesToTeach.filter(language => language.language != null),
           descriptionText: responseData.data.descriptionText,
           cities: responseData.data.cities,
-          profileVideoURL: responseData.data.profileVideoURL ? responseData.data.profileVideoURL : ''
+          profileVideoURL: responseData.data.profileVideoURL ? responseData.data.profileVideoURL : '',
+          isExcludeFromMatching: responseData.data.excludeFromMatching,
         })
       })
       .catch((error) => {
@@ -459,6 +441,35 @@ class EditProfilePage extends Component {
       default:
         break;
     }
+  }
+  onExcludeIncludeButtonClicked = async flagValue => {
+      try {
+        const response = await fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/users/setMatchingVisibility", 
+        {
+          method: 'POST',
+          credentials: 'include',
+          cors: 'no-cors',
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            flag: flagValue,
+          })
+        });
+        const responseData = await response.json();
+        if(responseData.excludeFromMatching) {
+          this.setState({ isExcludeFromMatching: true })
+          this.toggleAlert(true, 'success', 'Exclude from matching succesfully!');
+        }
+        else {
+          this.setState({ isExcludeFromMatching: false })
+          this.toggleAlert(true, 'success', 'Include in matching succesfully!');
+        }
+      }
+      catch(e) {
+        this.toggleAlert(true, "error", 'Something went wrong. Try again later.');
+      }
   }
 
   toExcludeLanguages = () => {
@@ -713,6 +724,30 @@ class EditProfilePage extends Component {
               >
                 Save changes
                 </Button>
+              
+              { this.state.isExcludeFromMatching ? 
+                  <Tooltip title="Your profile will be visible in find partner page. Other users will be able to send you a partner request.">
+                    <Button  
+                    fullWidth            
+                    variant="contained"
+                    color="primary"
+                    className={classes.includeInMatchingButton}
+                    onClick={() => this.onExcludeIncludeButtonClicked(false)}>
+                               Include In Matching
+                    </Button>
+                  </Tooltip>
+                  : 
+                  <Tooltip title="Your profile will be excluded from find partner page. Other users won't be able to send you a partner request.">
+                    <Button  
+                     fullWidth            
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => this.onExcludeIncludeButtonClicked(true)}>
+                      Exclude From Matching
+                    </Button>
+                  </Tooltip>
+              }
+              <br /><br />
 
               <ExpansionPanel
                 defaultExpanded={false}>
@@ -728,7 +763,7 @@ class EditProfilePage extends Component {
                     variant='contained'
                     color='primary'
                     className={classes.submit}
-                    onClick={this.onDeleteButtonClicked}>
+                    onClick={()=>{this.setState({showConfirm: true})}}>
                     Delete profile
                     </Button>
                 </ExpansionPanelDetails>
@@ -740,12 +775,17 @@ class EditProfilePage extends Component {
           <Box mt={5}>
           </Box>
         </Container>
-        <AlertView
+        <AlertPopup
           open={this.state.showAlert}
           onClose={() => {this.setState({showAlert: false})}}
           variant={this.state.alertType}
           message={this.state.alertText}
         />
+        <ConfirmDialog
+          open={this.state.showConfirm}
+          onClose={()=>{this.setState({showConfirm: false})}}
+          title="Are you sure you want to delete your profile ?"
+          onConfirm={this.onDeleteProfile}/>
       </div>
     );
   }

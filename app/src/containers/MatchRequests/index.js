@@ -25,7 +25,7 @@ import Icon from '@material-ui/core/Icon';
 import logo from '../../tandemlogo.png'
 import Grid from '@material-ui/core/Grid'
 
-import { AlertView } from '../../components/AlertView';
+import { AlertPopup, ConfirmDialog } from '../../components/AlertView';
 import ConstantsList from '../../config_constants';
 import UserStyleCard from '../../components/UserStyleCard';
 
@@ -89,6 +89,9 @@ class MatchRequests extends React.Component {
         showAlert:false,
         alertType: "success",
         alertText:"",
+        showAcceptConfirm: false,
+        showDenyConfirm: false,
+        matchId: "",
         portOption:ConstantsList.PORT_IN_USE
       };
       this.acceptMatchRequest = this.acceptMatchRequest.bind(this);
@@ -96,44 +99,18 @@ class MatchRequests extends React.Component {
       this.toggleAlert = this.toggleAlert.bind(this);
     }
 
-    acceptMatchRequest(match) {
-        if (window.confirm("Accept match request?")) {
-            this.setState({isLoadingPage: true})
-            fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/usersMatch/acceptMatchRequest/' + match._id,
-                {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                    credentials: 'include',
-                    cors: 'no-cors',
-                    body: JSON.stringify({})
-                })
-                .then((response) => {
-                    if (response.status === 200) {
-                        this.getUserMatchsRequestListAPI(()=>{
-                            this.toggleAlert(true, "success", "Match request accepted.")
-                            this.setState({isLoadingPage: false})
-                        });
-                    }
-                    else {
-                        this.toggleAlert(true, "error", "Something went wrong.");
-                    }
-                })
-                .catch((error) => {
-                    this.setState({isLoadingPage: false})
-                    console.log('Error');
-                    console.error(error);
-                });
-        }
+    closeAllDialogs = () => {
+        this.setState({
+            showAcceptConfirm: false,
+            showDenyConfirm: false,
+            matchId: ""
+        })
     }
 
-    denyMatchRequest(match) {
-        if (window.confirm("Deny match request?")) {
-            this.setState({isLoadingPage: true})
-            const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/usersMatch/denyMatchRequest/" + match._id);
-            fetch(url, {
+    acceptMatchRequest() {
+        this.setState({isLoadingPage: true})
+        fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/usersMatch/acceptMatchRequest/' + this.state.matchId,
+            {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
@@ -141,21 +118,53 @@ class MatchRequests extends React.Component {
                 },
                 credentials: 'include',
                 cors: 'no-cors',
+                body: JSON.stringify({})
             })
             .then((response) => {
                 if (response.status === 200) {
                     this.getUserMatchsRequestListAPI(()=>{
-                        this.toggleAlert(true, "success", "Match request denied.")
+                        this.toggleAlert(true, "success", "Match request accepted.")
                         this.setState({isLoadingPage: false})
                     });
                 }
-                else
+                else {
                     this.toggleAlert(true, "error", "Something went wrong.");
+                }
             })
             .catch((error) => {
+                this.setState({isLoadingPage: false})
+                console.log('Error');
                 console.error(error);
             });
-         }
+        this.closeAllDialogs();
+    }
+
+    denyMatchRequest() {
+        this.setState({isLoadingPage: true})
+        const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/usersMatch/denyMatchRequest/" + this.state.matchId);
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            cors: 'no-cors',
+        })
+        .then((response) => {
+            if (response.status === 200) {
+                this.getUserMatchsRequestListAPI(()=>{
+                    this.toggleAlert(true, "success", "Match request denied.")
+                    this.setState({isLoadingPage: false})
+                });
+            }
+            else
+                this.toggleAlert(true, "error", "Something went wrong.");
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+        this.closeAllDialogs();
     }
 
     getUserMatchsRequestListAPI(callback) {
@@ -192,8 +201,8 @@ class MatchRequests extends React.Component {
                     matches.map((match, key) =>  
                     {
                         return(<GridListTile key={key} rows={2}>
-                                    <UserStyleCard  user={match.requesterUser} yesText="Accept" yesFunction={this.acceptMatchRequest} 
-                                      noText="Deny" noFunction={this.denyMatchRequest}  page="pending-match" match={match}> 
+                                    <UserStyleCard  user={match.requesterUser} yesText="Accept" yesFunction={()=>{this.setState({showAcceptConfirm: true, matchId: match._id})}}
+                                      noText="Deny" noFunction={()=>{this.setState({showDenyConfirm: true, matchId: match._id})}}  page="pending-match" match={match}> 
                                     </UserStyleCard>
                                 </GridListTile>)
                     }
@@ -261,11 +270,11 @@ class MatchRequests extends React.Component {
                         <br></br>
                         <br></br>
                     </div>
-                    <AlertView
-                    open={this.state.showAlert}
-                    variant={this.state.alertType}
-                    message={this.state.alertText}
-                    onClose={() => { this.setState({ showAlert: false }) }} />
+                    <AlertPopup
+                        open={this.state.showAlert}
+                        variant={this.state.alertType}
+                        message={this.state.alertText}
+                        onClose={() => { this.setState({ showAlert: false }) }} />
                 </div>
 
             )
@@ -291,11 +300,16 @@ class MatchRequests extends React.Component {
                             <Divider variant="middle" />
                         </ExpansionPanelDetails>
                 </ExpansionPanel>
-                <AlertView
+                <AlertPopup
                     open={this.state.showAlert}
                     variant={this.state.alertType}
                     message={this.state.alertText}
                     onClose={() => { this.setState({ showAlert: false }) }} />
+                <ConfirmDialog
+                    open={this.state.showAcceptConfirm || this.state.showDenyConfirm}
+                    onClose={this.closeAllDialogs}
+                    title={(this.state.showAcceptConfirm ? "Accept" : "Deny") +  " this request ?"}
+                    onConfirm={()=>{(this.state.showAcceptConfirm && this.acceptMatchRequest()) || (this.state.showDenyConfirm && this.denyMatchRequest())}}/>
             </div>
         );
     }

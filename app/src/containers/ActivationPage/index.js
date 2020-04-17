@@ -11,7 +11,7 @@ import { withStyles } from '@material-ui/styles';
 import ConstantsList from '../../config_constants';
 import Grid from '@material-ui/core/Grid';
 
-import {AlertView} from '../../components/AlertView';
+import {AlertPopup} from '../../components/AlertView';
 
 /**
  * The activation page is based on a template available on: https://github.com/mui-org/material-ui/tree/master/docs/src/pages/getting-started/templates/sign-in
@@ -159,7 +159,7 @@ class ActivationPage extends Component
           {'.'}
         </Typography>
       </Box>
-      <AlertView
+      <AlertPopup
         open={this.state.showAlert}
         message={this.state.alertText}
         variant={this.state.alertType}/>
