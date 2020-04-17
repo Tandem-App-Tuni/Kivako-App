@@ -21,6 +21,7 @@ import ActivationPage from './containers/ActivationPage'
 import Checker from './containers/Checker'
 import CheckerAdmin from './containers/CheckerAdmin'
 import ForgotPasswordPage from './containers/ForgotPasswordPage'
+import NewsDashboard from "./containers/NewsDashboard"
 
 import ListOfAdmins from './containers/ListOfAdmins'
 import ListOfStudents from './containers/ListOfStudents'
@@ -175,6 +176,13 @@ class App extends React.Component
               </CheckerAdmin>
             </Route>
 
+            <Route exact path='/news-dashboard'>
+              <CheckerAdmin activeSocket={this.activeSocket} setSocket={this.setSocket}>
+                <ResponsiveDrawer title='News dashboard' chatBundle={chatBundle}>
+                  <NewsDashboard />
+                </ResponsiveDrawer>
+              </CheckerAdmin>
+            </Route>
           </Router>
         </AppContextProvider>
       </MuiThemeProvider>
