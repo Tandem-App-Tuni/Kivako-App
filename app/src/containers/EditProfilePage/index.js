@@ -118,6 +118,7 @@ class EditProfilePage extends Component {
       profileVideoURL: '',
       showInputTeachLanguage: false,
       showInputLearnLanguage: false,
+      showConfirm: false,
       showAlert: false,
       alertType: "success",
       alertText: '',

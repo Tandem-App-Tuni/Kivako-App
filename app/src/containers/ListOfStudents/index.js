@@ -12,7 +12,7 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 
-import { AlertPopup } from '../../components/AlertView';
+import { AlertPopup, ConfirmDialog } from '../../components/AlertView';
 import Constants from '../../config_constants';
 
 const useStyles = theme => ({
@@ -81,6 +81,8 @@ class ListOfStudents extends Component {
       rows: [],
       message: '',
       socket: props.socket,
+      showConfirm: false,
+      deleteData:{},
       showAlert: false,
       alertType: "success",
       alertText: ""
@@ -102,11 +104,10 @@ class ListOfStudents extends Component {
   };
 
   componentDidMount() {
-    console.log('[ListOfStudents] Mounting', window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/admin/studentUsers');
     this.fetchUserList();
   }
 
-  fetchUserList() {
+  fetchUserList = () => {
     fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/admin/studentUsers',
       {
         method: 'GET',
@@ -123,7 +124,6 @@ class ListOfStudents extends Component {
   }
 
   onSendMessage = () => {
-    console.log('[ListOfMatches] Message sent to students!');
     this.state.socket.emit('adminGlobal', { message: this.state.message });
   }
 
@@ -143,11 +143,8 @@ class ListOfStudents extends Component {
     }
   }
 
-  onRemoveClick(data) {
-    console.log('Remove user:', data.email);
-
-    if (window.confirm('Are you sure you want to delete the user?'))
-      fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/users/deleteAdmin/' + data.email,
+  onDeleteUser = () => {
+      fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/users/deleteAdmin/' + this.state.deleteData.email,
         {
           method: 'GET',
           credentials: 'include',
@@ -162,12 +159,10 @@ class ListOfStudents extends Component {
         .catch((error) => {
           console.error(error);
         });
-    else console.log('Not removed!');
+    this.setState({showConfirm: false, deleteData: {}})
   }
 
   render() {
-    console.log('[ListOfStudents] Render');
-
     const { classes } = this.props;
 
     if (this.state.isLoadingTable) return null;
@@ -233,7 +228,7 @@ class ListOfStudents extends Component {
                               variant='contained'
                               color='primary'
                               className={classes.chip}
-                              onClick={() => this.onRemoveClick(row)}>
+                              onClick={() => {this.setState({showConfirm: true, deleteData: row})}}>
                               Remove
                               </Button> : <div />}
                         </div>
@@ -258,6 +253,11 @@ class ListOfStudents extends Component {
           variant={this.state.alertType}
           message={this.state.alertText}
           onClose={()=>{this.setState({showAlert: false})}}/>
+        <ConfirmDialog
+          open={this.state.showConfirm}
+          onClose={()=>{this.setState({showConfirm: false, deleteData: {}})}}
+          title="Are you sure you want to delete the user?"
+          onConfirm={this.onDeleteUser}/>
       </Paper>
     );
   }
