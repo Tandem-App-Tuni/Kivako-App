@@ -12,18 +12,7 @@ import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 
 import Divider from '@material-ui/core/Divider';
-import Avatar from '@material-ui/core/Avatar';
-
 import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-
-import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
-import Icon from '@material-ui/core/Icon';
-
-import logo from '../../tandemlogo.png'
-import Grid from '@material-ui/core/Grid'
 
 import { AlertPopup, ConfirmDialog } from '../../components/AlertView';
 import ConstantsList from '../../config_constants';

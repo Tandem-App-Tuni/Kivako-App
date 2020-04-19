@@ -13,6 +13,8 @@ import Grid from '@material-ui/core/Grid';
 import ProfilePage from '../../containers/ViewProfile'
 import ConstantsList from '../../config_constants';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import WarningIcon from '@material-ui/icons/Warning';
+import Tooltip from '@material-ui/core/Tooltip';
 
   const useStyles = theme => ({
     card: {
@@ -21,6 +23,13 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
       borderRadius: 16,
       backgroundColor: "#FAFAFA",
       },
+    thirdRow: {
+      display: 'flex',
+      flexWrap: 'wrap',
+      '& > *': {
+        marginRight: theme.spacing(1.5),
+      }
+    },
     media: {
       flexShrink: 0,
       backgroundColor: "#F4F4F4",
@@ -65,16 +74,6 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
       marginBottom: 0,
       marginRight: "1.5em",
       display: 'inline-block',
-    },
-    
-    email: {
-      fontSize: 14,
-      fontWeight: 'bold',
-      letterSpacing: '0.5px',
-      marginBottom: 0,
-      marginTop:'1rem',
-      marginRight: "1.5em",
-      display: 'block',
     },
     body : {
       fontSize: 14,
@@ -249,6 +248,7 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
     render ()
     {  
+        console.log("thissss", this.props.fitQuality)
         const { classes, user, yesText, yesFunction, noText, noFunction } = this.props;
         const userDescription = (user.descriptionText == null || user.descriptionText === "") 
                                 ? "< User has no description >" : `${user.descriptionText.substr(0,180)} ...`
@@ -268,7 +268,18 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
               </Box>
               <Box mb={1}>
                 <h6 className={classes.heading}> { user.cities.join(', ') }  </h6>
-                <h6 className={classes.email}> { user.email}  </h6>
+              </Box>
+              <Box mb={1} className={classes.thirdRow}>
+                <p className={classes.email}> { user.email}  </p>
+                {(this.props.fitQuality !== null && this.props.fitQuality === 0) ?
+                    <Tooltip title="One way match means you cannot teach any language(s) that this student want to learn.">
+                      <Chip
+                      icon={<WarningIcon />}
+                      label="One way match!"
+                      size="small"
+                      /> 
+                    </Tooltip> : <></>
+                }
               </Box>
               <p className={classes.descriptionText}>
                 {userDescription}     
