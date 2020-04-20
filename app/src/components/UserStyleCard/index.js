@@ -248,7 +248,6 @@ import Tooltip from '@material-ui/core/Tooltip';
 
     render ()
     {  
-        console.log("thissss", this.props.fitQuality)
         const { classes, user, yesText, yesFunction, noText, noFunction } = this.props;
         const userDescription = (user.descriptionText == null || user.descriptionText === "") 
                                 ? "< User has no description >" : `${user.descriptionText.substr(0,180)} ...`
