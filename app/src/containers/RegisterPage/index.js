@@ -122,6 +122,7 @@ class SignUpPage extends Component {
       password: '',
       passwordConfirmation: '',
       email: '',
+      emailConfirmation: '',
       cities: [],
       descriptionText: '',
       showInputTeachLanguage: false,
@@ -129,6 +130,7 @@ class SignUpPage extends Component {
       editingTeachLanguageIndex: 0,
       editingLearnLanguageIndex: 0,
       isAlreadyregistered: false,
+      confirmEmailChecked : false,
       termsAndConditionsAccept: false,
       isAlreadyAuthenticated: false,
       isLoadingPage: true,
@@ -201,6 +203,24 @@ class SignUpPage extends Component {
 
     var value = (event.target.value);
     this.setState({ email: value });
+  };
+
+  handleChangeConfirmEmail = event => {
+
+    var value = (event.target.value);
+    this.setState({ emailConfirmation: value });
+  
+
+   if (value !== this.state.email) {
+      this.setState({ emailConfirmationError: true, emailConfirmationErrorMessage: 'The email and confirm email must be equal' });
+      this.setState({ confirmEmailChecked: false });
+    } else {
+      this.setState({ emailConfirmationError: false, emailConfirmationErrorMessage: '' });
+      this.setState({ emailConfirmation: value });
+      this.setState({ confirmEmailChecked: true });
+      
+    }
+    
   };
 
   handleChangeCities = value => {
@@ -466,9 +486,18 @@ class SignUpPage extends Component {
     this._isMounted = false;
   }
 
+  canBeSubmitted() {
+   if(this.state.confirmEmailChecked && this.state.termsAndConditionsAccept) {
+     return true;
+   }
+   else 
+    return false;
+  }
+
   render() {
     const { classes } = this.props;
     const excludedLanguages = this.toExcludeLanguages();
+    const isEnabled = this.canBeSubmitted();
 
     //Wait until all informations be render until continue
     if (this.state.isLoadingPage) {
@@ -551,6 +580,23 @@ class SignUpPage extends Component {
                     helperText="Please use your university email (firstname.lastname@university.fi)"
                   />
                 </Grid>
+
+                <Grid item xs={12}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="confirmEmail"
+                    label="Email address confirmation"
+                    value={this.state.emailConfirmation}
+                    name="confirmEmail"
+                    error={this.state.emailConfirmationError}
+                    // autoComplete="confirmEmail"
+                    onChange={this.handleChangeConfirmEmail}
+                    helperText={this.state.emailConfirmationError === false ? '' : this.state.emailConfirmationErrorMessage}
+                  />
+                </Grid>
+
 
                 <Grid item xs={12}>
                   <TextField
@@ -723,7 +769,7 @@ class SignUpPage extends Component {
 
               <Button
                 //type="submit"
-                disabled={!this.state.termsAndConditionsAccept}
+                disabled={!isEnabled}
                 fullWidth
                 variant="contained"
                 color="primary"
@@ -755,8 +801,7 @@ export default withStyles(useStyles)(SignUpPage);
 class TermsAndConditions extends Component {
 
   render() {
-
-
+ 
     return (
       <div>
 
