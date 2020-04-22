@@ -67,8 +67,6 @@ export default class StatiticsTable extends Component {
     }
   
     render(){
-      //console.log(this.columns)
-  
       if(this.isLoadingTable){
         return null;
       }
