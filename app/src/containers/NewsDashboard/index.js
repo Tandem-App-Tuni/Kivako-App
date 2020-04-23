@@ -32,12 +32,22 @@ class NewsDashboard extends React.Component {
 					}
 				},
 				{ title: "Author", field: "author" },
-				{ title: "Created at", field: "createdAt", editable: 'never' },
-				{ title: "Updated at", field: "updatedAt", editable: 'never' }
+				{
+					title: "Created at",
+					field: "createdAt",
+					editable: 'never',
+					render: data => data ? convertDate(data.createdAt) : ""
+				},
+				{
+					title: "Updated at",
+					field: "updatedAt",
+					editable: 'never',
+					render: data => data ? convertDate(data.updatedAt) : ""
+				}
 			],
 			isLoading: true,
 			showAlert: false,
-			alertText: "",
+			alertText: "",	
 			alertType: ""
 		}
 	}
@@ -233,3 +243,9 @@ class NewsDashboard extends React.Component {
 }
 
 export default NewsDashboard;	
+
+function convertDate(dateStr) {
+	let date = new Date(dateStr);
+	return date.getDate()+ "." +(date.getMonth()+1)+ "." + date.getFullYear()+ " "
+		+ date.getHours()+ "." + date.getMinutes();
+}
