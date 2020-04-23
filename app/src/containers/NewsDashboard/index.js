@@ -63,6 +63,7 @@ class NewsDashboard extends React.Component {
 			.then(res => {
 				resolve(res);
 			}).catch(err => {
+				this.toggleAlert(true, "error", "There is an error. Please try again later!");
 				reject();
 			})
 		})
@@ -90,6 +91,7 @@ class NewsDashboard extends React.Component {
 			.then(res => {
 				resolve(res);
 			}).catch(err => {
+				this.toggleAlert(true, "error", "There is an error. Please try again later!");
 				reject();
 			})
 		})
@@ -115,6 +117,7 @@ class NewsDashboard extends React.Component {
 				else
 					throw new Error();
 			}).catch(err => {
+				this.toggleAlert(true, "error", "There is an error. Please try again later!");
 				reject();
 			})
 		})
