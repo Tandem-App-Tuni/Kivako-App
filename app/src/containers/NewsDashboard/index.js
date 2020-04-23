@@ -12,16 +12,24 @@ class NewsDashboard extends React.Component {
 			newsList: [],
 			tableColumns: [
 				{ title: "Title", field: "title" },
-				{ title: "Content", field: "content", editComponent: props => (
-					<textarea
-					  type="text"
-					  value={props.value}
-					  rows="20"
-					  cols="70"
-					  onChange={e => props.onChange(e.target.value)}
-					/>
-				  ),
-				  render: data => <div className="cell-content">{data.content}</div>
+				{
+					title: "Content",
+					field: "content",
+					editComponent: props => (
+						<textarea
+						type="text"
+						value={props.value}
+						rows="20"
+						cols="70"
+						onChange={e => props.onChange(e.target.value)}
+						/>
+					),
+					render: data => {
+						let str = data.content.split("\n");
+						return <div className="cell-content">
+							{str.map(item => <p>{item}</p>)}
+						</div>
+					}
 				},
 				{ title: "Author", field: "author" },
 				{ title: "Created at", field: "createdAt", editable: 'never' },
