@@ -12,7 +12,17 @@ class NewsDashboard extends React.Component {
 			newsList: [],
 			tableColumns: [
 				{ title: "Title", field: "title" },
-				{ title: "Content", field: "content" },
+				{ title: "Content", field: "content", editComponent: props => (
+					<textarea
+					  type="text"
+					  value={props.value}
+					  rows="20"
+					  cols="70"
+					  onChange={e => props.onChange(e.target.value)}
+					/>
+				  ),
+				  render: data => <div className="cell-content">{data.content}</div>
+				},
 				{ title: "Author", field: "author" },
 				{ title: "Created at", field: "createdAt", editable: 'never' },
 				{ title: "Updated at", field: "updatedAt", editable: 'never' }
@@ -140,7 +150,7 @@ class NewsDashboard extends React.Component {
 	}
 
 	render() {
-		return <div>
+		return <div className="news-dashboard">
 			{!this.state.isLoading &&
 				<MaterialTable
 					columns={this.state.tableColumns}
