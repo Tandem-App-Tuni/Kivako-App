@@ -173,7 +173,7 @@ class NewsDashboard extends React.Component {
 				<MaterialTable
 					columns={this.state.tableColumns}
 					data={this.state.newsList}
-					title="News list"
+					title="List of news"
 					options={{
 						actionsColumnIndex: -1
 					}}
@@ -250,5 +250,5 @@ export default NewsDashboard;
 function convertDate(dateStr) {
 	let date = new Date(dateStr);
 	return date.getDate()+ "." +(date.getMonth()+1)+ "." + date.getFullYear()+ " "
-		+ date.getHours()+ "." + date.getMinutes();
+		+ date.getHours()+ ":" + date.getMinutes();
 }
