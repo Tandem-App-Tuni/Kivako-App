@@ -39,7 +39,7 @@
   border-radius: 50%;
 }
 
-.news-dashboard table tr th:nth-child(3),.news-dashboard table tr td:nth-child(3) {
+.news-dashboard table tr th:nth-child(2),.news-dashboard table tr td:nth-child(2) {
   width: 65%!important;
 }
 
