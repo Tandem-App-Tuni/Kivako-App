@@ -174,6 +174,9 @@ class NewsDashboard extends React.Component {
 					columns={this.state.tableColumns}
 					data={this.state.newsList}
 					title="News list"
+					options={{
+						actionsColumnIndex: -1
+					}}
 					editable={{
 						onRowAdd: newData =>
 							new Promise((resolve, reject) => {
