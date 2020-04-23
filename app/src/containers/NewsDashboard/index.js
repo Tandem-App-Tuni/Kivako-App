@@ -142,6 +142,7 @@ class NewsDashboard extends React.Component {
 				<MaterialTable
 					columns={this.state.tableColumns}
 					data={this.state.newsList}
+					title="News list"
 					editable={{
 						onRowAdd: newData =>
 							new Promise((resolve, reject) => {
