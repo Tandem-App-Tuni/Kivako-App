@@ -114,7 +114,7 @@ class BrowseMatch extends React.Component
                     item.matches.map((match, key) =>  
                     {
                         return(<GridListTile key={match._id} className={classes.gridListTile} rows={2}>
-                                    <UserStyleCard  user={match} yesText="Send invitation" yesFunction={this.onInviteAction} 
+                                    <UserStyleCard  user={match} fitQuality={match.fitQuality} yesText="Send invitation" yesFunction={this.onInviteAction} 
                                      page="browse-match" matchingLanguage={item.languageName}> 
                                     </UserStyleCard>
                                 </GridListTile>)

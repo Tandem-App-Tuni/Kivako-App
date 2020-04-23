@@ -12,7 +12,7 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 
-import { AlertPopup } from '../../components/AlertView';
+import { AlertPopup, ConfirmDialog } from '../../components/AlertView';
 import Constants from '../../config_constants';
 
 const useStyles = theme => ({
@@ -54,14 +54,23 @@ class ListOfStudents extends Component {
       label: 'Last Access',
       minWidth: 170,
       align: 'center',
-      format: value => value.toLocaleString('fi-FI', { timeZone: 'UTC' })
+      format: value =>  {
+        if(value) {
+          let time = new Date(value);
+          return +time.getDate()+ '.' +(time.getMonth()+1)+'.' +time.getFullYear()+' '+time.getHours()+'.'+time.getMinutes();
+        }
+      }
     },
+    
     {
       id: 'userIsActivie',
       label: 'Active',
       minWidth: 170,
       align: 'center',
-      format: value => value.toString()
+      format: value => {
+        if(value) value.toString()
+      } 
+
     },
     {
       id: 'removeUserButton',
@@ -79,8 +88,12 @@ class ListOfStudents extends Component {
       page: 0,
       rowsPerPage: 10,
       rows: [],
+      data: [],
+      searchValue: "",
       message: '',
       socket: props.socket,
+      showConfirm: false,
+      deleteData:{},
       showAlert: false,
       alertType: "success",
       alertText: ""
@@ -102,11 +115,10 @@ class ListOfStudents extends Component {
   };
 
   componentDidMount() {
-    console.log('[ListOfStudents] Mounting', window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/admin/studentUsers');
     this.fetchUserList();
   }
 
-  fetchUserList() {
+  fetchUserList = () => {
     fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/admin/studentUsers',
       {
         method: 'GET',
@@ -115,7 +127,7 @@ class ListOfStudents extends Component {
       })
       .then((response) => response.json())
       .then((responseJson) => {
-        this.setState({ rows: responseJson.data, isLoadingTable: false });
+        this.setState({data: responseJson.data, rows: responseJson.data, isLoadingTable: false });
       })
       .catch((error) => {
         console.error(error);
@@ -123,7 +135,6 @@ class ListOfStudents extends Component {
   }
 
   onSendMessage = () => {
-    console.log('[ListOfMatches] Message sent to students!');
     this.state.socket.emit('adminGlobal', { message: this.state.message });
   }
 
@@ -143,11 +154,8 @@ class ListOfStudents extends Component {
     }
   }
 
-  onRemoveClick(data) {
-    console.log('Remove user:', data.email);
-
-    if (window.confirm('Are you sure you want to delete the user?'))
-      fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/users/deleteAdmin/' + data.email,
+  onDeleteUser = () => {
+      fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/users/deleteAdmin/' + this.state.deleteData.email,
         {
           method: 'GET',
           credentials: 'include',
@@ -162,20 +170,35 @@ class ListOfStudents extends Component {
         .catch((error) => {
           console.error(error);
         });
-    else console.log('Not removed!');
+    this.setState({showConfirm: false, deleteData: {}})
+  }
+  handleSearchChange = (event) => {
+    this.setState({searchValue: event.target.value})
+    let searchValue = event.target.value.toLowerCase();
+    if (event.target.value.length >= 2){
+      let searchResult = this.state.data.filter(item => {
+        return item.lastName.toLowerCase().includes( searchValue)
+        ||item.firstName.toLowerCase().includes( searchValue)
+        ||item.email.toLowerCase().includes( searchValue);
+
+      })
+      this.setState({rows:searchResult})
+    } 
+    if (searchValue.length == 0){
+      this.setState({rows:this.state.data})
+    }
   }
 
   render() {
-    console.log('[ListOfStudents] Render');
-
     const { classes } = this.props;
 
     if (this.state.isLoadingTable) return null;
 
     return (
       <Paper className={classes.tableRoot}>
-        <Grid
-          container
+        
+        <Grid 
+          container 
           direction='row'
           justify='center'
           alignItems='center'>
@@ -204,60 +227,74 @@ class ListOfStudents extends Component {
             </Button>
           </Grid>
         </Grid>
-        <Table stickyHeader aria-label="sticky table" className={classes.tableWrapper}>
-          <TableHead>
-            <TableRow>
-              {this.columns.map(column => (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{ minWidth: column.minWidth }}>
-                  {column.label}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {this.state.rows.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((row, index) => {
-              return (
-                <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                  {this.columns.map(column => {
-                    const value = row[column.id];
-                    return (
-                      <TableCell key={column.id} align={column.align}>
-                        <div>
-                          {column.format && typeof value === ('number' || 'bool') ? column.format(value) : value}
-                          {column.id === 'removeUserButton' ?
-                            <Button
-                              fullWidth
-                              variant='contained'
-                              color='primary'
-                              className={classes.chip}
-                              onClick={() => this.onRemoveClick(row)}>
-                              Remove
-                              </Button> : <div />}
-                        </div>
-                      </TableCell>
-                    );
-                  })}
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-        <TablePagination
-          rowsPerPageOptions={[10, 25, 100]}
-          component="div"
-          count={this.state.rows.length}
-          rowsPerPage={this.state.rowsPerPage}
-          page={this.state.page}
-          onChangePage={this.handleChangePage}
-          onChangeRowsPerPage={this.handleChangeRowsPerPage} />
+        <TextField 
+        variant='outlined'
+        margin='normal'
+        fullWidth
+        id='search'
+        label='Search for students by name or email'
+        name='search'
+        onChange = {this.handleSearchChange} value={this.state.searchValue}
+        />
+          <Table stickyHeader aria-label="sticky table" className={classes.tableWrapper}>
+            <TableHead>
+              <TableRow>
+                {this.columns.map(column => (
+                  <TableCell
+                    key={column.id}
+                    align={column.align}
+                    style={{ minWidth: column.minWidth }}>
+                    {column.label}
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {this.state.rows.length ? this.state.rows.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((row, index) => {
+                return (
+                  <TableRow hover role="checkbox" tabIndex={-1} key={index}>
+                    {this.columns.map(column => {
+                      const value = row[column.id];
+                      return (
+                        <TableCell key={column.id} align={column.align}>
+                          <div>
+                            {column.format ? column.format(value) : value}
+                            {column.id === 'removeUserButton' ? 
+                              <Button
+                                fullWidth
+                                variant='contained'
+                                color='primary'
+                                className={classes.chip}
+                                onClick={() => this.onRemoveClick(row)}>
+                                Remove
+                              </Button> : <div/>}
+                          </div>
+                        </TableCell>
+                      );
+                    })}
+                  </TableRow>
+                );
+              }): null}
+            </TableBody>
+          </Table>
+          <TablePagination
+            rowsPerPageOptions={[10, 25, 100]}
+            component="div"
+            count={this.state.rows.length}
+            rowsPerPage={this.state.rowsPerPage}
+            page={this.state.page}
+            onChangePage={this.handleChangePage}
+            onChangeRowsPerPage={this.handleChangeRowsPerPage}/>
         <AlertPopup
           open={this.state.showAlert}
           variant={this.state.alertType}
           message={this.state.alertText}
           onClose={()=>{this.setState({showAlert: false})}}/>
+        <ConfirmDialog
+          open={this.state.showConfirm}
+          onClose={()=>{this.setState({showConfirm: false, deleteData: {}})}}
+          title="Are you sure you want to delete the user?"
+          onConfirm={this.onDeleteUser}/>
       </Paper>
     );
   }
