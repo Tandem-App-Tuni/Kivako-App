@@ -93,6 +93,7 @@ export const ConfirmDialog = ({title, content, open, onClose, onConfirm}) => {
     onClose={onClose}
     aria-labelledby="alert-dialog-title"
     aria-describedby="alert-dialog-description"
+    fullWidth
   >
     <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
     {content ? 
