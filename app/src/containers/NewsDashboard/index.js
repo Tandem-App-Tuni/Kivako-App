@@ -11,7 +11,16 @@ class NewsDashboard extends React.Component {
 		this.state = {
 			newsList: [],
 			tableColumns: [
-				{ title: "Title", field: "title" },
+				{
+					title: "Title",
+					field: "title",
+					cellStyle: {
+						width: "20%",
+					},
+					headerStyle: {
+						width: "20%" ,
+					}
+				},
 				{
 					title: "Content",
 					field: "content",
@@ -29,6 +38,14 @@ class NewsDashboard extends React.Component {
 						return <div className="cell-content">
 							{str.map(item => <p>{item}</p>)}
 						</div>
+					},
+					cellStyle: {
+						width: "50%",
+						// maxWidth: 20
+					},
+					headerStyle: {
+						width: "50%" ,
+						// maxWidth: 20
 					}
 				},
 				{ title: "Author", field: "author" },

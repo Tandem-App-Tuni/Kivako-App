@@ -39,10 +39,6 @@
   border-radius: 50%;
 }
 
-.news-dashboard table tr th:nth-child(2),.news-dashboard table tr td:nth-child(2) {
-  width: 65%!important;
-}
-
 .news-dashboard table tr td .cell-content{
   max-height: 11em;
   overflow: scroll;
