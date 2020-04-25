@@ -160,6 +160,7 @@ class EditProfilePage extends Component {
   }
 
   onSaveButtonClicked = () => {
+   
     fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/users/update",
       {
         method: 'POST',
@@ -249,7 +250,7 @@ class EditProfilePage extends Component {
     const validNameRegex = RegExp(/^.*(?=.{1,})(?=.*[a-zA-Z\\u0080-\\uFFFF])(?=.*\d).*$/);
 
     if (validNameRegex.test(formFirstName)) this.setState({ firstNameError: true, firstNameErrorMessage: 'Special characters are not accepted' });
-    else if (formFirstName.length <= 1 || formFirstName.length >= 20) this.setState({ firstNameError: true, firstNameErrorMessage: 'Number of characters not accepted' });
+    else if ( formFirstName.length >= 20) this.setState({ firstNameError: true, firstNameErrorMessage: 'Number of characters not accepted' });
     else this.setState({ firstNameError: false, firstNameErrorMessage: '', firstName: formFirstName });
   };
 
@@ -260,7 +261,7 @@ class EditProfilePage extends Component {
 
     if (validNameRegex.test(formLastName) === true) {
       this.setState({ lastNameError: true, lastNameErrorMessage: 'Special characters are not accepted' });
-    } else if (formLastName.length <= 1 || formLastName.length >= 20) {
+    } else if ( formLastName.length >= 20) {
       this.setState({ lastNameError: true, lastNameErrorMessage: 'Number of characters not accepted' });
     } else {
       this.setState({ lastNameError: false, lastNameErrorMessage: '' });
@@ -549,7 +550,7 @@ class EditProfilePage extends Component {
                     autoFocus
                     error={this.state.firstNameError}
                     value={this.state.firstName}
-                    helperText={this.state.firstNameError === false ? '' : this.state.firstNameErrorMessage}
+                    helperText={this.state.firstNameError === false ? '2-19 characters required' : this.state.firstNameErrorMessage}
                     onChange={this.handleChangeFirstName}
                     inputProps={{ maxLength: 21 }}
                   />
@@ -566,7 +567,7 @@ class EditProfilePage extends Component {
                     autoComplete="lname"
                     value={this.state.lastName}
                     error={this.state.lastNameError}
-                    helperText={this.state.lastNameError === false ? '' : this.state.lastNameErrorMessage}
+                    helperText={this.state.lastNameError === false ? '2-19 characters required' : this.state.lastNameErrorMessage}
                     onChange={this.handleChangeLastName}
                     inputProps={{ maxLength: 21 }}
                   />
@@ -721,6 +722,7 @@ class EditProfilePage extends Component {
                 color="primary"
                 className={classes.submit}
                 onClick={this.onSaveButtonClicked}
+                disabled = {(this.state.lastName.length<2 || this.state.firstName.length<2) ? true: false }
               >
                 Save changes
                 </Button>
