@@ -231,6 +231,7 @@ class PartnerListPage extends Component
     .then((response) => 
     {
       this.getPartnerList();
+      this.setState({showConfirm: false, unmatchId: ""})
     });
   }
 

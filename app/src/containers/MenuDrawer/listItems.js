@@ -118,5 +118,13 @@ export const adminListItems = (
       </ListItemIcon>
       <ListItemText primary="Statistics" />
     </ListItem>
+
+    <ListItem button component={Link} 
+      to={'/news-dashboard'}>
+      <ListItemIcon>
+        <SearchIcon />
+      </ListItemIcon>
+      <ListItemText primary="News dasboard" />
+    </ListItem>
   </div>
 );
