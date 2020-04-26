@@ -38,3 +38,15 @@
   margin:5px;
   border-radius: 50%;
 }
+
+.news-dashboard table tr td .cell-content{
+  max-height: 11em;
+  overflow: scroll;
+}
+
+@media only screen and (min-width: 600px) {
+  .news-dashboard {
+    margin-left: -24px;
+    margin-right: -24px;
+  }
+}
