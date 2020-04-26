@@ -130,39 +130,39 @@ import ConstantsList from '../../config_constants';
 
     render ()
     {  
-        const { classes, newsTitle, newsContent } = this.props;
+        const { classes, newsTitle, newsContent, newsImage } = this.props;
         const trimedTitle = (newsTitle && newsTitle.length > 28) ? newsTitle.substring(0,28) + "..." : newsTitle
-        const newsImage = "https://www.predictiveindex.com/wp-content/uploads/2019/02/PI-News-Icon-2.png"
+
         return(
           <div>
             <Card className={classes.card} elevation={0}>
-            <CardContent className={classes.content}>
-                <CardMedia
-                    className={classes.media}
-                    component="img"
-                    image={newsImage}
-                />
+              <CardContent className={classes.content}>
+                  <CardMedia
+                      className={classes.media}
+                      component="img"
+                      image={newsImage}
+                  />
 
-                <Box mb={1}>
-                    <h4>
+                  <Box mb={1}>
+                      <h4>
                         <Link
-                        component={'button'}
-                        onClick={this.handleNewsDetailsOpen}
-                        className={classes.titleText}
-                        >
-                        {trimedTitle} <ArrowForwardIos className={classes.icon}/>
+                          component={'button'}
+                          onClick={this.handleNewsDetailsOpen}
+                          className={classes.titleText}
+                          >
+                          {trimedTitle} <ArrowForwardIos className={classes.icon}/>
                         </Link>
-                    </h4>
-                </Box>
-            </CardContent>
+                      </h4>
+                  </Box>
+              </CardContent>
 
-          </Card>
+            </Card>
             <Dialog
                 aria-labelledby="simple-modal-title"
                 aria-describedby="simple-modal-description"
                 open={this.state.newsDetailsOpen}
                 onClose={this.handleClose}
-                maxWidth={'sm'}
+                maxWidth={'md'}
                 fullWidth={true}
             >
               <NewsDetails

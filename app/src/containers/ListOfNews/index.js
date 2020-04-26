@@ -69,14 +69,15 @@ class ListOfNews extends React.Component {
     }
 
     getNewsTiles(news, classes) {
+        const newsImage = "https://www.predictiveindex.com/wp-content/uploads/2019/02/PI-News-Icon-2.png"
         return (
             <div className={classes.fullWidth}>
-                <GridList cellHeight="auto" spacing={25} className={classes.gridList} cols={4} >
+                <GridList cellHeight="auto" spacing={25} className={classes.gridList} cols={3.5} >
                 {
                     news.map((news, key) =>  
                     {
                         return(<GridListTile key={key} cols={1} rows={1}>
-                                    <NewsCard newsTitle={news.title} newsContent={news.content}> 
+                                    <NewsCard newsTitle={news.title} newsContent={news.content} newsImage={newsImage}> 
                                     </NewsCard>
                                     
                                 </GridListTile>)
@@ -93,10 +94,10 @@ class ListOfNews extends React.Component {
         //Wait until all informations be render until continue
         if (this.state.isLoadingPage) return null;
 
-        if (this.state.newsList.length === 1) {
+        if (this.state.newsList.length === 0) {
             return (
                 <div className={classes.root}>
-                    <div align="center">
+                    <div className={classes.fullWidth} align="center">
                         <Paper>
 
                             <br></br>
