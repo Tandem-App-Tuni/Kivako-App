@@ -40,11 +40,11 @@ class NewsDashboard extends React.Component {
 						</div>
 					},
 					cellStyle: {
-						width: "50%",
+						width: "25%",
 						// maxWidth: 20
 					},
 					headerStyle: {
-						width: "50%" ,
+						width: "25%" ,
 						// maxWidth: 20
 					}
 				},

@@ -17,6 +17,7 @@ import kivako_logo from "./images/kivako_logo.png"
 import cc_image from "./images/cc.png"
 import unitandem_logo from "./images/unitandem_logo.png"
 import cover_pic from "./images/cover_photo.png"
+import ListOfNews from '../ListOfNews'
 
 import '@fortawesome/fontawesome-free/css/all.min.css';
 const useStyles = theme =>
@@ -104,6 +105,13 @@ class LandingPage extends Component {
             </div>
           </div>
         </section>  {/* first section ends here */}
+
+        <section id="news-section"> {/* news section or feature section starts here */}
+          <div className=" container-fluid white-section">
+              <h2>News</h2>
+              <ListOfNews/>
+            </div>
+        </section> {/* news section or feature section ends here */}
 
         <section id="second-section"> {/* second section or feature section starts here */}
           <div className=" container-fluid white-section">
