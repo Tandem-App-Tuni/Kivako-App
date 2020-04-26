@@ -18,6 +18,7 @@ import { Link } from 'react-router-dom';
 import {withStyles} from '@material-ui/core/styles';
 import logo from '../../tandemlogo.png'
 import ConstantsList from '../../config_constants';
+
 import {AppContext} from "../../components/context/context";
 
 const drawerWidth = 240;
@@ -112,7 +113,8 @@ class Dashboard extends React.Component
     super(props);
 
     this.state = {open:true, isAdmin:false, requestAmount:0 , socket: props.chatBundle.socket, getChatN: props.chatBundle.getChatNotification, setChatN: props.chatBundle.setChatNotification,};
-    
+    this.resizeScreen = this.resizeScreen.bind(this); 
+
   }
 
   handleDrawerOpen = () => 
@@ -130,10 +132,22 @@ class Dashboard extends React.Component
     window.location.href="/";
   }
 
+  resizeScreen() {
+    if(window.innerWidth <= 850)
+    {
+      this.setState({open:false});
+    }
+    else {
+      this.setState({open:true});
+    }
+  }
   async componentDidMount()
   {
     try 
     {
+      window.addEventListener("resize", this.resizeScreen);
+      this.resizeScreen();
+
       this._isMounted = true;
 
       this.state.socket.on('notification', () => this.state.setChatN(true));
