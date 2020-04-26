@@ -121,8 +121,7 @@ class SignUpPage extends Component {
       lastName: '',
       password: '',
       passwordConfirmation: '',
-      email: '',
-      emailConfirmation: '',
+      email: '',  
       cities: [],
       descriptionText: '',
       showInputTeachLanguage: false,
@@ -206,19 +205,12 @@ class SignUpPage extends Component {
   };
 
   handleChangeConfirmEmail = event => {
-
-    var value = (event.target.value);
-    this.setState({ emailConfirmation: value });
-  
+    var value = (event.target.value); 
 
    if (value !== this.state.email) {
-      this.setState({ emailConfirmationError: true, emailConfirmationErrorMessage: 'The email and confirm email must be equal' });
-      this.setState({ confirmEmailChecked: false });
+      this.setState({ confirmEmailChecked: false ,emailConfirmationError: true, emailConfirmationErrorMessage: 'The email and confirm email must be same' });
     } else {
-      this.setState({ emailConfirmationError: false, emailConfirmationErrorMessage: '' });
-      this.setState({ emailConfirmation: value });
-      this.setState({ confirmEmailChecked: true });
-      
+      this.setState({ confirmEmailChecked: true, emailConfirmationError: false, emailConfirmationErrorMessage: '' });   
     }
     
   };
@@ -486,19 +478,10 @@ class SignUpPage extends Component {
     this._isMounted = false;
   }
 
-  canBeSubmitted() {
-   if(this.state.confirmEmailChecked && this.state.termsAndConditionsAccept) {
-     return true;
-   }
-   else 
-    return false;
-  }
-
   render() {
     const { classes } = this.props;
     const excludedLanguages = this.toExcludeLanguages();
-    const isEnabled = this.canBeSubmitted();
-
+   
     //Wait until all informations be render until continue
     if (this.state.isLoadingPage) {
       return null;
@@ -769,7 +752,7 @@ class SignUpPage extends Component {
 
               <Button
                 //type="submit"
-                disabled={!isEnabled}
+                disabled={!(this.state.termsAndConditionsAccept && this.state.confirmEmailChecked)}
                 fullWidth
                 variant="contained"
                 color="primary"
