@@ -31,12 +31,11 @@ const useStyles = theme => ({
 
 class NewsDetails extends Component {
 
-    constructor(props) {
-      super(props);
+  constructor(props) {
+    super(props);
   }
-    
-  render() 
-  {
+
+  render() {
     const { classes, newsTitle, newsContent, newsImage } = this.props;
     
     return  (
@@ -51,9 +50,9 @@ class NewsDetails extends Component {
             <Box mb={1}>
                 <h3>{newsTitle}</h3>
             </Box>
-            <p className={classes.descriptionText}>
-                {newsContent}     
-            </p>
+            {newsContent.split("\n").map((content, index) => 
+              <p key={index} className={classes.descriptionText}>{content}</p>
+            )}     
         </Container>
       </div> 
     );
