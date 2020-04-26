@@ -122,6 +122,7 @@ class SignUpPage extends Component {
       password: '',
       passwordConfirmation: '',
       email: '',
+      emailConfirmation: '',  
       cities: [],
       descriptionText: '',
       showInputTeachLanguage: false,
@@ -201,6 +202,11 @@ class SignUpPage extends Component {
 
     var value = (event.target.value);
     this.setState({ email: value });
+  };
+
+  handleChangeConfirmEmail = event => {
+    var value = event.target.value;
+    this.setState({ emailConfirmation: value });
   };
 
   handleChangeCities = value => {
@@ -469,7 +475,7 @@ class SignUpPage extends Component {
   render() {
     const { classes } = this.props;
     const excludedLanguages = this.toExcludeLanguages();
-
+   
     //Wait until all informations be render until continue
     if (this.state.isLoadingPage) {
       return null;
@@ -551,6 +557,22 @@ class SignUpPage extends Component {
                     helperText="Please use your university email (firstname.lastname@university.fi)"
                   />
                 </Grid>
+
+                <Grid item xs={12}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="confirmEmail"
+                    label="Email address confirmation"
+                    value={this.state.emailConfirmation}
+                    name="confirmEmail"
+                    error={this.state.emailConfirmation !== this.state.email}
+                    onChange={this.handleChangeConfirmEmail}
+                    helperText={(this.state.emailConfirmation === this.state.email) ? '' : 'The email and confirm email must be same'}
+                  />
+                </Grid>
+
 
                 <Grid item xs={12}>
                   <TextField
@@ -723,7 +745,7 @@ class SignUpPage extends Component {
 
               <Button
                 //type="submit"
-                disabled={!this.state.termsAndConditionsAccept}
+                disabled={!(this.state.termsAndConditionsAccept && (this.state.emailConfirmation === this.state.email))}
                 fullWidth
                 variant="contained"
                 color="primary"
@@ -755,8 +777,7 @@ export default withStyles(useStyles)(SignUpPage);
 class TermsAndConditions extends Component {
 
   render() {
-
-
+ 
     return (
       <div>
 

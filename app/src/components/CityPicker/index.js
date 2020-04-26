@@ -138,7 +138,7 @@ export function CityPicker(props) {
       }) => {
         const { onBlur, onChange, onFocus, ...inputProps } = getInputProps({
           onKeyDown: handleKeyDown,
-          placeholder: 'Your minicipilities of residence and study',
+          placeholder: 'Your municipilities of residence and study',
         });
 
         return (
