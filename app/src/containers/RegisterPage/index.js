@@ -121,7 +121,8 @@ class SignUpPage extends Component {
       lastName: '',
       password: '',
       passwordConfirmation: '',
-      email: '',  
+      email: '',
+      emailConfirmation: '',  
       cities: [],
       descriptionText: '',
       showInputTeachLanguage: false,
@@ -129,7 +130,6 @@ class SignUpPage extends Component {
       editingTeachLanguageIndex: 0,
       editingLearnLanguageIndex: 0,
       isAlreadyregistered: false,
-      confirmEmailChecked : false,
       termsAndConditionsAccept: false,
       isAlreadyAuthenticated: false,
       isLoadingPage: true,
@@ -205,14 +205,8 @@ class SignUpPage extends Component {
   };
 
   handleChangeConfirmEmail = event => {
-    var value = (event.target.value); 
-
-   if (value !== this.state.email) {
-      this.setState({ confirmEmailChecked: false ,emailConfirmationError: true, emailConfirmationErrorMessage: 'The email and confirm email must be same' });
-    } else {
-      this.setState({ confirmEmailChecked: true, emailConfirmationError: false, emailConfirmationErrorMessage: '' });   
-    }
-    
+    var value = event.target.value;
+    this.setState({ emailConfirmation: value });
   };
 
   handleChangeCities = value => {
@@ -573,10 +567,9 @@ class SignUpPage extends Component {
                     label="Email address confirmation"
                     value={this.state.emailConfirmation}
                     name="confirmEmail"
-                    error={this.state.emailConfirmationError}
-                    // autoComplete="confirmEmail"
+                    error={this.state.emailConfirmation !== this.state.email}
                     onChange={this.handleChangeConfirmEmail}
-                    helperText={this.state.emailConfirmationError === false ? '' : this.state.emailConfirmationErrorMessage}
+                    helperText={(this.state.emailConfirmation === this.state.email) ? '' : 'The email and confirm email must be same'}
                   />
                 </Grid>
 
@@ -752,7 +745,7 @@ class SignUpPage extends Component {
 
               <Button
                 //type="submit"
-                disabled={!(this.state.termsAndConditionsAccept && this.state.confirmEmailChecked)}
+                disabled={!(this.state.termsAndConditionsAccept && (this.state.emailConfirmation === this.state.email))}
                 fullWidth
                 variant="contained"
                 color="primary"
