@@ -13,6 +13,7 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { ConfirmDialog } from '../../components/AlertView';
 import Dialog from '@material-ui/core/Dialog';
+import Hidden from '@material-ui/core/Hidden';
 
 
 const styles =  theme => 
@@ -168,19 +169,36 @@ class PartnerListPage extends Component
     return (
       
         <div className={classes.fullWidth}>
-          <GridList cellHeight="auto" spacing={25} >
-            {
-                partnerList.map((partner, _id) =>  
-                {      
-                  return(<GridListTile key={_id} rows={2}>
-                            <UserStyleCard  user={partner} page="partner-list"
-                            yesText="Unmatch" yesFunction={()=>{this.setState({showConfirm: true, unmatchId: partner.matchId})}} matchId={partner.matchId}
-                            noText="Report" noFunction={this.onReportPartner}> 
-                            </UserStyleCard>
-                        </GridListTile>)
-                }
-            )}
+          <Hidden xsDown>
+            <GridList cellHeight="auto" spacing={25} >
+              {
+                  partnerList.map((partner, _id) =>  
+                  {      
+                    return(<GridListTile key={_id} rows={2}>
+                              <UserStyleCard  user={partner} page="partner-list"
+                              yesText="Unmatch" yesFunction={()=>{this.setState({showConfirm: true, unmatchId: partner.matchId})}} matchId={partner.matchId}
+                              noText="Report" noFunction={this.onReportPartner}> 
+                              </UserStyleCard>
+                          </GridListTile>)
+                  }
+              )}
+              </GridList>
+          </Hidden>
+          <Hidden smUp>
+            <GridList cellHeight="auto" cols={1} spacing={25} >
+              {
+                  partnerList.map((partner, _id) =>  
+                  {      
+                    return(<GridListTile key={_id} rows={2}>
+                              <UserStyleCard  user={partner} page="partner-list"
+                              yesText="Unmatch" yesFunction={()=>{this.setState({showConfirm: true, unmatchId: partner.matchId})}} matchId={partner.matchId}
+                              noText="Report" noFunction={this.onReportPartner}> 
+                              </UserStyleCard>
+                          </GridListTile>)
+                  }
+              )}
             </GridList>
+          </Hidden>
         </div>   
         )
 }

@@ -24,6 +24,7 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import {AppContext} from "../../components/context/context";
+import Hidden from '@material-ui/core/Hidden';
 
 const styles = ({
     root: {
@@ -185,18 +186,35 @@ class MatchRequests extends React.Component {
     getMatchesTiles(matches, classes) {
         return (
             <div className={classes.fullWidth}>
-                <GridList cellHeight="auto" spacing={25} >
-                {
-                    matches.map((match, key) =>  
+                <Hidden xsDown>
+                    <GridList cellHeight="auto" spacing={25} >
                     {
-                        return(<GridListTile key={key} rows={2}>
-                                    <UserStyleCard  user={match.requesterUser} yesText="Accept" yesFunction={()=>{this.setState({showAcceptConfirm: true, matchId: match._id})}}
-                                      noText="Deny" noFunction={()=>{this.setState({showDenyConfirm: true, matchId: match._id})}}  page="pending-match" match={match}> 
-                                    </UserStyleCard>
-                                </GridListTile>)
-                    }
-                )}
-                </GridList>
+                        matches.map((match, key) =>  
+                        {
+                            return(<GridListTile key={key} rows={2}>
+                                        <UserStyleCard  user={match.requesterUser} yesText="Accept" yesFunction={()=>{this.setState({showAcceptConfirm: true, matchId: match._id})}}
+                                        noText="Deny" noFunction={()=>{this.setState({showDenyConfirm: true, matchId: match._id})}}  page="pending-match" match={match}> 
+                                        </UserStyleCard>
+                                    </GridListTile>)
+                        }
+                    )}
+                    </GridList>
+                </Hidden>
+                <Hidden smUp>
+                    <GridList cellHeight="auto" cols={1} spacing={25} >
+                    {
+                        matches.map((match, key) =>  
+                        {
+                            return(<GridListTile key={key} rows={2}>
+                                        <UserStyleCard  user={match.requesterUser} yesText="Accept" yesFunction={()=>{this.setState({showAcceptConfirm: true, matchId: match._id})}}
+                                        noText="Deny" noFunction={()=>{this.setState({showDenyConfirm: true, matchId: match._id})}}  page="pending-match" match={match}> 
+                                        </UserStyleCard>
+                                    </GridListTile>)
+                        }
+                    )}
+                    </GridList>
+                </Hidden>
+
             </div>   
             )
     }

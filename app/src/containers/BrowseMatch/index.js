@@ -30,6 +30,8 @@ import ConstantsList from '../../config_constants';
 import {AlertPopup} from '../../components/AlertView';
 
 import UserStyleCard from '../../components/UserStyleCard';
+import Hidden from '@material-ui/core/Hidden';
+
 const styles = ({
     root: {
         display: 'inline',
@@ -109,18 +111,34 @@ class BrowseMatch extends React.Component
                 </Typography>
             ) : (
             <div className={classes.fullWidth}>
-                <GridList cellHeight="auto" spacing={25} >
-                {
-                    item.matches.map((match, key) =>  
+                <Hidden xsDown>
+                    <GridList cellHeight="auto" spacing={25} >
                     {
-                        return(<GridListTile key={match._id} className={classes.gridListTile} rows={2}>
-                                    <UserStyleCard  user={match} fitQuality={match.fitQuality} yesText="Send invitation" yesFunction={this.onInviteAction} 
-                                     page="browse-match" matchingLanguage={item.languageName}> 
-                                    </UserStyleCard>
-                                </GridListTile>)
-                    }
-                )}
-                </GridList>
+                        item.matches.map((match, key) =>  
+                        {
+                            return(<GridListTile key={match._id} className={classes.gridListTile} rows={2}>
+                                        <UserStyleCard  user={match} fitQuality={match.fitQuality} yesText="Send invitation" yesFunction={this.onInviteAction} 
+                                        page="browse-match" matchingLanguage={item.languageName}> 
+                                        </UserStyleCard>
+                                    </GridListTile>)
+                        }
+                    )}
+                    </GridList>
+                </Hidden>
+                <Hidden smUp>
+                    <GridList cellHeight="auto" cols={1} spacing={25} >
+                    {
+                        item.matches.map((match, key) =>  
+                        {
+                            return(<GridListTile key={match._id} className={classes.gridListTile} rows={2}>
+                                        <UserStyleCard  user={match} fitQuality={match.fitQuality} yesText="Send invitation" yesFunction={this.onInviteAction} 
+                                        page="browse-match" matchingLanguage={item.languageName}> 
+                                        </UserStyleCard>
+                                    </GridListTile>)
+                        }
+                    )}
+                    </GridList>
+                </Hidden>
             </div>   
             )
         )
