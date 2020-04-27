@@ -40,11 +40,11 @@ class NewsDashboard extends React.Component {
 						</div>
 					},
 					cellStyle: {
-						width: "50%",
+						width: "25%",
 						// maxWidth: 20
 					},
 					headerStyle: {
-						width: "50%" ,
+						width: "25%" ,
 						// maxWidth: 20
 					}
 				},
@@ -264,7 +264,7 @@ class NewsDashboard extends React.Component {
 
 export default NewsDashboard;	
 
-function convertDate(dateStr) {
+export function convertDate(dateStr) {
 	let date = new Date(dateStr);
 	return date.getDate()+ "." +(date.getMonth()+1)+ "." + date.getFullYear()+ " "
 		+ date.getHours()+ ":" + date.getMinutes();
