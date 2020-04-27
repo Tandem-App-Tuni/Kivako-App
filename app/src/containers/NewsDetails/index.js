@@ -5,6 +5,8 @@ import {withStyles} from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import CardMedia from '@material-ui/core/CardMedia';
 
+import {convertDate} from "../NewsDashboard";
+
 const useStyles = theme => ({
   '@global': {
     body: {
@@ -36,7 +38,7 @@ class NewsDetails extends Component {
   }
 
   render() {
-    const { classes, newsTitle, newsContent, newsImage } = this.props;
+    const { classes, newsTitle, newsContent, newsImage, newsAuthor, newsUpdateDate } = this.props;
     
     return  (
       <div>
@@ -48,8 +50,10 @@ class NewsDetails extends Component {
             image={newsImage}
             />
             <Box mb={1}>
-                <h3>{newsTitle}</h3>
+                <h2>{newsTitle}</h2>
+                <p>{newsAuthor} - {convertDate(newsUpdateDate)}</p>
             </Box>
+            <hr/>
             {newsContent.split("\n").map((content, index) => 
               <p key={index} className={classes.descriptionText}>{content}</p>
             )}     

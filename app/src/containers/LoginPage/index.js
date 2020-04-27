@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-import {
-  withStyles
-} from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 
 import InfoTable from './statiticsTable'
 

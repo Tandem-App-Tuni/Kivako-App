@@ -15,50 +15,44 @@ import ConstantsList from '../../config_constants';
   const useStyles = theme => ({
     card: {
       display: 'flex',
-      padding: "1px",
+      flexDirection: "column",
+      textAlign: "center",
       borderRadius: 16,
       backgroundColor: "#FAFAFA",
-      width: "250px",
+      width: "100%",
       height: "250px",
       [theme.breakpoints.down('md')]: {
-        width: "185px",
-      height: "185px",
+        height: "185px",
       },
       [theme.breakpoints.down('sm')]: {
-        width: "160px",
-      height: "160px",
+        height: "160px",
       },
       [theme.breakpoints.down('xs')]: {
-        width: "120px",
-      height: "120px",
-      },
-      
-      },
+        height: "120px",
+      },  
+    },
     media: {
       flexShrink: 0,
       backgroundColor: "#F4F4F4",
       borderRadius: "80%",
       boxShadow: '0 2px 8px 0 #c1c9d7, 0 -2px 8px 0 #cce1e9',
-      marginRight:"2%",
-      marginLeft: "11%",
+      marginRight:"auto",
+      marginLeft: "auto",
       width: '10rem',
       height: '10rem',
       [theme.breakpoints.between('lg','xl')]: {
         width: '10rem',
         height: '10rem',
         marginTop:"20px",
-        marginRight: "5%",
       },
       [theme.breakpoints.down('lg')]: {
         width: '10rem',
         height: '10rem',
-        marginRight: "5px",
         borderRadius: "50%",
       },
       [theme.breakpoints.down('1462')]: {
         width: '10rem',
         height: '10rem',
-        marginRight: "5px",
         borderRadius: "60%",
       },
       [theme.breakpoints.down('1346')]: {
@@ -74,7 +68,6 @@ import ConstantsList from '../../config_constants';
         width: '4rem'
       },
       [theme.breakpoints.down('xs')]: {
-        //display: "none",
         height: '3rem',
         width: '3rem'
       },
@@ -85,6 +78,7 @@ import ConstantsList from '../../config_constants';
     titleText: {
       fontSize: 17,
       wordWrap: "break-word",
+      marginTop: "15px",
       minWidth: "220px",
       maxWidth: "220px",
       [theme.breakpoints.down('lg')]: {
@@ -130,8 +124,9 @@ import ConstantsList from '../../config_constants';
 
     render ()
     {  
-        const { classes, newsTitle, newsContent, newsImage } = this.props;
-        const trimedTitle = (newsTitle && newsTitle.length > 28) ? newsTitle.substring(0,28) + "..." : newsTitle
+        const { classes, newsImage, news } = this.props;
+        const {title, content, author, updatedAt} = news;
+        const trimedTitle = (title && title.length > 28) ? title.substring(0,28) + "..." : title
 
         return(
           <div>
@@ -140,9 +135,7 @@ import ConstantsList from '../../config_constants';
                   <CardMedia
                       className={classes.media}
                       component="img"
-                      image={newsImage}
-                  />
-
+                      image={newsImage}/>
                   <Box mb={1}>
                       <h4>
                         <Link
@@ -155,7 +148,6 @@ import ConstantsList from '../../config_constants';
                       </h4>
                   </Box>
               </CardContent>
-
             </Card>
             <Dialog
                 aria-labelledby="simple-modal-title"
@@ -163,13 +155,13 @@ import ConstantsList from '../../config_constants';
                 open={this.state.newsDetailsOpen}
                 onClose={this.handleClose}
                 maxWidth={'md'}
-                fullWidth={true}
-            >
+                fullWidth={true}>
               <NewsDetails
-                newsTitle={newsTitle}
-                newsContent={newsContent}
-                newsImage={newsImage}
-              ></NewsDetails>
+                newsTitle={title}
+                newsContent={content}
+                newsAuthor={author}
+                newsUpdateDate={updatedAt}
+                newsImage={newsImage}/>
             </Dialog>
         </div>
         );

@@ -76,11 +76,11 @@ class ListOfNews extends React.Component {
                 {
                     news.map((news, key) =>  
                     {
-                        return(<GridListTile key={key} cols={1} rows={1}>
-                                    <NewsCard newsTitle={news.title} newsContent={news.content} newsImage={newsImage}> 
-                                    </NewsCard>
-                                    
-                                </GridListTile>)
+                        return(
+                            <GridListTile key={key} cols={1} rows={1}>
+                                <NewsCard news={news} newsImage={newsImage}/> 
+                            </GridListTile>
+                        )
                     }
                 )}
                 </GridList>
