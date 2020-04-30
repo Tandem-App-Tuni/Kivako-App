@@ -15,14 +15,10 @@ const useStyles = theme => ({
   },
   media: {
     flexShrink: 0,
-    backgroundColor: "#F4F4F4",
-    borderRadius: "80%",
-    boxShadow: '0 2px 8px 0 #c1c9d7, 0 -2px 8px 0 #cce1e9',
     marginTop:"2%",
     marginLeft: "33%",
     width: '33%',
     height: '33%',
-    
   },
   cardMedia:  {
     minHeight: '300px'
@@ -38,7 +34,7 @@ class NewsDetails extends Component {
   }
 
   render() {
-    const { classes, newsTitle, newsContent, newsImage, newsAuthor, newsUpdateDate } = this.props;
+    const { classes, newsTitle, newsImage ,newsContent, newsAuthor, newsUpdateDate } = this.props;
     
     return  (
       <div>
