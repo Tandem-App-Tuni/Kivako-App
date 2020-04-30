@@ -1,5 +1,6 @@
 import React from "react";
 import {clone} from "ramda";
+import TextField from "@material-ui/core/TextField";
 
 import ConstantsList from '../../config_constants';
 import MaterialTable from "material-table";
@@ -26,12 +27,11 @@ class NewsDashboard extends React.Component {
 					field: "content",
 					editComponent: props => (
 						<textarea
-						type="text"
-						value={props.value}
-						rows="20"
-						cols="70"
-						onChange={e => props.onChange(e.target.value)}
-						/>
+							type="text"
+							value={props.value}
+							rows="20"
+							cols="70"
+							onChange={e => props.onChange(e.target.value)}/>
 					),
 					render: data => {
 						let str = data.content.split("\n");
@@ -41,14 +41,15 @@ class NewsDashboard extends React.Component {
 					},
 					cellStyle: {
 						width: "25%",
-						// maxWidth: 20
 					},
 					headerStyle: {
 						width: "25%" ,
-						// maxWidth: 20
 					}
 				},
-				{ title: "Author", field: "author" },
+				{
+					title: "Author",
+					field: "author"
+				},
 				{
 					title: "Created at",
 					field: "createdAt",
@@ -65,7 +66,8 @@ class NewsDashboard extends React.Component {
 			isLoading: true,
 			showAlert: false,
 			alertText: "",	
-			alertType: ""
+			alertType: "",
+			user: {}
 		}
 	}
 
@@ -80,6 +82,24 @@ class NewsDashboard extends React.Component {
 		.then(responseJson => {
 			this.setState({ newsList: responseJson, isLoading: false })
 		});
+
+		fetch(window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + "/api/v1/users/userInfo",
+			{
+				method: 'GET',
+				credentials: 'include'
+			}
+		)
+		.then(response => response.json())	
+		.then(responseJson => {
+			this.setState(state => {
+				let {data} = responseJson
+				let columns = state.tableColumns;
+				let col = columns.find(col => col.field === "author");
+				col.initialEditValue = data.firstName + " " + data.lastName;
+				return {user: data, tableColumns: columns}
+			})
+		});
+		
 	}
 
 	updateNews = (newData, oldData) => {
