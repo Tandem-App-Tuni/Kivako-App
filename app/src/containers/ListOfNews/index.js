@@ -69,16 +69,15 @@ class ListOfNews extends React.Component {
     }
 
     getNewsTiles(news, classes) {
-        const newsImage = "https://www.predictiveindex.com/wp-content/uploads/2019/02/PI-News-Icon-2.png"
         return (
             <div className={classes.fullWidth}>
-                <GridList cellHeight="auto" spacing={25} className={classes.gridList} cols={3.5} >
+                <GridList cellHeight="auto" spacing={25} className={classes.gridList} cols={2} >
                 {
                     news.map((news, key) =>  
                     {
                         return(
                             <GridListTile key={key} cols={1} rows={1}>
-                                <NewsCard news={news} newsImage={newsImage}/> 
+                                <NewsCard news={news}/> 
                             </GridListTile>
                         )
                     }

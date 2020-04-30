@@ -33,50 +33,35 @@ import ConstantsList from '../../config_constants';
     },
     media: {
       flexShrink: 0,
-      backgroundColor: "#F4F4F4",
-      borderRadius: "80%",
-      boxShadow: '0 2px 8px 0 #c1c9d7, 0 -2px 8px 0 #cce1e9',
       marginRight:"auto",
       marginLeft: "auto",
       width: '10rem',
       height: '10rem',
       [theme.breakpoints.between('lg','xl')]: {
-        width: '10rem',
-        height: '10rem',
-        marginTop:"20px",
+        width: '9rem',
+        height: '9rem',
       },
       [theme.breakpoints.down('lg')]: {
-        width: '10rem',
-        height: '10rem',
-        borderRadius: "50%",
+        width: '8rem',
+        height: '8rem',
       },
       [theme.breakpoints.down('1462')]: {
-        width: '10rem',
-        height: '10rem',
-        borderRadius: "60%",
+        width: '7rem',
+        height: '7rem',
       },
       [theme.breakpoints.down('1346')]: {
-        height: '7rem',
-        width: '7rem'
-      },
-      [theme.breakpoints.down('md')]: {
         height: '5rem',
         width: '5rem'
       },
-      [theme.breakpoints.down('sm')]: {
-        height: '4rem',
-        width: '4rem'
-      },
       [theme.breakpoints.down('xs')]: {
-        height: '3rem',
-        width: '3rem'
+        display: "none"
       },
     },
     content: {
       padding: "0px, 0, 0, 0",
     },
     titleText: {
-      fontSize: 17,
+      fontSize: 23,
       wordWrap: "break-word",
       marginTop: "15px",
       minWidth: "220px",
@@ -90,9 +75,18 @@ import ConstantsList from '../../config_constants';
         maxWidth: "180px"
       },
       [theme.breakpoints.down('md')]: {
+        fontSize: 18,
         minWidth: "auto",
         maxWidth: "auto",
         minHeight: "auto"
+      },
+      [theme.breakpoints.down('sm')]: {
+        fontSize: 15,
+        margin: "0px",
+        minWidth: "auto",
+        maxWidth: "auto",
+        minHeight: "auto",
+        textAlign:"center"
       }
     }
   });
@@ -124,9 +118,9 @@ import ConstantsList from '../../config_constants';
 
     render ()
     {  
-        const { classes, newsImage, news } = this.props;
+        const { classes, news } = this.props;
         const {title, content, author, updatedAt} = news;
-        const trimedTitle = (title && title.length > 28) ? title.substring(0,28) + "..." : title
+        const trimedTitle = (title && title.length > 70) ? title.substring(0,70) + "..." : title
 
         return(
           <div>
@@ -135,15 +129,15 @@ import ConstantsList from '../../config_constants';
                   <CardMedia
                       className={classes.media}
                       component="img"
-                      image={newsImage}/>
+                      image={window.location.origin + '/news-thumbnail.png'}/>
                   <Box mb={1}>
-                      <h4>
+                      <h4 className={classes.fullWidth}>
                         <Link
                           component={'button'}
                           onClick={this.handleNewsDetailsOpen}
                           className={classes.titleText}
                           >
-                          {trimedTitle} <ArrowForwardIos className={classes.icon}/>
+                          {trimedTitle}
                         </Link>
                       </h4>
                   </Box>
@@ -161,7 +155,7 @@ import ConstantsList from '../../config_constants';
                 newsContent={content}
                 newsAuthor={author}
                 newsUpdateDate={updatedAt}
-                newsImage={newsImage}/>
+                newsImage={window.location.origin + '/news-thumbnail.png'}/>
             </Dialog>
         </div>
         );
