@@ -187,13 +187,13 @@ class LandingPage extends Component {
                 <li>
                   <div className="content">
                     <h3>Step 3</h3>
-                    <p>Find a language partner. When you have found a partner, send an email to <a href="mailto:info@unitandem.fi"> info@unitandem.fi</a> to get the password for <a href="https://digicampus.fi/course/view.php?id=272">DigiCampus</a>, where the instructions and materials are available.</p>
+                    <p>Find a language partner. When you have found a partner, fill in the <a href="http://bit.ly/UniTandemReg">registration form</a> to get the password for <a href="https://digicampus.fi/course/view.php?id=272">DigiCampus</a>, where the instructions and materials are available.</p>
                   </div>
                 </li>
                 <li>
                   <div className="content">
                     <h3>Step 4</h3>
-                    <p>Sign up to <a href="https://digicampus.fi/course/view.php?id=272">DigiCampus</a> using your university of university of applied sciences email address (HAKA), and when prompted, enter the enrolment key you have received from <a href="mailto:info@unitandem.fi"> info@unitandem.fi</a>. </p>
+                    <p>Sign up to <a href="https://digicampus.fi/course/view.php?id=272">DigiCampus</a> using your university or university of applied sciences email address (HAKA), and when prompted, enter the enrolment key you have received after filling in the registration form.</p>
                   </div>
                 </li>
                 <li>
