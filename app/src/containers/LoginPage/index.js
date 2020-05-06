@@ -187,7 +187,7 @@ class LandingPage extends Component {
                 <li>
                   <div className="content">
                     <h3>Step 3</h3>
-                    <p>Find a language partner. When you have found a partner, fill in the <a href="http://bit.ly/UniTandemReg">registration form</a> to get the password for <a href="https://digicampus.fi/course/view.php?id=272">DigiCampus</a>, where the instructions and materials are available.</p>
+                    <p>Find a language partner. When you have found a partner, fill in the <a href="http://bit.ly/UniTandemReg">registration form</a> to get the password for <a href="https://digicampus.fi/course/view.php?id=272">DigiCampus</a>, where the instructions and materials are available. Every student must fill in the registration form individually.</p>
                   </div>
                 </li>
                 <li>
@@ -217,7 +217,7 @@ class LandingPage extends Component {
                 <li>
                   <div className="content">
                     <h3>Step 8</h3>
-                    <p>The university coordinating UniTandem awards the credits. </p>
+                    <p>The university coordinating UniTandem awards the credits and you transfer them to your university. </p>
                   </div>
                 </li>
                 <div className="clear-div"></div>
