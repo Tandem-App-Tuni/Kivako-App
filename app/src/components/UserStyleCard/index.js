@@ -271,7 +271,7 @@ import Tooltip from '@material-ui/core/Tooltip';
               <Box mb={1} className={classes.thirdRow}>
                 <p className={classes.email}> { user.email}  </p>
                 {(this.props.fitQuality !== null && this.props.fitQuality === 0) ?
-                    <Tooltip title="One way match means you cannot teach any language(s) that this student want to learn.">
+                    <Tooltip title="One way match means you cannot teach any language(s) that this student wants to learn.">
                       <Chip
                       icon={<WarningIcon />}
                       label="One way match!"
@@ -288,7 +288,7 @@ import Tooltip from '@material-ui/core/Tooltip';
               </div>
               <div className={classes.body}>   
                 <div className={classes.chipGroup}>
-                  Want to learn
+                  Wants to learn
                   {user.languagesToLearn.map(lang => {
                     return ( <Chip key={lang.language} className={classes.chip} color="primary" variant="outlined" size="small" 
                              label={`${lang.language} - ${lang.level} - ${lang.credits} credits`} /> )
