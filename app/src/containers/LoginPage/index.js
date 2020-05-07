@@ -92,14 +92,22 @@ class LandingPage extends Component {
               <a id="moodle-button" href=" https://digicampus.fi/course/view.php?id=272"
                 className="btn btn-lg btn-outline-success title-btn">Go to
                 DigiCampus</a>
-              <h2>What is tandem learning? </h2>
-              <p className="title-paragraph">Tandem (also known as Each One Teach One) is a method where
-                  two
-                  students teach each other their native (or native-like) languages in informal meetings,
-                  acting both in the teacher’s and the learner’s roles. Tandem can be utilized from
-                  beginner to advanced levels, and it can be used to support regular language studies or
-                  taken separately.
-            </p>
+             
+              <div>
+                <h2>What is tandem learning? </h2>
+                <p className="title-paragraph">Tandem (also known as Each One Teach One) is a method where
+                    two
+                    students teach each other their native (or native-like) languages in informal meetings,
+                    acting both in the teacher’s and the learner’s roles. Tandem can be utilized from
+                    beginner to advanced levels, and it can be used to support regular language studies or
+                    taken separately.
+                </p>
+              </div>
+              
+              <div class="embed-responsive embed-responsive-21by9">
+                <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/mlwKBF9F-pw"></iframe>
+              </div>             
+
             </div>
           </div>
         </section>  {/* first section ends here */}
