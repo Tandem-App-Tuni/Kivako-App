@@ -47,7 +47,7 @@ export let languages = [
 	"Estonian",
 	"Extremaduran",
 	"Faroese",
-	"Finnish ",
+	"Finnish",
 	"Franco-Provençal",
 	"French",
 	"Frisian",
