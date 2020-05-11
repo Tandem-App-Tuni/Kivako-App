@@ -265,7 +265,7 @@ class ListOfStudents extends Component {
                                 variant='contained'
                                 color='primary'
                                 className={classes.chip}
-                                onClick={() => this.onRemoveClick(row)}>
+                                onClick={() => {this.setState({showConfirm: true, deleteData: row})}}>
                                 Remove
                               </Button> : <div/>}
                           </div>
