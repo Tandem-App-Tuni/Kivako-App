@@ -1,6 +1,4 @@
-
 import React from 'react';
-
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import GridList from '@material-ui/core/GridList';
@@ -14,7 +12,7 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-
+import axios from 'axios';
 
 const styles = ({
     root: {
@@ -44,9 +42,9 @@ class ListOfNews extends React.Component {
       };
     }
 
-    getNewsListAPI(callback) {
-        const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/news");
-
+    //getNewsListAPI(callback) {
+getNewsListAPI() {
+      /*const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/news");
         fetch(url, {
             method: 'GET',
             credentials: 'include',
@@ -59,13 +57,32 @@ class ListOfNews extends React.Component {
             });
 
         callback();
-    }
+  */ 
+
+      //axios.get('news.json').then(response=>{
+        //this.sort((a, b) =>{return a.title - b.title});
+        //this.setState({ newsList: response});
+      
+      //})
 
 
+      fetch('news.json')
+        .then(res => res.json())
+        .then((data) => {
+            data.sort((a,b) => new Date(a.updatedAt) < new Date(b.updatedAt) ? 1 : -1);
+            this.setState({ newsList: data })
+                
+        })
+        .catch(console.log)
+}
+
+
+   
     componentDidMount() {
-        this.getNewsListAPI(() => {
-            this.setState({ isLoadingPage: false });
-        });
+       // this.getNewsListAPI(() => {
+          // this.setState({ isLoadingPage: false });
+        //});
+        this.getNewsListAPI();
     }
 
     getNewsTiles(news, classes) {
@@ -91,7 +108,7 @@ class ListOfNews extends React.Component {
         const { classes } = this.props;
 
         //Wait until all informations be render until continue
-        if (this.state.isLoadingPage) return null;
+        //if (this.state.isLoadingPage) return null;
 
         if (this.state.newsList.length === 0) {
             return (
@@ -146,3 +163,4 @@ ListOfNews.propTypes = {
 };
 
 export default withStyles(styles)(ListOfNews);
+
