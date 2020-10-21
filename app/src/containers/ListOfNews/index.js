@@ -42,47 +42,31 @@ class ListOfNews extends React.Component {
       };
     }
 
-    //getNewsListAPI(callback) {
-getNewsListAPI() {
-      /*const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/news");
+    getNewsListAPI(callback) {
+      const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/news");
         fetch(url, {
             method: 'GET',
             credentials: 'include',
             cors: 'no-cors'
         }).then((response) => response.json())
             .then((responseJson) => {
+                responseJson.sort((a,b) => new Date(a.updatedAt) < new Date(b.updatedAt) ? 1 : -1);
                 this.setState({ newsList: responseJson })
             }).catch((error) => {
                 console.error(error);
             });
 
         callback();
-  */ 
 
-      //axios.get('news.json').then(response=>{
-        //this.sort((a, b) =>{return a.title - b.title});
-        //this.setState({ newsList: response});
-      
-      //})
-
-
-      fetch('news.json')
-        .then(res => res.json())
-        .then((data) => {
-            data.sort((a,b) => new Date(a.updatedAt) < new Date(b.updatedAt) ? 1 : -1);
-            this.setState({ newsList: data })
-                
-        })
-        .catch(console.log)
 }
 
 
    
     componentDidMount() {
-       // this.getNewsListAPI(() => {
-          // this.setState({ isLoadingPage: false });
-        //});
-        this.getNewsListAPI();
+        this.getNewsListAPI(() => {
+        this.setState({ isLoadingPage: false });
+        });
+       
     }
 
     getNewsTiles(news, classes) {
@@ -107,8 +91,8 @@ getNewsListAPI() {
     render() {
         const { classes } = this.props;
 
-        //Wait until all informations be render until continue
-        //if (this.state.isLoadingPage) return null;
+       // Wait until all informations be render until continue
+        if (this.state.isLoadingPage) return null;
 
         if (this.state.newsList.length === 0) {
             return (
