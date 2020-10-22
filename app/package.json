@@ -10,7 +10,6 @@
     "@material-ui/icons": "^4.5.1",
     "@material-ui/lab": "^4.0.0-alpha.39",
     "@material-ui/styles": "^4.8.2",
-    "axios": "^0.20.0",
     "bootstrap": "^4.4.1",
     "downshift": "^3.4.8",
     "font-awesome": "^4.7.0",
