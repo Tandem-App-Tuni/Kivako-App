@@ -14,7 +14,7 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import {compareDate} from './util';
+import {compareDate} from '../../helpers/utils';
 
 
 const styles = ({
@@ -54,7 +54,9 @@ class ListOfNews extends React.Component {
             cors: 'no-cors'
         }).then((response) => response.json())
             .then((responseJson) => {
-                this.setState({ newsList: responseJson.sort((item, siblingItem) => compareDate(item.updatedAt, siblingItem.updatedAt))})
+                this.setState({ newsList: responseJson
+                    .sort((item, siblingItem) => compareDate(item.updatedAt, siblingItem.updatedAt))
+                })
             }).catch((error) => {
                 console.error(error);
             });
