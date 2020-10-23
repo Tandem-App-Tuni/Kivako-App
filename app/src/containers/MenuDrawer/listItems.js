@@ -17,21 +17,6 @@ import ConstantsList from '../../config_constants';
 
 export const mainListItems = chatNotification => (
   <div>
-    <ListItem button component="a" href="https://digicampus.fi/course/view.php?id=272">
-      <ListItemIcon>
-        <CollectionsBookmarkIcon/>
-      </ListItemIcon>
-      <ListItemText primary="DigiCampus" />
-    </ListItem>
-
-    <ListItem button component={Link} 
-          to={"/partner-list"}>
-      <ListItemIcon>
-        <PersonPinIcon/>
-      </ListItemIcon>
-      <ListItemText primary="Current partners" />
-    </ListItem>
-
     <ListItem button component={Link} 
       to={"/view-profile"}>
       <ListItemIcon>
@@ -61,27 +46,44 @@ export const secondaryListItems = requestAmount => (
       <ListItemText primary="Find a partner" />
     </ListItem>
 
-    <ListItem button component={Link} to={"/match-requests"}>
+    <ListItem button component={Link} 
+          to={"/partner-list"}>
+      <ListItemIcon>
+        <PersonPinIcon/>
+      </ListItemIcon>
+      <ListItemText primary="Partners" />
+    </ListItem>
+
+    <ListItem button component={Link}
+          to={"/match-requests"}>
       <ListItemIcon>
       <Badge badgeContent={requestAmount} color="secondary">
         <TimerIcon />
       </Badge>
       </ListItemIcon>
-      <ListItemText primary="Pending requests" />
+      <ListItemText primary="Requests" />
     </ListItem>
+
   </div>
 );
 
 export const thirdListItems = (
     <div>
       <ListSubheader inset></ListSubheader>
+
+      <ListItem button component="a" href="https://digicampus.fi/course/view.php?id=272">
+        <ListItemIcon>
+          <CollectionsBookmarkIcon/>
+        </ListItemIcon>
+        <ListItemText primary="DigiCampus" />
+      </ListItem>
+
       <ListItem button  component="a" href={ConstantsList.APPLICATION_URL + '/logout'}>
         <ListItemIcon>
             <ExitToAppIcon/>
         </ListItemIcon>
-          <ListItemText primary="Log out!" />
+          <ListItemText primary="Log out"/>
       </ListItem>
-  
     </div>
   );
 
