@@ -14,11 +14,10 @@
     "downshift": "^3.4.8",
     "font-awesome": "^4.7.0",
     "material-table": "^1.57.2",
-    "package.json": "^2.0.1",
     "prop-types": "^15.7.2",
     "ramda": "^0.27.0",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
     "react-image-file-resizer": "^0.2.1",
     "react-localization": "^1.0.15",
     "react-router-dom": "^5.1.2",
@@ -31,7 +30,7 @@
     "typeface-roboto": "0.0.75"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "PORT=3001 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
@@ -54,9 +53,5 @@
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.12.1"
-  },
-  "main": "index.js",
-  "author": "",
-  "license": "ISC",
-  "description": ""
+  }
 }
