@@ -1,4 +1,6 @@
+
 import React from 'react';
+
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import GridList from '@material-ui/core/GridList';
@@ -12,6 +14,7 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import {compareDate} from './util';
 
 
 const styles = ({
@@ -43,30 +46,27 @@ class ListOfNews extends React.Component {
     }
 
     getNewsListAPI(callback) {
-      const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/news");
+        const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/news");
+
         fetch(url, {
             method: 'GET',
             credentials: 'include',
             cors: 'no-cors'
         }).then((response) => response.json())
             .then((responseJson) => {
-                responseJson.sort((a,b) => new Date(a.updatedAt) < new Date(b.updatedAt) ? 1 : -1);
-                this.setState({ newsList: responseJson })
+                this.setState({ newsList: responseJson.sort((item, siblingItem) => compareDate(item.updatedAt, siblingItem.updatedAt))})
             }).catch((error) => {
                 console.error(error);
             });
 
         callback();
+    }
 
-}
 
-
-   
     componentDidMount() {
         this.getNewsListAPI(() => {
-        this.setState({ isLoadingPage: false });
+            this.setState({ isLoadingPage: false });
         });
-       
     }
 
     getNewsTiles(news, classes) {
@@ -91,7 +91,7 @@ class ListOfNews extends React.Component {
     render() {
         const { classes } = this.props;
 
-       // Wait until all informations be render until continue
+        //Wait until all informations be render until continue
         if (this.state.isLoadingPage) return null;
 
         if (this.state.newsList.length === 0) {
@@ -147,4 +147,3 @@ ListOfNews.propTypes = {
 };
 
 export default withStyles(styles)(ListOfNews);
-
