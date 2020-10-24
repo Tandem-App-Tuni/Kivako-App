@@ -15,6 +15,8 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
+import { getApiData } from '../../helpers/networkRequestHelpers';
+
 
 const styles = ({
     root: {
@@ -34,20 +36,20 @@ const styles = ({
 
 class ListOfNews extends React.Component {
 
-    constructor(props) 
+    constructor(props)
     {
       super(props);
       this.state = {
         newsList:[],
         isLoadingPage:true,
-        portOption:ConstantsList.PORT_IN_USE
       };
     }
 
     getNewsListAPI(callback) {
-        const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/news");
-
-        fetch(url, {
+        getApiData({
+            version: 'v1',
+            endpoint: 'news'
+        }, {
             method: 'GET',
             credentials: 'include',
             cors: 'no-cors'
@@ -73,17 +75,17 @@ class ListOfNews extends React.Component {
             <div className={classes.fullWidth}>
                 <GridList cellHeight="auto" spacing={25} className={classes.gridList} cols={2} >
                 {
-                    news.map((news, key) =>  
+                    news.map((news, key) =>
                     {
                         return(
                             <GridListTile key={key} cols={1} rows={1}>
-                                <NewsCard news={news}/> 
+                                <NewsCard news={news}/>
                             </GridListTile>
                         )
                     }
                 )}
                 </GridList>
-            </div>   
+            </div>
             )
     }
 

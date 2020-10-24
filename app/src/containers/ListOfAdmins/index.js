@@ -11,6 +11,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
 import Constants from '../../config_constants';
+import { getApiData } from '../../helpers/networkRequestHelpers';
 
 const useStyles = theme => ({
   '@global': {
@@ -39,7 +40,7 @@ const useStyles = theme => ({
   }
 });
 
-class ListOfAdmins extends React.Component 
+class ListOfAdmins extends React.Component
 {
   _isTableMounted=false;
 
@@ -57,7 +58,7 @@ class ListOfAdmins extends React.Component
           let time = new Date(value);
           return +time.getDate()+ '.' +(time.getMonth()+1)+'.' +time.getFullYear()+' '+time.getHours()+'.'+time.getMinutes();
         }
-        
+
         }
     },
     {
@@ -67,11 +68,11 @@ class ListOfAdmins extends React.Component
       align: 'center',
       format: value => {
         if(value) value.toString()
-      } 
-            
+      }
+
     }]
 
-  constructor(props) 
+  constructor(props)
   {
     super(props);
 
@@ -85,30 +86,32 @@ class ListOfAdmins extends React.Component
     console.log('[ListOfAdmins] Constructor');
   }
 
-  handleChangePage = (event, page) =>  
+  handleChangePage = (event, page) =>
   {
     this.setState({page: page});
   };
 
-  handleChangeRowsPerPage = event => 
+  handleChangeRowsPerPage = event =>
   {
     this.setState({rowsPerPage:event.target.value, page:0});
   };
 
-  componentDidMount() 
+  componentDidMount()
   {
     this._isTableMounted = true;
 
     console.log('[ListOfAdmins] Mounting');
 
-    fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/admin/adminUsers', 
-    {
+    getApiData({
+      version: 'v1',
+      endpoint: 'admin/adminUsers',
+    }, {
       method: 'GET',
       credentials: 'include',
       cors:'no-cors'
     })
     .then((response) => response.json())
-    .then((responseJson) => 
+    .then((responseJson) =>
     {
       if(this._isTableMounted) this.setState({ rows: responseJson.data, isLoadingTable:false});
     })
@@ -141,16 +144,16 @@ class ListOfAdmins extends React.Component
             </TableRow>
           </TableHead>
           <TableBody>
-            {this.state.rows.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((row, index) => 
+            {this.state.rows.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((row, index) =>
             {
               return (
                 <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                  {this.columns.map(column => 
+                  {this.columns.map(column =>
                   {
                     const value = row[column.id];
-                    
+
                     return (
-                      <TableCell key={column.id} align={column.align}>    
+                      <TableCell key={column.id} align={column.align}>
                         <div>{column.format ? column.format(value) : value}</div>
                       </TableCell>
                     );

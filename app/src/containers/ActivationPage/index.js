@@ -11,6 +11,7 @@ import { withStyles } from '@material-ui/styles';
 import ConstantsList from '../../config_constants';
 import Grid from '@material-ui/core/Grid';
 
+import { getApiData } from '../../helpers/networkRequestHelpers';
 import {AlertPopup} from '../../components/AlertView';
 
 /**
@@ -19,24 +20,24 @@ import {AlertPopup} from '../../components/AlertView';
  */
 
 const styles = theme => ({
-  paper: 
+  paper:
   {
     marginTop: theme.spacing(8),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
   },
-  avatar: 
+  avatar:
   {
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main,
   },
-  form: 
+  form:
   {
     width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(1),
   },
-  submit: 
+  submit:
   {
     margin: theme.spacing(3, 0, 2),
   },
@@ -66,15 +67,15 @@ class ActivationPage extends Component
   {
     e.preventDefault();
 
-    fetch(window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/api/v1/users/reactivate/' + this.state.email,
-    {
+    getApiData({
+      version: 'v1',
+      endpoint: 'users/reactivate/' + this.state.email,
+    }, {
       method: 'GET'
-    })
-    .then(response => 
-    {
+    }).then(response => {
       console.log(response);
 
-      if (response.status !== 200) 
+      if (response.status !== 200)
         this.toggleAlert(true, "error",'Something went wrong. Try again later.');
       else
         this.toggleAlert(true, "success", 'Activation link sent. Do not forget to check the junk/spam mail folder.');
@@ -103,23 +104,23 @@ class ActivationPage extends Component
     const {classes} = this.props;
 
     return(
-      <Container 
-      component="main" 
+      <Container
+      component="main"
       maxWidth="xs">
       <Paper className={classes.paper}>
         <a href={this.state.initialPage}>
           <img
-              alt="" 
-              src={logo} 
+              alt=""
+              src={logo}
               style={{ maxHeight: 100 , maxWidth: '80%', marginTop: 30, marginLeft: 20, marginRight: 20}}
           />
         </a>
-        <Typography 
-            component="h1" 
+        <Typography
+            component="h1"
             variant="h5">
           {'Resend activation email'}
         </Typography>
-        
+
         <form  className={classes.form} noValidate>
           <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -150,9 +151,9 @@ class ActivationPage extends Component
         </form>
       </Paper>
       <Box mt={8}>
-        <Typography 
-          variant="body2" 
-          color="textSecondary" 
+        <Typography
+          variant="body2"
+          color="textSecondary"
           align="center">
           {'Copyright © Unitandem '}
           {new Date().getFullYear()}

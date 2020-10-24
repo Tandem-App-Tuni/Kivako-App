@@ -21,6 +21,7 @@ import { History } from 'react-router';
 import {AlertPopup, StaticAlert} from '../../components/AlertView'
 
 import ConstantsList from '../../config_constants';
+import { getApiData, getApiUrl } from '../../helpers/networkRequestHelpers';
 
 const useStyles = theme => ({
   '@global': {
@@ -99,7 +100,10 @@ class ViewProfile extends Component {
       super(props);
       let imgUrl = props.userEmail ? "/" + props.userEmail : "";
       this.state = {
-      profileImgURL: window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/api/v1/avatar/getAvatar' + imgUrl,
+      profileImgURL: getApiUrl({
+        version: 'v1',
+        endpoint: 'avatar/getAvatar' + imgUrl,
+      }),
       profileImgWarning: false,
       languagesToTeach: [],
       languagesToLearn: [],
@@ -120,24 +124,25 @@ class ViewProfile extends Component {
       //This will be used to fetch the user info from backend
       userEmail: props.userEmail,
       redirectURL: '',
-      portOption: ConstantsList.PORT_IN_USE //set to 3000 for local testing
     };
   }
 
 
-  preLoadUserInformations = () => 
+  preLoadUserInformations = () =>
   {
     console.log('[INFO]Loading user information...');
     let queryParameter = this.state.userEmail ? "?userEmail=" + this.state.userEmail : "";
 
-    fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/users/userInfo" + queryParameter, 
-    {
+    getApiData({
+      version: 'v1',
+      endpoint: '/users/userInfo' + queryParameter,
+    }, {
         method: 'GET',
         credentials: 'include',
         cors: 'no-cors'
     })
     .then((response) => response.json())
-    .then((responseData) => 
+    .then((responseData) =>
     {
       console.log('Load user info:', responseData.data.firstName);
 
@@ -152,15 +157,15 @@ class ViewProfile extends Component {
         profileVideoURL: responseData.data.profileVideoURL ? responseData.data.profileVideoURL : ''
       })
     })
-    .catch((error) => 
+    .catch((error) =>
     {
       console.error(error);
     });
   }
 
-  componentDidMount() 
+  componentDidMount()
   {
-    this.checkIfUserIsAuthenticaded(() => 
+    this.checkIfUserIsAuthenticaded(() =>
     {
       this.preLoadUserInformations();
     });
@@ -168,14 +173,16 @@ class ViewProfile extends Component {
 
   checkIfUserIsAuthenticaded (callback)
   {
-    fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/isAuthenticated', 
-    {
+    getApiData({
+      version: 'v1',
+      endpoint: 'isAuthenticated',
+    }, {
       method: 'GET',
       credentials: 'include',
       cors:'no-cors'
     })
     .then((response) => response.json())
-    .then((responseData) => 
+    .then((responseData) =>
     {
       if(responseData.isAuthenticated)
       {
@@ -188,18 +195,18 @@ class ViewProfile extends Component {
       console.error(error);
     });
   }
-    
-  render() 
+
+  render()
   {
     const { classes } = this.props;
-    const mediaCard =  this.state.profileVideoURL 
+    const mediaCard =  this.state.profileVideoURL
                           ? <Grid item xs={12} >
                               <Card>
                               <CardHeader title="Profile video URL">
                               </CardHeader>
                               <CardMedia className={classes.cardMedia} component="iframe" src={this.state.profileVideoURL}></CardMedia>
                               </Card>
-                            </Grid> 
+                            </Grid>
                           : <Typography variant='caption'>
                               Video profile URL
                                 <Typography variant='body1'>
@@ -211,7 +218,7 @@ class ViewProfile extends Component {
       <div>
         <Container component="main" maxWidth="xs">
           <CssBaseline />
-  
+
           <div className={classes.paper}>
             {( this.state.profileImgWarning && !this.state.userEmail)  ?
   	          <StaticAlert severity="error">You don't have a valid profile image, please upload a profile image!</StaticAlert>
@@ -230,7 +237,7 @@ class ViewProfile extends Component {
               }}
             />
             }
-            
+
 
         <form className={classes.form} noValidate>
           <Grid container spacing={2}>
@@ -263,7 +270,7 @@ class ViewProfile extends Component {
           </Grid>
 
           <Grid item xs={12}>
-	    
+
             {mediaCard}
           </Grid>
 
@@ -275,7 +282,7 @@ class ViewProfile extends Component {
               </Typography>
             </Typography>
           </Grid>
-                
+
           <Grid item xs={12}>
 	    <Typography variant='caption'>
 	      Short introduction about you
@@ -284,7 +291,7 @@ class ViewProfile extends Component {
               </Typography>
             </Typography>
           </Grid>
-              
+
           <Grid item xs={12}>
             <Typography variant="caption" gutterBottom>
             Languages I can teach
@@ -316,7 +323,7 @@ class ViewProfile extends Component {
 
 
                 </Grid>
-            
+
               </Grid>
             { !this.state.userEmail ? <Button
 	      //type="submit"
@@ -328,9 +335,9 @@ class ViewProfile extends Component {
                   >
                   Edit profile
                 </Button> : <div/>}
-            
 
-              
+
+
             </form>
 
           </div>
@@ -348,7 +355,7 @@ class ViewProfile extends Component {
         variant={this.state.alertType}
         message={this.state.alertText}
       />
-      </div> 
+      </div>
     );
   }
 

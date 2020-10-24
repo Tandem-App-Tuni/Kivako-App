@@ -3,6 +3,8 @@ import Constants from '../../config_constants';
 import {CircularProgress} from '@material-ui/core'
 import {Redirect} from 'react-router-dom';
 
+import { getApiData } from '../../helpers/networkRequestHelpers';
+
 class Checker extends React.Component
 {
     constructor(props)
@@ -14,27 +16,29 @@ class Checker extends React.Component
 
     componentDidMount()
     {
-        fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/isAuthenticated', 
-        {
+        getApiData({
+            version: 'v1',
+            endpoint: 'isAuthenticated',
+        }, {
             method: 'GET',
             credentials: 'include',
             cors: 'no-cors'
         })
         .then((response) => response.json())
-        .then((responseData) => 
+        .then((responseData) =>
         {
-            if (responseData.isAuthenticated) 
+            if (responseData.isAuthenticated)
             {
                 this.setState({isAuthenticated: true, retrievedData: true}, this.state.setSocket());
             }
             else this.setState({retrievedData: true});
         })
-        .catch((error) => 
+        .catch((error) =>
         {
             console.error(error);
         });
     }
-    
+
     render()
     {
         if (!this.state.retrievedData) return(<CircularProgress/>)

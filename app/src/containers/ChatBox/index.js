@@ -6,16 +6,17 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
 import ConstantsList from '../../config_constants';
+import { getApiUrl } from '../../helpers/networkRequestHelpers';
 
 /**
  * Author: Peter Mlakar
- * 
- * Custom chat library. 
+ *
+ * Custom chat library.
  * Supports rendering chat messages using the Material Ui library.
- * 
+ *
  * Expected properties: messages
  * Optional properties: function sendMessage
- * 
+ *
  * The messages object should be an array of the following shape:
  * [{
  *  id: 0,
@@ -39,14 +40,14 @@ class Chat extends React.Component
                       roomId: props.roomId,
                       user: props.user,
                       partner: props.partner};
-        
+
         this.handleSend = this.handleSend.bind(this);
         this.sendMessageClick = this.sendMessageClick.bind(this);
         this.sendMessageEnter = this.sendMessageEnter.bind(this);
 
         if (typeof this.state.sendMessageFunction == 'undefined') this.state.sendMessageFunction = this.sendMessage;
-        
-        this.state.socket.on('message', (data) => 
+
+        this.state.socket.on('message', (data) =>
         {
             console.log('Client', this.state.user, 'recieved message!');
             console.log('Displaying      message    ');
@@ -64,12 +65,12 @@ class Chat extends React.Component
     }
 
     /**
-     * Because the contents of the chat window is updated trough 
+     * Because the contents of the chat window is updated trough
      * setting new properties of the component, a listener for
      * properties change is required to trigger re-rendering.
-     * 
+     *
      * @param {*} props
-     * @param {*} state 
+     * @param {*} state
      */
     static getDerivedStateFromProps(props, state)
     {
@@ -96,8 +97,8 @@ class Chat extends React.Component
      * handleTextChange function handles the event when the
      * user is typing the message. The contents of the text field is
      * used to update the this.state property textFieldContent.
-     * 
-     * @param {*} e TextField containing the unfinished message contents. 
+     *
+     * @param {*} e TextField containing the unfinished message contents.
      */
     handleTextChange(e)
     {
@@ -114,7 +115,7 @@ class Chat extends React.Component
         let bubbles = [];
         let userOfPreviousMsg="";
 
-        this.state.messages.forEach((element, index) => 
+        this.state.messages.forEach((element, index) =>
         {
             let isSameUser = userOfPreviousMsg == element.id;
             userOfPreviousMsg = element.id;
@@ -130,7 +131,7 @@ class Chat extends React.Component
      * sendMessage function handels the event of sending the message.
      * This function can be overwriten to do custom actions (like server verification etc.).
      * The returned value should be the new chat array.
-     * 
+     *
      * @param {*} contents The contents of the TextField at the time it is sent.
      * @param {*} messages The current messages array.
      * @param {*} id The id of the user sending the message. Should always be 0.
@@ -152,7 +153,7 @@ class Chat extends React.Component
      * handleSend function updates the current state messages, forcing a re-render of the ui.
      * The message is also sent to the socket io server for processing and emiting to the apropriate
      * client.
-     * 
+     *
      * @param {*} newMessages The new messages array.
      */
     handleSend(newMessages)
@@ -184,7 +185,7 @@ class Chat extends React.Component
      */
     sendMessageEnter(event)
     {
-        if (event.key === 'Enter' && this.state.textFieldContent !== '') this.handleSend(this.state.sendMessageFunction(this.state.textFieldContent, this.state.messages, this.state.user));     
+        if (event.key === 'Enter' && this.state.textFieldContent !== '') this.handleSend(this.state.sendMessageFunction(this.state.textFieldContent, this.state.messages, this.state.user));
     }
 
     capitalizeWords = (str) =>
@@ -204,7 +205,7 @@ class Chat extends React.Component
     {
         return(
             <Box
-            
+
                 borderRadius={5}
                 boxShadow={3}>
                 <Toolbar
@@ -225,10 +226,10 @@ class Chat extends React.Component
                         direction='row'
                         justify='flex-start'
                         alignItems='flex-end'>
-                                                    
+
                         <Grid item xs={12} sm={1}>
                         </Grid>
-                        
+
                         <Grid item xs={12} sm={9}>
                             <TextField
                                 multiline
@@ -241,19 +242,19 @@ class Chat extends React.Component
                                 onKeyPress={(event) => this.sendMessageEnter(event)}
                                 onChange={(e) => this.handleTextChange(e)}
                                 value={this.state.textFieldContent}>
-                            </TextField>               
+                            </TextField>
                         </Grid>
 
-                        <Grid item xs={12} sm={1}> 
+                        <Grid item xs={12} sm={1}>
                             <Button
                                 variant="contained"
                                 fullWidth
                                 color="primary"
                                 onClick={() => this.sendMessageClick()}
                             >
-                            
+
                             <Icon>send</Icon>
-                            </Button>               
+                            </Button>
                         </Grid>
 
                         <Grid item xs={12} sm={1}>
@@ -267,7 +268,7 @@ class Chat extends React.Component
 }
 
 /**
- * The ChatBubble component hold the 
+ * The ChatBubble component hold the
  * text of individual messages and handles the rendering side.
  */
 class ChatBubble extends React.Component
@@ -276,7 +277,7 @@ class ChatBubble extends React.Component
     {
         super(props);
 
-        this.state = 
+        this.state =
         {
             user: props.user,
             message: props.message,
@@ -315,12 +316,18 @@ class ChatBubble extends React.Component
     render()
     {
         const alignmentLeft = this.state.align === 'left';
-        const avatarUrl0 = window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/api/v1/avatar/getAvatar';
-        const avatarUrl1 = window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/api/v1/avatar/getAvatar/' + this.state.partner;
+        const avatarUrl0 = getApiUrl({
+            version: 'v1',
+            endpoint: 'avatar/getAvatar',
+        });
+        const avatarUrl1 = getApiUrl({
+            version: 'v1',
+            endpoint: 'avatar/getAvatar/' + this.state.partner,
+        });
 
         return(
             <div>
-                <Grid 
+                <Grid
                 container
                 direction='row'
                 justify={alignmentLeft ? 'flex-end' : 'flex-start'}>

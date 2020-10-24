@@ -11,6 +11,7 @@ import TextField from '@material-ui/core/TextField';
 
 import Paper from '@material-ui/core/Paper';
 import Constants from '../../config_constants';
+import { getApiData } from '../../helpers/networkRequestHelpers';
 
 const useStyles = theme => ({
   '@global': {
@@ -39,7 +40,7 @@ const useStyles = theme => ({
   }
 });
 
-class ListOfMatches extends React.Component 
+class ListOfMatches extends React.Component
 {
   _isTableMounted=false;
 
@@ -51,7 +52,7 @@ class ListOfMatches extends React.Component
     { id: 's4', label: 'Match languages', minWidth: 100 },
     ]
 
-  constructor(props) 
+  constructor(props)
   {
     super(props);
 
@@ -64,65 +65,63 @@ class ListOfMatches extends React.Component
       rows: [],
       data: [],
       searchValue: "",
-      
+
       };
 
 
     console.log('[ListOfMatches] Constructor');
   }
 
-  handleChangePage = (event, page) =>  
+  handleChangePage = (event, page) =>
   {
     this.setState({page: page});
   };
 
-  handleChangeRowsPerPage = event => 
+  handleChangeRowsPerPage = event =>
   {
     this.setState({rowsPerPage:event.target.value, page:0});
   };
-    
-  componentDidMount() 
+
+  componentDidMount()
   {
     this._isTableMounted = true;
 
     console.log('[ListOfMatches] Mounting');
 
-    fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/admin/matches', 
-    {
+    getApiData({
+      version: 'v1',
+      endpoint: 'admin/matches',
+    }, {
       method: 'GET',
       credentials: 'include',
       cors:'no-cors'
     })
     .then((response) => response.json())
-    .then((responseJson) => 
-    {
-    
+    .then((responseJson) => {
       if(this._isTableMounted) this.setState({data: responseJson.data, rows: responseJson.data, isLoadingTable:false});
-           
     })
     .catch((error) => {
       console.error(error);
     });
-   
   }
   handleSearchChange = (event) => {
     this.setState({searchValue: event.target.value})
     let searchValue = event.target.value.toLowerCase();
     if (event.target.value.length >= 2){
       let searchResult = this.state.data.filter(item => {
-        return item.requesterUser.lastName.toLowerCase().includes( searchValue) || item.recipientUser.lastName.toLowerCase().includes( searchValue) 
+        return item.requesterUser.lastName.toLowerCase().includes( searchValue) || item.recipientUser.lastName.toLowerCase().includes( searchValue)
         ||item.requesterUser.firstName.toLowerCase().includes( searchValue) || item.recipientUser.firstName.toLowerCase().includes( searchValue)
         ||item.requesterUser.email.toLowerCase().includes( searchValue) || item.recipientUser.email.toLowerCase().includes( searchValue);
 
       })
       this.setState({rows:searchResult})
-    } 
+    }
     if (searchValue.length == 0){
       this.setState({rows:this.state.data})
     }
   }
   render()
-  {    
+  {
     console.log('[ListOfMatches] Render');
 
     if(this.state.isLoadingTable) return null;
@@ -131,15 +130,15 @@ class ListOfMatches extends React.Component
 
     return (
 
-      
+
       <Paper className={classes.tableRoot}>
-        
-        <TextField 
+
+        <TextField
         variant='outlined'
         margin='normal'
         fullWidth
         id='search'
-        label='Search matches by name or email'     
+        label='Search matches by name or email'
         onChange = {this.handleSearchChange} value={this.state.searchValue}
         />
         <Table stickyHeader aria-label="sticky table" className={classes.tableWrapper}>
@@ -155,21 +154,21 @@ class ListOfMatches extends React.Component
               ))}
             </TableRow>
           </TableHead>
-          <TableBody>        
-         
+          <TableBody>
 
-            {this.state.rows.length ? this.state.rows.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((row, index) => 
-            {  
-              console.log(row, index);  
-                        
-              const languageArray = row.requesterUser.languagesToLearn.filter(e => 
+
+            {this.state.rows.length ? this.state.rows.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((row, index) =>
+            {
+              console.log(row, index);
+
+              const languageArray = row.requesterUser.languagesToLearn.filter(e =>
                 {
                   for (let i = 0; i < row.recipientUser.languagesToTeach.length; i++)
                     if (e.language === row.recipientUser.languagesToTeach[i].language) return true;
                   return false;
                 });
 
-                const languageArray2 = row.requesterUser.languagesToTeach.filter(e => 
+                const languageArray2 = row.requesterUser.languagesToTeach.filter(e =>
                   {
                     for (let i = 0; i < row.recipientUser.languagesToLearn.length; i++)
                       if (e.language === row.recipientUser.languagesToLearn[i].language) return true;
@@ -184,7 +183,7 @@ class ListOfMatches extends React.Component
                   <TableCell key='s3'><div>{row.recipientUser.email}</div></TableCell>
                   <TableCell key='s4'><div>{languageArray.map((e, i) => e.language + (i === (languageArray.length - 1) ? '' : ', '))}</div>
                   <div> {languageArray2.map((e, i) => e.language + (i === (languageArray2.length - 1) ? '' : ', '))}</div></TableCell>
-                  
+
                 </TableRow>
               );
             }): null}
@@ -199,7 +198,7 @@ class ListOfMatches extends React.Component
           page={this.state.page}
           onChangePage={this.handleChangePage}
           onChangeRowsPerPage={this.handleChangeRowsPerPage}/>
-      </Paper> 
+      </Paper>
           );
   }
 

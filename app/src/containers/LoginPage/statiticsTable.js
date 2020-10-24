@@ -2,6 +2,7 @@
 import React, {Component} from 'react';
 import MaterialTable from "material-table";
 import Constants from '../../config_constants';
+import { getApiData } from '../../helpers/networkRequestHelpers';
 
 export default class StatiticsTable extends Component {
     _isTableMounted=false;
@@ -10,7 +11,7 @@ export default class StatiticsTable extends Component {
       { field: 'numberWantToLearn', title: 'Students', align: 'center' },
       { field: 'numberWantToTeach', title: 'Teachers', align: 'center'},
     ]
-    
+
     constructor(props) {
       super(props);
       this.state = {
@@ -19,29 +20,31 @@ export default class StatiticsTable extends Component {
         setPage: 0,
         rowsPerPage: 10,
         setRowsPerPage : 10,
-        rows: [ 
-          
+        rows: [
+
         ],
-       
+
       };
     }
-  
-  
+
+
     loadDataInTable(callback)
     {
-      fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE +'/api/v1/admin/statiticsOpen', 
-      {
+      getApiData({
+        version: 'v1',
+        endpoint: 'admin/statiticsOpen',
+      }, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
         }
       })
-      .then((response) => 
+      .then((response) =>
       {
         return response.json();
       })
-      .then((responseJson) => 
+      .then((responseJson) =>
       {
         this.setState({ rows: responseJson.data });
         callback();
@@ -49,28 +52,28 @@ export default class StatiticsTable extends Component {
       .catch((error) => {
         console.error(error);
       });
-    
-  
+
+
       callback();
     }
-  
+
     componentDidMount() {
       this._isTableMounted = true;
-  
+
       if(this._isTableMounted){
         this.loadDataInTable( () => {
           this.setState({isLoadingTable:false});
         });
-        
+
       }
-  
+
     }
-  
+
     render(){
       if(this.isLoadingTable){
         return null;
       }
-  
+
       return (
         <MaterialTable
           title=""
@@ -88,5 +91,5 @@ export default class StatiticsTable extends Component {
         />
       );
     }
-  
+
   }
