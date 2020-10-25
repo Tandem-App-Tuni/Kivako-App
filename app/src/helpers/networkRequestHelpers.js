@@ -1,3 +1,4 @@
+//list that holds the url
 import constantList from '../config_constants'
 
 
