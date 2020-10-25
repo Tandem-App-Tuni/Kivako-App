@@ -169,7 +169,7 @@ class NewsDashboard extends React.Component {
 		return new Promise((resolve, reject) => {
 			getApiData({
 				version: 'v1',
-				endpoint: 'news' + data._id,
+				endpoint: 'news/' + data._id,
 			}, {
 				method: "DELETE",
 				headers: {
