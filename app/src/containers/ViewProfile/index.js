@@ -174,7 +174,6 @@ class ViewProfile extends Component {
   checkIfUserIsAuthenticaded (callback)
   {
     getApiData({
-      version: 'v1',
       endpoint: 'isAuthenticated',
     }, {
       method: 'GET',

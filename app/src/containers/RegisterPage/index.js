@@ -430,7 +430,6 @@ class SignUpPage extends Component {
     console.log('Checking authentication...');
 
     getApiData({
-      version: 'v1',
       endpoint: 'isAuthenticated',
     }, {
         method: 'GET',

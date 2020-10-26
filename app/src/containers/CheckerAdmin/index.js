@@ -21,7 +21,6 @@ class CheckerAdmin extends React.Component
         console.log('[CheckerAdmin] Mounting');
 
         getApiData({
-            version: 'v1',
             endpoint: 'isAuthenticated',
         }, {
             method: 'GET',

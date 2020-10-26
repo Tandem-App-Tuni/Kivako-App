@@ -17,7 +17,6 @@ class Checker extends React.Component
     componentDidMount()
     {
         getApiData({
-            version: 'v1',
             endpoint: 'isAuthenticated',
         }, {
             method: 'GET',
