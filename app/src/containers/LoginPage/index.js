@@ -89,7 +89,7 @@ class LandingPage extends Component {
                 Sign Up</button>
               <button id="signInButton" className="btn btn-outline-success btn-lg title-btn" type="button" onClick={() => { this.onLoginButtonClicked() }}>
                 Sign In</button>
-              <a id="moodle-button" href=" https://digicampus.fi/course/view.php?id=272"
+              <a id="moodle-button" href="http://rebrand.ly/DigiCampus"
                 className="btn btn-lg btn-outline-success title-btn">Go to
                 DigiCampus</a>
              
@@ -201,7 +201,7 @@ class LandingPage extends Component {
                 <li>
                   <div className="content">
                     <h3>Step 4</h3>
-                    <p>Sign up to <a href="https://digicampus.fi/course/view.php?id=272">DigiCampus</a> using your university or university of applied sciences email address (HAKA), and when prompted, enter the enrolment key you have received after filling in the registration form.</p>
+                    <p>Sign up to <a href="http://rebrand.ly/DigiCampus">DigiCampus</a> using your university or university of applied sciences email address (HAKA), and when prompted, enter the enrolment key you have received after filling in the registration form.</p>
                   </div>
                 </li>
                 <li>

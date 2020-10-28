@@ -71,7 +71,7 @@ export const thirdListItems = (
     <div>
       <ListSubheader inset></ListSubheader>
 
-      <ListItem button component="a" href="https://digicampus.fi/course/view.php?id=272">
+      <ListItem button component="a" href="http://rebrand.ly/DigiCampus">
         <ListItemIcon>
           <CollectionsBookmarkIcon/>
         </ListItemIcon>
