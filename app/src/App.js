@@ -16,6 +16,7 @@ import BrowseMatch from './containers/BrowseMatch'
 import ChatPage from './containers/ChatPage'
 import RegisterPage from './containers/RegisterPage'
 import MatchRequests from './containers/MatchRequests'
+import Requests from './containers/Requests'
 import LocalLoginPage from './containers/LocalLoginPage'
 import ActivationPage from './containers/ActivationPage'
 import Checker from './containers/Checker'
@@ -150,6 +151,14 @@ class App extends React.Component
                   <ListOfAdmins />
                 </ResponsiveDrawer>
               </CheckerAdmin>
+            </Route>
+
+            <Route exact path='/requests'>
+              <Checker activeSocket={this.activeSocket} setSocket={this.setSocket}>
+                <ResponsiveDrawer title ='Requests' chatBundle={chatBundle}>
+                  <Requests/>
+                </ResponsiveDrawer>
+              </Checker>
             </Route>
           
             <Route exact path='/list-students'>

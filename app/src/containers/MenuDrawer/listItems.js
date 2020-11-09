@@ -55,7 +55,7 @@ export const secondaryListItems = requestAmount => (
     </ListItem>
 
     <ListItem button component={Link}
-          to={"/match-requests"}>
+          to={"/requests"}>
       <ListItemIcon>
       <Badge badgeContent={requestAmount} color="secondary">
         <TimerIcon />
