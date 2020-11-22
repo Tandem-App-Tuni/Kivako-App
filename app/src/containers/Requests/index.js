@@ -25,6 +25,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import {AppContext} from "../../components/context/context";
 import Hidden from '@material-ui/core/Hidden';
+import RequestCard from '../../components/RequestCard';
 
 const styles = ({
     root: {
@@ -192,9 +193,12 @@ class Requests extends React.Component {
                         matches.map((match, key) =>  
                         {
                             return(<GridListTile key={key} rows={2}>
-                                        <UserStyleCard  user={match.requesterUser} yesText="Accept" yesFunction={()=>{this.setState({showAcceptConfirm: true, matchId: match._id})}}
+                                        {/* <UserStyleCard  user={match.requesterUser} yesText="Accept" yesFunction={()=>{this.setState({showAcceptConfirm: true, matchId: match._id})}}
                                         noText="Deny" noFunction={()=>{this.setState({showDenyConfirm: true, matchId: match._id})}}  page="pending-match" match={match}> 
-                                        </UserStyleCard>
+                                        </UserStyleCard> */}
+                                        <RequestCard user={match.requesterUser} yesText="Accept" yesFunction={()=>{this.setState({showAcceptConfirm: true, matchId: match._id})}}
+                                        noText="Deny" noFunction={()=>{this.setState({showDenyConfirm: true, matchId: match._id})}}  page="pending-match" match={match}>
+                                        </RequestCard>
                                     </GridListTile>)
                         }
                     )}
@@ -206,9 +210,10 @@ class Requests extends React.Component {
                         matches.map((match, key) =>  
                         {
                             return(<GridListTile key={key} rows={2}>
-                                        <UserStyleCard  user={match.requesterUser} yesText="Accept" yesFunction={()=>{this.setState({showAcceptConfirm: true, matchId: match._id})}}
+                                        {/* <UserStyleCard  user={match.requesterUser} yesText="Accept" yesFunction={()=>{this.setState({showAcceptConfirm: true, matchId: match._id})}}
                                         noText="Deny" noFunction={()=>{this.setState({showDenyConfirm: true, matchId: match._id})}}  page="pending-match" match={match}> 
-                                        </UserStyleCard>
+                                        </UserStyleCard> */}
+                                        <RequestCard/>
                                     </GridListTile>)
                         }
                     )}
