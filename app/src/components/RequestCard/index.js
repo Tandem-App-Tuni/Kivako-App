@@ -21,6 +21,10 @@ import ConstantsList from '../../config_constants';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import WarningIcon from '@material-ui/icons/Warning';
 import Tooltip from '@material-ui/core/Tooltip';
+import Moment from 'moment';
+import Box from '@material-ui/core/Box';
+import Chip from '@material-ui/core/Chip';
+
 
 const useStyles = theme => ({
     root: {
@@ -83,10 +87,10 @@ class RequestCard extends Component {
   
     render ()
     {
-        const { classes, user, yesText, yesFunction, noText, noFunction } = this.props;
-        // const classes = useStyles();
-        // const [expanded, setExpanded] = React.useState(false);
-
+        const { classes, user, yesText, yesFunction, noText, noFunction, match } = this.props;
+        const userDescription = (user.descriptionText == null || user.descriptionText === "") 
+                                ? "< User has no description >" : `${user.descriptionText.substr(0,180)} ...`
+        console.log(match);
         return (
             <Card className={classes.root}>
                 <CardHeader
@@ -100,18 +104,33 @@ class RequestCard extends Component {
                     <MoreVertIcon />
                     </IconButton>
                 }
-                title={user.name}
-                subheader="September 14, 2016"
+                title={user.firstName +' '+ user.lastName}
+                subheader={'Request Date: ' + Moment(this.props.match.requestDate).format('DD.MM.yyyy')}
                 />
-                <CardMedia
-                className={classes.media}
-                image="/static/images/cards/paella.jpg"
-                title="Paella dish"
-                />
+                
                 <CardContent>
                 <Typography variant="body2" color="textSecondary" component="p">
-                    This impressive paella is a perfect party dish and a fun meal to cook together with your
-                    guests. Add 1 cup of frozen peas along with the mussels, if you like.
+                    { user.cities.join(', ') }<br/>
+                    { user.email}<br/>
+                    <Box mb={1} className={classes.thirdRow}>
+                        {(this.props.fitQuality !== null && this.props.fitQuality === 0) ?
+                            <Tooltip title="One way match means you cannot teach any language(s) that this student wants to learn.">
+                            <Chip
+                            icon={<WarningIcon />}
+                            label="One way match!"
+                            size="small"
+                            /> 
+                            </Tooltip> : <></>
+                        }
+                    </Box><br/>
+                    {userDescription}
+                    <div className={classes.chipGroup}>
+                        Wants to learn
+                        {user.languagesToLearn.map(lang => {
+                            return ( <Chip key={lang.language} className={classes.chip} color="primary" variant="outlined" size="small" 
+                                    label={`${lang.language} - ${lang.level} - ${lang.credits} credits`} /> )
+                        })}
+                    </div>
                 </Typography>
                 </CardContent>
                 <CardActions disableSpacing>
