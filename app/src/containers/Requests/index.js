@@ -76,6 +76,7 @@ class Requests extends React.Component {
       super(props);
       this.state = {
         userRequestMatches:[],
+        userSentMatchRequests:[],
         isLoadingPage:true,
         showAlert:false,
         alertType: "success",
@@ -177,9 +178,32 @@ class Requests extends React.Component {
         callback();
     }
 
+    getUserSentRequestListAPI(callback) {
+        const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/usersMatch/requestedMatchsRequests");
+
+        fetch(url, {
+            method: 'GET',
+            credentials: 'include',
+            cors: 'no-cors'
+        }).then((response) => response.json())
+            .then((responseJson) => {
+                const {updateContext} = this.context;
+                this.setState({ userSentMatchRequests: responseJson.matchs })
+                updateContext("sentRequestAmount", responseJson.matchs.length)
+            }).catch((error) => {
+                console.error(error);
+            });
+
+        callback();
+    }
+
 
     componentDidMount() {
         this.getUserMatchsRequestListAPI(() => {
+            this.setState({ isLoadingPage: false });
+        });
+
+        this.getUserSentRequestListAPI(() => {
             this.setState({ isLoadingPage: false });
         });
     }
@@ -213,7 +237,52 @@ class Requests extends React.Component {
                                         {/* <UserStyleCard  user={match.requesterUser} yesText="Accept" yesFunction={()=>{this.setState({showAcceptConfirm: true, matchId: match._id})}}
                                         noText="Deny" noFunction={()=>{this.setState({showDenyConfirm: true, matchId: match._id})}}  page="pending-match" match={match}> 
                                         </UserStyleCard> */}
-                                        <RequestCard/>
+                                        <RequestCard user={match.requesterUser} yesText="Accept" yesFunction={()=>{this.setState({showAcceptConfirm: true, matchId: match._id})}}
+                                        noText="Deny" noFunction={()=>{this.setState({showDenyConfirm: true, matchId: match._id})}}  page="pending-match" match={match}>
+                                        </RequestCard>
+                                    </GridListTile>)
+                        }
+                    )}
+                    </GridList>
+                </Hidden>
+
+            </div>   
+            )
+    }
+
+    getSentRequestsTiles(requests, classes) {
+        console.log('requests are---', requests);
+        return (
+            <div className={classes.fullWidth}>
+                <Hidden xsDown>
+                    <GridList cellHeight="auto" spacing={25} >
+                    {
+                        requests.map((request, key) =>  
+                        {
+                            return(<GridListTile key={key} rows={2}>
+                                        {/* <UserStyleCard  user={match.requesterUser} yesText="Accept" yesFunction={()=>{this.setState({showAcceptConfirm: true, matchId: match._id})}}
+                                        noText="Deny" noFunction={()=>{this.setState({showDenyConfirm: true, matchId: match._id})}}  page="pending-match" match={match}> 
+                                        </UserStyleCard> */}
+                                        <RequestCard user={request.recipientUser} yesText="Accept" yesFunction={()=>{this.setState({showAcceptConfirm: true, matchId: request._id})}}
+                                        noText="Deny" noFunction={()=>{this.setState({showDenyConfirm: true, matchId: request._id})}}  page="pending-match" match={request}>
+                                        </RequestCard>
+                                    </GridListTile>)
+                        }
+                    )}
+                    </GridList>
+                </Hidden>
+                <Hidden smUp>
+                    <GridList cellHeight="auto" cols={1} spacing={25} >
+                    {
+                        requests.map((match, key) =>  
+                        {
+                            return(<GridListTile key={key} rows={2}>
+                                        {/* <UserStyleCard  user={match.requesterUser} yesText="Accept" yesFunction={()=>{this.setState({showAcceptConfirm: true, matchId: match._id})}}
+                                        noText="Deny" noFunction={()=>{this.setState({showDenyConfirm: true, matchId: match._id})}}  page="pending-match" match={match}> 
+                                        </UserStyleCard> */}
+                                        <RequestCard user={match.requesterUser} yesText="Accept" yesFunction={()=>{this.setState({showAcceptConfirm: true, matchId: match._id})}}
+                                        noText="Deny" noFunction={()=>{this.setState({showDenyConfirm: true, matchId: match._id})}}  page="pending-match" match={match}>
+                                        </RequestCard>
                                     </GridListTile>)
                         }
                     )}
@@ -307,6 +376,25 @@ class Requests extends React.Component {
                         <ExpansionPanelDetails>
                             { 
                                 this.getMatchesTiles(this.state.userRequestMatches, classes)
+                            }
+                            <br></br>
+                            <Divider variant="middle" />
+                        </ExpansionPanelDetails>
+                </ExpansionPanel>                
+                    
+                <ExpansionPanel defaultExpanded={false}>
+                        <ExpansionPanelSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="panel1a-content"
+                            id="panel1a-header"
+                        >
+                        <Typography variant="h6">
+                            Your sent request(s)
+                        </Typography>
+                        </ExpansionPanelSummary>
+                        <ExpansionPanelDetails>
+                            { 
+                                this.getSentRequestsTiles(this.state.userSentMatchRequests, classes)
                             }
                             <br></br>
                             <Divider variant="middle" />
