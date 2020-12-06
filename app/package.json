@@ -53,6 +53,17 @@
     ]
   },
   "devDependencies": {
-    "@fortawesome/fontawesome-free": "^5.12.1"
+    "@fortawesome/fontawesome-free": "^5.12.1",
+    "@testing-library/dom": "^7.28.1",
+    "@testing-library/react": "^11.2.2"
+  },
+  "babel": {
+    "presets": [
+      "@babel/env"
+    ],
+    "plugins": [
+      "@babel/plugin-transform-react-jsx",
+      "@babel/plugin-proposal-class-properties"
+    ]
   }
 }
