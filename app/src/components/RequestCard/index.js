@@ -14,6 +14,8 @@ import Typography from '@material-ui/core/Typography';
 import { red } from '@material-ui/core/colors';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
+import DoneIcon from '@material-ui/icons/Done';
+import CloseIcon from '@material-ui/icons/Close';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ProfilePage from '../../containers/ViewProfile'
@@ -134,11 +136,11 @@ class RequestCard extends Component {
                 </Typography>
                 </CardContent>
                 <CardActions disableSpacing>
-                <IconButton aria-label="add to favorites">
-                    <FavoriteIcon />
+                <IconButton aria-label="accept">
+                    <DoneIcon />
                 </IconButton>
-                <IconButton aria-label="share">
-                    <ShareIcon />
+                <IconButton aria-label="reject">
+                    <CloseIcon />
                 </IconButton>
                 <IconButton
                     className={clsx(classes.expand, {
