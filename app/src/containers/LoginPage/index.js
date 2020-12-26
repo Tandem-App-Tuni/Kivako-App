@@ -89,7 +89,7 @@ class LandingPage extends Component {
                 Sign Up</button>
               <button id="signInButton" className="btn btn-outline-success btn-lg title-btn" type="button" onClick={() => { this.onLoginButtonClicked() }}>
                 Sign In</button>
-              <a id="moodle-button" href="http://rebrand.ly/DigiCampus"
+              <a id="moodle-button" href="http://rebrand.ly/DigiCampus" target="_blank"
                 className="btn btn-lg btn-outline-success title-btn">Go to
                 DigiCampus</a>
              
@@ -195,13 +195,13 @@ class LandingPage extends Component {
                 <li>
                   <div className="content">
                     <h3>Step 3</h3>
-                    <p>Find a language partner. When you have found a partner, fill in the <a href="http://bit.ly/UniTandemReg">registration form</a> to get the password for <a href="https://digicampus.fi/course/view.php?id=272">DigiCampus</a>, where the instructions and materials are available. Every student must fill in the registration form individually.</p>
+                    <p>Find a language partner. When somebody has accepted your partner request, fill in the <a href="http://bit.ly/UniTandemReg">registration form</a> to get the password for <a href="http://rebrand.ly/DigiCampus" target="_blank">DigiCampus</a>, where the instructions and materials are available. Every student must fill in the registration form individually.</p>
                   </div>
                 </li>
                 <li>
                   <div className="content">
                     <h3>Step 4</h3>
-                    <p>Sign up to <a href="http://rebrand.ly/DigiCampus">DigiCampus</a> using your university or university of applied sciences email address (HAKA), and when prompted, enter the enrolment key you have received after filling in the registration form.</p>
+                    <p>Sign up to <a href="http://rebrand.ly/DigiCampus" target="_blank">DigiCampus</a> using your university or university of applied sciences email address (HAKA), and when prompted, enter the enrolment key you have received after filling in the registration form.</p>
                   </div>
                 </li>
                 <li>
@@ -213,7 +213,7 @@ class LandingPage extends Component {
                 <li>
                   <div className="content">
                     <h3>Step 6</h3>
-                    <p>Collect the outputs of each trigger you complete in your portfolio and submit it when you’re finished.</p>
+                    <p>Reflect on your study process in the course blog, collect the outputs of each trigger you complete in your portfolio, and submit the portfolio when you’re finished.</p>
                   </div>
                 </li>
                 <li>
