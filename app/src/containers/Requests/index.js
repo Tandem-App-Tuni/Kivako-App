@@ -325,7 +325,7 @@ class Requests extends React.Component {
         //Wait until all informations be render until continue
         if (this.state.isLoadingPage) return null;
 
-        if (this.state.userRequestMatches.length === 0) {
+        if (this.state.userRequestMatches.length === 0 && this.state.userSentMatchRequests === 0) {
             return (
                 <div className={classes.root}>
                     <div align="center">
@@ -363,14 +363,14 @@ class Requests extends React.Component {
 
         return (
             <div className={classes.root}>
-                <ExpansionPanel defaultExpanded={true}>
+                <ExpansionPanel defaultExpanded={this.state.userRequestMatches.length > 0}>
                         <ExpansionPanelSummary
                             expandIcon={<ExpandMoreIcon />}
                             aria-controls="panel1a-content"
                             id="panel1a-header"
                         >
-                        <Typography variant="h6">
-                            Your pending request(s)
+                        <Typography variant="h6">                           
+                            You have recieved {this.state.userRequestMatches.length} pending request(s)
                         </Typography>
                         </ExpansionPanelSummary>
                         <ExpansionPanelDetails>
@@ -382,14 +382,14 @@ class Requests extends React.Component {
                         </ExpansionPanelDetails>
                 </ExpansionPanel>                
                     
-                <ExpansionPanel defaultExpanded={false}>
+                <ExpansionPanel defaultExpanded={this.state.userRequestMatches.length === 0 && this.state.userSentMatchRequests.length !== 0 }>
                         <ExpansionPanelSummary
                             expandIcon={<ExpandMoreIcon />}
                             aria-controls="panel1a-content"
                             id="panel1a-header"
                         >
                         <Typography variant="h6">
-                            Your sent request(s)
+                            Your have sent {this.state.userSentMatchRequests.length} request(s)
                         </Typography>
                         </ExpansionPanelSummary>
                         <ExpansionPanelDetails>
