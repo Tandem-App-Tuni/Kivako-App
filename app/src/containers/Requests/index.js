@@ -83,18 +83,23 @@ class Requests extends React.Component {
         alertText:"",
         showAcceptConfirm: false,
         showDenyConfirm: false,
+        showCancelConfirm: false,
         matchId: "",
         portOption:ConstantsList.PORT_IN_USE
       };
       this.acceptMatchRequest = this.acceptMatchRequest.bind(this);
       this.denyMatchRequest = this.denyMatchRequest.bind(this);
+      this.cancelSentRequest = this.cancelSentRequest.bind(this);
       this.toggleAlert = this.toggleAlert.bind(this);
     }
+
+    abortController = new AbortController();
 
     closeAllDialogs = () => {
         this.setState({
             showAcceptConfirm: false,
             showDenyConfirm: false,
+            showCancelConfirm: false,
             matchId: ""
         })
     }
@@ -159,6 +164,33 @@ class Requests extends React.Component {
         this.closeAllDialogs();
     }
 
+    cancelSentRequest() {
+        const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/usersMatch/cancelSendRequest/" + this.state.matchId);
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            cors: 'no-cors',
+        })
+        .then((response) => {
+            if (response.status === 200) {
+                this.getUserSentRequestListAPI(()=>{
+                    this.toggleAlert(true, "success", "Sent match request cancelled.")
+                    this.setState({isLoadingPage: false})
+                });
+            }
+            else
+                this.toggleAlert(true, "error", "Something went wrong.");
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+        this.closeAllDialogs();
+    }
+
     getUserMatchsRequestListAPI(callback) {
         const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/usersMatch/receiptMatchsRequests");
 
@@ -179,6 +211,7 @@ class Requests extends React.Component {
     }
 
     getUserSentRequestListAPI(callback) {
+        console.log('getUserSentRequestListAPI');
         const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/usersMatch/requestedMatchsRequests");
 
         fetch(url, {
@@ -263,8 +296,8 @@ class Requests extends React.Component {
                                         {/* <UserStyleCard  user={match.requesterUser} yesText="Accept" yesFunction={()=>{this.setState({showAcceptConfirm: true, matchId: match._id})}}
                                         noText="Deny" noFunction={()=>{this.setState({showDenyConfirm: true, matchId: match._id})}}  page="pending-match" match={match}> 
                                         </UserStyleCard> */}
-                                        <RequestCard user={request.recipientUser} yesText="Accept" yesFunction={()=>{this.setState({showAcceptConfirm: true, matchId: request._id})}}
-                                        noText="Deny" noFunction={()=>{this.setState({showDenyConfirm: true, matchId: request._id})}}  page="pending-match" match={request}>
+                                        <RequestCard user={request.recipientUser} yesText="Accept" noText="Cancel" 
+                                        noFunction={()=>{this.setState({showCancelConfirm: true, matchId: request._id})}}  page="pending-match" match={request}>
                                         </RequestCard>
                                     </GridListTile>)
                         }
@@ -410,6 +443,11 @@ class Requests extends React.Component {
                     onClose={this.closeAllDialogs}
                     title={(this.state.showAcceptConfirm ? "Accept" : "Deny") +  " this request ?"}
                     onConfirm={()=>{(this.state.showAcceptConfirm && this.acceptMatchRequest()) || (this.state.showDenyConfirm && this.denyMatchRequest())}}/>
+                <ConfirmDialog
+                    open={this.state.showCancelConfirm}
+                    onClose={this.closeAllDialogs}
+                    title={"Cancel the sent request ?"}
+                    onConfirm={()=>{this.cancelSentRequest()}}/>
             </div>
         );
     }

@@ -51,18 +51,24 @@ const useStyles = theme => ({
       backgroundColor: red[500],
     },
 });
-    
+  
 class RequestCard extends Component {
 
-        
-        state = 
+    constructor(props) {
+        super(props);
+        this.handleOnYesClick = this.handleOnYesClick.bind(this);
+        this.handleOnNoClick = this.handleOnNoClick.bind(this);
+        this.handleOnError = this.handleOnError.bind(this);    
+        this.state = 
         {
             detailProfileOpen: false,
             portOption:ConstantsList.PORT_IN_USE,
             showDefaultAvatar: false,
             detailsExpanded: false
         };
-    
+    }
+
+   
     handleExpandClick = () => {
         const expanded = this.state.detailsExpanded;
         this.setState({
@@ -86,13 +92,84 @@ class RequestCard extends Component {
         if(this.state.showDefaultAvatar) return defaultAvatar;
         else return UserAvatar
     }
+
+    handleOnYesClick= () => {
+        switch(this.props.page) {
+          case "browse-match": 
+            this.props.yesFunction(this.props.user, this.props.matchingLanguage);
+            break;
+          case "pending-match":
+            this.props.yesFunction(this.props.match);
+            break;
+          case "partner-list": 
+            this.props.yesFunction(this.props.matchId);
+            break;
+          default:
+            break;
+        }
+    }
+
+    handleOnNoClick= () => {
+        switch(this.props.page) {
+          case "pending-match":
+            this.props.noFunction(this.props.match);
+            break;
+          case "partner-list":
+            this.props.noFunction();
+            break;
+          default:
+            break;
+        }
+      }
+
+    handleOnError() {
+        this.setState({
+          showDefaultAvatar: true
+        })
+    }
+
+    renderButtonGroup = (yesText, yesFunction, noText, noFunction, classes) => {
+        const yesButton = (yesText && yesFunction) 
+        ? (  
+            <IconButton aria-label="accept" >
+                <DoneIcon onClick={this.handleOnYesClick} />
+            </IconButton>
+                
+          )
+        : (<></>);
+        const noButton = (noText && noFunction) 
+        ? (  
+            <IconButton aria-label="reject">
+                <CloseIcon onClick={this.handleOnNoClick} />
+            </IconButton>
+          )
+        : (<></>);
+
+        return(
+            <CardActions disableSpacing>
+                {yesButton}
+                {noButton}           
+                
+            <IconButton
+                className={clsx(classes.expand, {
+                [classes.expandOpen]: this.state.detailsExpanded,
+                })}
+                onClick={this.handleExpandClick}
+                aria-expanded={this.state.detailsExpanded}
+                aria-label="show more"
+            >
+                <ExpandMoreIcon />
+            </IconButton>
+            </CardActions>
+        )
+    }
   
     render ()
     {
         const { classes, user, yesText, yesFunction, noText, noFunction, match } = this.props;
         const userDescription = (user.descriptionText == null || user.descriptionText === "") 
                                 ? "< User has no description >" : `${user.descriptionText.substr(0,180)} ...`
-        console.log(match);
+
         return (
             <Card className={classes.root}>
                 <CardHeader
@@ -135,24 +212,9 @@ class RequestCard extends Component {
                     </div>
                 </Typography>
                 </CardContent>
-                <CardActions disableSpacing>
-                <IconButton aria-label="accept">
-                    <DoneIcon />
-                </IconButton>
-                <IconButton aria-label="reject">
-                    <CloseIcon />
-                </IconButton>
-                <IconButton
-                    className={clsx(classes.expand, {
-                    [classes.expandOpen]: this.state.detailsExpanded,
-                    })}
-                    onClick={this.handleExpandClick}
-                    aria-expanded={this.state.detailsExpanded}
-                    aria-label="show more"
-                >
-                    <ExpandMoreIcon />
-                </IconButton>
-                </CardActions>
+
+                {this.renderButtonGroup(yesText,yesFunction,noText,noFunction, classes)}
+
                 <Collapse in={this.state.detailsExpanded} timeout="auto" unmountOnExit>
                 <CardContent>
                     <Typography paragraph>Method:</Typography>
