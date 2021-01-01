@@ -79,7 +79,7 @@ class RequestCard extends Component {
     renderAvatar = (classes) => {
         const defaultAvatar = (<CardMedia
           className={classes.Avatar}
-          component={AccountCircleIcon}s
+          component={AccountCircleIcon}
           children=" " />);
         
         const UserAvatar = (<CardMedia
@@ -168,14 +168,13 @@ class RequestCard extends Component {
     {
         const { classes, user, yesText, yesFunction, noText, noFunction, match } = this.props;
         const userDescription = (user.descriptionText == null || user.descriptionText === "") 
-                                ? "< User has no description >" : `${user.descriptionText.substr(0,180)} ...`
+                                ? "< User has no description >" : `${user.descriptionText}`
 
-        return (
-            <Card className={classes.root}>
+        return (            
+            <Card className={classes.root}>               
                 <CardHeader
                 avatar={
-                    <Avatar aria-label="recipe" className={classes.avatar}>
-                    {this.renderAvatar(classes)}
+                    <Avatar className={classes.avatar} src={window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/avatar/getAvatar/' + this.props.user.email}>                    
                     </Avatar>
                 }
                 action={
@@ -202,12 +201,12 @@ class RequestCard extends Component {
                             </Tooltip> : <></>
                         }
                     </Box><br/>
-                    {userDescription}
+                    
                     <div className={classes.chipGroup}>
-                        Wants to learn
+                        Wants to learn: <br/>
                         {user.languagesToLearn.map(lang => {
                             return ( <Chip key={lang.language} className={classes.chip} color="primary" variant="outlined" size="small" 
-                                    label={`${lang.language} - ${lang.level} - ${lang.credits} credits`} /> )
+                                    label={`${lang.language} - ${lang.level} - ${lang.credits ? lang.credits : 0} credits`} /> )
                         })}
                     </div>
                 </Typography>
@@ -217,29 +216,9 @@ class RequestCard extends Component {
 
                 <Collapse in={this.state.detailsExpanded} timeout="auto" unmountOnExit>
                 <CardContent>
-                    <Typography paragraph>Method:</Typography>
-                    <Typography paragraph>
-                    Heat 1/2 cup of the broth in a pot until simmering, add saffron and set aside for 10
-                    minutes.
-                    </Typography>
-                    <Typography paragraph>
-                    Heat oil in a (14- to 16-inch) paella pan or a large, deep skillet over medium-high
-                    heat. Add chicken, shrimp and chorizo, and cook, stirring occasionally until lightly
-                    browned, 6 to 8 minutes. Transfer shrimp to a large plate and set aside, leaving chicken
-                    and chorizo in the pan. Add pimentón, bay leaves, garlic, tomatoes, onion, salt and
-                    pepper, and cook, stirring often until thickened and fragrant, about 10 minutes. Add
-                    saffron broth and remaining 4 1/2 cups chicken broth; bring to a boil.
-                    </Typography>
-                    <Typography paragraph>
-                    Add rice and stir very gently to distribute. Top with artichokes and peppers, and cook
-                    without stirring, until most of the liquid is absorbed, 15 to 18 minutes. Reduce heat to
-                    medium-low, add reserved shrimp and mussels, tucking them down into the rice, and cook
-                    again without stirring, until mussels have opened and rice is just tender, 5 to 7
-                    minutes more. (Discard any mussels that don’t open.)
-                    </Typography>
-                    <Typography>
-                    Set aside off of the heat to let rest for 10 minutes, and then serve.
-                    </Typography>
+                    <Typography paragraph>Details About Me: </Typography>
+                    <Typography paragraph>{userDescription}</Typography>
+
                 </CardContent>
                 </Collapse>
             </Card>

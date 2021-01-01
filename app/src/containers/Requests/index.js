@@ -287,11 +287,11 @@ class Requests extends React.Component {
         return (
             <div className={classes.fullWidth}>
                 <Hidden xsDown>
-                    <GridList cellHeight="auto" spacing={25} >
+                    <GridList cellHeight="325px" cols={3}>
                     {
                         requests.map((request, key) =>  
                         {
-                            return(<GridListTile key={key} rows={2}>                                        
+                            return(<GridListTile key={key} >                                        
                                         <RequestCard user={request.recipientUser} noText="Cancel" noFunction={()=>{this.setState({showCancelConfirm: true, matchId: request._id})}} 
                                         page="pending-match" match={request}>
                                         </RequestCard>
