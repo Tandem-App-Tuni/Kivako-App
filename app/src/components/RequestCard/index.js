@@ -26,11 +26,16 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Moment from 'moment';
 import Box from '@material-ui/core/Box';
 import Chip from '@material-ui/core/Chip';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import PopupMenu from '../../components/PopupMenu'
+
 
 
 const useStyles = theme => ({
-    root: {
-      maxWidth: 345,
+    root: {      
+      width: '99%',
+      height: '99%',
     },
     media: {
       height: '40px',
@@ -50,6 +55,12 @@ const useStyles = theme => ({
     avatar: {
       backgroundColor: red[500],
     },
+    summaryDetails: {
+      height: '100px'
+    },
+    chip: {
+      margin: '2px',
+    },
 });
   
 class RequestCard extends Component {
@@ -64,7 +75,8 @@ class RequestCard extends Component {
             detailProfileOpen: false,
             portOption:ConstantsList.PORT_IN_USE,
             showDefaultAvatar: false,
-            detailsExpanded: false
+            detailsExpanded: false,
+            menuOpen: false,
         };
     }
 
@@ -163,13 +175,15 @@ class RequestCard extends Component {
             </CardActions>
         )
     }
-  
+ 
+
     render ()
     {
         const { classes, user, yesText, yesFunction, noText, noFunction, match } = this.props;
         const userDescription = (user.descriptionText == null || user.descriptionText === "") 
                                 ? "< User has no description >" : `${user.descriptionText}`
-
+        
+        
         return (            
             <Card className={classes.root}>               
                 <CardHeader
@@ -178,16 +192,41 @@ class RequestCard extends Component {
                     </Avatar>
                 }
                 action={
-                    <IconButton aria-label="settings">
-                    <MoreVertIcon />
+                    <IconButton 
+                      aria-label="settings"
+                      aria-controls="long-menu"
+                      aria-haspopup="true"
+                      onClick={this.handleClick}>
+                        <MoreVertIcon />
                     </IconButton>
+                      /* <Menu
+                        id="long-menu"
+                        keepMounted
+                        open={Boolean(anchorEl)}
+                        anchorEl={anchorEl}                        
+                        onClose={this.handleClose} 
+                        PaperProps={{
+                          style: {
+                            maxHeight: 48 * 4.5,
+                            width: '20ch',
+                          },
+                        }}                       
+                      >
+                        
+                      <MenuItem>
+                        Complete Profile
+                      </MenuItem>
+                    
+                      </Menu> */
+               
+                    
                 }
                 title={user.firstName +' '+ user.lastName}
                 subheader={'Request Date: ' + Moment(this.props.match.requestDate).format('DD.MM.yyyy')}
                 />
                 
                 <CardContent>
-                <Typography variant="body2" color="textSecondary" component="p">
+                <Typography variant="body2" color="textSecondary" component="p" className={classes.summaryDetails}>
                     { user.cities.join(', ') }<br/>
                     { user.email}<br/>
                     <Box mb={1} className={classes.thirdRow}>
@@ -200,14 +239,15 @@ class RequestCard extends Component {
                             /> 
                             </Tooltip> : <></>
                         }
-                    </Box><br/>
+                    </Box>
                     
                     <div className={classes.chipGroup}>
-                        Wants to learn: <br/>
-                        {user.languagesToLearn.map(lang => {
+                        Wants to learn: <br/>                                               
+                        {user.languagesToLearn.slice(0,2).map(lang => {
                             return ( <Chip key={lang.language} className={classes.chip} color="primary" variant="outlined" size="small" 
                                     label={`${lang.language} - ${lang.level} - ${lang.credits ? lang.credits : 0} credits`} /> )
                         })}
+                        {(user.languagesToLearn.length > 2) ? <Typography variant="body2" color="textSecondary" component="span"> and more... </Typography> : ''}
                     </div>
                 </Typography>
                 </CardContent>
@@ -218,6 +258,13 @@ class RequestCard extends Component {
                 <CardContent>
                     <Typography paragraph>Details About Me: </Typography>
                     <Typography paragraph>{userDescription}</Typography>
+                    <div className={classes.chipGroup}>
+                        Wants to learn: <br/>                                               
+                        {user.languagesToLearn.map(lang => {
+                            return ( <Chip key={lang.language} className={classes.chip} color="primary" variant="outlined" size="small" 
+                                    label={`${lang.language} - ${lang.level} - ${lang.credits ? lang.credits : 0} credits`} /> )
+                        })}                       
+                    </div>
 
                 </CardContent>
                 </Collapse>

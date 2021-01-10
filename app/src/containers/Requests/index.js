@@ -32,7 +32,13 @@ const styles = ({
         display: 'inline',
         flexWrap: 'wrap',
         justifyContent: 'space-around',
-        overflow: 'hidden',
+        overflow: 'hidden',        
+    },
+    expansionPan: {
+        backgroundColor: '#f5f5f5',
+    },
+    expansionSummary: {
+        backgroundColor: '#fff',
     },
     gridList: {
         //flexWrap: 'nowrap',
@@ -65,6 +71,9 @@ const styles = ({
     },
     leftText: {
         textAlign: 'left'
+    }, 
+    chip: {
+        margin: 2,
     }
 });
 
@@ -245,14 +254,11 @@ class Requests extends React.Component {
         return (
             <div className={classes.fullWidth}>
                 <Hidden xsDown>
-                    <GridList cellHeight="auto" spacing={25} >
+                    <GridList cellHeight="325px" cols={3} >
                     {
                         matches.map((match, key) =>  
                         {
-                            return(<GridListTile key={key} rows={2}>
-                                        {/* <UserStyleCard  user={match.requesterUser} yesText="Accept" yesFunction={()=>{this.setState({showAcceptConfirm: true, matchId: match._id})}}
-                                        noText="Deny" noFunction={()=>{this.setState({showDenyConfirm: true, matchId: match._id})}}  page="pending-match" match={match}> 
-                                        </UserStyleCard> */}
+                            return(<GridListTile key={key} rows={2}>                                        
                                         <RequestCard user={match.requesterUser} yesText="Accept" yesFunction={()=>{this.setState({showAcceptConfirm: true, matchId: match._id})}}
                                         noText="Deny" noFunction={()=>{this.setState({showDenyConfirm: true, matchId: match._id})}}  page="pending-match" match={match}>
                                         </RequestCard>
@@ -388,11 +394,11 @@ class Requests extends React.Component {
 
         return (
             <div className={classes.root}>
-                <ExpansionPanel defaultExpanded={this.state.userRequestMatches.length > 0}>
+                <ExpansionPanel className={classes.expansionPan} defaultExpanded={this.state.userRequestMatches.length > 0}>
                         <ExpansionPanelSummary
                             expandIcon={<ExpandMoreIcon />}
                             aria-controls="panel1a-content"
-                            id="panel1a-header"
+                            id="panel1a-header"                            
                         >
                         <Typography variant="h6">                           
                             You have recieved {this.state.userRequestMatches.length} pending request(s)
@@ -407,7 +413,8 @@ class Requests extends React.Component {
                         </ExpansionPanelDetails>
                 </ExpansionPanel>                
                     
-                <ExpansionPanel defaultExpanded={this.state.userRequestMatches.length === 0 && this.state.userSentMatchRequests.length !== 0 }>
+                <ExpansionPanel className={classes.expansionPan} 
+                    defaultExpanded={this.state.userRequestMatches.length === 0 && this.state.userSentMatchRequests.length !== 0 }>
                         <ExpansionPanelSummary
                             expandIcon={<ExpandMoreIcon />}
                             aria-controls="panel1a-content"
