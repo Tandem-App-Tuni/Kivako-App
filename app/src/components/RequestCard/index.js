@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { makeStyles, Theme, createStyles, withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -7,17 +7,13 @@ import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Collapse from '@material-ui/core/Collapse';
-import Accordion from '@material-ui/core/Accordion';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import { red } from '@material-ui/core/colors';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import ShareIcon from '@material-ui/icons/Share';
 import DoneIcon from '@material-ui/icons/Done';
 import CloseIcon from '@material-ui/icons/Close';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ProfilePage from '../../containers/ViewProfile'
 import ConstantsList from '../../config_constants';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
@@ -26,8 +22,8 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Moment from 'moment';
 import Box from '@material-ui/core/Box';
 import Chip from '@material-ui/core/Chip';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
+import ZoomInIcon from '@material-ui/icons/ZoomIn';
+import Dialog from '@material-ui/core/Dialog';
 
 
 
@@ -174,16 +170,28 @@ class RequestCard extends Component {
             </CardActions>
         )
     }
+
+    handleDetailProfileOpen = () => {
+      this.setState({
+        detailProfileOpen: true
+      })
+    }
+    handleClose = () => {
+      this.setState({
+        detailProfileOpen: false
+      })
+    };
  
 
     render ()
     {
-        const { classes, user, yesText, yesFunction, noText, noFunction, match } = this.props;
+        const { classes, user, yesText, yesFunction, noText, noFunction } = this.props;
         const userDescription = (user.descriptionText == null || user.descriptionText === "") 
                                 ? "< User has no description >" : `${user.descriptionText}`
         
         
-        return (            
+        return (
+            <div>            
             <Card className={classes.root}>               
                 <CardHeader
                 avatar={
@@ -192,33 +200,10 @@ class RequestCard extends Component {
                 }
                 action={
                     <IconButton 
-                      aria-label="settings"
-                      aria-controls="long-menu"
-                      aria-haspopup="true"
-                      onClick={this.handleClick}>
-                        <MoreVertIcon />
+                      aria-label="Full Profile"                      
+                      onClick={this.handleDetailProfileOpen}>
+                        <ZoomInIcon />
                     </IconButton>
-                      /* <Menu
-                        id="long-menu"
-                        keepMounted
-                        open={Boolean(anchorEl)}
-                        anchorEl={anchorEl}                        
-                        onClose={this.handleClose} 
-                        PaperProps={{
-                          style: {
-                            maxHeight: 48 * 4.5,
-                            width: '20ch',
-                          },
-                        }}                       
-                      >
-                        
-                      <MenuItem>
-                        Complete Profile
-                      </MenuItem>
-                    
-                      </Menu> */
-               
-                    
                 }
                 title={user.firstName +' '+ user.lastName}
                 subheader={'Request Date: ' + Moment(this.props.match.requestDate).format('DD.MM.yyyy')}
@@ -268,6 +253,17 @@ class RequestCard extends Component {
                 </CardContent>
                 </Collapse>
             </Card>
+            <Dialog
+            aria-labelledby="simple-modal-title"
+            aria-describedby="simple-modal-description"
+            open={this.state.detailProfileOpen}
+            onClose={this.handleClose}
+            maxWidth={'md'}
+            fullWidth={true}
+            >
+              <ProfilePage userEmail={user.email}></ProfilePage>
+            </Dialog>
+            </div>
         );
       
     }
