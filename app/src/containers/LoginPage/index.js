@@ -195,7 +195,7 @@ class LandingPage extends Component {
                 <li>
                   <div className="content">
                     <h3>Step 3</h3>
-                    <p>Find a language partner. When somebody has accepted your partner request, fill in the <a href="http://bit.ly/UniTandemReg">registration form</a> to get the password for <a href="http://rebrand.ly/DigiCampus" target="_blank">DigiCampus</a>, where the instructions and materials are available. Every student must fill in the registration form individually.</p>
+                    <p>Find a language partner. When somebody has accepted your partner request, fill in the <a href="http://rebrand.ly/UniTandem">registration form</a> to get the password for <a href="http://rebrand.ly/DigiCampus" target="_blank">DigiCampus</a>, where the instructions and materials are available. Every student must fill in the registration form individually.</p>
                   </div>
                 </li>
                 <li>
