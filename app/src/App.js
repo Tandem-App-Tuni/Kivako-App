@@ -16,6 +16,7 @@ import BrowseMatch from './containers/BrowseMatch'
 import ChatPage from './containers/ChatPage'
 import RegisterPage from './containers/RegisterPage'
 import MatchRequests from './containers/MatchRequests'
+import Requests from './containers/Requests'
 import LocalLoginPage from './containers/LocalLoginPage'
 import ActivationPage from './containers/ActivationPage'
 import Checker from './containers/Checker'
@@ -114,7 +115,7 @@ class App extends React.Component
           
             <Route exact path='/partner-list'>
               <Checker activeSocket={this.activeSocket} setSocket={this.setSocket}>
-                <ResponsiveDrawer title='Current Partners' chatBundle={chatBundle}>
+                <ResponsiveDrawer title='Partners' chatBundle={chatBundle}>
                   <PartnerListPage />
                 </ResponsiveDrawer>
               </Checker>
@@ -122,7 +123,7 @@ class App extends React.Component
           
             <Route exact path='/browse-match'>
               <Checker activeSocket={this.activeSocket} setSocket={this.setSocket}>
-                <ResponsiveDrawer title='Find a new language partner' chatBundle={chatBundle}>
+                <ResponsiveDrawer title='Find a partner' chatBundle={chatBundle}>
                   <BrowseMatch />
                 </ResponsiveDrawer>
               </Checker>
@@ -130,7 +131,7 @@ class App extends React.Component
           
             <Route exact path='/chat-page'>
               <Checker activeSocket={this.activeSocket} setSocket={this.setSocket}>
-                <ResponsiveDrawer title='Conversations' chatBundle={chatBundle}>
+                <ResponsiveDrawer title='Chat' chatBundle={chatBundle}>
                   <ChatPage socket={this.state.socket} setChatNotification={this.setChatNotification}/>
                 </ResponsiveDrawer>
               </Checker>
@@ -138,7 +139,7 @@ class App extends React.Component
 
             <Route exact path='/match-requests'>
               <Checker activeSocket={this.activeSocket} setSocket={this.setSocket}>
-                <ResponsiveDrawer title ='Matches requests!' chatBundle={chatBundle}>
+                <ResponsiveDrawer title ='Requests' chatBundle={chatBundle}>
                   <MatchRequests/>
                 </ResponsiveDrawer>
               </Checker>
@@ -150,6 +151,14 @@ class App extends React.Component
                   <ListOfAdmins />
                 </ResponsiveDrawer>
               </CheckerAdmin>
+            </Route>
+
+            <Route exact path='/requests'>
+              <Checker activeSocket={this.activeSocket} setSocket={this.setSocket}>
+                <ResponsiveDrawer title ='Requests' chatBundle={chatBundle}>
+                  <Requests/>
+                </ResponsiveDrawer>
+              </Checker>
             </Route>
           
             <Route exact path='/list-students'>

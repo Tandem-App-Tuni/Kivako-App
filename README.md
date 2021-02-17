@@ -19,6 +19,10 @@ System prerequisites:
 
 Update `testServerUrl` (include port) in `src/config_constants.js` with the remote staging servers url and make sure `LOCAL_TEST_ENVIRONMENT` is set to `true`
 
+## Running the tests
+1. Navigate to the app folder, found in the root directory of frontend.
+2. Run the command "npm test".
+
 ## License
 
 This project is licensed under the terms of the MIT license
