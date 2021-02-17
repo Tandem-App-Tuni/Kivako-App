@@ -3,6 +3,8 @@ import Constants from '../../config_constants';
 import {CircularProgress} from '@material-ui/core'
 import {Redirect} from 'react-router-dom';
 
+import { getApiData } from '../../helpers/networkRequestHelpers'
+
 class CheckerAdmin extends React.Component
 {
     constructor(props)
@@ -18,42 +20,45 @@ class CheckerAdmin extends React.Component
     {
         console.log('[CheckerAdmin] Mounting');
 
-        fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/isAuthenticated', 
-        {
+        getApiData({
+            endpoint: 'isAuthenticated',
+        }, {
             method: 'GET',
             credentials: 'include',
             cors: 'no-cors'
         })
         .then((response) => response.json())
-        .then((responseData) => 
+        .then((responseData) =>
         {
             if (responseData.isAuthenticated)
             {
-                fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/users/isAdmin', 
-                {
+                getApiData({
+                    version: 'v1',
+                    endpoint: 'users/isAdmin',
+                }, {
                     method: 'GET',
                     credentials: 'include',
                     cors: 'no-cors'
                 })
                 .then((response) => response.json())
-                .then((responseData) => 
+                .then((responseData) =>
                 {
                     if (responseData.isAdmin) this.setState({isAdmin:responseData.isAdmin, isAuthenticated: true, retrievedData: true}, this.state.setSocket());
                     else this.setState({retrievedData: true});
                 })
-                .catch((error) => 
+                .catch((error) =>
                 {
                     console.error(error);
                 });
             }
             else this.setState({retrievedData: true});
         })
-        .catch((error) => 
+        .catch((error) =>
         {
             console.error(error);
         });
     }
-    
+
     render()
     {
         console.log('[CheckerAdmin] Render');

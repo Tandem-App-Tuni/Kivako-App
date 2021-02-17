@@ -5,6 +5,7 @@ import TextField from "@material-ui/core/TextField";
 import ConstantsList from '../../config_constants';
 import MaterialTable from "material-table";
 import { AlertPopup } from '../../components/AlertView';
+import { getApiData } from "../../helpers/networkRequestHelpers";
 
 class NewsDashboard extends React.Component {
 	constructor(props) {
@@ -65,31 +66,33 @@ class NewsDashboard extends React.Component {
 			],
 			isLoading: true,
 			showAlert: false,
-			alertText: "",	
+			alertText: "",
 			alertType: "",
 			user: {}
 		}
 	}
 
 	componentDidMount() {
-		fetch(window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + "/api/v1/news/",
-			{
-				method: 'GET',
-				credentials: 'include'
-			}
-		)
+		getApiData({
+			version: 'v1',
+			endpoint: 'news',
+		}, {
+			method: 'GET',
+			credentials: 'include'
+		})
 		.then(response => response.json())
 		.then(responseJson => {
 			this.setState({ newsList: responseJson, isLoading: false })
 		});
 
-		fetch(window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + "/api/v1/users/userInfo",
-			{
-				method: 'GET',
-				credentials: 'include'
-			}
-		)
-		.then(response => response.json())	
+		getApiData({
+			version: 'v1',
+			endpoint: 'users/userInfo',
+		}, {
+			method: 'GET',
+			credentials: 'include'
+		})
+		.then(response => response.json())
 		.then(responseJson => {
 			this.setState(state => {
 				let {data} = responseJson
@@ -99,27 +102,27 @@ class NewsDashboard extends React.Component {
 				return {user: data, tableColumns: columns}
 			})
 		});
-		
+
 	}
 
 	updateNews = (newData, oldData) => {
 		return new Promise((resolve, reject) => {
-			fetch(window.location.protocol + '//' + window.location.hostname
-				+ ConstantsList.PORT_IN_USE + "/api/v1/news/" + oldData._id,
-				{
-					method: 'PUT',
-					credentials: 'include',
-					headers: {
-						"Accept": "application/json",
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify({
-						title: newData.title,
-						author: newData.author,
-						content: newData.content
-					})
-				}
-			)
+			getApiData({
+				version: 'v1',
+				endpoint: 'news/' + oldData._id,
+			}, {
+				method: 'PUT',
+				credentials: 'include',
+				headers: {
+					"Accept": "application/json",
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					title: newData.title,
+					author: newData.author,
+					content: newData.content
+				})
+			})
 			.then(res => {
 				res.status === 200 &&
 					this.toggleAlert(true, "success", "Updated successfully")
@@ -136,18 +139,18 @@ class NewsDashboard extends React.Component {
 
 	addNews = newData => {
 		return new Promise((resolve, reject) => {
-			fetch(window.location.protocol + '//' + window.location.hostname
-				+ ConstantsList.PORT_IN_USE + "/api/v1/news/",
-				{
-					method: 'POST',
-					credentials: 'include',
-					headers: {
-						"Accept": "application/json",
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify(newData)
-				}
-			)
+			getApiData({
+				version: 'v1',
+				endpoint: 'news'
+			}, {
+				method: 'POST',
+				credentials: 'include',
+				headers: {
+					"Accept": "application/json",
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(newData)
+			})
 			.then(res => {
 				res.status === 201 &&
 					this.toggleAlert(true, "success", "Added successfully")
@@ -164,17 +167,17 @@ class NewsDashboard extends React.Component {
 
 	deleteNews = data => {
 		return new Promise((resolve, reject) => {
-			fetch(window.location.protocol + '//' + window.location.hostname
-				+ ConstantsList.PORT_IN_USE + "/api/v1/news/" + data._id,
-				{
-					method: "DELETE",
-					headers: {
-						'Accept': 'application/json',
-						'Content-Type': 'application/json',
-					},
-					credentials: 'include'
-				}
-			).then(res => {
+			getApiData({
+				version: 'v1',
+				endpoint: 'news/' + data._id,
+			}, {
+				method: "DELETE",
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json',
+				},
+				credentials: 'include'
+			}).then(res => {
 				if (res.status === 200){
 					this.toggleAlert(true, "success", "Deleted successfully");
 					resolve();
@@ -282,7 +285,7 @@ class NewsDashboard extends React.Component {
 	}
 }
 
-export default NewsDashboard;	
+export default NewsDashboard;
 
 export function convertDate(dateStr) {
 	let date = new Date(dateStr);

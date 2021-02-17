@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {withStyles} from '@material-ui/core/styles';
 import MaterialTable from "material-table";
 import Constants from '../../config_constants';
+import { getApiData } from '../../helpers/networkRequestHelpers';
 
 const useStyles = theme => ({
   '@global': {
@@ -32,7 +33,7 @@ const useStyles = theme => ({
 
 });
 
-class Statitics extends Component 
+class Statitics extends Component
 {
   columns = [
     { field: 'language', title: 'Language',  align: 'center'},
@@ -43,8 +44,8 @@ class Statitics extends Component
       title: 'Number of Active Matches'
     }
   ]
-  
-  constructor(props) 
+
+  constructor(props)
   {
     super(props);
     this.state = {
@@ -57,20 +58,22 @@ class Statitics extends Component
     };
   }
 
-  componentDidMount() 
+  componentDidMount()
   {
-    fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/admin/statitics', 
-    {
+    getApiData({
+      version: 'v1',
+      endpoint: 'admin/statitics',
+    }, {
       method: 'GET',
       credentials: 'include',
       cors:'no-cors'
     })
     .then((response) => response.json())
-    .then((responseJson) => 
+    .then((responseJson) =>
     {
       this.setState({rows:responseJson.data, isLoadingTable:false});
     })
-    .catch((error) => 
+    .catch((error) =>
     {
       console.error(error);
     });
@@ -79,7 +82,7 @@ class Statitics extends Component
   render()
   {
     if(this.isLoadingTable) return null;
-  
+
     return (
       <MaterialTable
         title="Language Data"

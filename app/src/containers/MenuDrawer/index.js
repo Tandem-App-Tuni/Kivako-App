@@ -20,6 +20,7 @@ import logo from '../../tandemlogo.png'
 import ConstantsList from '../../config_constants';
 
 import {AppContext} from "../../components/context/context";
+import { getApiData } from '../../helpers/networkRequestHelpers';
 
 const drawerWidth = 240;
 
@@ -113,21 +114,21 @@ class Dashboard extends React.Component
     super(props);
 
     this.state = {open:true, isAdmin:false, requestAmount:0 , socket: props.chatBundle.socket, getChatN: props.chatBundle.getChatNotification, setChatN: props.chatBundle.setChatNotification,};
-    this.resizeScreen = this.resizeScreen.bind(this); 
+    this.resizeScreen = this.resizeScreen.bind(this);
 
   }
 
-  handleDrawerOpen = () => 
+  handleDrawerOpen = () =>
   {
     this.setState({open:true});
   }
 
-  handleDrawerClose = () => 
+  handleDrawerClose = () =>
   {
     this.setState({open:false});
   }
 
-  logoClick = () => 
+  logoClick = () =>
   {
     window.location.href="/";
   }
@@ -143,7 +144,7 @@ class Dashboard extends React.Component
   }
   async componentDidMount()
   {
-    try 
+    try
     {
       window.addEventListener("resize", this.resizeScreen);
       this.resizeScreen();
@@ -151,18 +152,22 @@ class Dashboard extends React.Component
       this._isMounted = true;
 
       this.state.socket.on('notification', () => this.state.setChatN(true));
-      
+
       this.state.socket.emit('checkNotifications', {});
 
-      const p0 = fetch(window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/api/v1/users/isAdmin', 
-      {
+      const p0 = getApiData({
+        version: 'v1',
+        endpoint: 'users/isAdmin',
+      }, {
           method: 'GET',
           credentials: 'include',
           cors: 'no-cors'
       });
 
-      const p1 = fetch(window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + "/api/v1/usersMatch/receiptMatchsRequests", 
-      {
+      const p1 = getApiData({
+        version: 'v1',
+        endpoint: 'usersMatch/receiptMatchsRequests',
+      }, {
         method: 'GET',
         credentials: 'include',
         cors:'no-cors'
@@ -173,7 +178,7 @@ class Dashboard extends React.Component
       this.context.updateContext("requestAmount", responseResults[1].userReceiptMatches.length)
       this.setState({isAdmin: responseResults[0].isAdmin, requestAmount: responseResults[1].userReceiptMatches.length});
     }
-    catch(e) 
+    catch(e)
     {
       console.log("Error when menu mounted:", e)
     }
@@ -205,8 +210,8 @@ class Dashboard extends React.Component
         classes={{
           paper: clsx(classes.drawerPaper, !this.state.open && classes.drawerPaperClose),
         }}
-        open={this.state.open}> 
-          <div className={classes.toolbarIcon}>     
+        open={this.state.open}>
+          <div className={classes.toolbarIcon}>
             <img alt="" src={logo}  onClick={this.logoClick} style={{ maxHeight: 100, maxWidth: '70%', align: 'center' }} />
             <IconButton onClick={this.handleDrawerClose}>
               <ChevronLeftIcon/>

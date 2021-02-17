@@ -13,6 +13,7 @@ import ConstantsList from "../../config_constants";
 import Grid from "@material-ui/core/Grid";
 
 import { AlertPopup } from "../../components/AlertView";
+import { getApiData } from "../../helpers/networkRequestHelpers";
 
 /**
  * The activation page is based on a template available on: https://github.com/mui-org/material-ui/tree/master/docs/src/pages/getting-started/templates/sign-in
@@ -81,13 +82,12 @@ class ForgotPasswordPage extends React.Component {
 
 	handleSignUpButtonClick(e) {
 		e.preventDefault();
-		fetch(
-			window.location.protocol + "//" + window.location.hostname + ConstantsList.PORT_IN_USE + "/api/v1/users/resetPasswordRequest/" +
-			this.state.email,
-			{
-				method: "GET"
-			}
-		).then(response => {
+		getApiData({
+			version: 'v1',
+			endpoint: 'users/resetPasswordRequest/' + this.state.email
+		}, {
+			method: "GET"
+		}).then(response => {
 			console.log(response);
 
 			if (response.status !== 200) this.toggleAlert(true, "error", "Something went wrong. Try again later.");
@@ -118,21 +118,21 @@ class ForgotPasswordPage extends React.Component {
 			return;
 		}
 
-		fetch(
-			window.location.protocol + "//" + window.location.hostname + ConstantsList.PORT_IN_USE +
-			"/api/v1/users/resetPasswordRequestCheck",
-			{
-				method: "POST",
-				headers: {
-					Accept: "application/json",
-					"Content-Type": "application/json"
-				},
-				body: JSON.stringify({
-					email: this.state.emailBuffer,
-					token: this.state.token,
-					password: this.state.password
-				})
-			}).then(response => response)
+		getApiData({
+			version: 'v1',
+			endpoint: 'users/resetPasswordRequestCheck',
+		}, {
+			method: "POST",
+			headers: {
+				Accept: "application/json",
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({
+				email: this.state.emailBuffer,
+				token: this.state.token,
+				password: this.state.password
+			})
+		}).then(response => response)
 			.then(
 				res => {
 					this.setState({

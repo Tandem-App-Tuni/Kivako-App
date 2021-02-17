@@ -8,26 +8,27 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { makeStyles } from '@material-ui/core/styles';
 
 import ConstantsList from '../../config_constants';
+import { getApiUrl } from '../../helpers/networkRequestHelpers';
 
 /**
  * Author: Peter Mlakar
- * 
+ *
  * The PartnerListPage renders the current partners and request the user might have.
  * There are two arrays that need to be recieved from the
  * api called on the url /user/request&partner, the request array and the partners array.
  * There are is one parrameter that can be set: peekWordCount which controlls how many words of the last message of the conversation are shown in the preview.
- * 
+ *
  * The name property holds the name of the user requesting the connection.
  * The teach, learn properties are self evident. The city0 is the city where the user lives, city1 is the
  * city in which the user studies.
- * 
+ *
  * The second array holds all the partners with which the user is conversing.
- * 
+ *
  * The name property holds the name of the user with which we are conversing. The conversationName describes the
  * topic of conversation. ConversationId property is the index in the array of this.parent where this conversation is located.
  * By this nature it should be unique.
  * The messages array holds the messages of this conversation in the structue described in the Chat class.
- * 
+ *
  * The ChatPage state contains the following parameters:
  * currentOpenConversation -> contains the reference to the currently open conversation
  * peekWordCount -> explained above
@@ -39,7 +40,7 @@ import ConstantsList from '../../config_constants';
 class ChatPage extends React.Component
 {
   _isMounted = false;
-  
+
   constructor(props)
   {
     super(props);
@@ -53,7 +54,7 @@ class ChatPage extends React.Component
       socket: props.socket,
       loadedServerInformation: false,
       setChatNotification: props.setChatNotification
-    }; 
+    };
 
     this.partners = [];
   }
@@ -70,7 +71,7 @@ class ChatPage extends React.Component
 
     this.state.setChatNotification(false);
 
-    this.state.socket.on('chatData', (data) =>  
+    this.state.socket.on('chatData', (data) =>
     {
       let roomInformation = data.roomInformation;
 
@@ -88,18 +89,18 @@ class ChatPage extends React.Component
 
     /**
      * Function listens to roomUpdate events when subscribing to
-     * a specific room. 
+     * a specific room.
      */
-    this.state.socket.on('roomUpdate', (data) => 
+    this.state.socket.on('roomUpdate', (data) =>
     {
-      this.partners.forEach((element) => 
+      this.partners.forEach((element) =>
       {
         if (element.roomId === data.roomId)
         {
           element.messages = data.room.messages;
         }
       });
-      
+
       if (this._isMounted) this.setState({peekWordCount: 5});
     });
 
@@ -131,21 +132,24 @@ class ChatPage extends React.Component
 
     this.partners.forEach((element, index) => {
       parnerArray.push(
-        <Zoom 
+        <Zoom
           in={true}
           key={index}>
           <Box onClick={() => this.handleClick(element.conversationId)}>
-            <Tooltip 
+            <Tooltip
               title='Click to open conversation...'
               placement='left'>
-              <ListItem 
+              <ListItem
                 alignItems="flex-start"
                 key={index}
                 divider style={{cursor: 'pointer'}}>
                 <ListItemAvatar>
                   <Avatar
-                    alt={element.name} 
-                    src={window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/api/v1/avatar/getAvatar/' + element.email}/>
+                    alt={element.name}
+                    src={getApiUrl({
+                      version: 'v1',
+                      endpoint: 'avatar/getAvatar/' + element.email,
+                    })}/>
                 </ListItemAvatar>
                 <ListItemText
                   primary={this.capitalizeWords(element.conversationName)}
@@ -159,7 +163,7 @@ class ChatPage extends React.Component
 
           </Tooltip>
           </Box>
-          
+
         </Zoom>
       );
     });
@@ -170,7 +174,7 @@ class ChatPage extends React.Component
   /**
    * getMessagePeek constructs the preview of the conversation that has the length peekWordCount of words of the
    * last message of the conversation.
-   * 
+   *
    * @param {*} messages Messages of the specific conversation for which the peek should be retrieved.
    */
   getMessagePeek = (messages) =>
@@ -182,7 +186,7 @@ class ChatPage extends React.Component
     var peekSplit = msg.text.split(" ");
     var peek = "";
 
-    peekSplit.forEach((element, index) => 
+    peekSplit.forEach((element, index) =>
     {
       if (index > this.state.peekWordCount) return;
       peek+= " " + element;
@@ -192,13 +196,13 @@ class ChatPage extends React.Component
   }
 
   /**
-   * 
-   * handleClick funtion handles the click event on the components 
+   *
+   * handleClick funtion handles the click event on the components
    * generated by the renderPartnerArray function. The currently selected
    * conversation is stored in the this.state.currentOpenConversation reference.
    * If no conversation is open, the reference is undefined. Clicking the same
    * conversation twice closes the conversation.
-   * 
+   *
    * @param {*} id id of the clicked conversation.
    */
   handleClick = (id) =>
@@ -211,16 +215,16 @@ class ChatPage extends React.Component
     if (id !== currentId) this.setState({currentOpenConversation: this.partners[id]})
     else this.setState({currentOpenConversation: undefined})
 
-    if (id !== currentId) 
+    if (id !== currentId)
     {
-      this.state.socket.emit('subscribe', 
-          {to: this.partners[id].roomId, 
+      this.state.socket.emit('subscribe',
+          {to: this.partners[id].roomId,
            from: currentId !== -1 ? this.partners[currentId].roomId : 'null'});
     }
-    else 
+    else
     {
-      this.state.socket.emit('subscribe', 
-          {to: 'null', 
+      this.state.socket.emit('subscribe',
+          {to: 'null',
            from: currentId !== -1 ? this.partners[currentId].roomId : 'null'});
     }
   }
@@ -260,7 +264,7 @@ class ChatPage extends React.Component
       <div style = {{height:"88vh"}}>
         <Typography variant="h6" gutterBottom>
                 Partners
-        </Typography> 
+        </Typography>
         <div>
           <ExpansionPanel defaultExpanded={true}>
             <ExpansionPanelSummary
@@ -279,7 +283,7 @@ class ChatPage extends React.Component
                     <Grid item xs={12} sm={3}>
                       <Box borderRadius={10}>
 
-                        <List 
+                        <List
                           width='100%'
                           color='paper'>
                           {this.renderPartnerArray()}
@@ -287,7 +291,7 @@ class ChatPage extends React.Component
                       </Box>
                     </Grid>
 
-                    <Grid item xs={12} sm={8} > 
+                    <Grid item xs={12} sm={8} >
                       {this.renderChatWindow()}
                     </Grid>
                 </Grid>

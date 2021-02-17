@@ -58,7 +58,7 @@ class LocalLoginPage extends Component {
       logOut: ConstantsList.APPLICATION_URL + '/logout-user',
       signInCheck: ConstantsList.APPLICATION_URL + '/login/check',
       redirectURL: '',
-      initialPage: ConstantsList.IS_LOCAL_TEST_ENV ? 'http://localhost:3001' : ConstantsList.APPLICATION_URL,
+      initialPage: ConstantsList.APPLICATION_URL,
       showAlert: false,
       alertType: "success",
       alertText: ""
@@ -107,7 +107,7 @@ class LocalLoginPage extends Component {
         if (checkUrl === '/') {
           this.toggleAlert(true, "error", 'Wrong credentials!');
         }
-        else 
+        else
           fetch(this.state.api + checkUrl,
             {
               method: 'GET',

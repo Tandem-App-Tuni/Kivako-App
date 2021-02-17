@@ -15,6 +15,7 @@ import ConstantsList from '../../config_constants';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import WarningIcon from '@material-ui/icons/Warning';
 import Tooltip from '@material-ui/core/Tooltip';
+import { getApiUrl } from '../../helpers/networkRequestHelpers';
 
   const useStyles = theme => ({
     card: {
@@ -143,22 +144,21 @@ import Tooltip from '@material-ui/core/Tooltip';
       }
     }
   });
-  
-  class UserStyleCard extends Component 
+
+  class UserStyleCard extends Component
   {
     constructor(props) {
       super(props);
       this.handleOnYesClick = this.handleOnYesClick.bind(this);
       this.handleOnError = this.handleOnError.bind(this);
 
-      this.state = 
+      this.state =
       {
         detailProfileOpen: false,
-        portOption:ConstantsList.PORT_IN_USE,
         showDefaultAvatar: false
       };
     }
-    
+
     handleDetailProfileOpen = () => {
       this.setState({
         detailProfileOpen: true
@@ -172,13 +172,13 @@ import Tooltip from '@material-ui/core/Tooltip';
 
     handleOnYesClick= () => {
       switch(this.props.page) {
-        case "browse-match": 
+        case "browse-match":
           this.props.yesFunction(this.props.user, this.props.matchingLanguage);
           break;
         case "pending-match":
           this.props.yesFunction(this.props.match);
           break;
-        case "partner-list": 
+        case "partner-list":
           this.props.yesFunction(this.props.matchId);
           break;
         default:
@@ -210,12 +210,15 @@ import Tooltip from '@material-ui/core/Tooltip';
         className={classes.circleIcon}
         component={AccountCircleIcon}
         children=" " />);
-      
+
       const UserAvatar = (<CardMedia
         className={classes.media}
             component="img"
             onError={this.handleOnError}
-            image={window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/avatar/getAvatar/' + this.props.user.email}
+            image={getApiUrl({
+              version: 'v1',
+              endpoint: 'avatar/getAvatar/' + this.props.user.email,
+            })}
       />);
 
       if(this.state.showDefaultAvatar) return defaultAvatar;
@@ -223,13 +226,13 @@ import Tooltip from '@material-ui/core/Tooltip';
     }
 
     renderButtonGroup = (yesText, yesFunction, noText, noFunction, cssClasses) => {
-        const yesButton = (yesText && yesFunction) 
+        const yesButton = (yesText && yesFunction)
         ? (  <Button className={cssClasses.button} onClick={this.handleOnYesClick} variant="outlined" size="medium" color="primary" >
                 {yesText}
               </Button>
           )
         : (<></>);
-        const noButton = (noText && noFunction) 
+        const noButton = (noText && noFunction)
         ? (  <Button className={cssClasses.button} onClick={this.handleOnNoClick} variant="outlined" size="medium" color="secondary" >
                 {noText}
               </Button>
@@ -237,7 +240,7 @@ import Tooltip from '@material-ui/core/Tooltip';
         : (<></>);
 
         return(
-          <div className={cssClasses.buttonGroup}> 
+          <div className={cssClasses.buttonGroup}>
             <Grid>
               {yesButton}
               {noButton}
@@ -247,9 +250,9 @@ import Tooltip from '@material-ui/core/Tooltip';
     }
 
     render ()
-    {  
+    {
         const { classes, user, yesText, yesFunction, noText, noFunction } = this.props;
-        const userDescription = (user.descriptionText == null || user.descriptionText === "") 
+        const userDescription = (user.descriptionText == null || user.descriptionText === "")
                                 ? "< User has no description >" : `${user.descriptionText.substr(0,180)} ...`
         return(
           <div>
@@ -276,21 +279,21 @@ import Tooltip from '@material-ui/core/Tooltip';
                       icon={<WarningIcon />}
                       label="One way match!"
                       size="small"
-                      /> 
+                      />
                     </Tooltip> : <></>
                 }
               </Box>
               <p className={classes.descriptionText}>
-                {userDescription}     
+                {userDescription}
               </p>
               <div>
-                
+
               </div>
-              <div className={classes.body}>   
+              <div className={classes.body}>
                 <div className={classes.chipGroup}>
                   Wants to learn
                   {user.languagesToLearn.map(lang => {
-                    return ( <Chip key={lang.language} className={classes.chip} color="primary" variant="outlined" size="small" 
+                    return ( <Chip key={lang.language} className={classes.chip} color="primary" variant="outlined" size="small"
                              label={`${lang.language} - ${lang.level} - ${lang.credits} credits`} /> )
                   })}
                 </div>
@@ -314,7 +317,7 @@ import Tooltip from '@material-ui/core/Tooltip';
         </div>
         );
     }
-        
+
   }
 
 

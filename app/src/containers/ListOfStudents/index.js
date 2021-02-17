@@ -14,6 +14,7 @@ import TextField from '@material-ui/core/TextField';
 
 import { AlertPopup, ConfirmDialog } from '../../components/AlertView';
 import Constants from '../../config_constants';
+import { getApiData } from '../../helpers/networkRequestHelpers';
 
 const useStyles = theme => ({
   '@global': {
@@ -61,7 +62,7 @@ class ListOfStudents extends Component {
         }
       }
     },
-    
+
     {
       id: 'userIsActivie',
       label: 'Active',
@@ -69,7 +70,7 @@ class ListOfStudents extends Component {
       align: 'center',
       format: value => {
         if(value) value.toString()
-      } 
+      }
 
     },
     {
@@ -119,13 +120,14 @@ class ListOfStudents extends Component {
   }
 
   fetchUserList = () => {
-    fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/admin/studentUsers',
-      {
+    getApiData({
+      version: 'v1',
+      endpoint: 'admin/studentUsers',
+    }, {
         method: 'GET',
         credentials: 'include',
         cors: 'no-cors'
-      })
-      .then((response) => response.json())
+    }).then((response) => response.json())
       .then((responseJson) => {
         this.setState({data: responseJson.data, rows: responseJson.data, isLoadingTable: false });
       })
@@ -155,21 +157,21 @@ class ListOfStudents extends Component {
   }
 
   onDeleteUser = () => {
-      fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/users/deleteAdmin/' + this.state.deleteData.email,
-        {
+      getApiData({
+        version: 'v1',
+        endpoint: 'users/deleteAdmin/' + this.state.deleteData.email,
+      }, {
           method: 'GET',
           credentials: 'include',
           cors: 'no-cors'
-        })
-        .then((response) => {
-          if (response.status === 200) 
+      }).then((response) => {
+          if (response.status === 200)
             this.fetchUserList();
           else
             this.toggleAlert(true, "error", "Something went wrong");
-        })
-        .catch((error) => {
+      }).catch((error) => {
           console.error(error);
-        });
+      });
     this.setState({showConfirm: false, deleteData: {}})
   }
   handleSearchChange = (event) => {
@@ -183,7 +185,7 @@ class ListOfStudents extends Component {
 
       })
       this.setState({rows:searchResult})
-    } 
+    }
     if (searchValue.length == 0){
       this.setState({rows:this.state.data})
     }
@@ -196,9 +198,9 @@ class ListOfStudents extends Component {
 
     return (
       <Paper className={classes.tableRoot}>
-        
-        <Grid 
-          container 
+
+        <Grid
+          container
           direction='row'
           justify='center'
           alignItems='center'>
@@ -227,7 +229,7 @@ class ListOfStudents extends Component {
             </Button>
           </Grid>
         </Grid>
-        <TextField 
+        <TextField
         variant='outlined'
         margin='normal'
         fullWidth
@@ -259,7 +261,7 @@ class ListOfStudents extends Component {
                         <TableCell key={column.id} align={column.align}>
                           <div>
                             {column.format ? column.format(value) : value}
-                            {column.id === 'removeUserButton' ? 
+                            {column.id === 'removeUserButton' ?
                               <Button
                                 fullWidth
                                 variant='contained'

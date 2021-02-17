@@ -39,6 +39,7 @@ import { AlertPopup } from '../../components/AlertView';
 import ConstantsList from '../../config_constants';
 import TermsEnglishDialog from './privacy_policy_en'
 import TermsFinnishDialog from './privacy_policy_fi'
+import { getApiData } from '../../helpers/networkRequestHelpers';
 
 const useStyles = theme => ({
   '@global': {
@@ -122,7 +123,7 @@ class SignUpPage extends Component {
       password: '',
       passwordConfirmation: '',
       email: '',
-      emailConfirmation: '',  
+      emailConfirmation: '',
       cities: [],
       descriptionText: '',
       showInputTeachLanguage: false,
@@ -133,7 +134,6 @@ class SignUpPage extends Component {
       termsAndConditionsAccept: false,
       isAlreadyAuthenticated: false,
       isLoadingPage: true,
-      portOption: ConstantsList.PORT_IN_USE, //set to 3000 for local testing,
       showAlert: false,
       alertType: "success",
       alertText: ""
@@ -390,10 +390,10 @@ class SignUpPage extends Component {
 
   // API Call to insert user
   onSaveButtonClicked = () => {
-    const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/users/add")
-
-
-    fetch(url, {
+    getApiData({
+      version: 'v1',
+      endpoint: 'users/add',
+    }, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -410,19 +410,16 @@ class SignUpPage extends Component {
         userIsActivie: true,
         password: this.state.password
       })
-    })
-      .then((response) => response.json())
+    }).then((response) => response.json())
       .then((responseJson) => {
         if (responseJson.userAdded) {
           setTimeout(()=>{
             this.setState({ isAlreadyregistered: true });
-
           }, 5000);
           this.toggleAlert(true, "success", "User registered succesfully. Please check your email for an activation link. \nYou will redirect to login page in 5 seconds ...");
         }
-        else 
+        else
           this.toggleAlert(true, "error", responseJson.description);
-
       })
       .catch((error) => {
         console.error(error);
@@ -432,12 +429,12 @@ class SignUpPage extends Component {
   checkIfUserIsAuthenticaded(callback) {
     console.log('Checking authentication...');
 
-    fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/isAuthenticated',
-      {
+    getApiData({
+      endpoint: 'isAuthenticated',
+    }, {
         method: 'GET',
         credentials: 'include'
-      })
-      .then((response) => response.json())
+    }).then((response) => response.json())
       .then((responseData) => {
         if (responseData.isAuthenticated === false) {
           // Nothing to do, user will be redirect in render;
@@ -475,7 +472,7 @@ class SignUpPage extends Component {
   render() {
     const { classes } = this.props;
     const excludedLanguages = this.toExcludeLanguages();
-   
+
     //Wait until all informations be render until continue
     if (this.state.isLoadingPage) {
       return null;
@@ -777,7 +774,7 @@ export default withStyles(useStyles)(SignUpPage);
 class TermsAndConditions extends Component {
 
   render() {
- 
+
     return (
       <div>
 

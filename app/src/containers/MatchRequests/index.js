@@ -25,6 +25,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import {AppContext} from "../../components/context/context";
 import Hidden from '@material-ui/core/Hidden';
+import { getApiData } from '../../helpers/networkRequestHelpers';
 
 const styles = ({
     root: {
@@ -70,7 +71,7 @@ const styles = ({
 class MatchRequests extends React.Component {
     static contextType = AppContext;
 
-    constructor(props) 
+    constructor(props)
     {
       super(props);
       this.state = {
@@ -82,7 +83,6 @@ class MatchRequests extends React.Component {
         showAcceptConfirm: false,
         showDenyConfirm: false,
         matchId: "",
-        portOption:ConstantsList.PORT_IN_USE
       };
       this.acceptMatchRequest = this.acceptMatchRequest.bind(this);
       this.denyMatchRequest = this.denyMatchRequest.bind(this);
@@ -99,18 +99,19 @@ class MatchRequests extends React.Component {
 
     acceptMatchRequest() {
         this.setState({isLoadingPage: true})
-        fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/usersMatch/acceptMatchRequest/' + this.state.matchId,
-            {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'include',
-                cors: 'no-cors',
-                body: JSON.stringify({})
-            })
-            .then((response) => {
+        getApiData({
+            version: 'v1',
+            endpoint: 'usersMatch/acceptMatchRequest/' + this.state.matchId,
+        },{
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            cors: 'no-cors',
+            body: JSON.stringify({})
+        }).then((response) => {
                 if (response.status === 200) {
                     this.getUserMatchsRequestListAPI(()=>{
                         this.toggleAlert(true, "success", "Match request accepted.")
@@ -120,19 +121,20 @@ class MatchRequests extends React.Component {
                 else {
                     this.toggleAlert(true, "error", "Something went wrong.");
                 }
-            })
-            .catch((error) => {
-                this.setState({isLoadingPage: false})
-                console.log('Error');
-                console.error(error);
-            });
+        }).catch((error) => {
+            this.setState({isLoadingPage: false})
+            console.log('Error');
+            console.error(error);
+        });
         this.closeAllDialogs();
     }
 
     denyMatchRequest() {
         this.setState({isLoadingPage: true})
-        const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/usersMatch/denyMatchRequest/" + this.state.matchId);
-        fetch(url, {
+        getApiData({
+            version: 'v1',
+            endpoint: 'usersMatch/denyMatchRequest/' + this.state.matchId,
+        }, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -158,9 +160,10 @@ class MatchRequests extends React.Component {
     }
 
     getUserMatchsRequestListAPI(callback) {
-        const url = new URL(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/usersMatch/receiptMatchsRequests");
-
-        fetch(url, {
+        getApiData({
+            version: 'v1',
+            endpoint: 'usersMatch/receiptMatchsRequests',
+        }, {
             method: 'GET',
             credentials: 'include',
             cors: 'no-cors'
@@ -189,11 +192,11 @@ class MatchRequests extends React.Component {
                 <Hidden xsDown>
                     <GridList cellHeight="auto" spacing={25} >
                     {
-                        matches.map((match, key) =>  
+                        matches.map((match, key) =>
                         {
                             return(<GridListTile key={key} rows={2}>
                                         <UserStyleCard  user={match.requesterUser} yesText="Accept" yesFunction={()=>{this.setState({showAcceptConfirm: true, matchId: match._id})}}
-                                        noText="Deny" noFunction={()=>{this.setState({showDenyConfirm: true, matchId: match._id})}}  page="pending-match" match={match}> 
+                                        noText="Deny" noFunction={()=>{this.setState({showDenyConfirm: true, matchId: match._id})}}  page="pending-match" match={match}>
                                         </UserStyleCard>
                                     </GridListTile>)
                         }
@@ -203,11 +206,11 @@ class MatchRequests extends React.Component {
                 <Hidden smUp>
                     <GridList cellHeight="auto" cols={1} spacing={25} >
                     {
-                        matches.map((match, key) =>  
+                        matches.map((match, key) =>
                         {
                             return(<GridListTile key={key} rows={2}>
                                         <UserStyleCard  user={match.requesterUser} yesText="Accept" yesFunction={()=>{this.setState({showAcceptConfirm: true, matchId: match._id})}}
-                                        noText="Deny" noFunction={()=>{this.setState({showDenyConfirm: true, matchId: match._id})}}  page="pending-match" match={match}> 
+                                        noText="Deny" noFunction={()=>{this.setState({showDenyConfirm: true, matchId: match._id})}}  page="pending-match" match={match}>
                                         </UserStyleCard>
                                     </GridListTile>)
                         }
@@ -215,7 +218,7 @@ class MatchRequests extends React.Component {
                     </GridList>
                 </Hidden>
 
-            </div>   
+            </div>
             )
     }
 
@@ -300,7 +303,7 @@ class MatchRequests extends React.Component {
                         </Typography>
                         </ExpansionPanelSummary>
                         <ExpansionPanelDetails>
-                            { 
+                            {
                                 this.getMatchesTiles(this.state.userRequestMatches, classes)
                             }
                             <br></br>

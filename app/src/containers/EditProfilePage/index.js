@@ -30,6 +30,7 @@ import LanguagePicker from '../../components/LanguagePicker'
 import { AlertPopup, ConfirmDialog } from '../../components/AlertView';
 
 import ConstantsList from '../../config_constants';
+import { getApiData, getApiUrl } from '../../helpers/networkRequestHelpers';
 
 const useStyles = theme => ({
   '@global': {
@@ -107,7 +108,10 @@ class EditProfilePage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      profileImgURL: window.location.protocol + '//' + window.location.hostname + ConstantsList.PORT_IN_USE + '/api/v1/avatar/getAvatar',
+      profileImgURL: getApiUrl({
+        version: 'v1',
+        endpoint: 'avatar/getAvatar',
+      }),
       languagesToTeach: [],
       languagesToLearn: [],
       firstName: '',
@@ -126,7 +130,6 @@ class EditProfilePage extends Component {
       editingLearnLanguageIndex: 0,
       videoError: false,
       isExcludeFromMatching: false,
-      portOption: ConstantsList.PORT_IN_USE //set to 3000 for local testing
     };
 
     this.toggleAlert = this.toggleAlert.bind(this);
@@ -140,29 +143,38 @@ class EditProfilePage extends Component {
         let form = new FormData()
         form.append('avatar', event.target.files[0]);
 
-        fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/avatar/uploadAvatar',
-          {
+        getApiData({
+          version: 'v1',
+          endpoint: 'avatar/uploadAvatar',
+        }, {
             method: 'POST',
             credentials: 'include',
             body: form
-          })
-          .then(response => response.json())
-          .then(responseJson => {
-            if (responseJson.message === 'Avatar saved!') {
-              console.log('Fetching image...');
+        })
+        .then(response => response.json())
+        .then(responseJson => {
+          if (responseJson.message === 'Avatar saved!') {
+            console.log('Fetching image...');
 
-              this.setState({ profileImgURL: window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/avatar/getAvatar' });
-              window.location.reload();
-            }
-          });
+            this.setState({
+              profileImgURL: getApiUrl({
+                version: 'v1',
+                endpoint: 'avatar/getAvatar',
+              })
+            });
+            window.location.reload();
+          }
+        });
       }
     }
   }
 
   onSaveButtonClicked = () => {
-   
-    fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/users/update",
-      {
+
+    getApiData({
+      version: 'v1',
+      endpoint: 'users/update',
+    }, {
         method: 'POST',
         headers:
         {
@@ -182,12 +194,11 @@ class EditProfilePage extends Component {
           userIsActivie: true,
           profileVideoURL: this.state.profileVideoURL
         })
-      })
-      .then((response) => response.json())
+    }).then((response) => response.json())
       .then((responseJson) => {
         if (responseJson.update) {
           this.toggleAlert(true, 'success', 'User informations updated succesfully!');
-        } 
+        }
         else
           this.toggleAlert(true, 'error', 'Update failed. Please try again later');
       })
@@ -197,8 +208,10 @@ class EditProfilePage extends Component {
   }
 
   onDeleteProfile = () => {
-    fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/api/v1/users/delete',
-      {
+    getApiData({
+      version: 'v1',
+      endpoint: 'users/delete',
+    }, {
         method: 'DELETE',
         headers:
         {
@@ -206,8 +219,7 @@ class EditProfilePage extends Component {
           'Content-Type': 'application/json',
         },
         credentials: 'include'
-      })
-      .then((response) => {
+    }).then((response) => {
         if (response.status === 200) {
           this.setState({
             showAlert: true,
@@ -322,13 +334,13 @@ class EditProfilePage extends Component {
   };
 
   checkIfUserIsAuthenticaded(callback) {
-    fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + '/isAuthenticated',
-      {
+    getApiData({
+      endpoint: 'isAuthenticated',
+    }, {
         method: 'GET',
         credentials: 'include',
         cors: 'no-cors'
-      })
-      .then((response) => response.json())
+    }).then((response) => response.json())
       .then((responseData) => {
         if (responseData.isAuthenticated) {
           this.setState({ email: responseData.email });
@@ -344,13 +356,14 @@ class EditProfilePage extends Component {
   preLoadUserInformations = () => {
     console.log('[INFO]Loading user information...');
 
-    fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/users/userInfo",
-      {
+    getApiData({
+      version: 'v1',
+      endpoint: 'users/userInfo',
+    }, {
         method: 'GET',
         credentials: 'include',
         cors: 'no-cors'
-      })
-      .then((response) => response.json())
+    }).then((response) => response.json())
       .then((responseData) => {
         console.log('Load user info:', responseData.data.firstName);
 
@@ -445,8 +458,10 @@ class EditProfilePage extends Component {
   }
   onExcludeIncludeButtonClicked = async flagValue => {
       try {
-        const response = await fetch(window.location.protocol + '//' + window.location.hostname + this.state.portOption + "/api/v1/users/setMatchingVisibility", 
-        {
+        const response = await getApiData({
+          version: 'v1',
+          endpoint: 'users/setMatchingVisibility',
+        }, {
           method: 'POST',
           credentials: 'include',
           cors: 'no-cors',
@@ -726,11 +741,11 @@ class EditProfilePage extends Component {
               >
                 Save changes
                 </Button>
-              
-              { this.state.isExcludeFromMatching ? 
+
+              { this.state.isExcludeFromMatching ?
                   <Tooltip title="Your profile will be visible in find partner page. Other users will be able to send you a partner request.">
-                    <Button  
-                    fullWidth            
+                    <Button
+                    fullWidth
                     variant="contained"
                     color="primary"
                     className={classes.includeInMatchingButton}
@@ -738,10 +753,10 @@ class EditProfilePage extends Component {
                                Include In Matching
                     </Button>
                   </Tooltip>
-                  : 
+                  :
                   <Tooltip title="Your profile will be excluded from find partner page. Other users won't be able to send you a partner request.">
-                    <Button  
-                     fullWidth            
+                    <Button
+                     fullWidth
                       variant="contained"
                       color="secondary"
                       onClick={() => this.onExcludeIncludeButtonClicked(true)}>

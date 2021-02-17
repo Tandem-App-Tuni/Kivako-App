@@ -29,7 +29,7 @@ import ConstantsList from '../../config_constants';
       },
       [theme.breakpoints.down('xs')]: {
         height: "120px",
-      },  
+      },
     },
     media: {
       flexShrink: 0,
@@ -90,19 +90,18 @@ import ConstantsList from '../../config_constants';
       }
     }
   });
-  
-  class NewsCard extends Component 
+
+  class NewsCard extends Component
   {
     constructor(props) {
       super(props);
 
-      this.state = 
+      this.state =
       {
         newsDetailsOpen: false,
-        portOption:ConstantsList.PORT_IN_USE,
       };
     }
-    
+
     handleNewsDetailsOpen = () => {
       this.setState({
         newsDetailsOpen: true
@@ -117,7 +116,7 @@ import ConstantsList from '../../config_constants';
 
 
     render ()
-    {  
+    {
         const { classes, news } = this.props;
         const {title, content, author, updatedAt} = news;
         const trimedTitle = (title && title.length > 70) ? title.substring(0,70) + "..." : title
@@ -160,7 +159,7 @@ import ConstantsList from '../../config_constants';
         </div>
         );
     }
-        
+
   }
 
 

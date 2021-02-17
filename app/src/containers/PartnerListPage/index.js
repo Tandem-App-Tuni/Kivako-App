@@ -14,17 +14,18 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { ConfirmDialog } from '../../components/AlertView';
 import Dialog from '@material-ui/core/Dialog';
 import Hidden from '@material-ui/core/Hidden';
+import { getApiData, getApiUrl } from '../../helpers/networkRequestHelpers';
 
 
-const styles =  theme => 
+const styles =  theme =>
 ({
-  root: 
+  root:
   {
     display: 'inline',
     flexWrap: 'wrap',
     justifyContent: 'space-around',
     overflow: 'hidden',
-    
+
     // backgroundColor: theme.palette.background.paper,
   },
     gridList: {
@@ -59,11 +60,11 @@ const styles =  theme =>
   leftText: {
       textAlign: 'left'
   },
-  inline: 
+  inline:
   {
     display: 'inline',
   },
-  item: 
+  item:
   {
     backgroundColor: 'white',
   },
@@ -78,11 +79,11 @@ const styles =  theme =>
  * The user can the choose to unadd the partner,
  * resulting in the match being removed from the server.
  */
-class PartnerListPage extends Component 
+class PartnerListPage extends Component
 {
   constructor(props) {
     super(props);
-    this.state = 
+    this.state =
     {
       partnerList: [],
       isReportFormOpen: false,
@@ -92,13 +93,15 @@ class PartnerListPage extends Component
     this.onUnmatchUser = this.onUnmatchUser.bind(this);
     this.onReportPartner = this.onReportPartner.bind(this);
   }
- 
-  
+
+
   getPartnerList() {
-    fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/usersMatch/getUserActiveMatches',
-    {
+    getApiData({
+      version: 'v1',
+      endpoint: 'usersMatch/getUserActiveMatches',
+    }, {
       method: 'GET',
-      headers: 
+      headers:
       {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -106,9 +109,9 @@ class PartnerListPage extends Component
       credentials: 'include'
     })
     .then(responseSecond => responseSecond.json())
-    .then(jsonResponse => 
+    .then(jsonResponse =>
     {
-      if (jsonResponse.data === undefined) 
+      if (jsonResponse.data === undefined)
       {
         this.setState({partnerList: []});
         return;
@@ -129,30 +132,32 @@ class PartnerListPage extends Component
         let ltt = [];
         let ltl = [];
 
-        user.languagesToTeach.forEach(item => 
+        user.languagesToTeach.forEach(item =>
         {
           ltt.push(item.language);
         });
 
-        user.languagesToLearn.forEach(item => 
+        user.languagesToLearn.forEach(item =>
         {
           ltl.push(item.language);
         });
 
         partners.push(
         {
-           
             firstName:user.firstName,
             lastName:user.lastName,
             _id: i,
-            matchId: match._id,            
+            matchId: match._id,
             cities: user.cities,
             teachLanguages: ltt,
             studyLanguages: ltl,
             email:user.email,
             languagesToLearn:user.languagesToLearn,
             descriptionText:user.descriptionText,
-            photo_url:window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/avatar/getAvatar/' + user.email,
+            photo_url:getApiUrl({
+              version: 'v1',
+              endpoint: 'avatar/getAvatar/' + user.email
+            }),
         });
       }
 
@@ -167,17 +172,17 @@ class PartnerListPage extends Component
 
   getPartnersTiles(partnerList, classes) {
     return (
-      
+
         <div className={classes.fullWidth}>
           <Hidden xsDown>
             <GridList cellHeight="auto" spacing={25} >
               {
-                  partnerList.map((partner, _id) =>  
-                  {      
+                  partnerList.map((partner, _id) =>
+                  {
                     return(<GridListTile key={_id} rows={2}>
                               <UserStyleCard  user={partner} page="partner-list"
                               yesText="Unmatch" yesFunction={()=>{this.setState({showConfirm: true, unmatchId: partner.matchId})}} matchId={partner.matchId}
-                              noText="Report" noFunction={this.onReportPartner}> 
+                              noText="Report" noFunction={this.onReportPartner}>
                               </UserStyleCard>
                           </GridListTile>)
                   }
@@ -187,23 +192,23 @@ class PartnerListPage extends Component
           <Hidden smUp>
             <GridList cellHeight="auto" cols={1} spacing={25} >
               {
-                  partnerList.map((partner, _id) =>  
-                  {      
+                  partnerList.map((partner, _id) =>
+                  {
                     return(<GridListTile key={_id} rows={2}>
                               <UserStyleCard  user={partner} page="partner-list"
                               yesText="Unmatch" yesFunction={()=>{this.setState({showConfirm: true, unmatchId: partner.matchId})}} matchId={partner.matchId}
-                              noText="Report" noFunction={this.onReportPartner}> 
+                              noText="Report" noFunction={this.onReportPartner}>
                               </UserStyleCard>
                           </GridListTile>)
                   }
               )}
             </GridList>
           </Hidden>
-        </div>   
+        </div>
         )
 }
 
-  getPartnerDiv(list, classes) 
+  getPartnerDiv(list, classes)
   {
     if (this.state.partnerList.length === 0) return <div/>;
     else
@@ -221,14 +226,14 @@ class PartnerListPage extends Component
             </Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
-                  { 
+                  {
                       this.getPartnersTiles(this.state.partnerList, classes)
                   }
                   <br></br>
                   <Divider variant="middle" />
             </ExpansionPanelDetails>
-          
-        </ExpansionPanel>     
+
+        </ExpansionPanel>
       </div>
       );
     }
@@ -236,8 +241,10 @@ class PartnerListPage extends Component
 
   onUnmatchUser = () =>
   {
-    fetch(window.location.protocol + '//' + window.location.hostname + Constants.PORT_IN_USE + '/api/v1/usersMatch/removeExistingMatch', 
-    {
+    getApiData({
+      version: 'v1',
+      endpoint: 'usersMatch/removeExistingMatch',
+    }, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -246,7 +253,7 @@ class PartnerListPage extends Component
       credentials: 'include',
       body: JSON.stringify({matchId: this.state.unmatchId})
     })
-    .then((response) => 
+    .then((response) =>
     {
       this.getPartnerList();
       this.setState({showConfirm: false, unmatchId: ""})
@@ -277,8 +284,8 @@ class PartnerListPage extends Component
             maxWidth={'md'}
             fullWidth={true}
             >
-              {/* TODO: update it ASAP when getting a correct link from customer */}           
-              <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSeNpw2ZAAa0gmvlpw1B5KJv2SSr41bNTz9uXAB-eqKD4TvcXA/viewform?embedded=true" 
+              {/* TODO: update it ASAP when getting a correct link from customer */}
+              <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSeNpw2ZAAa0gmvlpw1B5KJv2SSr41bNTz9uXAB-eqKD4TvcXA/viewform?embedded=true"
               width="100%" height="1491" >Loading…</iframe>
         </Dialog>
         <ConfirmDialog
