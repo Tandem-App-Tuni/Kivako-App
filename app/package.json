@@ -13,6 +13,7 @@
     "bootstrap": "^4.4.1",
     "downshift": "^3.4.8",
     "font-awesome": "^4.7.0",
+    "jest": "^26.6.3",
     "material-table": "^1.57.2",
     "moment": "^2.29.1",
     "prop-types": "^15.7.2",
@@ -34,7 +35,7 @@
     "start": "PORT=3001 react-scripts start",
     "start-windows": "set PORT=3001 && react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "jest src/**/*.test.js",
     "eject": "react-scripts eject",
     "install": "react-scripts install"
   },

@@ -15,6 +15,9 @@ System prerequisites:
 5. To run the backend go to the src directory and run: nodemon server.js or node server.js. (Make sure to install all dependencies first by npm install package.json, or do it individually)
 6. To run the frontend go to the app directory and run: npm run start. (Make sure to install all dependencies first by npm install package.json, or do it individually)
 
+## Running the tests
+1. Navigate to the app folder, found in the root directory of frontend.
+2. Run the command "npm test".
 
 ## License
 
