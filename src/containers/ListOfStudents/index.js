@@ -11,6 +11,7 @@ import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
+import DeleteForever from '@material-ui/icons/DeleteForever';
 
 import { AlertPopup, ConfirmDialog } from '../../components/AlertView';
 import Constants from '../../config_constants';
@@ -71,8 +72,40 @@ class ListOfStudents extends Component {
       format: value => {
         if(value) value.toString()
       }
-
     },
+
+    {
+      id: 'languagesToTeach',
+      label: 'Teach',
+      minWidth: 170,
+      align: 'center',
+      format: value => {
+        let langs = "";
+        value.forEach(item => {
+          if(item) {
+            langs = langs + item.language + ", ";
+          }
+        })
+        return langs.slice(0, -2);
+      }
+    },
+
+    {
+      id: 'languagesToLearn',
+      label: 'Learn',
+      minWidth: 170,
+      align: 'center',
+      format: value => {
+        let langs = "";
+        value.forEach(item => {
+          if(item) {
+            langs = langs + item.language + ", ";
+          }
+        })
+        return langs.slice(0, -2);
+      }
+    },
+
     {
       id: 'removeUserButton',
       label: 'Remove user',
@@ -181,14 +214,30 @@ class ListOfStudents extends Component {
       let searchResult = this.state.data.filter(item => {
         return item.lastName.toLowerCase().includes( searchValue)
         ||item.firstName.toLowerCase().includes( searchValue)
-        ||item.email.toLowerCase().includes( searchValue);
-
+        ||item.email.toLowerCase().includes( searchValue)
+        ||this.languagesIntoString(item, 1).includes( searchValue)
+        ||this.languagesIntoString(item, 2).includes( searchValue);
       })
       this.setState({rows:searchResult})
     }
     if (searchValue.length == 0){
       this.setState({rows:this.state.data})
     }
+  }
+
+  languagesIntoString = (item, role) => {
+    let languagestr = "";
+    if (role == 1){
+      for (let index = 0; index < item.languagesToTeach.length; index++) {
+        languagestr = languagestr + item.languagesToTeach[index].language.toLowerCase() + " ";
+      }
+    }
+    else{
+      for (let index = 0; index < item.languagesToLearn.length; index++) {
+        languagestr = languagestr + item.languagesToLearn[index].language.toLowerCase() + " ";
+      }
+    }
+    return languagestr.slice(0, -1);
   }
 
   render() {
@@ -234,7 +283,7 @@ class ListOfStudents extends Component {
         margin='normal'
         fullWidth
         id='search'
-        label='Search for students by name or email'
+        label='Search for students by name, email or language'
         name='search'
         onChange = {this.handleSearchChange} value={this.state.searchValue}
         />
@@ -262,14 +311,13 @@ class ListOfStudents extends Component {
                           <div>
                             {column.format ? column.format(value) : value}
                             {column.id === 'removeUserButton' ?
-                              <Button
+                              <DeleteForever
                                 fullWidth
                                 variant='contained'
                                 color='primary'
                                 className={classes.chip}
                                 onClick={() => {this.setState({showConfirm: true, deleteData: row})}}>
-                                Remove
-                              </Button> : <div/>}
+                              </DeleteForever> : <div/>}
                           </div>
                         </TableCell>
                       );
