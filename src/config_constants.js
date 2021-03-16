@@ -1,4 +1,4 @@
-const LOCAL_TEST_ENVIRONMENT = true;
+const LOCAL_TEST_ENVIRONMENT = false;
 
 // set the test server url and port here; either remote hosted staging server or local server
 const testServerUrl = 'http://localhost:3000';
