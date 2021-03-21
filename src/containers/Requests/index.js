@@ -294,9 +294,9 @@ class Requests extends React.Component {
                         requests.map((request, key) =>  
                         {
                             return(<GridListTile key={key} >                                        
-                                        <RequestCard user={request.recipientUser} noText="Cancel" noFunction={()=>{this.setState({showCancelConfirm: true, matchId: request._id})}} 
+                                        <UserStyleCard user={request.recipientUser} noText="Cancel" noFunction={()=>{this.setState({showCancelConfirm: true, matchId: request._id})}} 
                                         page="pending-match" match={request}>
-                                        </RequestCard>
+                                        </UserStyleCard>
                                     </GridListTile>)
                         }
                     )}
@@ -308,8 +308,8 @@ class Requests extends React.Component {
                         requests.map((match, key) =>  
                         {
                             return(<GridListTile key={key} rows={2}>
-                                        <RequestCard user={match.requesterUser} noText="cancel" noFunction={()=>{this.setState({showCancelConfirm: true, matchId: match._id})}}  page="pending-match" match={match}>
-                                        </RequestCard>
+                                        <UserStyleCard user={match.requesterUser} noText="cancel" noFunction={()=>{this.setState({showCancelConfirm: true, matchId: match._id})}}  page="pending-match" match={match}>
+                                        </UserStyleCard>
                                     </GridListTile>)
                         }
                     )}
