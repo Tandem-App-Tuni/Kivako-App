@@ -1,4 +1,4 @@
-const LOCAL_TEST_ENVIRONMENT = false;
+const LOCAL_TEST_ENVIRONMENT = process.env.LOCAL_TEST_ENVIRONMENT || false;
 
 // set the test server url and port here; either remote hosted staging server or local server
 const testServerUrl = process.env.BACKEND_URL || 'http://localhost:3000';
