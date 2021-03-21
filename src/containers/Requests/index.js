@@ -16,7 +16,6 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import { AlertPopup, ConfirmDialog } from '../../components/AlertView';
 import ConstantsList from '../../config_constants';
-import UserStyleCard from '../../components/UserStyleCard';
 
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -25,7 +24,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import {AppContext} from "../../components/context/context";
 import Hidden from '@material-ui/core/Hidden';
-import RequestCard from '../../components/RequestCard';
+import UserStyleCard from '../../components/UserStyleCard';
 
 const styles = ({
     root: {
@@ -259,9 +258,9 @@ class Requests extends React.Component {
                         matches.map((match, key) =>  
                         {
                             return(<GridListTile key={key} rows={2}>                                        
-                                        <RequestCard user={match.requesterUser} yesText="Accept" yesFunction={()=>{this.setState({showAcceptConfirm: true, matchId: match._id})}}
+                                        <UserStyleCard user={match.requesterUser} yesText="Accept" yesFunction={()=>{this.setState({showAcceptConfirm: true, matchId: match._id})}}
                                         noText="Deny" noFunction={()=>{this.setState({showDenyConfirm: true, matchId: match._id})}}  page="pending-match" match={match}>
-                                        </RequestCard>
+                                        </UserStyleCard>
                                     </GridListTile>)
                         }
                     )}
@@ -273,12 +272,9 @@ class Requests extends React.Component {
                         matches.map((match, key) =>  
                         {
                             return(<GridListTile key={key} rows={2}>
-                                        {/* <UserStyleCard  user={match.requesterUser} yesText="Accept" yesFunction={()=>{this.setState({showAcceptConfirm: true, matchId: match._id})}}
-                                        noText="Deny" noFunction={()=>{this.setState({showDenyConfirm: true, matchId: match._id})}}  page="pending-match" match={match}> 
-                                        </UserStyleCard> */}
-                                        <RequestCard user={match.requesterUser} yesText="Accept" yesFunction={()=>{this.setState({showAcceptConfirm: true, matchId: match._id})}}
+                                        <UserStyleCard user={match.requesterUser} yesText="Accept" yesFunction={()=>{this.setState({showAcceptConfirm: true, matchId: match._id})}}
                                         noText="Deny" noFunction={()=>{this.setState({showDenyConfirm: true, matchId: match._id})}}  page="pending-match" match={match}>
-                                        </RequestCard>
+                                        </UserStyleCard>
                                     </GridListTile>)
                         }
                     )}
@@ -286,7 +282,7 @@ class Requests extends React.Component {
                 </Hidden>
 
             </div>   
-            )
+        )
     }
 
     getSentRequestsTiles(requests, classes) {

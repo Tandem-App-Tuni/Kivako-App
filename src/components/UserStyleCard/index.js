@@ -1,325 +1,274 @@
 import React, {Component} from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
+import clsx from 'clsx';
 import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
-import Box from '@material-ui/core/Box';
-import Link from '@material-ui/core/Link';
-import CardMedia from '@material-ui/core/CardMedia';
-import ArrowForwardIos from '@material-ui/icons/ArrowForwardIos';
-import Chip from '@material-ui/core/Chip';
-import Grid from '@material-ui/core/Grid';
+import CardActions from '@material-ui/core/CardActions';
+import Collapse from '@material-ui/core/Collapse';
+import Avatar from '@material-ui/core/Avatar';
+import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
+import { red } from '@material-ui/core/colors';
+import DoneIcon from '@material-ui/icons/Done';
+import CloseIcon from '@material-ui/icons/Close';
+import ReportIcon from '@material-ui/icons/Report';
+import PersonAddIcon from '@material-ui/icons/PersonAdd';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import PersonAddDisabledIcon from '@material-ui/icons/PersonAddDisabled';
 import ProfilePage from '../../containers/ViewProfile'
 import ConstantsList from '../../config_constants';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import WarningIcon from '@material-ui/icons/Warning';
 import Tooltip from '@material-ui/core/Tooltip';
+import Moment from 'moment';
+import Box from '@material-ui/core/Box';
+import Chip from '@material-ui/core/Chip';
+import ZoomInIcon from '@material-ui/icons/ZoomIn';
+import Dialog from '@material-ui/core/Dialog';
 import { getApiUrl } from '../../helpers/networkRequestHelpers';
 
-  const useStyles = theme => ({
-    card: {
-      display: 'flex',
-      padding: "1px",
-      borderRadius: 16,
-      backgroundColor: "#FAFAFA",
-      },
-    thirdRow: {
-      display: 'flex',
-      flexWrap: 'wrap',
-      '& > *': {
-        marginRight: theme.spacing(1.5),
-      }
-    },
-    media: {
-      flexShrink: 0,
-      backgroundColor: "#F4F4F4",
-      borderRadius: "80%",
-      boxShadow: '0 2px 8px 0 #c1c9d7, 0 -2px 8px 0 #cce1e9',
-      marginRight:"2%",
-      [theme.breakpoints.between('lg','xl')]: {
-        minWidth: '35%',
-        maxWidth: '35%',
-        maxHeight:"190px",
-        marginTop:"20px",
-        marginRight: "5%",
-      },
-      [theme.breakpoints.down('lg')]: {
-        minWidth: '30%',
-        maxWidth: '30%',
-        maxHeight: '10rem',
-        marginRight: "5px",
-        borderRadius: "50%",
-      },
-      [theme.breakpoints.down('1462')]: {
-        minWidth: '30%',
-        maxWidth: '30%',
-        maxHeight: '9rem',
-        marginRight: "5px",
-        borderRadius: "60%",
-      },
-      [theme.breakpoints.down('1346')]: {
-        maxHeight: '8rem',
-      },
-      [theme.breakpoints.down('md')]: {
-        display: "none"
-      },
-    },
-    content: {
-      padding: "0px, 0, 0, 0",
-    },
-    heading: {
-      fontSize: 17,
-      fontWeight: 'bold',
-      letterSpacing: '0.5px',
-      marginBottom: 0,
-      marginRight: "1.5em",
-      display: 'inline-block',
-    },
-    body : {
-      fontSize: 14,
-      wordWrap: "break-word",
-    },
-    icon: {
-      fontSize: '0.8rem',
-    },
-    chip: {
-      marginLeft: "5px"
-    },
-    buttonGroup: {
-      marginTop: "1.1rem"
-    },
-    button: {
-      marginRight: "10px"
-    },
-    descriptionText: {
-      fontSize: 14,
-      wordWrap: "break-word",
-      minHeight: "120px",
-      minWidth: "321.77px",
-      maxWidth: "321.77px",
-      [theme.breakpoints.down('lg')]: {
-        minWidth: "285.77px",
-        maxWidth: "285.77px"
-      },
-      [theme.breakpoints.down('1346')]: {
-        minWidth: "235.77px",
-        maxWidth: "235.77px"
-      },
-      [theme.breakpoints.down('md')]: {
-        minWidth: "auto",
-        maxWidth: "auto",
-        minHeight: "auto"
-      }
-    },
-    circleIcon: {
-      minWidth: '35%',
-      maxWidth: '35%',
-      maxHeight:"190px",
-      minHeight:"190px",
-      [theme.breakpoints.between('lg','xl')]: {
-        minWidth: '35%',
-        maxWidth: '35%',
-        maxHeight:"190px",
-        marginTop:"10px",
-        marginRight: "0%",
-      },
-      [theme.breakpoints.down('lg')]: {
-        minWidth: '51%',
-        maxWidth: '51%',
-        minHeight: '190px',
-        maxHeight: '170px',
-      },
-      [theme.breakpoints.down('1462')]: {
-        minWidth: '38%',
-        maxWidth: '38%',
-        maxHeight: '5rem',
-      },
-      [theme.breakpoints.down('1354')]: {
-        minWidth: '33%',
-        maxWidth: '33%'
-      },
-      [theme.breakpoints.down('md')]: {
-        display: "none"
-      }
-    }
-  });
+const useStyles = theme => ({
+   root: {
+      width: '99%',
+      height: '99%',
+   },
+   media: {
+      height: '40px',
+      width: '40px',
+      // 16:9
+   },
+   expand: {
+      transform: 'rotate(0deg)',
+      marginLeft: 'auto',
+      transition: theme.transitions.create('transform', {
+         duration: theme.transitions.duration.shortest,
+      }),
+   },
+   expandOpen: {
+      transform: 'rotate(180deg)',
+   },
+   avatar: {
+      backgroundColor: red[500],
+   },
+   summaryDetails: {
+      paddingTop: '0px'
+   },
+   chip: {
+      margin: '2px',
+   },
+});
 
-  class UserStyleCard extends Component
-  {
-    constructor(props) {
+class UserCard extends Component
+{
+   constructor(props) 
+   {
       super(props);
       this.handleOnYesClick = this.handleOnYesClick.bind(this);
+      this.handleOnNoClick = this.handleOnNoClick.bind(this);
       this.handleOnError = this.handleOnError.bind(this);
-
-      this.state =
+      this.state = 
       {
-        detailProfileOpen: false,
-        showDefaultAvatar: false
+         detailProfileOpen: false,
+         portOption:ConstantsList.PORT_IN_USE,
+         showDefaultAvatar: false,
+         detailsExpanded: false,
+         menuOpen: false,
       };
-    }
+   }
 
-    handleDetailProfileOpen = () => {
+   handleOnError() {
       this.setState({
-        detailProfileOpen: true
+         showDefaultAvatar: true
       })
-    }
-    handleClose = () => {
-      this.setState({
-        detailProfileOpen: false
-      })
-    };
+   }
 
-    handleOnYesClick= () => {
+   // expands the user's description and list of languages they want to learn
+   handleExpandClick = () =>
+   {
+      const expanded = this.state.detailsExpanded;
+      this.setState({
+         detailsExpanded: !expanded
+      });
+   }
+
+   handleOnYesClick = () => {
       switch(this.props.page) {
-        case "browse-match":
-          this.props.yesFunction(this.props.user, this.props.matchingLanguage);
-          break;
-        case "pending-match":
-          this.props.yesFunction(this.props.match);
-          break;
-        case "partner-list":
-          this.props.yesFunction(this.props.matchId);
-          break;
-        default:
-          break;
+         case "browse-match":
+            this.props.yesFunction(this.props.user, this.props.matchingLanguage);
+            break;
+         case "pending-match":
+            this.props.yesFunction(this.props.match);
+            break;
+         case "partner-list":
+            this.props.yesFunction(this.props.matchId);
+            break;
+         default:
+            break;
       }
-    }
+   }
 
-    handleOnNoClick= () => {
+   handleOnNoClick= () => {
       switch(this.props.page) {
-        case "pending-match":
-          this.props.noFunction(this.props.match);
-          break;
-        case "partner-list":
-          this.props.noFunction();
-          break;
-        default:
-          break;
+         case "pending-match":
+            this.props.noFunction(this.props.match);
+            break;
+         case "partner-list":
+            this.props.noFunction();
+            break;
+         default:
+            break;
       }
-    }
+   }
 
-    handleOnError() {
+   handleDetailProfileOpen = () => {
       this.setState({
-        showDefaultAvatar: true
+         detailProfileOpen: true
       })
-    }
+   }
 
-    renderAvatar = (classes) => {
-      const defaultAvatar = (<CardMedia
-        className={classes.circleIcon}
-        component={AccountCircleIcon}
-        children=" " />);
+   handleClose = () => {
+      this.setState({
+         detailProfileOpen: false
+      })
+   };
 
-      const UserAvatar = (<CardMedia
-        className={classes.media}
-            component="img"
-            onError={this.handleOnError}
-            image={getApiUrl({
-              version: 'v1',
-              endpoint: 'avatar/getAvatar/' + this.props.user.email,
-            })}
-      />);
+   renderButtonGroup = (yesText, yesFunction, noText, noFunction, classes) => {
+      const yesButton = (yesText && yesFunction) 
+      ?  (  (this.props.page == "pending-match")
+            ?  <IconButton aria-label="accept" >
+                  <DoneIcon onClick={this.handleOnYesClick} />
+               </IconButton>
+            :  (this.props.page == "browse-match")
+               ?  <IconButton aria-label="add partner">
+                     <PersonAddIcon onClick={this.handleOnYesClick}/>
+                  </IconButton>
+               :  
+               <IconButton aria-label="unmatch">
+                  <PersonAddDisabledIcon onClick={this.handleOnYesClick}/>
+               </IconButton>
+         )
+      : (<></>);
 
-      if(this.state.showDefaultAvatar) return defaultAvatar;
-      else return UserAvatar
-    }
+      const noButton = (noText && noFunction) 
+      ?  (  (this.props.page == "pending-match")
+            ?  <IconButton aria-label="reject">
+                  <CloseIcon onClick={this.handleOnNoClick} />
+               </IconButton>
+            :  
+            <IconButton aria-label="report">
+               <ReportIcon onClick={this.handleOnNoClick} />
+            </IconButton>
+         )
+      :  (<></>);
 
-    renderButtonGroup = (yesText, yesFunction, noText, noFunction, cssClasses) => {
-        const yesButton = (yesText && yesFunction)
-        ? (  <Button className={cssClasses.button} onClick={this.handleOnYesClick} variant="outlined" size="medium" color="primary" >
-                {yesText}
-              </Button>
-          )
-        : (<></>);
-        const noButton = (noText && noFunction)
-        ? (  <Button className={cssClasses.button} onClick={this.handleOnNoClick} variant="outlined" size="medium" color="secondary" >
-                {noText}
-              </Button>
-          )
-        : (<></>);
+      return(
+         <CardActions disableSpacing>
+            {yesButton}
+            {noButton}
+              
+            <IconButton
+               className={clsx(classes.expand, {
+                  [classes.expandOpen]: this.state.detailsExpanded,
+               })}
+               onClick={this.handleExpandClick}
+               aria-expanded={this.state.detailsExpanded}
+               aria-label="show more"
+            >
+               <ExpandMoreIcon />
+            </IconButton> 
+         </CardActions>
+      )
+  }
 
-        return(
-          <div className={cssClasses.buttonGroup}>
-            <Grid>
-              {yesButton}
-              {noButton}
-            </Grid>
-          </div>
-        )
-    }
+   renderCities = (cities) => {
+      if(cities != "") {
+         return <div>{ cities.join(', ') }<br/></div> 
+      }
+   }
 
-    render ()
-    {
-        const { classes, user, yesText, yesFunction, noText, noFunction } = this.props;
-        const userDescription = (user.descriptionText == null || user.descriptionText === "")
-                                ? "< User has no description >" : `${user.descriptionText.substr(0,180)} ...`
-        return(
-          <div>
-            <Card className={classes.card} elevation={0}>
-            <CardContent className={classes.content}>
+   
+
+   render ()
+   {
+      const { classes, user, yesText, yesFunction, noText, noFunction } = this.props;
+      const userDescription = (user.descriptionText == null || user.descriptionText === "") 
+                            ? "< User has no description >" : `${user.descriptionText}`
+        
+        
+      return (
+         <div> 
+         <Card className={classes.root}>
+            {/* profile picture, name and full profile (icon) */}
+            <CardHeader
+               avatar={
+                  <Avatar className={classes.avatar} src={getApiUrl({version: 'v1', endpoint: 'avatar/getAvatar/' + user.email})}></Avatar>
+               }
+               action={
+                  <IconButton 
+                     aria-label="Full Profile"
+                     onClick={this.handleDetailProfileOpen}>
+                     <ZoomInIcon />
+                  </IconButton>
+               }
+               title={<div>{user.firstName +' '+ user.lastName} {(this.props.fitQuality !== null && this.props.fitQuality === 0) ?
+                                                                  <Tooltip title="One way match means you cannot teach any language(s) that this student wants to learn.">
+                                                                  <Chip
+                                                                     icon={<WarningIcon />}
+                                                                     label="One way match!"
+                                                                     size="small"
+                                                                  />
+                                                                  </Tooltip> : <></>
+                                                               }</div>}
 
 
-              <Box mb={1}>
-                <h2 className={classes.heading}>{user.firstName} {user.lastName}</h2>
-                <Link
-                  component={'button'}  onClick={this.handleDetailProfileOpen}
-                >
-                  Full profile <ArrowForwardIos className={classes.icon}/>
-                </Link>
-              </Box>
-              <Box mb={1}>
-                <h6 className={classes.heading}> { user.cities.join(', ') }  </h6>
-              </Box>
-              <Box mb={1} className={classes.thirdRow}>
-                <p className={classes.email}> { user.email}  </p>
-                {(this.props.fitQuality !== null && this.props.fitQuality === 0) ?
-                    <Tooltip title="One way match means you cannot teach any language(s) that this student wants to learn.">
-                      <Chip
-                      icon={<WarningIcon />}
-                      label="One way match!"
-                      size="small"
-                      />
-                    </Tooltip> : <></>
-                }
-              </Box>
-              <p className={classes.descriptionText}>
-                {userDescription}
-              </p>
-              <div>
-
-              </div>
-              <div className={classes.body}>
-                <div className={classes.chipGroup}>
-                  Wants to learn
-                  {user.languagesToLearn.map(lang => {
-                    return ( <Chip key={lang.language} className={classes.chip} color="primary" variant="outlined" size="small"
-                             label={`${lang.language} - ${lang.level} - ${lang.credits} credits`} /> )
+               subheader={(this.props.match) ? 'Request Date: ' + Moment(this.props.match.requestDate).format('DD.MM.yyyy'):''}
+               
+            />
+               
+            <CardContent className={classes.summaryDetails}>
+            {/* city, email */}
+            <Typography variant="body2" color="textSecondary" component="p" >
+               
+               {this.renderCities(user.cities)}
+               { user.email}
+               {/* one way match tag nex to email */}
+               
+               
+               {/* which languages user wants to learn */}
+               <div className={classes.chipGroup}>
+                  Wants to learn: <br/>
+                  {user.languagesToLearn.slice(0,3).map(lang => {
+                        return ( <Chip key={lang.language} className={classes.chip} color="primary" variant="outlined" size="small" 
+                              label={`${lang.language} - ${lang.level} - ${lang.credits ? lang.credits : 0} credits`} /> )
                   })}
-                </div>
-              </div>
-              {this.renderButtonGroup(yesText,yesFunction,noText,noFunction,classes)}
-
+               </div>
+            </Typography>
             </CardContent>
-            {this.renderAvatar(classes)}
 
-          </Card>
-            <Dialog
+            {this.renderButtonGroup(yesText,yesFunction,noText,noFunction, classes)}
+
+            {/* open user description */}
+            <Collapse in={this.state.detailsExpanded} timeout="auto" unmountOnExit>
+            <CardContent>
+               <Typography paragraph>Details About Me: </Typography>
+               <Typography paragraph>{userDescription}</Typography>
+            </CardContent>
+            </Collapse>
+         </Card>
+
+         <Dialog
             aria-labelledby="simple-modal-title"
             aria-describedby="simple-modal-description"
             open={this.state.detailProfileOpen}
             onClose={this.handleClose}
             maxWidth={'md'}
             fullWidth={true}
-            >
-              <ProfilePage userEmail={user.email}></ProfilePage>
-            </Dialog>
-        </div>
-        );
-    }
+         >
+            <ProfilePage userEmail={user.email}></ProfilePage>
+         </Dialog>
+         </div>
+      );
+   }
+}
 
-  }
-
-
-  export default withStyles(useStyles) (UserStyleCard);
-
+export default withStyles(useStyles) (UserCard);
