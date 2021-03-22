@@ -19,6 +19,7 @@ import { getApiData, getApiUrl } from '../../helpers/networkRequestHelpers';
 
 const styles =  theme =>
 ({
+  /* none of these are actually used
   root:
   {
     display: 'inline',
@@ -70,7 +71,10 @@ const styles =  theme =>
   },
   divider:{
     height:'2px',
-  }
+  }*/
+  expansionPan: {
+    backgroundColor: '#f5f5f5',
+},
 });
 
 /**
@@ -173,7 +177,7 @@ class PartnerListPage extends Component
   getPartnersTiles(partnerList, classes) {
     return (
 
-        <div className={classes.fullWidth}>
+        <div>
           <Hidden xsDown>
             <GridList cellHeight="auto" spacing={25} >
               {
@@ -215,7 +219,7 @@ class PartnerListPage extends Component
     {
       return (
       <div className={classes.root}>
-          <ExpansionPanel defaultExpanded={true}>
+          <ExpansionPanel defaultExpanded={true} className={classes.expansionPan}>
             <ExpansionPanelSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"

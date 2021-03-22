@@ -21,7 +21,6 @@ import ConstantsList from '../../config_constants';
 import WarningIcon from '@material-ui/icons/Warning';
 import Tooltip from '@material-ui/core/Tooltip';
 import Moment from 'moment';
-import Box from '@material-ui/core/Box';
 import Chip from '@material-ui/core/Chip';
 import ZoomInIcon from '@material-ui/icons/ZoomIn';
 import Dialog from '@material-ui/core/Dialog';
@@ -180,6 +179,7 @@ class UserCard extends Component
       )
   }
 
+  /* one way match tag nex to email */
    renderCities = (cities) => {
       if(cities != "") {
          return <div>{ cities.join(', ') }<br/></div> 
@@ -231,7 +231,7 @@ class UserCard extends Component
                
                {this.renderCities(user.cities)}
                { user.email}
-               {/* one way match tag nex to email */}
+               
                
                
                {/* which languages user wants to learn */}

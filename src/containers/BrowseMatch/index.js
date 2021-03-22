@@ -35,11 +35,12 @@ import Hidden from '@material-ui/core/Hidden';
 import { getApiData } from '../../helpers/networkRequestHelpers';
 
 const styles = ({
+    /* these ones aren't actually used
     root: {
         display: 'inline',
-        //flexWrap: 'wrap',
-        // justifyContent: 'space-around',
-        //overflow: 'hidden',
+        flexWrap: 'wrap',
+        justifyContent: 'space-around',
+        overflow: 'hidden',
     },
     gridList: {
         //flexWrap: 'nowrap',
@@ -47,9 +48,6 @@ const styles = ({
         transform: 'translateZ(0)',
         width: "auto",
         height: "auto"
-    },
-    fullWidth: {
-        width: "100%",
     },
     bottomMargin: {
         marginBottom: '2em',
@@ -69,10 +67,16 @@ const styles = ({
     },
     leftText:{
         textAlign: 'left'
+    },*/
+    fullWidth: {
+        width: "100%",
+    },
+    expansionPan: {
+        backgroundColor: '#f5f5f5',
     },
     chipRoot: {
-        display: 'flex',
-        flexWrap: 'wrap',
+        /*display: 'flex',
+        flexWrap: 'wrap',*/
         '& > *': {
             margin: "0.5%",
         },
@@ -158,7 +162,8 @@ class BrowseMatch extends React.Component
     }
 
 
-    getAlreadyExistsDiv(item, classes) {
+    // wtf does this do
+    /*getAlreadyExistsDiv(item, classes) {
         return (
         <ListItem key={item.languageName} className={classes.fullWidth + ' ' + classes.bottomMargin}>
             <Typography variant="h5" gutterBottom>
@@ -170,7 +175,7 @@ class BrowseMatch extends React.Component
                 </Link>
             </Typography>
         </ListItem>)
-    }
+    }*/
 
     getMatchesList(item, classes)
     {
@@ -179,7 +184,7 @@ class BrowseMatch extends React.Component
 
         return (
                 <div key={item.languageName}>
-                    <ExpansionPanel defaultExpanded={this.state.isDefaultExpand}>
+                    <ExpansionPanel className={classes.expansionPan} defaultExpanded={this.state.isDefaultExpand}>
                         <ExpansionPanelSummary
                             expandIcon={<ExpandMoreIcon />}
                             aria-controls="panel1a-content"
@@ -344,9 +349,9 @@ class BrowseMatch extends React.Component
     {
         const {classes} = this.props;
         const classesPanel = makeStyles(theme => ({
-            root: {
+            /*root: {
               width: '100%',
-            },
+            },*/
             heading: {
               fontSize: theme.typography.pxToRem(15),
               fontWeight: theme.typography.fontWeightRegular,
@@ -358,11 +363,12 @@ class BrowseMatch extends React.Component
                 {
                     this.state.userMatches.map(item =>
                     {
-                        return item.alreadyExists ? (
+                        /*return item.alreadyExists ? (
                             this.getAlreadyExistsDiv(item, classes)
                         ) : (
                             this.getMatchesList(item, classes)
-                        )
+                        )*/
+                        return this.getMatchesList(item, classes)
                     })
                 }
             </div>  ) :
@@ -370,11 +376,12 @@ class BrowseMatch extends React.Component
                 {
                     this.state.userMatchesFilterByCity.map(item =>
                     {
-                        return item.alreadyExists ? (
+                        /*return item.alreadyExists ? (
                             this.getAlreadyExistsDiv(item, classes)
                         ) : (
                             this.getMatchesList(item, classes)
-                        )
+                        )*/
+                        return this.getMatchesList(item, classes)
                     })
                 }
             </div>  )

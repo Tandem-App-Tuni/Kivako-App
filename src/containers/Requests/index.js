@@ -27,16 +27,21 @@ import Hidden from '@material-ui/core/Hidden';
 import UserStyleCard from '../../components/UserStyleCard';
 
 const styles = ({
+    expansionPan: {
+        backgroundColor: '#f5f5f5',
+    },
+    fullWidth: {
+        width: "100%",
+    },
+    /* these ones aren't actually used
     root: {
         display: 'inline',
         flexWrap: 'wrap',
         justifyContent: 'space-around',
         overflow: 'hidden',        
     },
-    expansionPan: {
-        backgroundColor: '#f5f5f5',
-    },
-    expansionSummary: {
+    
+    expansionSummary: { //hdjsv
         backgroundColor: '#fff',
     },
     gridList: {
@@ -45,9 +50,6 @@ const styles = ({
         transform: 'translateZ(0)',
         width: "auto",
         height: "auto"
-    },
-    fullWidth: {
-        width: "100%",
     },
     bottomMargin: {
         marginBottom: '2em',
@@ -73,7 +75,7 @@ const styles = ({
     }, 
     chip: {
         margin: 2,
-    }
+    }*/
 });
 
 class Requests extends React.Component {
@@ -339,7 +341,7 @@ class Requests extends React.Component {
 
     render() {
         const { classes } = this.props;
-        const cardStyle = makeStyles(theme => ({
+        /*const cardStyle = makeStyles(theme => ({
             card: {
                 maxWidth: 345,
             },
@@ -347,7 +349,7 @@ class Requests extends React.Component {
                 height: 0,
                 paddingTop: '56.25%', // 16:9
             }
-        }));
+        }));*/
 
         //Wait until all informations be render until continue
         if (this.state.isLoadingPage) return null;
