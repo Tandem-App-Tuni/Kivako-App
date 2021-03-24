@@ -112,12 +112,12 @@ class BrowseMatch extends React.Component
         return (
             item.matches.length === 0 ? (
                 <Typography variant="overline" gutterBottom>
-                    {"No matches found for "} {item.languageName} :( !
+                    No matches found for {item.languageName}! :(
                 </Typography>
             ) : (
             <div className={classes.fullWidth}>
-                <Hidden xsDown>
-                    <GridList cellHeight="auto" spacing={25} >
+                <Hidden smDown>
+                    <GridList cellHeight="auto" cols={3}>
                     {
                         item.matches.map((match, key) =>
                         {
@@ -130,8 +130,8 @@ class BrowseMatch extends React.Component
                     )}
                     </GridList>
                 </Hidden>
-                <Hidden smUp>
-                    <GridList cellHeight="auto" cols={1} spacing={25} >
+                <Hidden mdUp>
+                    <GridList cellHeight="auto" cols={1}>
                     {
                         item.matches.map((match, key) =>
                         {
@@ -191,7 +191,7 @@ class BrowseMatch extends React.Component
                             id="panel1a-header"
                         >
                         <Typography className={classes.heading}>
-                            Possible matches who can teach you {item.languageName} - <strong>{item.matches.length} match(es) &nbsp;&nbsp;&nbsp;&nbsp;</strong>
+                            Possible matches who can teach you {item.languageName} <strong> - {item.matches.length} match(es) &nbsp;&nbsp;&nbsp;&nbsp;</strong>
                             <Tooltip title={languageTooltip} arrow>
                                 <InfoIcon>Arrow</InfoIcon>
                             </Tooltip>
@@ -227,7 +227,8 @@ class BrowseMatch extends React.Component
                             <Divider variant="middle" />
                         </ExpansionPanelDetails>
                     </ExpansionPanel>
-                    <br></br>
+                    {/*<br></br>*/}
+                    
                 </div>
             );
     }

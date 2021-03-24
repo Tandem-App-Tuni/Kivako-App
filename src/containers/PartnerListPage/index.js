@@ -179,7 +179,7 @@ class PartnerListPage extends Component
 
         <div>
           <Hidden xsDown>
-            <GridList cellHeight="auto" spacing={25} >
+            <GridList cellHeight="auto" cols={3} spacing={25} >
               {
                   partnerList.map((partner, _id) =>
                   {
