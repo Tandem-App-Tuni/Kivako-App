@@ -1,0 +1,60 @@
+{
+  "name": "kivako-tandem-app",
+  "version": "0.1.0",
+  "private": true,
+  "homepage": "https://www.unitandem.fi",
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.27",
+    "@fortawesome/react-fontawesome": "^0.1.8",
+    "@material-ui/core": "^4.8.3",
+    "@material-ui/icons": "^4.5.1",
+    "@material-ui/lab": "^4.0.0-alpha.39",
+    "@material-ui/styles": "^4.8.2",
+    "bootstrap": "^4.4.1",
+    "downshift": "^3.4.8",
+    "font-awesome": "^4.7.0",
+    "jest": "^24.9.0",
+    "material-table": "^1.57.2",
+    "moment": "^2.29.1",
+    "prop-types": "^15.7.2",
+    "ramda": "^0.27.0",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-image-file-resizer": "^0.2.1",
+    "react-localization": "^1.0.15",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "^3.3.0",
+    "react-select": "^3.0.8",
+    "react-web-gifted-chat": "^0.6.7",
+    "save": "^2.4.0",
+    "socket.io-client": "^2.3.0",
+    "toastr": "^2.1.4",
+    "typeface-roboto": "0.0.75"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "start-windows": "set PORT=3001 && react-scripts start",
+    "build": "react-scripts build",
+    "test": "jest src/**/*.test.js",
+    "eject": "react-scripts eject",
+    "install": "react-scripts install"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@fortawesome/fontawesome-free": "^5.12.1"
+  }
+}
