@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import Card from '@material-ui/core/Card';
@@ -50,25 +50,24 @@ const useStyles = theme => ({
       backgroundColor: red[500],
    },
    summaryDetails: {
-      paddingTop: '0px'
+      paddingTop: '0px',
+      height: '130px'
    },
    chip: {
       margin: '2px',
    },
 });
 
-class UserCard extends Component
-{
-   constructor(props) 
-   {
+class UserCard extends Component {
+   constructor(props) {
       super(props);
       this.handleOnYesClick = this.handleOnYesClick.bind(this);
       this.handleOnNoClick = this.handleOnNoClick.bind(this);
       this.handleOnError = this.handleOnError.bind(this);
-      this.state = 
+      this.state =
       {
          detailProfileOpen: false,
-         portOption:ConstantsList.PORT_IN_USE,
+         portOption: ConstantsList.PORT_IN_USE,
          showDefaultAvatar: false,
          detailsExpanded: false,
          menuOpen: false,
@@ -82,8 +81,7 @@ class UserCard extends Component
    }
 
    // expands the user's description and list of languages they want to learn
-   handleExpandClick = () =>
-   {
+   handleExpandClick = () => {
       const expanded = this.state.detailsExpanded;
       this.setState({
          detailsExpanded: !expanded
@@ -91,7 +89,7 @@ class UserCard extends Component
    }
 
    handleOnYesClick = () => {
-      switch(this.props.page) {
+      switch (this.props.page) {
          case "browse-match":
             this.props.yesFunction(this.props.user, this.props.matchingLanguage);
             break;
@@ -106,8 +104,8 @@ class UserCard extends Component
       }
    }
 
-   handleOnNoClick= () => {
-      switch(this.props.page) {
+   handleOnNoClick = () => {
+      switch (this.props.page) {
          case "pending-match":
             this.props.noFunction(this.props.match);
             break;
@@ -132,52 +130,51 @@ class UserCard extends Component
    };
 
    renderButtonGroup = (yesText, yesFunction, noText, noFunction, classes) => {
-      const yesButton = (yesText && yesFunction) 
-      ?  (  (this.props.page == "pending-match")
-            ?  <Tooltip title="Accept" placement="top">
-                  <IconButton aria-label="accept" >
-                     <DoneIcon onClick={this.handleOnYesClick} />
+      const yesButton = (yesText && yesFunction)
+         ? ((this.props.page == "pending-match")
+            ? <Tooltip title="Accept" placement="top-start">
+               <IconButton aria-label="accept" >
+                  <DoneIcon onClick={this.handleOnYesClick} />
+               </IconButton>
+              </Tooltip>
+            : (this.props.page == "browse-match")
+               ? <Tooltip title="Add partner" placement="right">
+                  <IconButton aria-label="add partner">
+                     <PersonAddIcon onClick={this.handleOnYesClick} />
                   </IconButton>
-               </Tooltip>
-            :  (this.props.page == "browse-match")
-               ?  <Tooltip title="Add partner" placement="top">
-                     <IconButton aria-label="add partner">
-                        <PersonAddIcon onClick={this.handleOnYesClick}/>
-                     </IconButton>
-                  </Tooltip>
-               :  
-               <Tooltip title="Unmatch" placement="top">
+                 </Tooltip>
+               : <Tooltip title="Unmatch" placement="top-start">
                   <IconButton aria-label="unmatch">
-                     <PersonAddDisabledIcon onClick={this.handleOnYesClick}/>
+                     <PersonAddDisabledIcon onClick={this.handleOnYesClick} />
                   </IconButton>
-               </Tooltip>
-               
-         )
-      : (<></>);
+                 </Tooltip>
 
-      const noButton = (noText && noFunction) 
-      ?  (  (this.props.page == "pending-match")
-            ?  <Tooltip title="Reject" placement="top">
-                  <IconButton aria-label="reject">
-                     <CloseIcon onClick={this.handleOnNoClick} />
-                  </IconButton>
-               </Tooltip>
-            :  
+         )
+         : (<></>);
+
+      const noButton = (noText && noFunction)
+         ? ((this.props.page == "pending-match")
+            ? <Tooltip title="Reject" placement="top">
+               <IconButton aria-label="reject">
+                  <CloseIcon onClick={this.handleOnNoClick} />
+               </IconButton>
+            </Tooltip>
+            :
             <Tooltip title="Report" placement="top">
                <IconButton aria-label="report">
                   <ReportIcon onClick={this.handleOnNoClick} />
                </IconButton>
             </Tooltip>
-            
-         )
-      :  (<></>);
 
-      return(
+         )
+         : (<></>);
+
+      return (
          <CardActions disableSpacing>
             {yesButton}
             {noButton}
-            
-            <Tooltip title="Show more" placement="top">
+
+            <Tooltip title="Show more" placement="left">
                <IconButton
                   className={clsx(classes.expand, {
                      [classes.expandOpen]: this.state.detailsExpanded,
@@ -187,104 +184,102 @@ class UserCard extends Component
                   aria-label="show more"
                >
                   <ExpandMoreIcon />
-               </IconButton> 
+               </IconButton>
             </Tooltip>
          </CardActions>
       )
-  }
+   }
 
-  /* one way match tag nex to email */
+   /* one way match tag nex to email */
    renderCities = (cities) => {
-      if(cities != "") {
-         return <div>{ cities.join(', ') }<br/></div> 
+      if (cities != "") {
+         return <div>{cities.join(', ')}<br /></div>
       }
    }
 
-   
 
-   render ()
-   {
+
+   render() {
       const { classes, user, yesText, yesFunction, noText, noFunction } = this.props;
-      const userDescription = (user.descriptionText == null || user.descriptionText === "") 
-                            ? "< User has no description >" : `${user.descriptionText}`
-        
-        
+      const userDescription = (user.descriptionText == null || user.descriptionText === "")
+                               ? "< User has no description >" : `${user.descriptionText}`
+
+
       return (
-         <div> 
-         <Card className={classes.root}>
-            {/* profile picture, name and full profile (icon) */}
-            <CardHeader
-               avatar={
-                  <Avatar className={classes.avatar} src={getApiUrl({version: 'v1', endpoint: 'avatar/getAvatar/' + user.email})}></Avatar>
-               }
-               action={
-                  <Tooltip title="Full profile" placement="top">
-                     <IconButton 
-                        aria-label="Full Profile"
-                        onClick={this.handleDetailProfileOpen}>
-                        <ZoomInIcon />
-                     </IconButton>
-                  </Tooltip>
-               }
-               title={<div>{user.firstName +' '+ user.lastName} {(this.props.fitQuality !== null && this.props.fitQuality === 0) ?
-                                                                  <Tooltip title="One way match means you cannot teach any language(s) that this student wants to learn.">
-                                                                  <Chip
-                                                                     icon={<WarningIcon />}
-                                                                     label="One way match!"
-                                                                     size="small"
-                                                                  />
-                                                                  </Tooltip> : <></>
-                                                               }</div>}
+         <div>
+            <Card className={classes.root}>
+               {/* profile picture, name and full profile (icon) */}
+               <CardHeader
+                  avatar={
+                     <Avatar className={classes.avatar} src={getApiUrl({ version: 'v1', endpoint: 'avatar/getAvatar/' + user.email })}></Avatar>
+                  }
+                  action={
+                     <Tooltip title="Full profile" placement="bottom-end">
+                        <IconButton
+                           aria-label="Full Profile"
+                           onClick={this.handleDetailProfileOpen}>
+                           <ZoomInIcon />
+                        </IconButton>
+                     </Tooltip>
+                  }
+                  title={<div>{user.firstName + ' ' + user.lastName} {(this.props.fitQuality !== null && this.props.fitQuality === 0)
+                           ?  <Tooltip title="One way match means you cannot teach any language(s) that this student wants to learn.">
+                                 <Chip
+                                 icon={<WarningIcon />}
+                                 label="One way match!"
+                                 size="small"
+                                 />
+                              </Tooltip>
+                           :  <></>
+                        }</div>}
 
 
-               subheader={(this.props.match) ? 'Request Date: ' + Moment(this.props.match.requestDate).format('DD.MM.yyyy'):''}
-               
-            />
-               
-            <CardContent className={classes.summaryDetails}>
-            {/* city, email */}
-            <Typography variant="body2" color="textSecondary" component="p" >
-               
-               {this.renderCities(user.cities)}
-               { user.email}
-               
-               
-               
-               {/* which languages user wants to learn */}
-               <div className={classes.chipGroup}>
-                  Wants to learn: <br/>
-                  {user.languagesToLearn.slice(0,3).map(lang => {
-                        return ( <Chip key={lang.language} className={classes.chip} color="primary" variant="outlined" size="small" 
-                              label={`${lang.language} - ${lang.level} - ${lang.credits ? lang.credits : 0} credits`} /> )
-                  })}
-               </div>
-            </Typography>
-            </CardContent>
+                  subheader={(this.props.match) ? 'Request Date: ' + Moment(this.props.match.requestDate).format('DD.MM.yyyy') : ''}
 
-            {this.renderButtonGroup(yesText,yesFunction,noText,noFunction, classes)}
+               />
 
-            {/* open user description */}
-            <Collapse in={this.state.detailsExpanded} timeout="auto" unmountOnExit>
-            <CardContent>
-               <Typography paragraph>Details About Me: </Typography>
-               <Typography paragraph>{userDescription}</Typography>
-            </CardContent>
-            </Collapse>
-         </Card>
+               <CardContent className={classes.summaryDetails}>
+                  {/* city, email */}
+                  <Typography variant="body2" color="textSecondary" component="p" >
 
-         <Dialog
-            aria-labelledby="simple-modal-title"
-            aria-describedby="simple-modal-description"
-            open={this.state.detailProfileOpen}
-            onClose={this.handleClose}
-            maxWidth={'md'}
-            fullWidth={true}
-         >
-            <ProfilePage userEmail={user.email}></ProfilePage>
-         </Dialog>
+                     {this.renderCities(user.cities)}
+                     {user.email}
+
+                     {/* which languages user wants to learn */}
+                     <div className={classes.chipGroup}>
+                        Wants to learn: <br />
+                        {user.languagesToLearn.slice(0, 3).map(lang => {
+                           return (<Chip key={lang.language} className={classes.chip} color="primary" variant="outlined" size="small"
+                                    label={`${lang.language} - ${lang.level} - ${lang.credits ? lang.credits : 0} credits`} />)
+                        })}
+                     </div>
+                  </Typography>
+               </CardContent>
+
+               {this.renderButtonGroup(yesText, yesFunction, noText, noFunction, classes)}
+
+               {/* open user description */}
+               <Collapse in={this.state.detailsExpanded} timeout="auto" unmountOnExit>
+                  <CardContent>
+                     <Typography paragraph>Details About Me: </Typography>
+                     <Typography paragraph>{userDescription}</Typography>
+                  </CardContent>
+               </Collapse>
+            </Card>
+
+            <Dialog
+               aria-labelledby="simple-modal-title"
+               aria-describedby="simple-modal-description"
+               open={this.state.detailProfileOpen}
+               onClose={this.handleClose}
+               maxWidth={'md'}
+               fullWidth={true}
+            >
+               <ProfilePage userEmail={user.email}></ProfilePage>
+            </Dialog>
          </div>
       );
    }
 }
 
-export default withStyles(useStyles) (UserCard);
+export default withStyles(useStyles)(UserCard);

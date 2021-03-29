@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
@@ -17,8 +17,7 @@ import Hidden from '@material-ui/core/Hidden';
 import { getApiData, getApiUrl } from '../../helpers/networkRequestHelpers';
 
 
-const styles =  theme =>
-({
+const styles = theme => ({
   /* none of these are actually used
   root:
   {
@@ -71,10 +70,10 @@ const styles =  theme =>
   },
   divider:{
     height:'2px',
-  }*/
+  },*/
   expansionPan: {
     backgroundColor: '#f5f5f5',
-},
+  },
 });
 
 /**
@@ -83,8 +82,7 @@ const styles =  theme =>
  * The user can the choose to unadd the partner,
  * resulting in the match being removed from the server.
  */
-class PartnerListPage extends Component
-{
+class PartnerListPage extends Component {
   constructor(props) {
     super(props);
     this.state =
@@ -97,7 +95,6 @@ class PartnerListPage extends Component
     this.onUnmatchUser = this.onUnmatchUser.bind(this);
     this.onReportPartner = this.onReportPartner.bind(this);
   }
-
 
   getPartnerList() {
     getApiData({
@@ -112,139 +109,136 @@ class PartnerListPage extends Component
       },
       credentials: 'include'
     })
-    .then(responseSecond => responseSecond.json())
-    .then(jsonResponse =>
-    {
-      if (jsonResponse.data === undefined)
-      {
-        this.setState({partnerList: []});
-        return;
-      }
+      .then(responseSecond => responseSecond.json())
+      .then(jsonResponse => {
+        if (jsonResponse.data === undefined) {
+          this.setState({ partnerList: [] });
+          return;
+        }
 
-      const userId = jsonResponse.userId;
-      let partners = [];
+        const userId = jsonResponse.userId;
+        let partners = [];
 
-      /**
-       * Loop through all the matches and
-       * and extract important data to be displayed.
-       */
-      for (let i = 0; i < jsonResponse.data.length; i++)
-      {
-        let match = jsonResponse.data[i];
-        const user = match.requesterUser._id === userId ? match.recipientUser : match.requesterUser;
+        /**
+         * Loop through all the matches and
+         * and extract important data to be displayed.
+         */
+        for (let i = 0; i < jsonResponse.data.length; i++) {
+          let match = jsonResponse.data[i];
+          const user = match.requesterUser._id === userId ? match.recipientUser : match.requesterUser;
 
-        let ltt = [];
-        let ltl = [];
+          let ltt = [];
+          let ltl = [];
 
-        user.languagesToTeach.forEach(item =>
-        {
-          ltt.push(item.language);
-        });
+          user.languagesToTeach.forEach(item => {
+            ltt.push(item.language);
+          });
 
-        user.languagesToLearn.forEach(item =>
-        {
-          ltl.push(item.language);
-        });
+          user.languagesToLearn.forEach(item => {
+            ltl.push(item.language);
+          });
 
-        partners.push(
-        {
-            firstName:user.firstName,
-            lastName:user.lastName,
+          partners.push({
+            firstName: user.firstName,
+            lastName: user.lastName,
             _id: i,
             matchId: match._id,
             cities: user.cities,
             teachLanguages: ltt,
             studyLanguages: ltl,
-            email:user.email,
-            languagesToLearn:user.languagesToLearn,
-            descriptionText:user.descriptionText,
-            photo_url:getApiUrl({
+            email: user.email,
+            languagesToLearn: user.languagesToLearn,
+            descriptionText: user.descriptionText,
+            photo_url: getApiUrl({
               version: 'v1',
               endpoint: 'avatar/getAvatar/' + user.email
             }),
-        });
-      }
-
-      this.setState({partnerList: partners});
-    });
+          });
+        }
+        this.setState({ partnerList: partners });
+      });
   }
 
-  componentDidMount()
-  {
+  componentDidMount() {
     this.getPartnerList();
   }
 
   getPartnersTiles(partnerList, classes) {
     return (
+      <div style={{ width: '100%' }}>
+        <Hidden smDown>
+          <GridList cellHeight="auto" cols={3} >
+            {
+              partnerList.map((partner, _id) => {
+                return (
+                  <GridListTile key={_id} >
+                    <UserStyleCard 
+                      user={partner} 
+                      page="partner-list"
+                      yesText="Unmatch" 
+                      yesFunction={() => { this.setState({ showConfirm: true, unmatchId: partner.matchId }) }} matchId={partner.matchId}
+                      noText="Report" 
+                      noFunction={this.onReportPartner}>
+                    </UserStyleCard>
+                  </GridListTile>
+                )
+              })
+            }
+          </GridList>
+        </Hidden>
+        <Hidden mdUp>
+          <GridList cellHeight="auto" cols={1} spacing={25} >
+            {
+              partnerList.map((partner, _id) => {
+                return (
+                  <GridListTile key={_id}>
+                    <UserStyleCard
+                      user={partner} 
+                      page="partner-list"
+                      yesText="Unmatch" 
+                      yesFunction={() => { this.setState({ showConfirm: true, unmatchId: partner.matchId }) }} matchId={partner.matchId}
+                      noText="Report" 
+                      noFunction={this.onReportPartner}>
+                    </UserStyleCard>
+                  </GridListTile>
+                )
+              })
+            }
+          </GridList>
+        </Hidden>
+      </div>
+    )
+  }
 
-        <div>
-          <Hidden xsDown>
-            <GridList cellHeight="auto" cols={3} spacing={25} >
-              {
-                  partnerList.map((partner, _id) =>
-                  {
-                    return(<GridListTile key={_id} rows={2}>
-                              <UserStyleCard  user={partner} page="partner-list"
-                              yesText="Unmatch" yesFunction={()=>{this.setState({showConfirm: true, unmatchId: partner.matchId})}} matchId={partner.matchId}
-                              noText="Report" noFunction={this.onReportPartner}>
-                              </UserStyleCard>
-                          </GridListTile>)
-                  }
-              )}
-              </GridList>
-          </Hidden>
-          <Hidden smUp>
-            <GridList cellHeight="auto" cols={1} spacing={25} >
-              {
-                  partnerList.map((partner, _id) =>
-                  {
-                    return(<GridListTile key={_id} rows={2}>
-                              <UserStyleCard  user={partner} page="partner-list"
-                              yesText="Unmatch" yesFunction={()=>{this.setState({showConfirm: true, unmatchId: partner.matchId})}} matchId={partner.matchId}
-                              noText="Report" noFunction={this.onReportPartner}>
-                              </UserStyleCard>
-                          </GridListTile>)
-                  }
-              )}
-            </GridList>
-          </Hidden>
-        </div>
-        )
-}
-
-  getPartnerDiv(list, classes)
-  {
-    if (this.state.partnerList.length === 0) return <div/>;
-    else
-    {
+  getPartnerDiv(list, classes) {
+    if (this.state.partnerList.length === 0) return <div />;
+    else {
       return (
-      <div className={classes.root}>
+        <div className={classes.root}>
           <ExpansionPanel defaultExpanded={true} className={classes.expansionPan}>
             <ExpansionPanelSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
             >
-            <Typography variant="h6">
+              <Typography variant="h6">
                 Your current partner(s)
-            </Typography>
+              </Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
-                  {
-                      this.getPartnersTiles(this.state.partnerList, classes)
-                  }
-                  <br></br>
-                  <Divider variant="middle" />
+              {
+                this.getPartnersTiles(this.state.partnerList, classes)
+              }
+              <br></br>
+              {/*<Divider variant="middle" />*/}
             </ExpansionPanelDetails>
-
-        </ExpansionPanel>
-      </div>
+          </ExpansionPanel>
+        </div>
       );
     }
   }
 
-  onUnmatchUser = () =>
-  {
+  onUnmatchUser = () => {
     getApiData({
       version: 'v1',
       endpoint: 'usersMatch/removeExistingMatch',
@@ -255,17 +249,16 @@ class PartnerListPage extends Component
         'Content-Type': 'application/json',
       },
       credentials: 'include',
-      body: JSON.stringify({matchId: this.state.unmatchId})
+      body: JSON.stringify({ matchId: this.state.unmatchId })
     })
-    .then((response) =>
-    {
-      this.getPartnerList();
-      this.setState({showConfirm: false, unmatchId: ""})
-    });
+      .then((response) => {
+        this.getPartnerList();
+        this.setState({ showConfirm: false, unmatchId: "" })
+      });
   }
 
   onReportPartner() {
-    this.setState({ isReportFormOpen: true})
+    this.setState({ isReportFormOpen: true })
   }
 
   handleReportFormClose = () => {
@@ -274,29 +267,29 @@ class PartnerListPage extends Component
     })
   };
 
-  render()
-  {
+  render() {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
-       {this.getPartnerDiv(this.state.partnerList, classes)}
-       <Dialog
-            aria-labelledby="simple-modal-title"
-            aria-describedby="simple-modal-description"
-            open={this.state.isReportFormOpen}
-            onClose={this.handleReportFormClose}
-            maxWidth={'md'}
-            fullWidth={true}
-            >
-              {/* TODO: update it ASAP when getting a correct link from customer */}
-              <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSeNpw2ZAAa0gmvlpw1B5KJv2SSr41bNTz9uXAB-eqKD4TvcXA/viewform?embedded=true"
-              width="100%" height="1491" >Loading…</iframe>
+        {this.getPartnerDiv(this.state.partnerList, classes)}
+        <Dialog
+          aria-labelledby="simple-modal-title"
+          aria-describedby="simple-modal-description"
+          open={this.state.isReportFormOpen}
+          onClose={this.handleReportFormClose}
+          maxWidth={'md'}
+          fullWidth={true}
+        >
+          {/* TODO: update it ASAP when getting a correct link from customer */}
+          <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSeNpw2ZAAa0gmvlpw1B5KJv2SSr41bNTz9uXAB-eqKD4TvcXA/viewform?embedded=true"
+            width="100%" height="1491" >Loading…</iframe>
         </Dialog>
         <ConfirmDialog
           open={this.state.showConfirm}
-          onClose={()=>{this.setState({showConfirm: false, unmatchId: ""})}}
-          title="Are you sure you want to unmatch this user ?"
-          onConfirm={this.onUnmatchUser}/>
+          onClose={() => { this.setState({ showConfirm: false, unmatchId: "" }) }}
+          title="Are you sure you want to unmatch this user?"
+          onConfirm={this.onUnmatchUser} 
+        />
       </div>
     );
   }
@@ -306,4 +299,4 @@ PartnerListPage.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles) (PartnerListPage);
+export default withStyles(styles)(PartnerListPage);

@@ -7,8 +7,8 @@ import Link from '@material-ui/core/Link';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import ListItem from '@material-ui/core/ListItem';
-import {withStyles} from '@material-ui/core/styles';
-import {CircularProgress} from '@material-ui/core'
+import { withStyles } from '@material-ui/core/styles';
+import { CircularProgress } from '@material-ui/core'
 import Tooltip from '@material-ui/core/Tooltip';
 import InfoIcon from '@material-ui/icons/Info';
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	Styles
@@ -27,7 +27,7 @@ import LocationCityIcon from '@material-ui/icons/LocationCity';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 
 import ConstantsList from '../../config_constants';
-import {AlertPopup} from '../../components/AlertView';
+import { AlertPopup } from '../../components/AlertView';
 
 import UserStyleCard from '../../components/UserStyleCard';
 import Hidden from '@material-ui/core/Hidden';
@@ -79,6 +79,7 @@ const styles = ({
         flexWrap: 'wrap',*/
         '& > *': {
             margin: "0.5%",
+            padding: "0.5%"
         },
         marginBottom: "2%"
     }
@@ -86,77 +87,80 @@ const styles = ({
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	Class
-class BrowseMatch extends React.Component
-{
-    constructor(props)
-    {
-      super(props);
-      this.state = {
-        userMatches:[],
-        isLoadingPage:true,
-        open:false,
-        modalData: null,
-        modalLanguage: null,
-        alertType: "success",
-        showAlert: false,
-        isDefaultExpand: false,
-        loginUser: {},
-        sortBy: "best-match", //sorting by best match first
-        userMatchesFilterByCity: []
-      };
-      this.onInviteAction = this.onInviteAction.bind(this);
+class BrowseMatch extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            userMatches: [],
+            isLoadingPage: true,
+            open: false,
+            modalData: null,
+            modalLanguage: null,
+            alertType: "success",
+            showAlert: false,
+            isDefaultExpand: false,
+            loginUser: {},
+            sortBy: "best-match", //sorting by best match first
+            userMatchesFilterByCity: []
+        };
+        this.onInviteAction = this.onInviteAction.bind(this);
     }
 
-    getMatchesTiles(item, classes)
-    {
+    getMatchesTiles(item, classes) {
         return (
-            item.matches.length === 0 ? (
-                <Typography variant="overline" gutterBottom>
+            item.matches.length === 0
+            ?  (<Typography variant="overline" gutterBottom>
                     No matches found for {item.languageName}! :(
-                </Typography>
-            ) : (
-            <div className={classes.fullWidth}>
-                <Hidden smDown>
-                    <GridList cellHeight="auto" cols={3}>
-                    {
-                        item.matches.map((match, key) =>
-                        {
-                            return(<GridListTile key={match._id} className={classes.gridListTile} rows={2}>
-                                        <UserStyleCard  user={match} fitQuality={match.fitQuality} yesText="Send invitation" yesFunction={this.onInviteAction}
-                                        page="browse-match" matchingLanguage={item.languageName}>
+                </Typography>) 
+            :  (<div className={classes.fullWidth}>
+                    <Hidden smDown>
+                        <GridList cellHeight="auto" cols={3}>
+                            {item.matches.map((match, key) => {
+                                return (
+                                    <GridListTile key={match._id} className={classes.gridListTile}>
+                                        <UserStyleCard
+                                            user={match}
+                                            fitQuality={match.fitQuality}
+                                            yesText="Send invitation"
+                                            yesFunction={this.onInviteAction}
+                                            page="browse-match"
+                                            matchingLanguage={item.languageName}>
                                         </UserStyleCard>
-                                    </GridListTile>)
-                        }
-                    )}
-                    </GridList>
-                </Hidden>
-                <Hidden mdUp>
-                    <GridList cellHeight="auto" cols={1}>
-                    {
-                        item.matches.map((match, key) =>
-                        {
-                            return(<GridListTile key={match._id} className={classes.gridListTile} rows={2}>
-                                        <UserStyleCard  user={match} fitQuality={match.fitQuality} yesText="Send invitation" yesFunction={this.onInviteAction}
-                                        page="browse-match" matchingLanguage={item.languageName}>
+                                    </GridListTile>
+                                )
+                            })}
+                        </GridList>
+                    </Hidden>
+                    <Hidden mdUp>
+                        <GridList cellHeight="auto" cols={1} spacing={25} >
+                            {item.matches.map((match, key) => {
+                                return (
+                                    <GridListTile key={match._id} className={classes.gridListTile} >
+                                        <UserStyleCard 
+                                            user={match} 
+                                            fitQuality={match.fitQuality} 
+                                            yesText="Send invitation" 
+                                            yesFunction={this.onInviteAction}
+                                            page="browse-match" 
+                                            matchingLanguage={item.languageName}>
                                         </UserStyleCard>
-                                    </GridListTile>)
-                        }
-                    )}
-                    </GridList>
-                </Hidden>
-            </div>
-            )
+                                    </GridListTile>
+                                )
+                            })}
+                        </GridList>
+                    </Hidden>
+                </div>)
         )
     }
 
     onSortByBestMatch = () => {
-        if(this.state.sortBy === "city-first") {
+        if (this.state.sortBy === "city-first") {
             this.setState({ sortBy: "best-match" });
         }
     }
 
     onSortByCityFirst = () => {
-        if(this.state.sortBy === "best-match") {
+        if (this.state.sortBy === "best-match") {
             this.setState({ sortBy: "city-first" });
         }
     }
@@ -177,71 +181,70 @@ class BrowseMatch extends React.Component
         </ListItem>)
     }*/
 
-    getMatchesList(item, classes)
-    {
+    getMatchesList(item, classes) {
         const languageTooltip = 'Matches are sorted by compatibility relative to your language preferences. ' +
                                 'Matches on the left are rated higher with a descending compatibility going right.';
 
         return (
-                <div key={item.languageName}>
-                    <ExpansionPanel className={classes.expansionPan} defaultExpanded={this.state.isDefaultExpand}>
-                        <ExpansionPanelSummary
-                            expandIcon={<ExpandMoreIcon />}
-                            aria-controls="panel1a-content"
-                            id="panel1a-header"
-                        >
-                        <Typography className={classes.heading}>
+            <div key={item.languageName}>
+                <ExpansionPanel className={classes.expansionPan} defaultExpanded={this.state.isDefaultExpand}>
+                    <ExpansionPanelSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="panel1a-content"
+                        id="panel1a-header"
+                    >
+                        <Typography variant="h6" className={classes.headingxxxxx}>
                             Possible matches who can teach you {item.languageName} <strong> - {item.matches.length} match(es) &nbsp;&nbsp;&nbsp;&nbsp;</strong>
                             <Tooltip title={languageTooltip} arrow>
                                 <InfoIcon>Arrow</InfoIcon>
                             </Tooltip>
                         </Typography>
-                        </ExpansionPanelSummary>
-                        <ExpansionPanelDetails>
-                            <div className={classes.fullWidth}>
-                                <div className={classes.chipRoot}>
-                                    <Chip
-                                        icon={<ThumbUpIcon />}
-                                        label="Best match first"
-                                        clickable={this.state.sortBy !== "best-match"}
-                                        color={(this.state.sortBy === "best-match") ? "primary" : "default"}
-                                        size="small"
-                                        onClick={this.onSortByBestMatch}
-                                    />
-                                    <Chip
-                                        icon={<LocationCityIcon />}
-                                        label="Same city first"
-                                        size="small"
-                                        clickable={this.state.sortBy !== "city-first"}
-                                        color={(this.state.sortBy === "city-first") ? "primary" : "default"}
-                                        onClick={this.onSortByCityFirst}
-                                    />
-                                </div>
-
-                                {
-                                    this.getMatchesTiles(item, classes)
-                                }
+                    </ExpansionPanelSummary>
+                    <ExpansionPanelDetails>
+                        <div className={classes.fullWidth}>
+                            <div className={classes.chipRoot}>
+                                <Chip
+                                    icon={<ThumbUpIcon />}
+                                    label="Best match first"
+                                    clickable={this.state.sortBy !== "best-match"}
+                                    color={(this.state.sortBy === "best-match") ? "primary" : "default"}
+                                    size="small"
+                                    onClick={this.onSortByBestMatch}
+                                />
+                                <Chip
+                                    icon={<LocationCityIcon />}
+                                    label="Same city first"
+                                    size="small"
+                                    clickable={this.state.sortBy !== "city-first"}
+                                    color={(this.state.sortBy === "city-first") ? "primary" : "default"}
+                                    onClick={this.onSortByCityFirst}
+                                />
                             </div>
 
-                            <br></br>
-                            <Divider variant="middle" />
-                        </ExpansionPanelDetails>
-                    </ExpansionPanel>
-                    {/*<br></br>*/}
-                    
-                </div>
-            );
+                            {
+                                this.getMatchesTiles(item, classes)
+                            }
+                        </div>
+
+                        <br></br>
+                        {/*<Divider variant="middle" />*/}
+                    </ExpansionPanelDetails>
+                </ExpansionPanel>
+                <br></br>
+
+            </div>
+        );
     }
 
-    onInviteAction(user,language) {
+    onInviteAction(user, language) {
         getApiData({
             version: 'v1',
             endpoint: 'usersMatch/sendRequest',
         }, {
             method: 'POST',
             headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
             },
             credentials: 'include',
             cors: 'no-cors',
@@ -250,61 +253,57 @@ class BrowseMatch extends React.Component
                 matchLanguage: language
             })
         })
-        .then((response) => response.json())
-        .then(response => {
-            if(response.status !== "fail"){
-                this.getUserPossibleMatchsListAPI();
-                this.setState({alertType: "success", showAlert: true});
-            }
-            else {
-                this.setState({alertType: "error", showAlert: true});
-            }
-        })
-        .catch((error) => {
-            this.setState({alertType: "error", showAlert: true});
-            console.error(error);
-        });
+            .then((response) => response.json())
+            .then(response => {
+                if (response.status !== "fail") {
+                    this.getUserPossibleMatchsListAPI();
+                    this.setState({ alertType: "success", showAlert: true });
+                }
+                else {
+                    this.setState({ alertType: "error", showAlert: true });
+                }
+            })
+            .catch((error) => {
+                this.setState({ alertType: "error", showAlert: true });
+                console.error(error);
+            });
     }
 
-
-
     sortByCity = () => {
-        if(this.state.loginUser && this.state.userMatches) {
+        if (this.state.loginUser && this.state.userMatches) {
             const languageToLearn = [...this.state.userMatches];
             const userCities = this.state.loginUser.cities;
 
-           const newList = languageToLearn.map(language => {
+            const newList = languageToLearn.map(language => {
                 let sortedList = [];
                 userCities.forEach(city => {
                     const userMatched = language.matches.filter(x => x.cities.includes(city))
-                    sortedList = [...sortedList,...userMatched]
+                    sortedList = [...sortedList, ...userMatched]
                 });
                 // push all the user to sort list, this will add those who don't match with user's cities at the end of the array
                 sortedList = [...sortedList, ...language.matches];
                 const uniqueSet = new Set(sortedList); // get rid of duplicate
-                return {...language, matches: [...uniqueSet]} // spread back to array
+                return { ...language, matches: [...uniqueSet] } // spread back to array
             });
             return newList;
         }
     }
 
-    getUserPossibleMatchsListAPI = async () =>
-    {
+    getUserPossibleMatchsListAPI = async () => {
         const response = await getApiData({
             version: 'v1',
             endpoint: 'usersMatch/possibleMatchs',
         }, {
-          method: 'GET',
-          credentials: 'include',
-          cors:'no-cors'
+            method: 'GET',
+            credentials: 'include',
+            cors: 'no-cors'
         });
         const responseJson = await response.json();
-        if(responseJson.userPossibleMatches !== undefined) {
+        if (responseJson.userPossibleMatches !== undefined) {
             this.setState(
                 {
                     userMatches: responseJson.userPossibleMatches,
-                    isDefaultExpand: responseJson.userPossibleMatches.length > 1
-                                   ? false : true
+                    isDefaultExpand: responseJson.userPossibleMatches.length > 1 ? false : true
                 }
             )
             const result = this.sortByCity();
@@ -319,9 +318,9 @@ class BrowseMatch extends React.Component
             version: 'v1',
             endpoint: 'users/userInfo',
         }, {
-          method: 'GET',
-          credentials: 'include',
-          cors:'no-cors'
+            method: 'GET',
+            credentials: 'include',
+            cors: 'no-cors'
         });
         const responseJson = await response.json();
         this.setState({
@@ -329,41 +328,38 @@ class BrowseMatch extends React.Component
         });
     }
 
-    async componentDidMount()
-    {
+    async componentDidMount() {
         try {
             await this.getLoginUserInfo(); // must wait for this to come first
             await this.getUserPossibleMatchsListAPI();
             this.setState(
                 {
-                    isLoadingPage:false,
+                    isLoadingPage: false,
                 }
             );
         }
-        catch(e) {
+        catch (e) {
             console.log("Error when trying to mount component. Err:", e)
         }
 
     }
 
-    render()
-    {
-        const {classes} = this.props;
+    render() {
+        const { classes } = this.props;
         const classesPanel = makeStyles(theme => ({
             /*root: {
               width: '100%',
             },*/
             heading: {
-              fontSize: theme.typography.pxToRem(15),
-              fontWeight: theme.typography.fontWeightRegular,
+                fontSize: theme.typography.pxToRem(15),
+                fontWeight: theme.typography.fontWeightRegular,
             },
-          }));
+        }));
 
-        const mainList = (this.state.sortBy === "best-match") ?
-          ( <div className={classesPanel.root}>
+        const mainList = (this.state.sortBy === "best-match") 
+        ?  (<div className={classesPanel.root}>
                 {
-                    this.state.userMatches.map(item =>
-                    {
+                    this.state.userMatches.map(item => {
                         /*return item.alreadyExists ? (
                             this.getAlreadyExistsDiv(item, classes)
                         ) : (
@@ -372,11 +368,10 @@ class BrowseMatch extends React.Component
                         return this.getMatchesList(item, classes)
                     })
                 }
-            </div>  ) :
-            ( <div className={classesPanel.root}>
+            </div>)
+        :  (<div className={classesPanel.root}>
                 {
-                    this.state.userMatchesFilterByCity.map(item =>
-                    {
+                    this.state.userMatchesFilterByCity.map(item => {
                         /*return item.alreadyExists ? (
                             this.getAlreadyExistsDiv(item, classes)
                         ) : (
@@ -385,25 +380,25 @@ class BrowseMatch extends React.Component
                         return this.getMatchesList(item, classes)
                     })
                 }
-            </div>  )
+            </div>)
 
-        if(this.state.isLoadingPage) return(<CircularProgress/>);
+        if (this.state.isLoadingPage) return (<CircularProgress />);
 
         return (
-        <div className={classes.root}>
-            <div className={classesPanel.root}>
-                {mainList}
+            <div className={classes.root}>
+                <div className={classesPanel.root}>
+                    {mainList}
+                </div>
+                <AlertPopup
+                    open={this.state.showAlert}
+                    onClose={() => { this.setState({ showAlert: false }) }}
+                    variant={this.state.alertType}
+                    message={this.state.alertType === "success"
+                        ? "Invitation sent"
+                        : "Failed to send invitation"
+                    }
+                />
             </div>
-            <AlertPopup
-                open={this.state.showAlert}
-                onClose={()=>{this.setState({showAlert: false})}}
-                variant={this.state.alertType}
-                message={this.state.alertType === "success" ?
-                    "Invitation sent"
-                    : "Failed to send invitation"
-                }
-            />
-        </div>
         );
     }
 }
