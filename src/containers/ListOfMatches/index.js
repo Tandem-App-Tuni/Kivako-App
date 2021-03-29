@@ -8,10 +8,16 @@ import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
+import { format, parseISO, formatISO, isAfter, isBefore, isEqual } from 'date-fns'
 
 import Paper from '@material-ui/core/Paper';
 import Constants from '../../config_constants';
 import { getApiData } from '../../helpers/networkRequestHelpers';
+import { getDisplayDate } from '@material-ui/pickers/_helpers/text-field-helper';
+import { CompareArrowsOutlined } from '@material-ui/icons';
 
 const useStyles = theme => ({
   '@global': {
@@ -40,6 +46,8 @@ const useStyles = theme => ({
   }
 });
 
+const currentDate = new Date();
+
 class ListOfMatches extends React.Component
 {
   _isTableMounted=false;
@@ -50,6 +58,7 @@ class ListOfMatches extends React.Component
     { id: 's2', label: 'Partner 2', minWidth: 100 },
     { id: 's3', label: 'Partner 2 email', minWidth: 100 },
     { id: 's4', label: 'Match languages', minWidth: 100 },
+    { id: 's5', label: 'Matched date', minWidth: 100 },
     ]
 
   constructor(props)
@@ -65,7 +74,9 @@ class ListOfMatches extends React.Component
       rows: [],
       data: [],
       searchValue: "",
-
+      disableToDate: true,
+      fromDateValue: null,
+      toDateValue: null,
       };
 
 
@@ -104,6 +115,8 @@ class ListOfMatches extends React.Component
       console.error(error);
     });
   }
+
+  /*
   handleSearchChange = (event) => {
     this.setState({searchValue: event.target.value})
     let searchValue = event.target.value.toLowerCase();
@@ -112,7 +125,6 @@ class ListOfMatches extends React.Component
         return item.requesterUser.lastName.toLowerCase().includes( searchValue) || item.recipientUser.lastName.toLowerCase().includes( searchValue)
         ||item.requesterUser.firstName.toLowerCase().includes( searchValue) || item.recipientUser.firstName.toLowerCase().includes( searchValue)
         ||item.requesterUser.email.toLowerCase().includes( searchValue) || item.recipientUser.email.toLowerCase().includes( searchValue);
-
       })
       this.setState({rows:searchResult})
     }
@@ -120,6 +132,101 @@ class ListOfMatches extends React.Component
       this.setState({rows:this.state.data})
     }
   }
+
+
+  handleDateSearchChange = () => {
+    let dateSearchResult = this.state.data.filter(item =>{
+      return this.compareDateRange(item.matchStartDate);
+    })
+    this.setState({rows:dateSearchResult})
+  }
+
+  */
+
+  handleSearchChange = (event) =>{
+    //This is to fix asynchronization issue
+    this.setState({searchValue: event.target.value}, function(){
+      console.log("searchValue's setState completed", this.state);
+      this.handleAllSearchChanges();
+    })
+  }
+
+  handleAllSearchChanges = () => {
+    let taulu = this.state.data;
+    //If dates are set, we'll filter by them first
+    if(!(this.state.toDateValue == null)){
+      console.log("To date value is not null.");
+      taulu = this.state.data.filter(item =>{
+        return this.compareDateRange(item.matchStartDate);
+      })
+    }
+    //Check if we need to filer by the textfield as well
+    //If textfield has been emptied (lenght = 0) we still have to keep date filtering
+    let searchValue = this.state.searchValue.toLowerCase();
+    if (this.state.searchValue.length >= 2){
+      let searchResult = taulu.filter(item => {
+        return item.requesterUser.lastName.toLowerCase().includes( searchValue) || item.recipientUser.lastName.toLowerCase().includes( searchValue)
+      ||item.requesterUser.firstName.toLowerCase().includes( searchValue) || item.recipientUser.firstName.toLowerCase().includes( searchValue)
+      ||item.requesterUser.email.toLowerCase().includes( searchValue) || item.recipientUser.email.toLowerCase().includes( searchValue);
+      })
+      this.setState({rows:searchResult})
+    }
+    if (searchValue.length == 0){
+      this.setState({rows:taulu})
+    }
+  }
+
+  compareDateRange = (dateval) =>{
+    let targetdate = parseISO(dateval).setHours(0, 0, 0, 0);;
+    let date1 = this.state.fromDateValue.setHours(0, 0, 0, 0);
+    let date2 = this.state.toDateValue.setHours(0, 0, 0, 0);
+    if(isAfter(targetdate, date1) || isEqual(targetdate, date1)){
+      if(isBefore(targetdate, date2) || isEqual(targetdate, date2)){
+        return true;
+      }
+      return false;
+    }
+    else{
+      return false;
+    }
+  }
+
+  handleFromDateChange = (date) => {
+    this.setState({fromDateValue:date}, function(){
+      console.log("handleFromDateChange's setState completed", this.state);
+    //If to is null when from is set, or if from is set to something AFTER to,
+    //we need to update to
+    if(this.state.disableToDate){
+      this.setState({disableToDate:false});
+      this.handleToDateChange(currentDate)
+    }
+    else if(isAfter(this.state.fromDateValue.setHours(0, 0, 0, 0), 
+    this.state.toDateValue.setHours(0, 0, 0, 0))){
+      console.log("From ja to on nurinpain nyt");
+      this.handleToDateChange(currentDate);
+    }
+  });
+  }
+
+  handleToDateChange = (date) => {
+    //Fixing another asynchronization issue
+    this.setState({toDateValue:date}, function(){
+      console.log("handleToDateChange's setState completed", this.state);
+      //this.handleDateSearchChange(date);});
+      this.handleAllSearchChanges(date);});
+  }
+
+  onResetDates = () =>{
+    if(!(this.state.toDateValue == null)){
+      this.setState({toDateValue: null}, function(){
+        console.log("toDateValue's setState completed", this.state);
+        this.setState({fromDateValue: null})
+        this.setState({disableToDate: true})
+        this.handleAllSearchChanges();
+      })
+    }
+  }
+
   render()
   {
     console.log('[ListOfMatches] Render');
@@ -130,17 +237,51 @@ class ListOfMatches extends React.Component
 
     return (
 
-
       <Paper className={classes.tableRoot}>
 
         <TextField
         variant='outlined'
         margin='normal'
+        style = {{width: '46%'}}
         fullWidth
         id='search'
         label='Search matches by name or email'
-        onChange = {this.handleSearchChange} value={this.state.searchValue}
+        onChange = {this.handleSearchChange} 
+        value={this.state.searchValue}
         />
+
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <KeyboardDatePicker
+            id = 'fromdate'
+            label= "From date"
+            format="dd.MM.yyyy"
+            style = {{marginLeft: '0.8em'}}
+            maxDate={currentDate}
+            onChange={this.handleFromDateChange}
+            value ={this.state.fromDateValue}
+          />
+          <KeyboardDatePicker
+            id = 'todate'
+            label= "To date"
+            disabled={this.state.disableToDate}
+            format="dd.MM.yyyy"
+            style = {{marginLeft: '0.8em'}}
+            minDate={this.state.fromDateValue}
+            onChange={this.handleToDateChange}
+            value ={this.state.toDateValue}
+          />
+        </MuiPickersUtilsProvider>
+
+        <Button
+          variant='contained'
+          style={{marginTop: '0.8em'}}
+          margin='normal'
+          color='primary'
+          className={classes.chip}
+          onClick={this.onResetDates}>
+          Reset dates
+        </Button>
+
         <Table stickyHeader aria-label="sticky table" className={classes.tableWrapper}>
           <TableHead>
             <TableRow>
@@ -183,7 +324,7 @@ class ListOfMatches extends React.Component
                   <TableCell key='s3'><div>{row.recipientUser.email}</div></TableCell>
                   <TableCell key='s4'><div>{languageArray.map((e, i) => e.language + (i === (languageArray.length - 1) ? '' : ', '))}</div>
                   <div> {languageArray2.map((e, i) => e.language + (i === (languageArray2.length - 1) ? '' : ', '))}</div></TableCell>
-
+                  <TableCell key='s5'><div>{format(new Date(Date.parse(row.matchStartDate)), "dd.MM.yyyy")}</div></TableCell>
                 </TableRow>
               );
             }): null}
@@ -201,6 +342,67 @@ class ListOfMatches extends React.Component
       </Paper>
           );
   }
+
+
+  /*
+
+  handleSearchChange2 = (searchValue) => {
+      let searchResult = this.state.data.filter(item => {
+        return item.requesterUser.lastName.toLowerCase().includes( searchValue) || item.recipientUser.lastName.toLowerCase().includes( searchValue)
+        ||item.requesterUser.firstName.toLowerCase().includes( searchValue) || item.recipientUser.firstName.toLowerCase().includes( searchValue)
+        ||item.requesterUser.email.toLowerCase().includes( searchValue) || item.recipientUser.email.toLowerCase().includes( searchValue);
+      })
+      return searchResult;
+  }
+
+  handleAllSearchChanges = (event, code) => {
+    let onceFiltered;
+    if(code == null){
+      this.setState({searchValue: event.target.value})
+      let searchValue = event.target.value.toLowerCase();
+      if (event.target.value.length >= 2){
+        onceFiltered = this.handleSearchChange2(searchValue)
+        //This should catch both null and undefined
+        if(this.state.fromDateValue == null){
+          this.setState({rows:onceFiltered})
+          //tämä ajelu päättyy tähän
+        }
+        else{
+          let dateSearchResult = onceFiltered.filter(item =>{
+            return this.compareDateRange(item.matchStartDate);
+          })
+          this.setState({rows:dateSearchResult})
+          //tämä ajelu päättyy tähän
+        }
+      }
+      if (searchValue.length == 0){
+        this.setState({rows:this.state.data})
+        //tämä ajelu päättyy tähän
+      }
+    }
+    //jos koodi == 2
+    else{
+      let dateSearchResult = this.state.data.filter(item =>{
+          return this.compareDateRange(item.matchStartDate);
+      })
+      let searchValue = this.state.searchValue;
+      if(searchValue.length >= 2){
+        let finalresult = this.handleSearchChange2(dateSearchResult);
+        this.setState({rows:finalresult})
+      }
+      if (searchValue.length == 0){
+        this.setState({rows:this.state.data})
+      }
+    }
+  }
+
+  handleDateSearchChange2 = () => {
+    let dateSearchResult = this.state.data.filter(item =>{
+      return this.compareDateRange(item.matchStartDate);
+    })
+    this.setState({rows:dateSearchResult})
+  }
+  */
 
 }
 
