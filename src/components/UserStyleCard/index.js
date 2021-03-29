@@ -134,29 +134,41 @@ class UserCard extends Component
    renderButtonGroup = (yesText, yesFunction, noText, noFunction, classes) => {
       const yesButton = (yesText && yesFunction) 
       ?  (  (this.props.page == "pending-match")
-            ?  <IconButton aria-label="accept" >
-                  <DoneIcon onClick={this.handleOnYesClick} />
-               </IconButton>
-            :  (this.props.page == "browse-match")
-               ?  <IconButton aria-label="add partner">
-                     <PersonAddIcon onClick={this.handleOnYesClick}/>
+            ?  <Tooltip title="Accept" placement="top">
+                  <IconButton aria-label="accept" >
+                     <DoneIcon onClick={this.handleOnYesClick} />
                   </IconButton>
+               </Tooltip>
+            :  (this.props.page == "browse-match")
+               ?  <Tooltip title="Add partner" placement="top">
+                     <IconButton aria-label="add partner">
+                        <PersonAddIcon onClick={this.handleOnYesClick}/>
+                     </IconButton>
+                  </Tooltip>
                :  
-               <IconButton aria-label="unmatch">
-                  <PersonAddDisabledIcon onClick={this.handleOnYesClick}/>
-               </IconButton>
+               <Tooltip title="Unmatch" placement="top">
+                  <IconButton aria-label="unmatch">
+                     <PersonAddDisabledIcon onClick={this.handleOnYesClick}/>
+                  </IconButton>
+               </Tooltip>
+               
          )
       : (<></>);
 
       const noButton = (noText && noFunction) 
       ?  (  (this.props.page == "pending-match")
-            ?  <IconButton aria-label="reject">
-                  <CloseIcon onClick={this.handleOnNoClick} />
-               </IconButton>
+            ?  <Tooltip title="Reject" placement="top">
+                  <IconButton aria-label="reject">
+                     <CloseIcon onClick={this.handleOnNoClick} />
+                  </IconButton>
+               </Tooltip>
             :  
-            <IconButton aria-label="report">
-               <ReportIcon onClick={this.handleOnNoClick} />
-            </IconButton>
+            <Tooltip title="Report" placement="top">
+               <IconButton aria-label="report">
+                  <ReportIcon onClick={this.handleOnNoClick} />
+               </IconButton>
+            </Tooltip>
+            
          )
       :  (<></>);
 
@@ -164,17 +176,19 @@ class UserCard extends Component
          <CardActions disableSpacing>
             {yesButton}
             {noButton}
-              
-            <IconButton
-               className={clsx(classes.expand, {
-                  [classes.expandOpen]: this.state.detailsExpanded,
-               })}
-               onClick={this.handleExpandClick}
-               aria-expanded={this.state.detailsExpanded}
-               aria-label="show more"
-            >
-               <ExpandMoreIcon />
-            </IconButton> 
+            
+            <Tooltip title="Show more" placement="top">
+               <IconButton
+                  className={clsx(classes.expand, {
+                     [classes.expandOpen]: this.state.detailsExpanded,
+                  })}
+                  onClick={this.handleExpandClick}
+                  aria-expanded={this.state.detailsExpanded}
+                  aria-label="show more"
+               >
+                  <ExpandMoreIcon />
+               </IconButton> 
+            </Tooltip>
          </CardActions>
       )
   }
@@ -204,11 +218,13 @@ class UserCard extends Component
                   <Avatar className={classes.avatar} src={getApiUrl({version: 'v1', endpoint: 'avatar/getAvatar/' + user.email})}></Avatar>
                }
                action={
-                  <IconButton 
-                     aria-label="Full Profile"
-                     onClick={this.handleDetailProfileOpen}>
-                     <ZoomInIcon />
-                  </IconButton>
+                  <Tooltip title="Full profile" placement="top">
+                     <IconButton 
+                        aria-label="Full Profile"
+                        onClick={this.handleDetailProfileOpen}>
+                        <ZoomInIcon />
+                     </IconButton>
+                  </Tooltip>
                }
                title={<div>{user.firstName +' '+ user.lastName} {(this.props.fitQuality !== null && this.props.fitQuality === 0) ?
                                                                   <Tooltip title="One way match means you cannot teach any language(s) that this student wants to learn.">
