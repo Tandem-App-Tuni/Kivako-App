@@ -46,7 +46,11 @@ export default class StatiticsTable extends Component {
       })
       .then((responseJson) =>
       {
-        this.setState({ rows: responseJson.data });
+          const data = responseJson.data.filter(d => {
+              return (d['numberWantToLearn'] > 0 || d['numberWantToTeach'] > 0);
+          })
+
+          this.setState({ rows: data });
         callback();
       })
       .catch((error) => {
