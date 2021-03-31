@@ -11,7 +11,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
-import { format, parseISO, formatISO, isAfter, isBefore, isEqual } from 'date-fns'
+import { format, parseISO, isAfter, isBefore, isEqual } from 'date-fns'
 
 import Paper from '@material-ui/core/Paper';
 import Constants from '../../config_constants';
@@ -116,34 +116,7 @@ class ListOfMatches extends React.Component
     });
   }
 
-  /*
-  handleSearchChange = (event) => {
-    this.setState({searchValue: event.target.value})
-    let searchValue = event.target.value.toLowerCase();
-    if (event.target.value.length >= 2){
-      let searchResult = this.state.data.filter(item => {
-        return item.requesterUser.lastName.toLowerCase().includes( searchValue) || item.recipientUser.lastName.toLowerCase().includes( searchValue)
-        ||item.requesterUser.firstName.toLowerCase().includes( searchValue) || item.recipientUser.firstName.toLowerCase().includes( searchValue)
-        ||item.requesterUser.email.toLowerCase().includes( searchValue) || item.recipientUser.email.toLowerCase().includes( searchValue);
-      })
-      this.setState({rows:searchResult})
-    }
-    if (searchValue.length == 0){
-      this.setState({rows:this.state.data})
-    }
-  }
-
-
-  handleDateSearchChange = () => {
-    let dateSearchResult = this.state.data.filter(item =>{
-      return this.compareDateRange(item.matchStartDate);
-    })
-    this.setState({rows:dateSearchResult})
-  }
-
-  */
-
-  handleSearchChange = (event) =>{
+  textfieldChange = (event) =>{
     //This is to fix asynchronization issue
     this.setState({searchValue: event.target.value}, function(){
       console.log("searchValue's setState completed", this.state);
@@ -155,13 +128,12 @@ class ListOfMatches extends React.Component
     let taulu = this.state.data;
     //If dates are set, we'll filter by them first
     if(!(this.state.toDateValue == null)){
-      console.log("To date value is not null.");
       taulu = this.state.data.filter(item =>{
         return this.compareDateRange(item.matchStartDate);
       })
     }
     //Check if we need to filer by the textfield as well
-    //If textfield has been emptied (lenght = 0) we still have to keep date filtering
+    //If textfield has been emptied (length = 0) we still have to keep the selected date filtering
     let searchValue = this.state.searchValue.toLowerCase();
     if (this.state.searchValue.length >= 2){
       let searchResult = taulu.filter(item => {
@@ -176,6 +148,8 @@ class ListOfMatches extends React.Component
     }
   }
 
+  //Check whether a date is included in the specified range
+  //Used in filtering the table according to date search criteria
   compareDateRange = (dateval) =>{
     let targetdate = parseISO(dateval).setHours(0, 0, 0, 0);;
     let date1 = this.state.fromDateValue.setHours(0, 0, 0, 0);
@@ -196,16 +170,18 @@ class ListOfMatches extends React.Component
       console.log("handleFromDateChange's setState completed", this.state);
     //If to is null when from is set, or if from is set to something AFTER to,
     //we need to update to
-    if(this.state.disableToDate){
-      this.setState({disableToDate:false});
-      this.handleToDateChange(currentDate)
-    }
-    else if(isAfter(this.state.fromDateValue.setHours(0, 0, 0, 0), 
-    this.state.toDateValue.setHours(0, 0, 0, 0))){
-      console.log("From ja to on nurinpain nyt");
-      this.handleToDateChange(currentDate);
-    }
-  });
+      if(this.state.disableToDate){
+        this.setState({disableToDate:false});
+        this.handleToDateChange(currentDate)
+      }
+      else if(isAfter(this.state.fromDateValue.setHours(0, 0, 0, 0), 
+      this.state.toDateValue.setHours(0, 0, 0, 0))){
+        this.handleToDateChange(currentDate);
+      }
+      else{
+        this.handleAllSearchChanges();
+      }
+    });
   }
 
   handleToDateChange = (date) => {
@@ -213,9 +189,10 @@ class ListOfMatches extends React.Component
     this.setState({toDateValue:date}, function(){
       console.log("handleToDateChange's setState completed", this.state);
       //this.handleDateSearchChange(date);});
-      this.handleAllSearchChanges(date);});
+      this.handleAllSearchChanges();});
   }
 
+  //Handles the date reset button
   onResetDates = () =>{
     if(!(this.state.toDateValue == null)){
       this.setState({toDateValue: null}, function(){
@@ -246,13 +223,14 @@ class ListOfMatches extends React.Component
         fullWidth
         id='search'
         label='Search matches by name or email'
-        onChange = {this.handleSearchChange} 
+        onChange = {this.textfieldChange} 
         value={this.state.searchValue}
         />
 
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <KeyboardDatePicker
             id = 'fromdate'
+            inputProps={{readOnly: true}}
             label= "From date"
             format="dd.MM.yyyy"
             style = {{marginLeft: '0.8em'}}
@@ -262,6 +240,7 @@ class ListOfMatches extends React.Component
           />
           <KeyboardDatePicker
             id = 'todate'
+            inputProps={{readOnly: true}}
             label= "To date"
             disabled={this.state.disableToDate}
             format="dd.MM.yyyy"
@@ -274,9 +253,9 @@ class ListOfMatches extends React.Component
 
         <Button
           variant='contained'
-          style={{marginTop: '0.8em'}}
+          style={{marginLeft: '2em', marginTop: '2em', size: 'xx-small', fontSize: 'xx-small'}}
           margin='normal'
-          color='primary'
+          color='gray'
           className={classes.chip}
           onClick={this.onResetDates}>
           Reset dates
@@ -342,68 +321,6 @@ class ListOfMatches extends React.Component
       </Paper>
           );
   }
-
-
-  /*
-
-  handleSearchChange2 = (searchValue) => {
-      let searchResult = this.state.data.filter(item => {
-        return item.requesterUser.lastName.toLowerCase().includes( searchValue) || item.recipientUser.lastName.toLowerCase().includes( searchValue)
-        ||item.requesterUser.firstName.toLowerCase().includes( searchValue) || item.recipientUser.firstName.toLowerCase().includes( searchValue)
-        ||item.requesterUser.email.toLowerCase().includes( searchValue) || item.recipientUser.email.toLowerCase().includes( searchValue);
-      })
-      return searchResult;
-  }
-
-  handleAllSearchChanges = (event, code) => {
-    let onceFiltered;
-    if(code == null){
-      this.setState({searchValue: event.target.value})
-      let searchValue = event.target.value.toLowerCase();
-      if (event.target.value.length >= 2){
-        onceFiltered = this.handleSearchChange2(searchValue)
-        //This should catch both null and undefined
-        if(this.state.fromDateValue == null){
-          this.setState({rows:onceFiltered})
-          //tämä ajelu päättyy tähän
-        }
-        else{
-          let dateSearchResult = onceFiltered.filter(item =>{
-            return this.compareDateRange(item.matchStartDate);
-          })
-          this.setState({rows:dateSearchResult})
-          //tämä ajelu päättyy tähän
-        }
-      }
-      if (searchValue.length == 0){
-        this.setState({rows:this.state.data})
-        //tämä ajelu päättyy tähän
-      }
-    }
-    //jos koodi == 2
-    else{
-      let dateSearchResult = this.state.data.filter(item =>{
-          return this.compareDateRange(item.matchStartDate);
-      })
-      let searchValue = this.state.searchValue;
-      if(searchValue.length >= 2){
-        let finalresult = this.handleSearchChange2(dateSearchResult);
-        this.setState({rows:finalresult})
-      }
-      if (searchValue.length == 0){
-        this.setState({rows:this.state.data})
-      }
-    }
-  }
-
-  handleDateSearchChange2 = () => {
-    let dateSearchResult = this.state.data.filter(item =>{
-      return this.compareDateRange(item.matchStartDate);
-    })
-    this.setState({rows:dateSearchResult})
-  }
-  */
-
 }
 
 export default withStyles(useStyles)(ListOfMatches);
