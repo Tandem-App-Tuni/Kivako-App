@@ -125,10 +125,10 @@ class ListOfMatches extends React.Component
   }
 
   handleAllSearchChanges = () => {
-    let taulu = this.state.data;
+    let filteredtable = this.state.data;
     //If dates are set, we'll filter by them first
     if(!(this.state.toDateValue == null)){
-      taulu = this.state.data.filter(item =>{
+      filteredtable = this.state.data.filter(item =>{
         return this.compareDateRange(item.matchStartDate);
       })
     }
@@ -136,7 +136,7 @@ class ListOfMatches extends React.Component
     //If textfield has been emptied (length = 0) we still have to keep the selected date filtering
     let searchValue = this.state.searchValue.toLowerCase();
     if (this.state.searchValue.length >= 2){
-      let searchResult = taulu.filter(item => {
+      let searchResult = filteredtable.filter(item => {
         return item.requesterUser.lastName.toLowerCase().includes( searchValue) || item.recipientUser.lastName.toLowerCase().includes( searchValue)
       ||item.requesterUser.firstName.toLowerCase().includes( searchValue) || item.recipientUser.firstName.toLowerCase().includes( searchValue)
       ||item.requesterUser.email.toLowerCase().includes( searchValue) || item.recipientUser.email.toLowerCase().includes( searchValue);
@@ -144,7 +144,7 @@ class ListOfMatches extends React.Component
       this.setState({rows:searchResult})
     }
     if (searchValue.length == 0){
-      this.setState({rows:taulu})
+      this.setState({rows:filteredtable})
     }
   }
 
