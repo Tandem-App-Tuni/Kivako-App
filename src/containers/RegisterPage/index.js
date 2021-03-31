@@ -367,11 +367,9 @@ class SignUpPage extends Component {
     this.state.languagesToTeach.forEach(item => {
       langs.push(item.language);
     })
-    /*
     this.state.languagesToLearn.forEach(item => {
       langs.push(item.language);
     })
-    */
     console.log("Excluded languages list: ")
     console.log(langs)
     return langs
