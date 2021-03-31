@@ -5,7 +5,7 @@ console.log('LOCAL_TEST_ENVIRONMENT --- ', LOCAL_TEST_ENVIRONMENT)
 const testServerUrl = process.env.BACKEND_URL || 'http://localhost:3000';
 const testServerPort = process.env.BACKEND_PORT || ':3000';
 
-console.log('testServerUrl, testServerPort ', testServerUrl, testServerPort )
+console.log('testServerUrl, testServerPort logs ', testServerUrl, testServerPort )
 
 module.exports = Object.freeze({
     APPLICATION_URL: LOCAL_TEST_ENVIRONMENT ? testServerUrl : 'https://www.unitandem.fi',
