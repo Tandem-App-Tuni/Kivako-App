@@ -1,4 +1,4 @@
-const LOCAL_TEST_ENVIRONMENT = process.env.LOCAL_TEST_ENVIRONMENT || false;
+const LOCAL_TEST_ENVIRONMENT = process.env.LOCAL_TEST_ENVIRONMENT || true;
 console.log('LOCAL_TEST_ENVIRONMENT --- ', LOCAL_TEST_ENVIRONMENT)
 
 // set the test server url and port here; either remote hosted staging server or local server
