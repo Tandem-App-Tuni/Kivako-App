@@ -39,7 +39,7 @@
     "build": "react-scripts build",
     "postinstall": "npm run build",
     "test": "jest src/**/*.test.js",
-    "eject": "react-scripts eject",
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": "react-app"
