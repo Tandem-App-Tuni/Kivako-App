@@ -32,7 +32,7 @@
     "typeface-roboto": "0.0.75"
   },
   "scripts": {
-    "start": "node --max_old_space_size=2560 react-scripts start",
+    "start": "node --max_old_space_size=2560 node_modules/.bin/react-scripts start",
     "start-windows": "set PORT=3001 && react-scripts start",
     "build": "react-scripts build",
     "test": "jest src/**/*.test.js",
