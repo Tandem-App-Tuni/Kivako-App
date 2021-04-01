@@ -1,11 +1,14 @@
 const LOCAL_TEST_ENVIRONMENT = process.env.LOCAL_TEST_ENVIRONMENT || true;
-console.log('LOCAL_TEST_ENVIRONMENT --- ', LOCAL_TEST_ENVIRONMENT)
 
 // set the test server url and port here; either remote hosted staging server or local server
 const testServerUrl = process.env.BACKEND_URL || 'http://localhost:3000';
 const testServerPort = process.env.BACKEND_PORT || ':3000';
 
 console.log('testServerUrl, testServerPort logs ', testServerUrl, testServerPort )
+
+console.log('LOCAL_TEST_ENVIRONMENT --- ', process.env.LOCAL_TEST_ENVIRONMENT)
+console.log('BACKEND_URL --- ', process.env.BACKEND_URL)
+console.log('NODE_ENV --- ', process.env.NODE_ENV)
 
 module.exports = Object.freeze({
     APPLICATION_URL: LOCAL_TEST_ENVIRONMENT ? testServerUrl : 'https://www.unitandem.fi',
