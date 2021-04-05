@@ -1,3 +1,5 @@
+import('dotenv').config();
+
 const LOCAL_TEST_ENVIRONMENT = process.env.REACT_APP_LOCAL_TEST_ENVIRONMENT || true;
 
 // set the test server url and port here; either remote hosted staging server or local server
