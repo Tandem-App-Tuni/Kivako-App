@@ -8,11 +8,9 @@ import { Link } from 'react-router-dom';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
-
-import Divider from '@material-ui/core/Divider';
-import { makeStyles } from '@material-ui/core/styles';
 
 import { AlertPopup, ConfirmDialog } from '../../components/AlertView';
 import ConstantsList from '../../config_constants';
@@ -39,43 +37,6 @@ const styles = ({
         justifyContent: 'space-around',
         overflow: 'hidden',
     },
-    /* these ones aren't actually used
-    
-    expansionSummary: { //hdjsv
-        backgroundColor: '#fff',
-    },
-    gridList: {
-        //flexWrap: 'nowrap',
-        // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
-        transform: 'translateZ(0)',
-        width: "auto",
-        height: "auto"
-    },
-    bottomMargin: {
-        marginBottom: '2em',
-    },
-    title: {
-        color: '#fff',
-    },
-    titleBar: {
-        background:
-            'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
-    },
-    preferencesLink: {
-        color: '#3f51b5'
-    },
-    cardContent: {
-        padding: '0'
-    },
-    gridListTileBar: {
-        background: "#3f51b5",
-    },
-    leftText: {
-        textAlign: 'left'
-    }, 
-    chip: {
-        margin: 2,
-    }*/
 });
 
 class Requests extends React.Component {

@@ -3,17 +3,14 @@ import React from 'react';
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	Material UI
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
-import Link from '@material-ui/core/Link';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
-import ListItem from '@material-ui/core/ListItem';
 import { withStyles } from '@material-ui/core/styles';
 import { CircularProgress } from '@material-ui/core'
 import Tooltip from '@material-ui/core/Tooltip';
 import InfoIcon from '@material-ui/icons/Info';
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	Styles
 
-import Divider from '@material-ui/core/Divider';
 
 import { makeStyles } from '@material-ui/core/styles';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -35,8 +32,7 @@ import Hidden from '@material-ui/core/Hidden';
 import { getApiData } from '../../helpers/networkRequestHelpers';
 
 const styles = ({
-    /* these ones aren't actually used
-    root: {
+    /*root: {
         display: 'inline',
         flexWrap: 'wrap',
         justifyContent: 'space-around',
@@ -52,21 +48,8 @@ const styles = ({
     bottomMargin: {
         marginBottom: '2em',
     },
-    title: {
-        color: '#fff',
-    },
-    titleBar: {
-        background:
-            'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
-    },
     preferencesLink: {
         color: '#3f51b5'
-    },
-    cardContent: {
-        padding: '0'
-    },
-    leftText:{
-        textAlign: 'left'
     },*/
     fullWidth: {
         width: "100%",
@@ -166,7 +149,7 @@ class BrowseMatch extends React.Component {
     }
 
 
-    // wtf does this do
+    // this is currently not used
     /*getAlreadyExistsDiv(item, classes) {
         return (
         <ListItem key={item.languageName} className={classes.fullWidth + ' ' + classes.bottomMargin}>

@@ -6,7 +6,6 @@ import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import UserStyleCard from '../../components/UserStyleCard';
 import Constants from '../../config_constants';
-import Divider from '@material-ui/core/Divider';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
@@ -18,8 +17,7 @@ import { getApiData, getApiUrl } from '../../helpers/networkRequestHelpers';
 
 
 const styles = theme => ({
-  /* none of these are actually used
-  root:
+  /*root:
   {
     display: 'inline',
     flexWrap: 'wrap',
@@ -27,49 +25,6 @@ const styles = theme => ({
     overflow: 'hidden',
 
     // backgroundColor: theme.palette.background.paper,
-  },
-    gridList: {
-      //flexWrap: 'nowrap',
-      // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
-      transform: 'translateZ(0)',
-      width: "auto",
-      height: "auto"
-  },
-  fullWidth: {
-      width: "100%",
-  },
-  bottomMargin: {
-      marginBottom: '2em',
-  },
-  title: {
-      color: '#fff',
-  },
-  titleBar: {
-      background:
-          'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
-  },
-  preferencesLink: {
-      color: '#3f51b5'
-  },
-  cardContent: {
-      padding: '0'
-  },
-  gridListTileBar: {
-      background: "#3f51b5",
-  },
-  leftText: {
-      textAlign: 'left'
-  },
-  inline:
-  {
-    display: 'inline',
-  },
-  item:
-  {
-    backgroundColor: 'white',
-  },
-  divider:{
-    height:'2px',
   },*/
   expansionPan: {
     backgroundColor: '#f5f5f5',
@@ -230,7 +185,6 @@ class PartnerListPage extends Component {
                 this.getPartnersTiles(this.state.partnerList, classes)
               }
               <br></br>
-              {/*<Divider variant="middle" />*/}
             </ExpansionPanelDetails>
           </ExpansionPanel>
         </div>
