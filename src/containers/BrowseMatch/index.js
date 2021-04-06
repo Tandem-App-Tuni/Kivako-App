@@ -11,8 +11,6 @@ import Tooltip from '@material-ui/core/Tooltip';
 import InfoIcon from '@material-ui/icons/Info';
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	Styles
 
-
-import { makeStyles } from '@material-ui/core/styles';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
@@ -100,7 +98,7 @@ class BrowseMatch extends React.Component {
                         <GridList cellHeight="auto" cols={3}>
                             {item.matches.map((match, key) => {
                                 return (
-                                    <GridListTile key={match._id} className={classes.gridListTile}>
+                                    <GridListTile key={match._id}>
                                         <UserStyleCard
                                             user={match}
                                             fitQuality={match.fitQuality}
@@ -118,7 +116,7 @@ class BrowseMatch extends React.Component {
                         <GridList cellHeight="auto" cols={1} spacing={25} >
                             {item.matches.map((match, key) => {
                                 return (
-                                    <GridListTile key={match._id} className={classes.gridListTile} >
+                                    <GridListTile key={match._id}>
                                         <UserStyleCard 
                                             user={match} 
                                             fitQuality={match.fitQuality} 
@@ -176,7 +174,7 @@ class BrowseMatch extends React.Component {
                         aria-controls="panel1a-content"
                         id="panel1a-header"
                     >
-                        <Typography variant="h6" className={classes.headingxxxxx}>
+                        <Typography variant="h6">
                             Possible matches who can teach you {item.languageName} <strong> - {item.matches.length} match(es) &nbsp;&nbsp;&nbsp;&nbsp;</strong>
                             <Tooltip title={languageTooltip} arrow>
                                 <InfoIcon>Arrow</InfoIcon>
@@ -329,18 +327,9 @@ class BrowseMatch extends React.Component {
 
     render() {
         const { classes } = this.props;
-        const classesPanel = makeStyles(theme => ({
-            /*root: {
-              width: '100%',
-            },*/
-            heading: {
-                fontSize: theme.typography.pxToRem(15),
-                fontWeight: theme.typography.fontWeightRegular,
-            },
-        }));
 
         const mainList = (this.state.sortBy === "best-match") 
-        ?  (<div className={classesPanel.root}>
+        ?  (<div>
                 {
                     this.state.userMatches.map(item => {
                         /*return item.alreadyExists ? (
@@ -352,7 +341,7 @@ class BrowseMatch extends React.Component {
                     })
                 }
             </div>)
-        :  (<div className={classesPanel.root}>
+        :  (<div>
                 {
                     this.state.userMatchesFilterByCity.map(item => {
                         /*return item.alreadyExists ? (
@@ -368,8 +357,8 @@ class BrowseMatch extends React.Component {
         if (this.state.isLoadingPage) return (<CircularProgress />);
 
         return (
-            <div className={classes.root}>
-                <div className={classesPanel.root}>
+            <div>
+                <div>
                     {mainList}
                 </div>
                 <AlertPopup

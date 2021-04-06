@@ -16,20 +16,11 @@ import Hidden from '@material-ui/core/Hidden';
 import { getApiData, getApiUrl } from '../../helpers/networkRequestHelpers';
 
 
-const styles = theme => ({
-  /*root:
-  {
-    display: 'inline',
-    flexWrap: 'wrap',
-    justifyContent: 'space-around',
-    overflow: 'hidden',
-
-    // backgroundColor: theme.palette.background.paper,
-  },*/
+const styles = {
   expansionPan: {
     backgroundColor: '#f5f5f5',
   },
-});
+};
 
 /**
  * Displays the current partners from the
@@ -169,7 +160,7 @@ class PartnerListPage extends Component {
     if (this.state.partnerList.length === 0) return <div />;
     else {
       return (
-        <div className={classes.root}>
+        <div>
           <ExpansionPanel defaultExpanded={true} className={classes.expansionPan}>
             <ExpansionPanelSummary
               expandIcon={<ExpandMoreIcon />}
@@ -224,7 +215,7 @@ class PartnerListPage extends Component {
   render() {
     const { classes } = this.props;
     return (
-      <div className={classes.root}>
+      <div>
         {this.getPartnerDiv(this.state.partnerList, classes)}
         <Dialog
           aria-labelledby="simple-modal-title"

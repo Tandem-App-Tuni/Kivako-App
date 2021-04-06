@@ -27,15 +27,6 @@ import Dialog from '@material-ui/core/Dialog';
 import { getApiUrl } from '../../helpers/networkRequestHelpers';
 
 const useStyles = theme => ({
-   root: {
-      width: '99%',
-      height: '99%',
-   },
-   media: {
-      height: '40px',
-      width: '40px',
-      // 16:9
-   },
    expand: {
       transform: 'rotate(0deg)',
       marginLeft: 'auto',
@@ -207,7 +198,7 @@ class UserCard extends Component {
 
       return (
          <div>
-            <Card className={classes.root}>
+            <Card>
                {/* profile picture, name and full profile (icon) */}
                <CardHeader
                   avatar={
@@ -246,7 +237,7 @@ class UserCard extends Component {
                      {user.email}
 
                      {/* which languages user wants to learn */}
-                     <div className={classes.chipGroup}>
+                     <div>
                         Wants to learn: <br />
                         {user.languagesToLearn.slice(0, 3).map(lang => {
                            return (<Chip key={lang.language} className={classes.chip} color="primary" variant="outlined" size="small"

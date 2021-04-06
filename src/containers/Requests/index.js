@@ -31,12 +31,6 @@ const styles = ({
     fullWidth: {
         width: "100%",
     },
-    root: {
-        display: 'inline',
-        flexWrap: 'wrap',
-        justifyContent: 'space-around',
-        overflow: 'hidden',
-    },
 });
 
 class Requests extends React.Component {
@@ -329,7 +323,7 @@ class Requests extends React.Component {
 
         if (this.state.userRequestMatches.length === 0 && this.state.userSentMatchRequests === 0) {
             return (
-                <div className={classes.root}>
+                <div>
                     <div align="center">
                         <Paper>
                             <br></br>
@@ -363,7 +357,7 @@ class Requests extends React.Component {
         }
 
         return (
-            <div className={classes.root}>
+            <div>
                 <ExpansionPanel className={classes.expansionPan} defaultExpanded={this.state.userRequestMatches.length > 0}>
                     <ExpansionPanelSummary
                         expandIcon={<ExpandMoreIcon />}
