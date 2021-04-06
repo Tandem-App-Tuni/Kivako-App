@@ -12,10 +12,14 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import DeleteForever from '@material-ui/icons/DeleteForever';
+import CheckIcon from '@material-ui/icons/Check';
+import CloseIcon from '@material-ui/icons/Close';
 
 import { AlertPopup, ConfirmDialog } from '../../components/AlertView';
 import Constants from '../../config_constants';
 import { getApiData } from '../../helpers/networkRequestHelpers';
+
+var userActivity;
 
 const useStyles = theme => ({
   '@global': {
@@ -65,12 +69,12 @@ class ListOfStudents extends Component {
     },
 
     {
-      id: 'userIsActivie',
+      id: 'isActive',
       label: 'Active',
       minWidth: 170,
       align: 'center',
       format: value => {
-        if(value) value.toString()
+        value ? userActivity = true : userActivity = false;
       }
     },
 
@@ -310,6 +314,24 @@ class ListOfStudents extends Component {
                         <TableCell key={column.id} align={column.align}>
                           <div>
                             {column.format ? column.format(value) : value}
+
+                            {column.id === 'isActive' ?
+                              userActivity ?
+                              <CheckIcon
+                                fullWidth
+                                variant='contained'
+                                color = 'primary'
+                                style={{ fill: "green" }}
+                                className={classes.chip}>
+                              </CheckIcon> : 
+                              <CloseIcon
+                                fullWidth
+                                variant='contained'
+                                color = 'primary'
+                                style={{ fill: "red" }}
+                                className={classes.chip}>
+                              </CloseIcon> : <div/>}
+
                             {column.id === 'removeUserButton' ?
                               <DeleteForever
                                 fullWidth
