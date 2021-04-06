@@ -119,7 +119,6 @@ class ListOfMatches extends React.Component
   textfieldChange = (event) =>{
     //This is to fix asynchronization issue
     this.setState({searchValue: event.target.value}, function(){
-      console.log("searchValue's setState completed", this.state);
       this.handleAllSearchChanges();
     })
   }
@@ -151,7 +150,7 @@ class ListOfMatches extends React.Component
   //Check whether a date is included in the specified range
   //Used in filtering the table according to date search criteria
   compareDateRange = (dateval) =>{
-    let targetdate = parseISO(dateval).setHours(0, 0, 0, 0);;
+    let targetdate = parseISO(dateval).setHours(0, 0, 0, 0);
     let date1 = this.state.fromDateValue.setHours(0, 0, 0, 0);
     let date2 = this.state.toDateValue.setHours(0, 0, 0, 0);
     if(isAfter(targetdate, date1) || isEqual(targetdate, date1)){
@@ -167,7 +166,6 @@ class ListOfMatches extends React.Component
 
   handleFromDateChange = (date) => {
     this.setState({fromDateValue:date}, function(){
-      console.log("handleFromDateChange's setState completed", this.state);
     //If to is null when from is set, or if from is set to something AFTER to,
     //we need to update to
       if(this.state.disableToDate){
@@ -187,7 +185,6 @@ class ListOfMatches extends React.Component
   handleToDateChange = (date) => {
     //Fixing another asynchronization issue
     this.setState({toDateValue:date}, function(){
-      console.log("handleToDateChange's setState completed", this.state);
       //this.handleDateSearchChange(date);});
       this.handleAllSearchChanges();});
   }
@@ -196,7 +193,6 @@ class ListOfMatches extends React.Component
   onResetDates = () =>{
     if(!(this.state.toDateValue == null)){
       this.setState({toDateValue: null}, function(){
-        console.log("toDateValue's setState completed", this.state);
         this.setState({fromDateValue: null})
         this.setState({disableToDate: true})
         this.handleAllSearchChanges();
@@ -246,6 +242,7 @@ class ListOfMatches extends React.Component
             format="dd.MM.yyyy"
             style = {{marginLeft: '0.8em'}}
             minDate={this.state.fromDateValue}
+            maxDate={currentDate}
             onChange={this.handleToDateChange}
             value ={this.state.toDateValue}
           />
