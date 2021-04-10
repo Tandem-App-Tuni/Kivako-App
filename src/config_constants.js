@@ -13,6 +13,7 @@ console.log('testServerUrl, testServerPort logs ', testServerUrl, testServerPort
 console.log('LOCAL_TEST_ENVIRONMENT --- ', process.env.REACT_APP_LOCAL_TEST_ENVIRONMENT)
 console.log('BACKEND_URL --- ', process.env.REACT_APP_BACKEND_URL)
 console.log('NODE_ENV --- ', process.env.REACT_APP_NODE_ENV)
+console.log('NODE_ENV Other --- ', process.env.REACT_APP_NODE_ENV)
 
 module.exports = Object.freeze({
     APPLICATION_URL: LOCAL_TEST_ENVIRONMENT ? testServerUrl : 'https://www.unitandem.fi',
