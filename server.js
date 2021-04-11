@@ -16,7 +16,7 @@ app.get('/', (req, res) => {
 
 // Proxy endpoints
 app.use('/service', createProxyMiddleware({
-  target: ConstantsList.APPLICATION_URL,
+  target: process.env.REACT_APP_BACKEND_HOST,
   changeOrigin: true,
   pathRewrite: {
       [`^/service`]: '',
