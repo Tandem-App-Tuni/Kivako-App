@@ -1,4 +1,5 @@
 const express = require ('express')
+const { createProxyMiddleware } = require('http-proxy-middleware');
 const app = express();
 const http = require('http').Server(app);
 const path = require( 'path')
@@ -12,9 +13,10 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'build') + '/index.html');
 });
 
+const proxyTarget = process.env.REACT_APP_BACKEND_HOST || 'http://locahost:3000';
 // Proxy endpoints
 app.use('/service', createProxyMiddleware({
-  target: process.env.REACT_APP_BACKEND_HOST,
+  target: proxyTarget,
   changeOrigin: true,
   pathRewrite: {
       [`^/service`]: '',
