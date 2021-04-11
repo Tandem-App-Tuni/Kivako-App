@@ -25,4 +25,5 @@ app.use('/service', createProxyMiddleware({
 
 app.listen(port, () => {
   console.log(`Kivako app running on port ${port}`);
+  console.log('REACT_APP_BACKEND_HOST -----> ', process.env.REACT_APP_BACKEND_HOST);
 });
