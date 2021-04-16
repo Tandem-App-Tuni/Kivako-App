@@ -245,9 +245,9 @@ class LandingPage extends Component {
         <section id="footer-section">{/* footer-section starts her  */}
           <div className="content">
             <a href="."> <img className="footer-logo1" src={unitandem_logo} alt="unitandem logo" /> </a> <br />
-            Tampere University <br />
-            Kalevantie 4, 33104 Tampere <br />
-            <a href="tel:+358 (0) 294 5211">+358 (0) 294 5211</a>
+            Tampere University of Applied Sciences <br />
+            Kuntokatu 3, 33520 Tampere <br />
+            <a href="tel:+358 294 5222"> +358 294 5222</a>
             <a href="mailto:info@unitandem.fi"> info@unitandem.fi</a>
             <div className="footer-logos">
               <img className="footer-logo2" src={kivako_logo} alt="kivako logo" />
