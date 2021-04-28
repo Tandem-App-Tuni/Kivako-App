@@ -285,7 +285,7 @@ class LandingPage extends Component {
                 <ul>
                   <li>Phone: <a href="tel: +358 294 5222">+358 294 5222</a></li>
                   <li>E-mail: <a href="mailto: info@unitandem.fi"> info@unitandem.fi</a></li>
-                  <li>Postal Address: Kuntokatu 3, 33520 Tampere, Finland</li>
+                  <li>Postal Address: Kuntokatu 3, 33520 Tampere, Finland </li>
                 </ul>
               </Typography>
               <Typography variant="body1" gutterBottom> We try to respond to feedback within 5 business days. </Typography>
