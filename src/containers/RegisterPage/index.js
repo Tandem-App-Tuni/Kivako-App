@@ -31,6 +31,7 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 
 import Divider from '@material-ui/core/Divider';
 import { Redirect } from 'react-router-dom';
+import DOMPurify from "dompurify";
 
 //Components
 import { CityPicker } from '../../components/CityPicker';
@@ -142,6 +143,7 @@ class SignUpPage extends Component {
     this.toggleAlert = this.toggleAlert.bind(this);
   }
 
+  //pitääkö tää siistiä? mikäs image tää on
   onImageChange = (event) => {
     if (event.target.files.length > 0) {
       const url = URL.createObjectURL(event.target.files[0]);
@@ -199,17 +201,19 @@ class SignUpPage extends Component {
   };
 
   handleChangeEmail = event => {
-
-    var value = (event.target.value);
+    var value = DOMPurify.sanitize((event.target.value));
+    console.log(value);
     this.setState({ email: value });
   };
 
   handleChangeConfirmEmail = event => {
-    var value = event.target.value;
+    var value = DOMPurify.sanitize((event.target.value));
+    console.log(value);
     this.setState({ emailConfirmation: value });
   };
 
   handleChangeCities = value => {
+    value = DOMPurify.sanitize(value);
     if (value.length > 2) {
       this.setState({ citiesError: true, citiesErrorMessage: 'Maximum number of municipilities is 2' });
     } else if (value.length < 1) {
@@ -223,6 +227,12 @@ class SignUpPage extends Component {
   handleChangeIntroduction = event => {
 
     var value = (event.target.value);
+    console.log(value);
+    var clean = DOMPurify.sanitize(value);
+    console.log('siisti: '+ clean);
+
+    //tämä on hölmösti siisti lopulliseen
+    value = clean;
     this.setState({ descriptionText: value });
 
 
@@ -240,7 +250,7 @@ class SignUpPage extends Component {
 
   handleFirstPasswordField = event => {
 
-    var value = (event.target.value);
+    var value = DOMPurify.sanitize((event.target.value));
     this.setState({ password: value });
 
     if (value.length < 6 || value.length > 20) {
@@ -254,7 +264,7 @@ class SignUpPage extends Component {
 
   handleConfirmationPasswordField = event => {
 
-    var value = (event.target.value);
+    var value = DOMPurify.sanitize((event.target.value));
     this.setState({ passwordConfirmation: value });
 
     if (value.length < 6 || value.length > 20) {
@@ -370,8 +380,8 @@ class SignUpPage extends Component {
     this.state.languagesToLearn.forEach(item => {
       langs.push(item.language);
     })
-    console.log("Excluded languages list: ")
-    console.log(langs)
+    //console.log("Excluded languages list: ")
+    //console.log(langs)
     return langs
   }
 
