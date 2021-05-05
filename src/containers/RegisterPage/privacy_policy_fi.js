@@ -84,8 +84,8 @@ export default function TermsFinnishDialog() {
               Tampereen korkeakouluyhteisö <br></br>
               Henri Annala, Emmanuel Abruquah<br></br>
               info (at) unitandem.fi<br></br>
-              http://www.tuni.fi/en <br></br>
-              Tampereen yliopisto,Kalevantie 4, 33100 Tampereen yliopisto , puh. 0294 5211 
+              http://www.tuni.fi/ <br></br>
+              Tampereen ammattikorkeakoulu, Kuntokatu 3, 33520 Tampere , puh. +358 294 5222 
             </Typography>
             <br></br>
             <Typography variant='subtitle1' align='left' gutterBottom> <b>Hallintoalue</b> </Typography>
