@@ -23,6 +23,7 @@ import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import Tooltip from '@material-ui/core/Tooltip';
+import DOMPurify from "dompurify";
 
 //Components
 import { CityPicker } from '../../components/CityPicker';
@@ -283,7 +284,7 @@ class EditProfilePage extends Component {
   };
 
   handleChangeEmail = event => {
-    var value = (event.target.value);
+    var value = DOMPurify.sanitize((event.target.value));
 
     this.setState({
       email: value
@@ -309,6 +310,7 @@ class EditProfilePage extends Component {
   };
 
   handleChangeCities = value => {
+    value = DOMPurify.sanitize(value);
     if (value.length > 2) {
       this.setState({ citiesError: true, citiesErrorMessage: 'Maximum number of municipilities is 2' });
     } else if (value.length < 1) {
@@ -320,7 +322,7 @@ class EditProfilePage extends Component {
   };
 
   handleChangeIntroduction = event => {
-    var value = (event.target.value);
+    var value = DOMPurify.sanitize((event.target.value));
     this.setState({ descriptionText: value });
 
     if (value.length < 5 && value.length > 0) {
