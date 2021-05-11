@@ -330,11 +330,11 @@ class Requests extends React.Component {
                             <br></br>
                             <br></br>
                             <br></br>
-                            <Typography variant="h5" gutterBottom>
+                            <Typography variant="h5" component="h2" gutterBottom>
                                 No pending requests
                             </Typography>
                             <br></br>
-                            <Typography variant="h6" gutterBottom>
+                            <Typography variant="h6" component="h3" gutterBottom>
                                 Click the button below to search for language partners
                             </Typography>
                             <br></br>
@@ -361,10 +361,8 @@ class Requests extends React.Component {
                 <ExpansionPanel className={classes.expansionPan} defaultExpanded={this.state.userRequestMatches.length > 0}>
                     <ExpansionPanelSummary
                         expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel1a-content"
-                        id="panel1a-header"
                     >
-                        <Typography variant="h6">
+                        <Typography variant="h6" component="h2">
                             You have recieved {this.state.userRequestMatches.length} pending request(s)
                         </Typography>
                     </ExpansionPanelSummary>
@@ -381,10 +379,8 @@ class Requests extends React.Component {
                     defaultExpanded={this.state.userRequestMatches.length === 0 && this.state.userSentMatchRequests.length !== 0}>
                     <ExpansionPanelSummary
                         expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel1a-content"
-                        id="panel1a-header"
                     >
-                        <Typography variant="h6">
+                        <Typography variant="h6" component="h2">
                             Your have sent {this.state.userSentMatchRequests.length} request(s)
                         </Typography>
                     </ExpansionPanelSummary>

@@ -86,9 +86,9 @@ class LandingPage extends Component {
           </button>
           <div className="collapse navbar-collapse" id="navbarTogglerDemo01">
             <ul className="navbar-nav ml-auto navbar-right">
-              <a className="nav-text" href=".">Home</a>
-              <a className="nav-text" href="#footer-section">Contact</a>
-              <a className="nav-text" onClick={() => {this.onAccessibilityStatementButtonClicked()}}>Accessibility Statement</a>
+              <li><a className="nav-text" href=".">Home</a></li>
+              <li><a className="nav-text" href="#footer-section">Contact</a></li>
+              <li><a className="nav-text" onClick={() => {this.onAccessibilityStatementButtonClicked()}}>Accessibility Statement</a></li>
             </ul>
           </div>
         </nav> {/* navigation ends here */}
@@ -102,8 +102,8 @@ class LandingPage extends Component {
                 learn languages and cultures through tandem learning. </p>
               <button id="signUpButton" className="btn btn-outline-success btn-lg title-btn" type="button" onClick={() => { this.onSignUpButtonClicked() }}>
                 Sign Up</button>
-              <button id="signInButton" className="btn btn-outline-success btn-lg title-btn" type="button" onClick={() => { this.onLoginButtonClicked() }}>
-                Sign In</button>
+              <button id="logInButton" className="btn btn-outline-success btn-lg title-btn" type="button" onClick={() => { this.onLoginButtonClicked() }}>
+                Log In</button>
               <a id="moodle-button" href="http://rebrand.ly/DigiCampus" target="_blank"
                 className="btn btn-lg btn-outline-success title-btn">Go to
                 DigiCampus</a>
@@ -120,7 +120,7 @@ class LandingPage extends Component {
               </div>
               
               <div class="embed-responsive embed-responsive-21by9">
-                <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/mlwKBF9F-pw"></iframe>
+                <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/mlwKBF9F-pw" title="Youtube" aria-label="Youtube vide on how to use UniTable"></iframe>
               </div>             
 
             </div>
@@ -243,8 +243,8 @@ class LandingPage extends Component {
                     <p>The university coordinating UniTandem awards the credits and you transfer them to your university. </p>
                   </div>
                 </li>
-                <div className="clear-div"></div>
               </ul>
+              <div className="clear-div"></div>
             </div>
           </div>
         </section>  {/* third section ends here  */}

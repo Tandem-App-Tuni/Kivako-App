@@ -164,11 +164,9 @@ class PartnerListPage extends Component {
           <ExpansionPanel defaultExpanded={true} className={classes.expansionPan}>
             <ExpansionPanelSummary
               expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
             >
-              <Typography variant="h6">
-                Your current partner(s)
+              <Typography variant="h6" component="h2">
+                Your current partners
               </Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
@@ -218,7 +216,7 @@ class PartnerListPage extends Component {
       <div>
         {this.getPartnerDiv(this.state.partnerList, classes)}
         <Dialog
-          aria-labelledby="simple-modal-title"
+          aria-labelledby="Report user"
           aria-describedby="simple-modal-description"
           open={this.state.isReportFormOpen}
           onClose={this.handleReportFormClose}

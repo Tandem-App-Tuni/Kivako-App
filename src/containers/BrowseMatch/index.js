@@ -171,17 +171,15 @@ class BrowseMatch extends React.Component {
                 <ExpansionPanel className={classes.expansionPan} defaultExpanded={this.state.isDefaultExpand}>
                     <ExpansionPanelSummary
                         expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel1a-content"
-                        id="panel1a-header"
                     >
-                        <Typography variant="h6">
+                        <Typography variant="h6" component="h2">
                             Possible matches who can teach you {item.languageName} <strong> - {item.matches.length} match(es) &nbsp;&nbsp;&nbsp;&nbsp;</strong>
                             <Tooltip title={languageTooltip} arrow>
                                 <InfoIcon>Arrow</InfoIcon>
                             </Tooltip>
                         </Typography>
                     </ExpansionPanelSummary>
-                    <ExpansionPanelDetails>
+                    <ExpansionPanelDetails aria-label={"possible-matches-for-"+item.languageName}>
                         <div className={classes.fullWidth}>
                             <div className={classes.chipRoot}>
                                 <Chip
