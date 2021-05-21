@@ -9,6 +9,7 @@ import logo from '../../tandemlogo.png'
 import Paper from '@material-ui/core/Paper';
 import { withStyles } from '@material-ui/styles';
 import { Redirect } from 'react-router';
+import DOMPurify from "dompurify";
 
 import ConstantsList from '../../config_constants';
 import Grid from '@material-ui/core/Grid';
@@ -77,11 +78,13 @@ class LocalLoginPage extends Component {
   }
 
   handleEmailFormChange(e) {
-    this.setState({ email: e.target.value });
+    let val = DOMPurify.sanitize(e.target.value);
+    this.setState({ email: val });
   }
 
   handlePasswordFormChange(e) {
-    this.setState({ password: e.target.value });
+    let val = DOMPurify.sanitize(e.target.value);
+    this.setState({ password: val });
   }
 
   handleSignUpButtonClick(e) {
