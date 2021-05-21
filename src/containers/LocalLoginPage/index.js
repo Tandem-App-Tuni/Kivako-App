@@ -163,9 +163,9 @@ class LocalLoginPage extends Component {
           component="main"
           maxWidth="xs">
           <Paper className={classes.paper}>
-            <a href={this.state.initialPage}>
+            <a href={this.state.initialPage} title="Home Page">
               <img
-                alt=""
+                alt="UniTandem logo"
                 src={logo}
                 style={{ maxHeight: 100, maxWidth: '80%', marginTop: 30, marginLeft: 20, marginRight: 20 }}
               />
@@ -177,6 +177,7 @@ class LocalLoginPage extends Component {
             </Typography>
 
             <form className={classes.form} noValidate>
+
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <TextField
@@ -207,7 +208,6 @@ class LocalLoginPage extends Component {
                     onChange={(e) => { this.handlePasswordFormChange(e) }}
                   />
                 </Grid>
-
               </Grid>
 
               <Button
@@ -219,8 +219,11 @@ class LocalLoginPage extends Component {
                 onClick={(e) => { this.handleSignUpButtonClick(e) }}>
                 {this.state.signUp}
               </Button>
+
             </form>
+
           </Paper>
+
           <Box mt={3}>
             <Typography
               variant="body2"
@@ -231,16 +234,17 @@ class LocalLoginPage extends Component {
                 href="#"
                 onClick={e => this.onForgotPassword(e)}>
                 Forgot password?
-          </Link>
+              </Link>
               <br />
               <Link
                 color="inherit"
                 href="#"
                 onClick={e => this.onReactivate(e)}>
                 Did not receive activation link?
-          </Link>
+              </Link>
             </Typography>
           </Box>
+
           <Box mt={5}>
             <Typography
               variant="body2"
@@ -252,11 +256,12 @@ class LocalLoginPage extends Component {
             </Typography>
           </Box>
         </Container>
+
         <AlertPopup
           open={this.state.showAlert}
           variant={this.state.alertType}
           message={this.state.alertText}
-          onClose={()=>{this.setState({showAlert: false})}}/>
+          onClose={() => { this.setState({ showAlert: false }) }} />
       </React.Fragment>
     )
   }

@@ -22,6 +22,7 @@ import WarningIcon from '@material-ui/icons/Warning';
 import Tooltip from '@material-ui/core/Tooltip';
 import Moment from 'moment';
 import Chip from '@material-ui/core/Chip';
+import Button from '@material-ui/core/Button';
 import ZoomInIcon from '@material-ui/icons/ZoomIn';
 import Dialog from '@material-ui/core/Dialog';
 import { getApiUrl } from '../../helpers/networkRequestHelpers';
@@ -47,6 +48,10 @@ const useStyles = theme => ({
    chip: {
       margin: '2px',
    },
+   purple: {
+      backgroundColor: theme.palette.primary.main,
+      fontColor: "white"
+   }
 });
 
 class UserCard extends Component {
@@ -259,14 +264,14 @@ class UserCard extends Component {
             </Card>
 
             <Dialog
-               aria-labelledby="simple-modal-title"
-               aria-describedby="simple-modal-description"
+               aria-labelledby="View profile information"
                open={this.state.detailProfileOpen}
                onClose={this.handleClose}
                maxWidth={'md'}
                fullWidth={true}
             >
                <ProfilePage userEmail={user.email}></ProfilePage>
+               <Button variant="filled" color="primary" onClick={this.handleClose}>Close</Button>
             </Dialog>
          </div>
       );

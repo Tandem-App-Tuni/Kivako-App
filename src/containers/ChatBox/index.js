@@ -204,10 +204,7 @@ class Chat extends React.Component
     render()
     {
         return(
-            <Box
-
-                borderRadius={5}
-                boxShadow={3}>
+            <Box borderRadius={5} boxShadow={3}>
                 <Toolbar
                     style={{backgroundColor:'indigo', color:'white'}}>
                     {this.capitalizeWords(this.state.conversationName)}
@@ -218,17 +215,15 @@ class Chat extends React.Component
                 </div>
                 <br></br>
                 <Divider variant="middle" />
-                <Box
-                    p={1} m={0}>
+                <Box p={1} m={0}>
                     <Grid
                         spacing={2}
                         container
                         direction='row'
                         justify='flex-start'
-                        alignItems='flex-end'>
-
-                        <Grid item xs={12} sm={1}>
-                        </Grid>
+                        alignItems='flex-end'
+                    >
+                        <Grid item xs={12} sm={1}></Grid>
 
                         <Grid item xs={12} sm={9}>
                             <TextField
@@ -236,7 +231,7 @@ class Chat extends React.Component
                                 fullWidth
                                 margin="normal"
                                 InputLabelProps={{
-                                shrink: true,
+                                    shrink: true,
                                 }}
                                 placeholder='Write your message here...'
                                 onKeyPress={(event) => this.sendMessageEnter(event)}
@@ -251,15 +246,14 @@ class Chat extends React.Component
                                 fullWidth
                                 color="primary"
                                 onClick={() => this.sendMessageClick()}
+                                aria-label="send-message"
                             >
-
-                            <Icon>send</Icon>
+                                <Icon>send</Icon>
                             </Button>
                         </Grid>
 
                         <Grid item xs={12} sm={1}>
                         </Grid>
-
                     </Grid>
                 </Box>
             </Box>

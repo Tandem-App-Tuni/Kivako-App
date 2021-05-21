@@ -107,7 +107,6 @@ const useStyles = theme => ({
     flexDirection: 'row',
     padding: 0,
   }
-
 });
 
 class SignUpPage extends Component {
@@ -164,7 +163,6 @@ class SignUpPage extends Component {
     //const { options } = event.target;
     var value = (event.target.value);
     this.setState({ languagesToLearn: value });
-
   };
 
   handleChangeFirstName = event => {
@@ -172,16 +170,14 @@ class SignUpPage extends Component {
     var formFirstName = (event.target.value);
     const validNameRegex = RegExp(/^.*(?=.{1,})(?=.*[a-zA-Z\\u0080-\\uFFFF])(?=.*\d).*$/);
 
-    if(validNameRegex.test(formFirstName)===true){
-      this.setState( {firstNameError: true, firstNameErrorMessage: 'Special characters are not accepted'} )
-    }else if(formFirstName.length <= 1 || formFirstName.length >=20){
-      this.setState( {firstNameError: true, firstNameErrorMessage: 'Number of characters not accepted'} )
-    }else{
-      this.setState( {firstNameError: false, firstNameErrorMessage: ''} )
-      this.setState( {firstName: formFirstName} )
+    if (validNameRegex.test(formFirstName) === true) {
+      this.setState({ firstNameError: true, firstNameErrorMessage: 'Special characters are not accepted' })
+    } else if (formFirstName.length <= 1 || formFirstName.length >= 20) {
+      this.setState({ firstNameError: true, firstNameErrorMessage: 'Number of characters not accepted' })
+    } else {
+      this.setState({ firstNameError: false, firstNameErrorMessage: '' })
+      this.setState({ firstName: formFirstName })
     }
-
-
   };
 
   handleChangeLastName = event => {
@@ -189,20 +185,18 @@ class SignUpPage extends Component {
     var formLastName = (event.target.value);
     const validNameRegex = RegExp(/^.*(?=.{1,})(?=.*[a-zA-Z\\u0080-\\uFFFF])(?=.*\d).*$/);
 
-    if(validNameRegex.test(formLastName)===true){
-      this.setState( {lastNameError: true, lastNameErrorMessage: 'Special characters are not accepted'} );
-    }else if(formLastName.length <= 1 || formLastName.length >=20){
-      this.setState( {lastNameError: true, lastNameErrorMessage: 'Number of characters not accepted'} );
-    }else{
-      this.setState( {lastNameError: false, lastNameErrorMessage: ''} );
-      this.setState( {lastName: formLastName} );
+    if (validNameRegex.test(formLastName) === true) {
+      this.setState({ lastNameError: true, lastNameErrorMessage: 'Special characters are not accepted' });
+    } else if (formLastName.length <= 1 || formLastName.length >= 20) {
+      this.setState({ lastNameError: true, lastNameErrorMessage: 'Number of characters not accepted' });
+    } else {
+      this.setState({ lastNameError: false, lastNameErrorMessage: '' });
+      this.setState({ lastName: formLastName });
     }
-
   };
 
   handleChangeEmail = event => {
     var value = DOMPurify.sanitize((event.target.value));
-    console.log(value);
     this.setState({ email: value });
   };
 
@@ -225,7 +219,6 @@ class SignUpPage extends Component {
   };
 
   handleChangeIntroduction = event => {
-
     var value = (event.target.value);
     console.log(value);
     var clean = DOMPurify.sanitize(value);
@@ -235,17 +228,14 @@ class SignUpPage extends Component {
     value = clean;
     this.setState({ descriptionText: value });
 
-
     if (value.length < 5 && value.length > 0) {
-      this.setState({ introError: true, introErrorMessage: 'We recommend to write about you' });
+      this.setState({ introError: true, introErrorMessage: 'We recommend to write something about you' });
     } else if (value.length > 500) {
       this.setState({ introError: true, introErrorMessage: 'Maximum number of characters is 500!' });
     } else {
       this.setState({ introError: false, introErrorMessage: '' });
       this.setState({ descriptionText: value });
     }
-
-
   };
 
   handleFirstPasswordField = event => {
@@ -259,7 +249,6 @@ class SignUpPage extends Component {
       this.setState({ passwordError: false, passwordErrorMessage: '' });
       this.setState({ password: value });
     }
-
   };
 
   handleConfirmationPasswordField = event => {
@@ -277,24 +266,16 @@ class SignUpPage extends Component {
       this.setState({ passwordError: false, passwordErrorMessage: '' });
       this.setState({ passwordConfirmation: value });
     }
-
   };
 
 
   handleTermsAndConditionsCheckboxChange = name => event => {
-    this.setState({
-      termsAndConditionsAccept: name,
-    })
-
+    this.setState({ termsAndConditionsAccept: name })
   };
 
   onShowInputTeachLanguage = (open, index, newValue) => {
     if (open === true) {
-      this.setState(
-        {
-          editingTeachLanguageIndex: index
-        }
-      )
+      this.setState({ editingTeachLanguageIndex: index })
     }
     else {
       if (newValue != null) {
@@ -305,27 +286,15 @@ class SignUpPage extends Component {
         else {
           arr.push(newValue)
         }
-        this.setState(
-          {
-            languagesToTeach: arr
-          }
-        )
+        this.setState({ languagesToTeach: arr })
       }
     }
-    this.setState(
-      {
-        showInputTeachLanguage: open
-      }
-    )
+    this.setState({ showInputTeachLanguage: open })
   };
 
   onShowInputLearnLanguage = (open, index, newValue) => {
     if (open === true) {
-      this.setState(
-        {
-          editingLearnLanguageIndex: index
-        }
-      )
+      this.setState({ editingLearnLanguageIndex: index })
     }
     else {
       if (newValue != null) {
@@ -336,18 +305,10 @@ class SignUpPage extends Component {
         else {
           arr.push(newValue)
         }
-        this.setState(
-          {
-            languagesToLearn: arr
-          }
-        )
+        this.setState({ languagesToLearn: arr })
       }
     }
-    this.setState(
-      {
-        showInputLearnLanguage: open
-      }
-    )
+    this.setState({ showInputLearnLanguage: open })
   };
 
   onDeleteLanguage = (type, itemIndex) => {
@@ -355,16 +316,12 @@ class SignUpPage extends Component {
       case "teach":
         const oldTeachList = this.state.languagesToTeach;
         let newTeachList = oldTeachList.filter((x, index) => index !== itemIndex);
-        this.setState({
-          languagesToTeach: newTeachList
-        })
+        this.setState({ languagesToTeach: newTeachList })
         break;
       case "learn":
         const oldLearnList = this.state.languagesToLearn;
         let newLearnList = oldLearnList.filter((x, index) => index !== itemIndex);
-        this.setState({
-          languagesToLearn: newLearnList
-        })
+        this.setState({ languagesToLearn: newLearnList })
         break;
       default:
         break;
@@ -426,7 +383,7 @@ class SignUpPage extends Component {
     }).then((response) => response.json())
       .then((responseJson) => {
         if (responseJson.userAdded) {
-          setTimeout(()=>{
+          setTimeout(() => {
             this.setState({ isAlreadyregistered: true });
           }, 5000);
           this.toggleAlert(true, "success", "User registered succesfully. Please check your email for an activation link. \nYou will redirect to login page in 5 seconds ...");
@@ -445,8 +402,8 @@ class SignUpPage extends Component {
     getApiData({
       endpoint: 'isAuthenticated',
     }, {
-        method: 'GET',
-        credentials: 'include'
+      method: 'GET',
+      credentials: 'include'
     }).then((response) => response.json())
       .then((responseData) => {
         if (responseData.isAuthenticated === false) {
@@ -474,7 +431,6 @@ class SignUpPage extends Component {
       this.checkIfUserIsAuthenticaded(() => {
         this.setState({ isLoadingPage: false });
       });
-
     }
   }
 
@@ -504,14 +460,14 @@ class SignUpPage extends Component {
       <div>
         <Container component="main" maxWidth="xs">
           <CssBaseline />
-          <div align="center" className={classes.paper} style={{ backgroundColor: '#400075', color: 'white', borderRadius: 16 }}>
-            <Typography variant="h3" >
+          <div align="center" className={classes.paper} style={{ backgroundColor: '#400075', color: 'white', borderRadius: 16, padding: "7px" }}>
+            <Typography variant="h3" component="h1" >
               Register
-              </Typography>
+            </Typography>
             <br></br>
             <Typography variant="caption" >
               Please fill in the following information to confirm your registration!
-              </Typography>
+            </Typography>
             <br></br>
           </div>
 
@@ -522,10 +478,10 @@ class SignUpPage extends Component {
 
                 <Grid item xs={12} sm={6}>
                   <TextField
-                    autoComplete="fname"
+                    autoComplete="given-name"
                     name="firstName"
                     variant="outlined"
-                    required={true}
+                    required
                     fullWidth
                     id="firstName"
                     label="First name"
@@ -540,12 +496,12 @@ class SignUpPage extends Component {
                 <Grid item xs={12} sm={6}>
                   <TextField
                     variant="outlined"
-                    required={true}
+                    required
                     fullWidth
                     id="lastName"
                     label="Last name"
                     name="lastName"
-                    autoComplete="lname"
+                    autoComplete="family-name"
                     error={this.state.lastNameError}
                     helperText={this.state.lastNameError === false ? '' : this.state.lastNameErrorMessage}
                     onChange={this.handleChangeLastName}
@@ -642,9 +598,9 @@ class SignUpPage extends Component {
                 </Grid>
 
                 <Grid item xs={12}>
-                  <Typography variant="subtitle1" gutterBottom>
+                  <Typography variant="subtitle1" component="p" gutterBottom>
                     Languages I can teach (max 3) (Note: you need to be a native or a near-native speaker to teach)
-                </Typography>
+                  </Typography>
 
                   <List>
                     {this.state.languagesToTeach.map(item => {
@@ -665,7 +621,7 @@ class SignUpPage extends Component {
                   </List>
                   <div align="center">
                     <IconButton disabled={this.state.languagesToTeach.length >= 3} className={classes.margin} onClick={() => this.onShowInputTeachLanguage(true, this.state.languagesToTeach.length)}>
-                      <AddCircleOutlineIcon fontSize="small" /> <Typography align="center" variant="button"> Add more languages to teach</Typography>
+                      <AddCircleOutlineIcon fontSize="small" /> <Typography align="center" variant="button"> Add languages to teach</Typography>
                     </IconButton>
                   </div>
                 </Grid>
@@ -678,9 +634,9 @@ class SignUpPage extends Component {
                 />
 
                 <Grid item xs={12}>
-                  <Typography variant="subtitle1" gutterBottom>
+                  <Typography variant="subtitle1" component="p" gutterBottom>
                     Languages I want to learn (max. 3)
-                    </Typography>
+                  </Typography>
 
                   <List>
                     {this.state.languagesToLearn.map(item => {
@@ -701,7 +657,7 @@ class SignUpPage extends Component {
                   </List>
                   <div align="center">
                     <IconButton disabled={this.state.languagesToLearn.length >= 3} align="center" className={classes.margin} onClick={() => this.onShowInputLearnLanguage(true, this.state.languagesToLearn.length)}>
-                      <AddCircleOutlineIcon fontSize="small" />  <Typography align="center" variant="button"> Add more languages to learn</Typography>
+                      <AddCircleOutlineIcon fontSize="small" />  <Typography align="center" variant="button"> Add languages to learn</Typography>
                     </IconButton>
                   </div>
                 </Grid>
@@ -728,16 +684,10 @@ class SignUpPage extends Component {
             <div>
               <div>
                 <ExpansionPanel>
-                  <ExpansionPanelSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-label="Expand"
-                    aria-controls="additional-actions1-content"
-                    id="additional-actions1-header"
-                  >
+                  <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} >
                     <FormControlLabel
                       control={
                         <Checkbox
-                          id="teste"
                           checked={this.state.termsAndConditionsAccept}
                           onChange={this.handleTermsAndConditionsCheckboxChange(!this.state.termsAndConditionsAccept)}
                           color="primary"
@@ -760,10 +710,9 @@ class SignUpPage extends Component {
                 variant="contained"
                 color="primary"
                 className={classes.submit}
-                onClick={this.onSaveButtonClicked}
-              >
+                onClick={this.onSaveButtonClicked}>
                 SIGN UP
-            </Button>
+              </Button>
 
             </div>
           </div>
@@ -775,7 +724,7 @@ class SignUpPage extends Component {
           open={this.state.showAlert}
           variant={this.state.alertType}
           message={this.state.alertText}
-          onClose={()=>{this.setState({showAlert: false})}}/>
+          onClose={() => { this.setState({ showAlert: false }) }} />
       </div>
     );
   }
@@ -790,13 +739,12 @@ class TermsAndConditions extends Component {
 
     return (
       <div>
-
         <Typography color="textSecondary">
           Terms and conditions and Privacy Policy can be see in the following languages:
-      </Typography>
+        </Typography>
         <br></br>
         <ExpansionPanel>
-          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
+          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} >
             <Typography >English</Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
@@ -805,17 +753,14 @@ class TermsAndConditions extends Component {
         </ExpansionPanel>
 
         <ExpansionPanel>
-          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
+          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} >
             <Typography >Finnish</Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
             <TermsFinnishDialog></TermsFinnishDialog>
           </ExpansionPanelDetails>
         </ExpansionPanel>
-
       </div>
-
-
     )
   }
 }

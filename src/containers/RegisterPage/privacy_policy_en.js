@@ -85,7 +85,7 @@ export default function TermsEnglishDialog() {
               Henri Annala, Emmanuel Abruquah<br></br>
               info (at) unitandem.fi<br></br>
               http://www.tuni.fi/en <br></br>
-              Tampere University,Kalevantie 4, 33014 Tampere,  tel. +358 (0) 294 5211 
+              Tampere University of Applied Sciences, Kuntokatu 3, 33520 Tampere, Finland, tel. +358 294 5222
             </Typography>
             <br></br> 
 
