@@ -12,6 +12,8 @@ import Paper from '@material-ui/core/Paper';
 
 import Constants from '../../config_constants';
 import { getApiData } from '../../helpers/networkRequestHelpers';
+import { AlertPopup, ConfirmDialog } from '../../components/AlertView';
+import DeleteForever from '@material-ui/icons/DeleteForever';
 
 const useStyles = theme => ({
   '@global': {
@@ -61,16 +63,14 @@ class ListOfAdmins extends React.Component
 
         }
     },
+    
     {
-      id: 'isActive',
-      label: 'Active',
+      id: 'removeAdminButton',
+      label: 'Remove admin',
       minWidth: 170,
-      align: 'center',
-      format: value => {
-        if(value) value.toString()
-      }
-
-    }]
+      align: 'center'
+    }
+  ]
 
   constructor(props)
   {
@@ -120,6 +120,45 @@ class ListOfAdmins extends React.Component
     });
   }
 
+  componentDidMount() {
+    this.fetchAdminList();
+  }
+
+  fetchAdminList = () => {
+    getApiData({
+      version: 'v1',
+      endpoint: 'admin/adminUsers',
+    }, {
+        method: 'GET',
+        credentials: 'include',
+        cors: 'no-cors'
+    }).then((response) => response.json())
+      .then((responseJson) => {
+        this.setState({data: responseJson.data, rows: responseJson.data, isLoadingTable: false });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
+  onRemoveAdmin = () => {
+    getApiData({
+      version: 'v1',
+      endpoint: 'users/removeAdminStatus/' + this.state.deleteData.email,
+    }, {
+        method: 'POST',
+        credentials: 'include',
+        cors: 'no-cors'
+    }).then((response) => {
+        if (response.status === 200)
+          this.fetchAdminList();
+        else
+          this.toggleAlert(true, "error", "Something went wrong");
+    }).catch((error) => {
+        console.error(error);
+    });
+  this.setState({showConfirm: false, deleteData: {}})
+}
   render()
   {
     console.log('[ListOfAdmins] Render');
@@ -154,7 +193,17 @@ class ListOfAdmins extends React.Component
 
                     return (
                       <TableCell key={column.id} align={column.align}>
-                        <div>{column.format ? column.format(value) : value}</div>
+                        <div>
+                          {column.format ? column.format(value) : value}
+                          {column.id === 'removeAdminButton' ?
+                              <DeleteForever
+                                fullWidth
+                                variant='contained'
+                                color='primary'
+                                className={classes.chip}
+                                onClick={() => {this.setState({showConfirm: true, deleteData: row})}}>
+                              </DeleteForever> : <div/>}
+                          </div>
                       </TableCell>
                     );
                   })}
@@ -171,6 +220,16 @@ class ListOfAdmins extends React.Component
             page={this.state.page}
             onChangePage={this.handleChangePage}
             onChangeRowsPerPage={this.handleChangeRowsPerPage}/>
+             <AlertPopup
+          open={this.state.showAlert}
+          variant={this.state.alertType}
+          message={this.state.alertText}
+          onClose={()=>{this.setState({showAlert: false})}}/>
+        <ConfirmDialog
+          open={this.state.showConfirm}
+          onClose={()=>{this.setState({showConfirm: false, deleteData: {}})}}
+          title="Are you sure you want to remove this user from admin?"
+          onConfirm={this.onRemoveAdmin}/>
       </Paper>
     );
   }

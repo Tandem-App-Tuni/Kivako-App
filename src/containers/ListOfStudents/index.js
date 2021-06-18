@@ -11,9 +11,11 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import DeleteForever from '@material-ui/icons/DeleteForever';
+import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
+
+import { AlertPopup, ConfirmDialog, ConfirmAdmin } from '../../components/AlertView';
 import CheckIcon from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
-import { AlertPopup, ConfirmDialog } from '../../components/AlertView';
 import Constants from '../../config_constants';
 import { getApiData } from '../../helpers/networkRequestHelpers';
 
@@ -69,7 +71,7 @@ class ListOfStudents extends Component {
     {
       id: 'isActive',
       label: 'Active',
-      minWidth: 170,
+      minWidth: 70,
       align: 'center',
       format: value => {
         value ? userActivity = true : userActivity = false;
@@ -111,7 +113,13 @@ class ListOfStudents extends Component {
     {
       id: 'removeUserButton',
       label: 'Remove user',
-      minWidth: 170,
+      minWidth: 110,
+      align: 'center'
+    },
+    {
+      id: 'promoteToAdmin',
+      label: 'Make Admin',
+      minWidth: 110,
       align: 'center'
     }
   ]
@@ -129,7 +137,8 @@ class ListOfStudents extends Component {
       message: '',
       socket: props.socket,
       showConfirm: false,
-      deleteData: {},
+      deleteData:{},
+      userDetail:{},
       showAlert: false,
       alertType: "success",
       alertText: ""
@@ -209,6 +218,26 @@ class ListOfStudents extends Component {
     });
     this.setState({ showConfirm: false, deleteData: {} })
   }
+  onMakeAdmin = () => {
+    getApiData({
+      version: 'v1',
+      endpoint: 'users/updateUserToAdmin/' + this.state.userDetail.email,
+    }, {
+        method: 'POST',
+        credentials: 'include',
+        cors: 'no-cors'
+    }).then((response) => {
+        if (response.status === 200)
+          this.fetchUserList();
+      
+        else
+          this.toggleAlert(true, "error", "Something went wrong");
+    }).catch((error) => {
+        console.error(error);
+    });
+  this.setState({showConfirm: false, deleteData: {}})
+  console.log('user')
+}
   handleSearchChange = (event) => {
     this.setState({ searchValue: event.target.value })
     let searchValue = event.target.value.toLowerCase();
@@ -340,6 +369,14 @@ class ListOfStudents extends Component {
                               className={classes.chip}
                               onClick={() => { this.setState({ showConfirm: true, deleteData: row }) }}>
                             </DeleteForever> : <div />}
+                          {column.id === 'promoteToAdmin' ?
+                            <AssignmentTurnedInIcon
+                              fullWidth
+                              variant='contained'
+                              color='primary'
+                              className={classes.chip}
+                              onClick={() => {this.setState({showAdmin:true , userDetail: row})}}>
+                            </AssignmentTurnedInIcon> : <div/>}
                         </div>
                       </TableCell>
                     );
@@ -367,6 +404,11 @@ class ListOfStudents extends Component {
           onClose={() => { this.setState({ showConfirm: false, deleteData: {} }) }}
           title="Are you sure you want to delete the user?"
           onConfirm={this.onDeleteUser} />
+        <ConfirmAdmin
+          open={this.state.showAdmin}
+          onClose={()=>{this.setState({showAdmin: false, userDetail: {}})}}
+          title="Are you sure you want to make this user admin?"
+          onConfirm={this.onMakeAdmin}/>
       </Paper>
     );
   }

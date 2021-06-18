@@ -115,3 +115,33 @@ export const ConfirmDialog = ({title, content, open, onClose, onConfirm}) => {
   </Dialog>
   )
 }
+
+export const ConfirmAdmin = ({title, content, open, onClose, onConfirm}) => {
+  return (
+    <Dialog
+    open={open}
+    onClose={onClose}
+    aria-labelledby="alert-dialog-title"
+    aria-describedby="alert-dialog-description"
+    fullWidth
+  >
+    <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
+    {content ? 
+      <DialogContent>
+        <DialogContentText id="alert-dialog-description">
+          {content}
+        </DialogContentText>
+      </DialogContent>
+      : null
+    }
+    <DialogActions>
+      <Button onClick={onConfirm} color="primary" autoFocus>
+        Yes
+      </Button>
+      <Button onClick={onClose} close="primary">
+        No
+      </Button>
+    </DialogActions>
+  </Dialog>
+  )
+}
