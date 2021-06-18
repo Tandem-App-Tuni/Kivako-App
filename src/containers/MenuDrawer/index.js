@@ -15,11 +15,11 @@ import MessageIcon from '@material-ui/icons/Message';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import { mainListItems, secondaryListItems, thirdListItems, adminListItems } from './listItems';
 import { Link } from 'react-router-dom';
-import {withStyles} from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import logo from '../../tandemlogo.png'
 import ConstantsList from '../../config_constants';
 
-import {AppContext} from "../../components/context/context";
+import { AppContext } from "../../components/context/context";
 import { getApiData } from '../../helpers/networkRequestHelpers';
 
 const drawerWidth = 240;
@@ -103,49 +103,41 @@ const useStyles = theme => ({
   },
 });
 
-class Dashboard extends React.Component
-{
+class Dashboard extends React.Component {
   _isMounted = false;
 
   static contextType = AppContext;
 
-  constructor(props)
-  {
+  constructor(props) {
     super(props);
 
-    this.state = {open:true, isAdmin:false, requestAmount:0 , socket: props.chatBundle.socket, getChatN: props.chatBundle.getChatNotification, setChatN: props.chatBundle.setChatNotification,};
+    this.state = { open: true, isAdmin: false, requestAmount: 0, socket: props.chatBundle.socket, getChatN: props.chatBundle.getChatNotification, setChatN: props.chatBundle.setChatNotification, };
     this.resizeScreen = this.resizeScreen.bind(this);
 
   }
 
-  handleDrawerOpen = () =>
-  {
-    this.setState({open:true});
+  handleDrawerOpen = () => {
+    this.setState({ open: true });
   }
 
-  handleDrawerClose = () =>
-  {
-    this.setState({open:false});
+  handleDrawerClose = () => {
+    this.setState({ open: false });
   }
 
-  logoClick = () =>
-  {
-    window.location.href="/";
+  logoClick = () => {
+    window.location.href = "/";
   }
 
   resizeScreen() {
-    if(window.innerWidth <= 850)
-    {
-      this.setState({open:false});
+    if (window.innerWidth <= 850) {
+      this.setState({ open: false });
     }
     else {
-      this.setState({open:true});
+      this.setState({ open: true });
     }
   }
-  async componentDidMount()
-  {
-    try
-    {
+  async componentDidMount() {
+    try {
       window.addEventListener("resize", this.resizeScreen);
       this.resizeScreen();
 
@@ -159,9 +151,9 @@ class Dashboard extends React.Component
         version: 'v1',
         endpoint: 'users/isAdmin',
       }, {
-          method: 'GET',
-          credentials: 'include',
-          cors: 'no-cors'
+        method: 'GET',
+        credentials: 'include',
+        cors: 'no-cors'
       });
 
       const p1 = getApiData({
@@ -170,68 +162,72 @@ class Dashboard extends React.Component
       }, {
         method: 'GET',
         credentials: 'include',
-        cors:'no-cors'
+        cors: 'no-cors'
       });
 
       const results = await Promise.all([p0, p1]);
       const responseResults = await Promise.all([results[0].json(), results[1].json()]);
       this.context.updateContext("requestAmount", responseResults[1].userReceiptMatches.length)
-      this.setState({isAdmin: responseResults[0].isAdmin, requestAmount: responseResults[1].userReceiptMatches.length});
+      this.setState({ isAdmin: responseResults[0].isAdmin, requestAmount: responseResults[1].userReceiptMatches.length });
     }
-    catch(e)
-    {
+    catch (e) {
       console.log("Error when menu mounted:", e)
     }
   }
 
-  render()
-  {
+  render() {
     const { classes } = this.props;
-    return(
-    <div className={classes.root}>
-      <CssBaseline />
-      <AppBar position="absolute" className={clsx(classes.appBar, this.state.open && classes.appBarShift)}>
-        <Toolbar className={classes.toolbar}>
-          <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            onClick={this.handleDrawerOpen}
-            className={clsx(classes.menuButton, this.state.open && classes.menuButtonHidden)}>
-            <MenuIcon/>
-          </IconButton>
-          <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            {this.props.title}
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        variant="permanent"
-        classes={{
-          paper: clsx(classes.drawerPaper, !this.state.open && classes.drawerPaperClose),
-        }}
-        open={this.state.open}>
-          <div className={classes.toolbarIcon}>
-            <img alt="" src={logo}  onClick={this.logoClick} style={{ maxHeight: 100, maxWidth: '70%', align: 'center' }} />
-            <IconButton onClick={this.handleDrawerClose}>
-              <ChevronLeftIcon/>
+    return (
+      <div className={classes.root}>
+        <CssBaseline />
+        <AppBar position="absolute" className={clsx(classes.appBar, this.state.open && classes.appBarShift)}>
+          <Toolbar className={classes.toolbar}>
+            <IconButton
+              edge="start"
+              color="inherit"
+              aria-label="open drawer"
+              onClick={this.handleDrawerOpen}
+              className={clsx(classes.menuButton, this.state.open && classes.menuButtonHidden)}>
+              <MenuIcon />
             </IconButton>
-          </div>
-          <Divider/>
-          <List>{mainListItems(this.state.getChatN())}</List>
+            <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
+              {this.props.title}
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <Drawer
+          variant="permanent"
+          classes={{
+            paper: clsx(classes.drawerPaper, !this.state.open && classes.drawerPaperClose),
+          }}
+          open={this.state.open}>
+          <nav className={classes.toolbarIcon} aria-label="main logo">
+            <img alt="UniTandem logo" src={logo} onClick={this.logoClick} style={{ maxHeight: 100, maxWidth: '70%', align: 'center' }} />
+            <IconButton onClick={this.handleDrawerClose} aria-label="expand menu">
+              <ChevronLeftIcon />
+            </IconButton>
+          </nav>
           <Divider />
-          <List>{secondaryListItems(this.context.requestAmount)}</List>
-          {this.state.isAdmin ? <div><Divider /><List>{adminListItems}</List></div> : <div/>}
+          <List component="nav" aria-label="profile and chat">
+            {mainListItems(this.state.getChatN())}
+          </List>
           <Divider />
-          <List>{thirdListItems}</List>
-      </Drawer>
-      <main className={classes.content}>
-      <div className={classes.appBarSpacer} />
-      <Container maxWidth="lg" className={classes.container}>
-          {this.props.children}
-      </Container>
-      </main>
-    </div>
+          <List component="nav" aria-label="partners and requests">
+            {secondaryListItems(this.context.requestAmount)}
+          </List>
+          {this.state.isAdmin ? <div><Divider /><List component="nav" aria-label="admin navigation">{adminListItems}</List></div> : <div />}
+          <Divider />
+          <List component="nav" aria-label="digi campus and log out">
+            {thirdListItems}
+            </List>
+        </Drawer>
+        <main className={classes.content}>
+          <div className={classes.appBarSpacer} />
+          <Container maxWidth="lg" className={classes.container}>
+            {this.props.children}
+          </Container>
+        </main>
+      </div>
     );
   }
 }

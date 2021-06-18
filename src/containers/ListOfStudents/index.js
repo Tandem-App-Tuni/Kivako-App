@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
-
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -15,8 +14,12 @@ import DeleteForever from '@material-ui/icons/DeleteForever';
 import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 
 import { AlertPopup, ConfirmDialog, ConfirmAdmin } from '../../components/AlertView';
+import CheckIcon from '@material-ui/icons/Check';
+import CloseIcon from '@material-ui/icons/Close';
 import Constants from '../../config_constants';
 import { getApiData } from '../../helpers/networkRequestHelpers';
+
+var userActivity;
 
 const useStyles = theme => ({
   '@global': {
@@ -57,21 +60,21 @@ class ListOfStudents extends Component {
       label: 'Last Access',
       minWidth: 170,
       align: 'center',
-      format: value =>  {
-        if(value) {
+      format: value => {
+        if (value) {
           let time = new Date(value);
-          return +time.getDate()+ '.' +(time.getMonth()+1)+'.' +time.getFullYear()+' '+time.getHours()+'.'+time.getMinutes();
+          return +time.getDate() + '.' + (time.getMonth() + 1) + '.' + time.getFullYear() + ' ' + time.getHours() + '.' + time.getMinutes();
         }
       }
     },
 
     {
-      id: 'userIsActivie',
+      id: 'isActive',
       label: 'Active',
-      minWidth: 170,
+      minWidth: 70,
       align: 'center',
       format: value => {
-        if(value) value.toString()
+        value ? userActivity = true : userActivity = false;
       }
     },
 
@@ -82,11 +85,11 @@ class ListOfStudents extends Component {
       align: 'center',
       format: value => {
         let langs = "";
-        //value.forEach(item => {
-          //if(item) {
-           //langs = langs + item.language + ", ";
-         // }
-       // })
+        value.forEach(item => {
+          if (item) {
+            langs = langs + item.language + ", ";
+          }
+        })
         return langs.slice(0, -2);
       }
     },
@@ -98,11 +101,11 @@ class ListOfStudents extends Component {
       align: 'center',
       format: value => {
         let langs = "";
-        //value.forEach(item => {
-          //if(item) {
-            //langs = langs + item.language + ", ";
-          //}
-        //})
+        value.forEach(item => {
+          if (item) {
+            langs = langs + item.language + ", ";
+          }
+        })
         return langs.slice(0, -2);
       }
     },
@@ -110,13 +113,13 @@ class ListOfStudents extends Component {
     {
       id: 'removeUserButton',
       label: 'Remove user',
-      minWidth: 170,
+      minWidth: 110,
       align: 'center'
     },
     {
       id: 'promoteToAdmin',
       label: 'Make Admin',
-      minWidth: 170,
+      minWidth: 110,
       align: 'center'
     }
   ]
@@ -165,12 +168,12 @@ class ListOfStudents extends Component {
       version: 'v1',
       endpoint: 'admin/studentUsers',
     }, {
-        method: 'GET',
-        credentials: 'include',
-        cors: 'no-cors'
+      method: 'GET',
+      credentials: 'include',
+      cors: 'no-cors'
     }).then((response) => response.json())
       .then((responseJson) => {
-        this.setState({data: responseJson.data, rows: responseJson.data, isLoadingTable: false });
+        this.setState({ data: responseJson.data, rows: responseJson.data, isLoadingTable: false });
       })
       .catch((error) => {
         console.error(error);
@@ -198,22 +201,22 @@ class ListOfStudents extends Component {
   }
 
   onDeleteUser = () => {
-      getApiData({
-        version: 'v1',
-        endpoint: 'users/deleteAdmin/' + this.state.deleteData.email,
-      }, {
-          method: 'GET',
-          credentials: 'include',
-          cors: 'no-cors'
-      }).then((response) => {
-          if (response.status === 200)
-            this.fetchUserList();
-          else
-            this.toggleAlert(true, "error", "Something went wrong");
-      }).catch((error) => {
-          console.error(error);
-      });
-    this.setState({showConfirm: false, deleteData: {}})
+    getApiData({
+      version: 'v1',
+      endpoint: 'users/deleteAdmin/' + this.state.deleteData.email,
+    }, {
+      method: 'GET',
+      credentials: 'include',
+      cors: 'no-cors'
+    }).then((response) => {
+      if (response.status === 200)
+        this.fetchUserList();
+      else
+        this.toggleAlert(true, "error", "Something went wrong");
+    }).catch((error) => {
+      console.error(error);
+    });
+    this.setState({ showConfirm: false, deleteData: {} })
   }
   onMakeAdmin = () => {
     getApiData({
@@ -236,31 +239,31 @@ class ListOfStudents extends Component {
   console.log('user')
 }
   handleSearchChange = (event) => {
-    this.setState({searchValue: event.target.value})
+    this.setState({ searchValue: event.target.value })
     let searchValue = event.target.value.toLowerCase();
-    if (event.target.value.length >= 2){
+    if (event.target.value.length >= 2) {
       let searchResult = this.state.data.filter(item => {
-        return item.lastName.toLowerCase().includes( searchValue)
-        ||item.firstName.toLowerCase().includes( searchValue)
-        ||item.email.toLowerCase().includes( searchValue)
-        ||this.languagesIntoString(item, 1).includes( searchValue)
-        ||this.languagesIntoString(item, 2).includes( searchValue);
+        return item.lastName.toLowerCase().includes(searchValue)
+          || item.firstName.toLowerCase().includes(searchValue)
+          || item.email.toLowerCase().includes(searchValue)
+          || this.languagesIntoString(item, 1).includes(searchValue)
+          || this.languagesIntoString(item, 2).includes(searchValue);
       })
-      this.setState({rows:searchResult})
+      this.setState({ rows: searchResult })
     }
-    if (searchValue.length == 0){
-      this.setState({rows:this.state.data})
+    if (searchValue.length == 0) {
+      this.setState({ rows: this.state.data })
     }
   }
 
   languagesIntoString = (item, role) => {
     let languagestr = "";
-    if (role == 1){
+    if (role == 1) {
       for (let index = 0; index < item.languagesToTeach.length; index++) {
         languagestr = languagestr + item.languagesToTeach[index].language.toLowerCase() + " ";
       }
     }
-    else{
+    else {
       for (let index = 0; index < item.languagesToLearn.length; index++) {
         languagestr = languagestr + item.languagesToLearn[index].language.toLowerCase() + " ";
       }
@@ -280,7 +283,8 @@ class ListOfStudents extends Component {
           container
           direction='row'
           justify='center'
-          alignItems='center'>
+          alignItems='center'
+        >
           <Grid item xs={9}>
             <TextField
               variant='outlined'
@@ -290,9 +294,9 @@ class ListOfStudents extends Component {
               id='message'
               label='Message for students'
               name='message'
-              autoComplete='message'
               onChange={(e) => { this.handleChangeMessage(e) }}
-              autoFocus />
+              autoFocus 
+            />
           </Grid>
           <Grid item xs={3}>
             <Button
@@ -307,83 +311,100 @@ class ListOfStudents extends Component {
           </Grid>
         </Grid>
         <TextField
-        variant='outlined'
-        margin='normal'
-        fullWidth
-        id='search'
-        label='Search for students by name, email or language'
-        name='search'
-        onChange = {this.handleSearchChange} value={this.state.searchValue}
+          variant='outlined'
+          margin='normal'
+          fullWidth
+          id='search'
+          label='Search for students by name, email or language'
+          name='search'
+          onChange={this.handleSearchChange} 
+          value={this.state.searchValue}
         />
-          <Table stickyHeader aria-label="sticky table" className={classes.tableWrapper}>
-            <TableHead>
-              <TableRow>
-                {this.columns.map(column => (
-                  <TableCell
-                    key={column.id}
-                    align={column.align}
-                    style={{ minWidth: column.minWidth }}>
-                    {column.label}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {this.state.rows.length ? this.state.rows.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((row, index) => {
-                return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                    {this.columns.map(column => {
-                      const value = row[column.id];
-                      return (
-                        <TableCell key={column.id} align={column.align}>
-                          <div>
-                            {column.format ? column.format(value) : value}
-                            {column.id === 'removeUserButton' ?
-                              <DeleteForever
-                                fullWidth
-                                variant='contained'
-                                color='primary'
-                                className={classes.chip}
-                                onClick={() => {this.setState({showConfirm: true, deleteData: row})}}>
-                              </DeleteForever> : <div/>}
+        <Table stickyHeader aria-label="sticky table" className={classes.tableWrapper}>
+          <TableHead>
+            <TableRow>
+              {this.columns.map(column => (
+                <TableCell
+                  key={column.id}
+                  align={column.align}
+                  style={{ minWidth: column.minWidth }}>
+                  {column.label}
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {this.state.rows.length ? this.state.rows.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((row, index) => {
+              return (
+                <TableRow hover role="checkbox" tabIndex={-1} key={index}>
+                  {this.columns.map(column => {
+                    const value = row[column.id];
+                    return (
+                      <TableCell key={column.id} align={column.align}>
+                        <div>
+                          {column.format ? column.format(value) : value}
 
-                            
-                            {column.id === 'promoteToAdmin' ?
-                              <AssignmentTurnedInIcon
+                          {column.id === 'isActive' ?
+                            userActivity ?
+                              <CheckIcon
                                 fullWidth
                                 variant='contained'
                                 color='primary'
-                                className={classes.chip}
-                                onClick={() => {this.setState({showAdmin:true , userDetail: row})}}>
-                              </AssignmentTurnedInIcon> : <div/>}
-                          </div>
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                );
-              }): null}
-            </TableBody>
-          </Table>
-          <TablePagination
-            rowsPerPageOptions={[10, 25, 100]}
-            component="div"
-            count={this.state.rows.length}
-            rowsPerPage={this.state.rowsPerPage}
-            page={this.state.page}
-            onChangePage={this.handleChangePage}
-            onChangeRowsPerPage={this.handleChangeRowsPerPage}/>
+                                style={{ fill: "green" }}
+                                className={classes.chip}>
+                              </CheckIcon> :
+                              <CloseIcon
+                                fullWidth
+                                variant='contained'
+                                color='primary'
+                                style={{ fill: "red" }}
+                                className={classes.chip}>
+                              </CloseIcon> : <div />}
+
+                          {column.id === 'removeUserButton' ?
+                            <DeleteForever
+                              fullWidth
+                              variant='contained'
+                              color='primary'
+                              className={classes.chip}
+                              onClick={() => { this.setState({ showConfirm: true, deleteData: row }) }}>
+                            </DeleteForever> : <div />}
+                          {column.id === 'promoteToAdmin' ?
+                            <AssignmentTurnedInIcon
+                              fullWidth
+                              variant='contained'
+                              color='primary'
+                              className={classes.chip}
+                              onClick={() => {this.setState({showAdmin:true , userDetail: row})}}>
+                            </AssignmentTurnedInIcon> : <div/>}
+                        </div>
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+              );
+            }) : null}
+          </TableBody>
+        </Table>
+        <TablePagination
+          rowsPerPageOptions={[10, 25, 100]}
+          component="div"
+          count={this.state.rows.length}
+          rowsPerPage={this.state.rowsPerPage}
+          page={this.state.page}
+          onChangePage={this.handleChangePage}
+          onChangeRowsPerPage={this.handleChangeRowsPerPage} />
         <AlertPopup
           open={this.state.showAlert}
           variant={this.state.alertType}
           message={this.state.alertText}
-          onClose={()=>{this.setState({showAlert: false})}}/>
+          onClose={() => { this.setState({ showAlert: false }) }} />
         <ConfirmDialog
           open={this.state.showConfirm}
-          onClose={()=>{this.setState({showConfirm: false, deleteData: {}})}}
+          onClose={() => { this.setState({ showConfirm: false, deleteData: {} }) }}
           title="Are you sure you want to delete the user?"
-          onConfirm={this.onDeleteUser}/>
-          <ConfirmAdmin
+          onConfirm={this.onDeleteUser} />
+        <ConfirmAdmin
           open={this.state.showAdmin}
           onClose={()=>{this.setState({showAdmin: false, userDetail: {}})}}
           title="Are you sure you want to make this user admin?"

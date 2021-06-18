@@ -23,6 +23,7 @@ import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import Tooltip from '@material-ui/core/Tooltip';
+import DOMPurify from "dompurify";
 
 //Components
 import { CityPicker } from '../../components/CityPicker';
@@ -65,7 +66,7 @@ const useStyles = theme => ({
   uploadBtnWrapper: {
     position: 'relative',
     overflow: 'hidden',
-    display: 'inline-block',
+
     '& input': {
       fontSize: '100px',
       position: 'absolute',
@@ -147,24 +148,24 @@ class EditProfilePage extends Component {
           version: 'v1',
           endpoint: 'avatar/uploadAvatar',
         }, {
-            method: 'POST',
-            credentials: 'include',
-            body: form
+          method: 'POST',
+          credentials: 'include',
+          body: form
         })
-        .then(response => response.json())
-        .then(responseJson => {
-          if (responseJson.message === 'Avatar saved!') {
-            console.log('Fetching image...');
+          .then(response => response.json())
+          .then(responseJson => {
+            if (responseJson.message === 'Avatar saved!') {
+              console.log('Fetching image...');
 
-            this.setState({
-              profileImgURL: getApiUrl({
-                version: 'v1',
-                endpoint: 'avatar/getAvatar',
-              })
-            });
-            window.location.reload();
-          }
-        });
+              this.setState({
+                profileImgURL: getApiUrl({
+                  version: 'v1',
+                  endpoint: 'avatar/getAvatar',
+                })
+              });
+              window.location.reload();
+            }
+          });
       }
     }
   }
@@ -175,25 +176,25 @@ class EditProfilePage extends Component {
       version: 'v1',
       endpoint: 'users/update',
     }, {
-        method: 'POST',
-        headers:
-        {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        cors: 'no-cors',
-        body: JSON.stringify({
-          languagesToTeach: this.state.languagesToTeach,
-          languagesToLearn: this.state.languagesToLearn,
-          firstName: this.state.firstName,
-          lastName: this.state.lastName,
-          email: this.state.email,
-          cities: this.state.cities,
-          descriptionText: this.state.descriptionText,
-          userIsActivie: true,
-          profileVideoURL: this.state.profileVideoURL
-        })
+      method: 'POST',
+      headers:
+      {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      cors: 'no-cors',
+      body: JSON.stringify({
+        languagesToTeach: this.state.languagesToTeach,
+        languagesToLearn: this.state.languagesToLearn,
+        firstName: this.state.firstName,
+        lastName: this.state.lastName,
+        email: this.state.email,
+        cities: this.state.cities,
+        descriptionText: this.state.descriptionText,
+        userIsActivie: true,
+        profileVideoURL: this.state.profileVideoURL
+      })
     }).then((response) => response.json())
       .then((responseJson) => {
         if (responseJson.update) {
@@ -212,30 +213,30 @@ class EditProfilePage extends Component {
       version: 'v1',
       endpoint: 'users/delete',
     }, {
-        method: 'DELETE',
-        headers:
-        {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include'
+      method: 'DELETE',
+      headers:
+      {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include'
     }).then((response) => {
-        if (response.status === 200) {
-          this.setState({
-            showAlert: true,
-            showConfirm: false,
-            alertText: "You can always create a new account by signing in again. Goodbye!",
-            alertType: "info"
-          })
-        }
-        else
-          this.setState({
-            showAlert: true,
-            showConfirm: false,
-            alertText: "Something went wrong. Please try again later.",
-            alertType: "error"
-          })
-      })
+      if (response.status === 200) {
+        this.setState({
+          showAlert: true,
+          showConfirm: false,
+          alertText: "You can always create a new account by signing in again. Goodbye!",
+          alertType: "info"
+        })
+      }
+      else
+        this.setState({
+          showAlert: true,
+          showConfirm: false,
+          alertText: "Something went wrong. Please try again later.",
+          alertType: "error"
+        })
+    })
       .catch(err => {
         console.log(err)
         this.setState({
@@ -262,7 +263,7 @@ class EditProfilePage extends Component {
     const validNameRegex = RegExp(/^.*(?=.{1,})(?=.*[a-zA-Z\\u0080-\\uFFFF])(?=.*\d).*$/);
 
     if (validNameRegex.test(formFirstName)) this.setState({ firstNameError: true, firstNameErrorMessage: 'Special characters are not accepted' });
-    else if ( formFirstName.length >= 20) this.setState({ firstNameError: true, firstNameErrorMessage: 'Number of characters not accepted' });
+    else if (formFirstName.length >= 20) this.setState({ firstNameError: true, firstNameErrorMessage: 'Number of characters not accepted' });
     else this.setState({ firstNameError: false, firstNameErrorMessage: '', firstName: formFirstName });
   };
 
@@ -273,7 +274,7 @@ class EditProfilePage extends Component {
 
     if (validNameRegex.test(formLastName) === true) {
       this.setState({ lastNameError: true, lastNameErrorMessage: 'Special characters are not accepted' });
-    } else if ( formLastName.length >= 20) {
+    } else if (formLastName.length >= 20) {
       this.setState({ lastNameError: true, lastNameErrorMessage: 'Number of characters not accepted' });
     } else {
       this.setState({ lastNameError: false, lastNameErrorMessage: '' });
@@ -283,7 +284,7 @@ class EditProfilePage extends Component {
   };
 
   handleChangeEmail = event => {
-    var value = (event.target.value);
+    var value = DOMPurify.sanitize((event.target.value));
 
     this.setState({
       email: value
@@ -309,6 +310,7 @@ class EditProfilePage extends Component {
   };
 
   handleChangeCities = value => {
+    value = DOMPurify.sanitize(value);
     if (value.length > 2) {
       this.setState({ citiesError: true, citiesErrorMessage: 'Maximum number of municipilities is 2' });
     } else if (value.length < 1) {
@@ -320,7 +322,7 @@ class EditProfilePage extends Component {
   };
 
   handleChangeIntroduction = event => {
-    var value = (event.target.value);
+    var value = DOMPurify.sanitize((event.target.value));
     this.setState({ descriptionText: value });
 
     if (value.length < 5 && value.length > 0) {
@@ -337,9 +339,9 @@ class EditProfilePage extends Component {
     getApiData({
       endpoint: 'isAuthenticated',
     }, {
-        method: 'GET',
-        credentials: 'include',
-        cors: 'no-cors'
+      method: 'GET',
+      credentials: 'include',
+      cors: 'no-cors'
     }).then((response) => response.json())
       .then((responseData) => {
         if (responseData.isAuthenticated) {
@@ -360,9 +362,9 @@ class EditProfilePage extends Component {
       version: 'v1',
       endpoint: 'users/userInfo',
     }, {
-        method: 'GET',
-        credentials: 'include',
-        cors: 'no-cors'
+      method: 'GET',
+      credentials: 'include',
+      cors: 'no-cors'
     }).then((response) => response.json())
       .then((responseData) => {
         console.log('Load user info:', responseData.data.firstName);
@@ -457,35 +459,35 @@ class EditProfilePage extends Component {
     }
   }
   onExcludeIncludeButtonClicked = async flagValue => {
-      try {
-        const response = await getApiData({
-          version: 'v1',
-          endpoint: 'users/setMatchingVisibility',
-        }, {
-          method: 'POST',
-          credentials: 'include',
-          cors: 'no-cors',
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            flag: flagValue,
-          })
-        });
-        const responseData = await response.json();
-        if(responseData.excludeFromMatching) {
-          this.setState({ isExcludeFromMatching: true })
-          this.toggleAlert(true, 'success', 'Exclude from matching succesfully!');
-        }
-        else {
-          this.setState({ isExcludeFromMatching: false })
-          this.toggleAlert(true, 'success', 'Include in matching succesfully!');
-        }
+    try {
+      const response = await getApiData({
+        version: 'v1',
+        endpoint: 'users/setMatchingVisibility',
+      }, {
+        method: 'POST',
+        credentials: 'include',
+        cors: 'no-cors',
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          flag: flagValue,
+        })
+      });
+      const responseData = await response.json();
+      if (responseData.excludeFromMatching) {
+        this.setState({ isExcludeFromMatching: true })
+        this.toggleAlert(true, 'success', 'Exclude from matching succesfully!');
       }
-      catch(e) {
-        this.toggleAlert(true, "error", 'Something went wrong. Try again later.');
+      else {
+        this.setState({ isExcludeFromMatching: false })
+        this.toggleAlert(true, 'success', 'Include in matching succesfully!');
       }
+    }
+    catch (e) {
+      this.toggleAlert(true, "error", 'Something went wrong. Try again later.');
+    }
   }
 
   toExcludeLanguages = () => {
@@ -529,25 +531,33 @@ class EditProfilePage extends Component {
 
     return (
       <div>
-        <Container component="main" maxWidth="xs">
+        <Container component="section" aria-label="Edit profile" maxWidth="xs">
           <CssBaseline />
 
           <div className={classes.paper}>
-            <Avatar className={classes.avatar} src={this.state.profileImgURL}>
+            <Avatar className={classes.avatar} src={this.state.profileImgURL} />
 
-            </Avatar>
             <div className={classes.uploadBtnWrapper}>
 
-              <IconButton
-                color="primary"
-                className={classes.button}
-                aria-label="upload picture"
-                component="span"
-              >
-                <PhotoCamera />
+              <input accept="image/*"
+                id="icon-button-file"
+                type="file"
+                name="myfile"
+                onChange={this.onImageChange}
+                aria-label="upload-image"
+              />
+              <label htmlFor="icon-button-file">
+                <Tooltip title="Upload image" placement="top">
+                  <IconButton
+                    color="primary"
+                    className={classes.button}
+                    component="span"
+                  >
+                    <PhotoCamera />
+                  </IconButton>
+                </Tooltip>
+              </label>
 
-              </IconButton>
-              <input type="file" name="myfile" onChange={this.onImageChange} />
             </div>
 
             <form className={classes.form} noValidate>
@@ -555,7 +565,7 @@ class EditProfilePage extends Component {
 
                 <Grid item xs={12} sm={6}>
                   <TextField
-                    autoComplete="fname"
+                    autoComplete="given-name"
                     name="firstName"
                     variant="outlined"
                     required={true}
@@ -579,7 +589,7 @@ class EditProfilePage extends Component {
                     id="lastName"
                     label="Last name"
                     name="lastName"
-                    autoComplete="lname"
+                    autoComplete="family-name"
                     value={this.state.lastName}
                     error={this.state.lastNameError}
                     helperText={this.state.lastNameError === false ? '2-19 characters required' : this.state.lastNameErrorMessage}
@@ -612,11 +622,11 @@ class EditProfilePage extends Component {
                     label="Video profile URL"
                     value={this.state.profileVideoURL}
                     name="video"
-                    autoComplete="video"
+                    autoComplete="url"
                     onChange={this.handleChangeProfileVideo}
                     error={this.state.videoError}
                     helperText={
-                      this.state.videoError ? "Url is not supported. Only youtube Url is supported at the moment."
+                      this.state.videoError ? "URL is not supported. Only youtube Url is supported at the moment."
                         : "Please make sure the video is publicly accessible. A YouTube link is recommended."
                     }
                   />
@@ -645,14 +655,13 @@ class EditProfilePage extends Component {
                     maxLength={500}
                     margin="normal"
                     onChange={this.handleChangeIntroduction}
-                    //helperText = "The max number of characters is 500."
                     error={this.state.introError}
                     helperText={this.state.introError === false ? 'The max number of characters is 500.' : this.state.introErrorMessage}
                   />
                 </Grid>
 
                 <Grid item xs={12}>
-                  <Typography variant="subtitle1" gutterBottom>
+                  <Typography variant="subtitle1" component="subtitle" gutterBottom>
                     Languages I can teach (max 3) (Note: you need to be a native or a near-native speaker to teach)
                   </Typography>
 
@@ -676,7 +685,7 @@ class EditProfilePage extends Component {
 
                   <div align="center">
                     <IconButton disabled={this.state.languagesToTeach.length >= 3} className={classes.margin} onClick={() => this.onShowInputTeachLanguage(true, this.state.languagesToTeach.length)}>
-                      <AddCircleOutlineIcon fontSize="small" /> <Typography align="center" variant="button"> Add more languages to teach</Typography>
+                      <AddCircleOutlineIcon fontSize="small" /> <Typography align="center" variant="button">Add more languages to teach</Typography>
                     </IconButton>
                   </div>
 
@@ -690,7 +699,7 @@ class EditProfilePage extends Component {
                 />
 
                 <Grid item xs={12}>
-                  <Typography variant="subtitle1" gutterBottom>
+                  <Typography variant="subtitle1" component="subtitle" gutterBottom>
                     Languages I want to learn (max. 3)
                     </Typography>
 
@@ -737,32 +746,32 @@ class EditProfilePage extends Component {
                 color="primary"
                 className={classes.submit}
                 onClick={this.onSaveButtonClicked}
-                disabled = {(this.state.lastName.length<2 || this.state.firstName.length<2) ? true: false }
+                disabled={(this.state.lastName.length < 2 || this.state.firstName.length < 2) ? true : false}
               >
                 Save changes
-                </Button>
+              </Button>
 
-              { this.state.isExcludeFromMatching ?
-                  <Tooltip title="Your profile will be visible in find partner page. Other users will be able to send you a partner request.">
-                    <Button
+              {this.state.isExcludeFromMatching ?
+                <Tooltip title="Your profile will be visible in find partner page. Other users will be able to send you a partner request.">
+                  <Button
                     fullWidth
                     variant="contained"
                     color="primary"
                     className={classes.includeInMatchingButton}
                     onClick={() => this.onExcludeIncludeButtonClicked(false)}>
-                               Include In Matching
+                    Include In Matching
                     </Button>
-                  </Tooltip>
-                  :
-                  <Tooltip title="Your profile will be excluded from find partner page. Other users won't be able to send you a partner request.">
-                    <Button
-                     fullWidth
-                      variant="contained"
-                      color="secondary"
-                      onClick={() => this.onExcludeIncludeButtonClicked(true)}>
-                      Exclude From Matching
+                </Tooltip>
+                :
+                <Tooltip title="Your profile will be excluded from find partner page. Other users won't be able to send you a partner request.">
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => this.onExcludeIncludeButtonClicked(true)}>
+                    Exclude From Matching
                     </Button>
-                  </Tooltip>
+                </Tooltip>
               }
               <br /><br />
 
@@ -780,7 +789,7 @@ class EditProfilePage extends Component {
                     variant='contained'
                     color='primary'
                     className={classes.submit}
-                    onClick={()=>{this.setState({showConfirm: true})}}>
+                    onClick={() => { this.setState({ showConfirm: true }) }}>
                     Delete profile
                     </Button>
                 </ExpansionPanelDetails>
@@ -794,15 +803,15 @@ class EditProfilePage extends Component {
         </Container>
         <AlertPopup
           open={this.state.showAlert}
-          onClose={() => {this.setState({showAlert: false})}}
+          onClose={() => { this.setState({ showAlert: false }) }}
           variant={this.state.alertType}
           message={this.state.alertText}
         />
         <ConfirmDialog
           open={this.state.showConfirm}
-          onClose={()=>{this.setState({showConfirm: false})}}
+          onClose={() => { this.setState({ showConfirm: false }) }}
           title="Are you sure you want to delete your profile ?"
-          onConfirm={this.onDeleteProfile}/>
+          onConfirm={this.onDeleteProfile} />
       </div>
     );
   }
