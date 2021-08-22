@@ -141,7 +141,7 @@ class NewsDashboard extends React.Component {
 		return new Promise((resolve, reject) => {
 			getApiData({
 				version: 'v1',
-				endpoint: 'news'
+				endpoint: 'news/'
 			}, {
 				method: 'POST',
 				credentials: 'include',
